@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/tmc-eclipse.feature_0.0.1.qualifier.jar" id="tmc-eclipse.feature" version="0.0.1.qualifier">
-      <category name="tmc-eclipse"/>
-   </feature>
-   <category-def name="tmc-eclipse" label="TMC-Eclipse"/>
-</site>
