@@ -14,9 +14,17 @@
 
   <properties>
     <tycho.version>0.20.0</tycho.version>
-
     <kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
   </properties>
+  
+   	<dependencies>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+	</dependencies>
+  
 
   <repositories>
     <repository>
@@ -24,6 +32,12 @@
       <url>${kepler-repo.url}</url>
       <layout>p2</layout>
     </repository>
+
+	<repository>
+		<id>Maven repo</id>
+		<url>http://repo.maven.apache.org</url>
+		<layout>default</layout>
+	</repository>
 
   </repositories>
 
@@ -40,6 +54,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
+          <pomDependencies>consider</pomDependencies>
           <environments>
             <environment>
               <os>linux</os>

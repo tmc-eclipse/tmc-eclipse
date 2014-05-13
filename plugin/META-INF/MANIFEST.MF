@@ -1,5 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: tmc-eclipse.plugin
+Bundle-SymbolicName: tmc-eclipse.plugin;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.eclipse.core.commands;bundle-version="3.6.100",
+ org.eclipse.ui;bundle-version="3.105.0"
+ 
