@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../master/pom.xml</relativePath>
+    <groupId>fi.helsinki.cs</groupId>
+    <artifactId>tmc-eclipse.master</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>tmc-eclipse.p2updatesite</artifactId>
+  <packaging>eclipse-repository</packaging>
+
+  <version>0.0.1-SNAPSHOT</version>
+  <groupId>fi.helsinki.cs</groupId>
+</project> 
