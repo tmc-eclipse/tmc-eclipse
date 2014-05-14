@@ -69,4 +69,9 @@ public class SettingsTest {
 		
 		assertTrue(settings.save());
 	}
+	
+	@Test
+	public void testDefaultSettingsSuccess(){
+		assertNotNull(Settings.getDefaultSettings());
+	}
 }
