@@ -3,6 +3,10 @@ package fi.helsinki.cs.plugin.tmc.model;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+/**
+ * Settings class for storing user preferences, such as TMC username and password, in a platform independent way.
+ * Wraps java.util.prefs.Preferences. Changes may be propagated to the persistent store at any time.
+ */
 public class Settings {
 
 	public static final String PREF_KEY_TMC_SERVER_URL = "baseUrl";	
@@ -10,7 +14,11 @@ public class Settings {
 	public static final String PREF_KEY_PASSWORD = "password";
 	
 	private Preferences prefs;
-	
+
+	/**
+	 * Returns the user preferences from the default storage for the current user.
+	 * @return the user preferences from the default storage for the current user.
+	 */
 	public static Settings getDefaultSettings() {
 		try {
 			Settings settings = new Settings(Preferences.userRoot().node(Settings.class.getName()));
@@ -48,6 +56,10 @@ public class Settings {
 		prefs.put(PREF_KEY_PASSWORD, password);
 	}
 	
+	/**
+	 * Forces the changes to be saved on a persistent store.
+	 * @return true if the changes are saved succesfully, false if an exception occurred.
+	 */
 	public boolean save() {
 		try {
 			prefs.flush();

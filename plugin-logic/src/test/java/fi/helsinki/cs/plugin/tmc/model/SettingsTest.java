@@ -53,13 +53,20 @@ public class SettingsTest {
 	}
 	
 	
-	
 	@Test
 	public void testSavingFailure() throws BackingStoreException{
 		settings.setUsername("matti.meikalainen");
 		settings.setPassword("password123");
 		
-			doThrow(new BackingStoreException("")).when(prefs).flush();
+		doThrow(new BackingStoreException("")).when(prefs).flush();
 		assertFalse(settings.save());
+	}
+	
+	@Test
+	public void testSavingSuccess() {
+		settings.setUsername("matti.meikalainen");
+		settings.setPassword("password123");
+		
+		assertTrue(settings.save());
 	}
 }
