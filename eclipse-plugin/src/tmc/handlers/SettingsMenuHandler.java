@@ -6,9 +6,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-
 import tmc.ui.SettingsWindow;
-
 
 public class SettingsMenuHandler extends AbstractHandler {
 
