@@ -1,8 +1,10 @@
 package fi.helsinki.cs.plugin.tmc.model;
 
 import static org.junit.Assert.*;
+
 import static org.mockito.Mockito.*;
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import org.junit.Before;
@@ -38,5 +40,14 @@ public class SettingsTest {
 		settings.setPassword("password123");
 		
 		verify(prefs).put(eq(Settings.PREF_KEY_PASSWORD), eq("password123"));
+	}
+	
+	@Test
+	public void testSavingFailure() throws BackingStoreException{
+		settings.setUsername("matti.meikalainen");
+		settings.setPassword("password123");
+		
+			doThrow(new BackingStoreException("")).when(prefs).flush();
+		assertFalse(settings.save());
 	}
 }
