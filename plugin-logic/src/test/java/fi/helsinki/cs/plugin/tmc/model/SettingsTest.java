@@ -25,12 +25,19 @@ public class SettingsTest {
 	public void testSavingServerBaseUrl() {
 		settings.setServerBaseUrl("http://tmc.mooc.fi");
 		
+		when(settings.getServerBaseUrl()).thenReturn("http://tmc.mooc.fi");
+		
+		assertEquals(settings.getServerBaseUrl(), "http://tmc.mooc.fi");
+		
 		verify(prefs).put(eq(Settings.PREF_KEY_TMC_SERVER_URL), eq("http://tmc.mooc.fi"));
 	}
 
 	@Test
 	public void testSavingUsername() {
 		settings.setUsername("matti.meikalainen");
+		when(settings.getUsername()).thenReturn("matti.meikalainen");
+		
+		assertEquals(settings.getUsername(), "matti.meikalainen");
 		
 		verify(prefs).put(eq(Settings.PREF_KEY_USERNAME), eq("matti.meikalainen"));
 	}
@@ -38,9 +45,14 @@ public class SettingsTest {
 	@Test
 	public void testSavingPassword() {
 		settings.setPassword("password123");
+		when(settings.getPassword()).thenReturn("password123");
+		
+		assertEquals(settings.getPassword(), "password123");
 		
 		verify(prefs).put(eq(Settings.PREF_KEY_PASSWORD), eq("password123"));
 	}
+	
+	
 	
 	@Test
 	public void testSavingFailure() throws BackingStoreException{
