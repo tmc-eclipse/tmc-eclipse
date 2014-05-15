@@ -45,8 +45,13 @@ public class CoursesTest {
 	
 
 	@Test
-	public void testCourses(){
-		
+	public void testgetCourseByNameSuccess(){
+		assertEquals(c.getCourseByName("c1"), c1);
+	}
+	
+	@Test
+	public void testgetCourseByNameFail(){
+		assertNull(c.getCourseByName("c5"));
 	}
 	
 	@Test
@@ -54,7 +59,15 @@ public class CoursesTest {
 		assertEquals(c.getCourses(), cl);
 	}
 	
-
+	@Test
+	public void testUpdateCourse(){
+		Course c5 =new Course("c4");
+		c5.setCometUrl("asd");
+		
+		c.updateCourse(c5);
+		assertEquals(c.getCourseByName("c4").getCometUrl(), "asd");
+	}
+	
 	@Test
 	public void testSetCourses(){
 		cl.remove(3);
