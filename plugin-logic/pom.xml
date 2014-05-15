@@ -52,6 +52,12 @@
 			<version>1.8.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.codeartisans.thirdparties.swing</groupId>
+			<artifactId>org-openide-util</artifactId>
+			<version>8.6.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
