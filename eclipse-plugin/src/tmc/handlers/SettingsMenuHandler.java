@@ -8,15 +8,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import tmc.ui.SettingsDialog;
+import fi.helsinki.cs.plugin.tmc.Core;
 
 
 public class SettingsMenuHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-
-		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET);
+		Core core = PluginGetter.getPlugin();
+		
+		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET, core.getSettings(), core.getCourseFetcher());
 		dialog.open();
+		
 		return null;
 	}
 }

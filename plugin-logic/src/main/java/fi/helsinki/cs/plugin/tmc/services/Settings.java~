@@ -13,7 +13,11 @@ public class Settings {
 	public static final String PREF_KEY_USERNAME = "username";
 	public static final String PREF_KEY_PASSWORD = "password";
 	public static final String PREF_KEY_CURRENT_COURSE = "currentCourse";
+<<<<<<< HEAD
+	
+=======
 
+>>>>>>> coredev
 	private Preferences prefs;
 
 	/**
@@ -56,6 +60,7 @@ public class Settings {
 	public void setPassword(String password) {
 		prefs.put(PREF_KEY_PASSWORD, password);
 	}
+<<<<<<< HEAD
 	
 	public String getCurrentCourseName() {
 		return prefs.get(PREF_KEY_CURRENT_COURSE, "");
@@ -65,7 +70,17 @@ public class Settings {
 		prefs.put(PREF_KEY_CURRENT_COURSE, currentCourseName);
 	}
 	
+=======
 
+	public String getCurrentCourseName() {
+		return prefs.get(PREF_KEY_CURRENT_COURSE, "");
+	}
+
+	public void setCurrentCourseName(String currentCourseName) {
+		prefs.put(PREF_KEY_CURRENT_COURSE, currentCourseName);
+	}
+
+>>>>>>> coredev
 	/**
 	 * Forces the changes to be saved on a persistent store.
 	 * @return true if the changes are saved succesfully, false if an exception occurred.
