@@ -4,10 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A class representing an instance of a Course in the TMC system.
- */
 public class Course {
+
     private String name;
     
     @SerializedName("details_url")
@@ -19,7 +17,13 @@ public class Course {
     @SerializedName("comet_url")
     private String cometUrl;
     @SerializedName("spyware_urls")
-    private List<String> spywareUrls;   
+    private List<String> spywareUrls;
+
+    private boolean exercisesLoaded;
+
+    private List<Exercise> exercises;
+    private List<String> unlockables; // Exercise names
+    
     
     public Course() {
     	//In case of a missing name-field in the JSON, GSON would replace any default value of name with null.
@@ -29,6 +33,8 @@ public class Course {
 
     public Course(String name) {
         this.name = name;
+        this.exercises = new ArrayList<Exercise>();
+        this.unlockables = new ArrayList<String>();
         this.spywareUrls = new ArrayList<String>();
     }
 
@@ -78,6 +84,30 @@ public class Course {
 
     public void setSpywareUrls(List<String> spywareUrls) {
         this.spywareUrls = spywareUrls;
+    }
+
+    public boolean isExercisesLoaded() {
+        return exercisesLoaded;
+    }
+
+    public void setExercisesLoaded(boolean exercisesLoaded) {
+        this.exercisesLoaded = exercisesLoaded;
+    }
+
+    public List<String> getUnlockables() {
+        return unlockables;
+    }
+
+    public void setUnlockables(List<String> unlockables) {
+        this.unlockables = unlockables;
+    }
+    
+    public List<Exercise> getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
     }
     
     @Override

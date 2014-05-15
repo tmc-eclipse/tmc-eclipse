@@ -32,11 +32,6 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
-		</dependency>
 
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -46,9 +41,27 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.3.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.8.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codeartisans.thirdparties.swing</groupId>
+			<artifactId>org-openide-util</artifactId>
+			<version>8.6.2</version>
 		</dependency>
 
 	</dependencies>

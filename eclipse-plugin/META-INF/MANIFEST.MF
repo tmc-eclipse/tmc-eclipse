@@ -6,4 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
- lib/tmc.eclipse-0.0.1-SNAPSHOT.jar
+ lib/tmc.eclipse-0.0.1-SNAPSHOT.jar,
+ swing2swt.jar,
+ swt-grouplayout.jar
