@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
 public class CoursesTest {
@@ -25,7 +26,7 @@ public class CoursesTest {
 	
 	@Before
 	public void setUp() {
-		lcs=new LocalCourseStorage(new File("testi.txt"));
+		lcs=new LocalCourseStorage(new FileIO("testi.txt"));
     	c=new Courses(lcs);
     	
     	c1=new Course("c1");
