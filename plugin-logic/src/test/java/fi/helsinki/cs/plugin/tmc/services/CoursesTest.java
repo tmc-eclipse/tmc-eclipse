@@ -17,18 +17,23 @@ public class CoursesTest {
 
 	private LocalCourseStorage lcs;
 	private Courses c;
+	private Course c1;
+	private Course c2;
+	private Course c3;
+	private Course c4;
+	ArrayList<Course> cl;
 	
 	@Before
 	public void setUp() {
 		lcs=new LocalCourseStorage(new File("testi.txt"));
-    	Courses c=new Courses(lcs);
+    	c=new Courses(lcs);
     	
-    	Course c1=new Course("c1");
-    	Course c2=new Course("c2");
-    	Course c3=new Course("c3");
-    	Course c4=new Course("c4");
+    	c1=new Course("c1");
+    	c2=new Course("c2");
+    	c3=new Course("c3");
+    	c4=new Course("c4");
     	
-    	ArrayList<Course> cl=new ArrayList<>();
+    	cl=new ArrayList<>();
     	
     	cl.add(c1);
     	cl.add(c2);
@@ -38,7 +43,23 @@ public class CoursesTest {
     	c.setCourses(cl);
 	}
 	
+
+	@Test
+	public void testCourses(){
+		
+	}
 	
+	@Test
+	public void testGetCourses(){
+		assertEquals(c.getCourses(), cl);
+	}
 	
+
+	@Test
+	public void testSetCourses(){
+		cl.remove(3);
+		c.setCourses(cl);
+		assertEquals(c.getCourses(), cl);
+	}
 
 }
