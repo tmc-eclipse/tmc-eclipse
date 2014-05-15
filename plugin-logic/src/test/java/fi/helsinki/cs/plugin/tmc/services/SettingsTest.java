@@ -1,7 +1,6 @@
-package fi.helsinki.cs.plugin.tmc.model;
+package fi.helsinki.cs.plugin.tmc.services;
 
 import static org.junit.Assert.*;
-
 import static org.mockito.Mockito.*;
 
 import java.util.prefs.BackingStoreException;

@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.model;
+package fi.helsinki.cs.plugin.tmc.services;
 
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
