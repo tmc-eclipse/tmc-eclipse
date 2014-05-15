@@ -65,7 +65,6 @@ public class Settings {
 		prefs.put(PREF_KEY_CURRENT_COURSE, currentCourseName);
 	}
 	
-
 	/**
 	 * Forces the changes to be saved on a persistent store.
 	 * @return true if the changes are saved succesfully, false if an exception occurred.

@@ -15,8 +15,8 @@ public class FileIO implements IO {
 	
 	private File file;
 	
-	public FileIO(File file) {
-		this.file = file;
+	public FileIO(String file) {
+		this.file = new File(file);
 	}
 	
 	@Override

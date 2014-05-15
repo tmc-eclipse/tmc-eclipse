@@ -9,7 +9,6 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.IO;
 
 public class LocalCourseStorage implements CourseDAO {
@@ -21,8 +20,8 @@ public class LocalCourseStorage implements CourseDAO {
 		public List<Course> courses;
 	}
 	
-	public LocalCourseStorage(File file) {
-		this.io = new FileIO(file);
+	public LocalCourseStorage(IO io) {
+		this.io = io;
 		this.gson = new Gson();
 	}
 	
