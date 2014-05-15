@@ -12,6 +12,7 @@ public class Settings {
 	public static final String PREF_KEY_TMC_SERVER_URL = "baseUrl";	
 	public static final String PREF_KEY_USERNAME = "username";
 	public static final String PREF_KEY_PASSWORD = "password";
+	public static final String PREF_KEY_CURRENT_COURSE = "currentCourse";
 	
 	private Preferences prefs;
 
@@ -54,6 +55,14 @@ public class Settings {
 	
 	public void setPassword(String password) {
 		prefs.put(PREF_KEY_PASSWORD, password);
+	}
+	
+	public String getCurrentCourseName() {
+		return prefs.get(PREF_KEY_CURRENT_COURSE, "");
+	}
+	
+	public void setCurrentCourseName(String currentCourseName) {
+		prefs.put(PREF_KEY_CURRENT_COURSE, currentCourseName);
 	}
 	
 	/**

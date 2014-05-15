@@ -1,0 +1,1 @@
+{"courses":[{"name":"c1","spyware_urls":[]},{"name":"c2","spyware_urls":[]},{"name":"c3","spyware_urls":[]}]}
