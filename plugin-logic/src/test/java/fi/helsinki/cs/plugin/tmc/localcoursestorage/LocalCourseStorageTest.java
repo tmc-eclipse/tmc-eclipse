@@ -29,5 +29,11 @@ public class LocalCourseStorageTest {
 		
 		assertNull(lcs.load());
 	}
+	
+	@Test
+	public void testNullIO(){
+		LocalCourseStorage lcs = new LocalCourseStorage(null);
+		
+	}
 
 }

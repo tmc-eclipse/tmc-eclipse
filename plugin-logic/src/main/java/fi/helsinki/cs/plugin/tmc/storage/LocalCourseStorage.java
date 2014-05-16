@@ -28,7 +28,7 @@ public class LocalCourseStorage implements CourseDAO {
 	@Override
 	public List<Course> load() {
 		if(!io.exists()) {
-			return null;
+			return new List<Course>();
 		}
 		
 		Reader reader = io.getReader();
@@ -51,16 +51,18 @@ public class LocalCourseStorage implements CourseDAO {
 		CoursesFileFormat courseList = new CoursesFileFormat();
 		courseList.courses = courses;
 		
+		if(io==null){
+			
+		}
+		
 		Writer writer = io.getWriter();
 		if(writer == null) {
 			return;
 		}
 		
 		gson.toJson(courseList, writer);
-
 		try {
 			writer.close();
-		} catch(IOException e) {
-		}
+		} catch(IOException e) {}
 	}
 }
