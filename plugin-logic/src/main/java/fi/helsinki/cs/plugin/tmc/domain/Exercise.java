@@ -86,8 +86,7 @@ public class Exercise implements Serializable {
 			throw new NullPointerException("name was null at Exercise.setName");
 		}
 		if (name.isEmpty()) {
-			throw new IllegalArgumentException(
-					"Name cannot be empty at Exercise.setName");
+			throw new IllegalArgumentException("Name cannot be empty at Exercise.setName");
 		}
 		this.name = name;
 	}
@@ -114,8 +113,7 @@ public class Exercise implements Serializable {
 
 	public boolean hasDeadlinePassedAt(Date time) {
 		if (time == null) {
-			throw new NullPointerException(
-					"Given time was null at Exercise.isDeadlineEnded");
+			throw new NullPointerException("Given time was null at Exercise.isDeadlineEnded");
 		}
 		if (getDeadline() != null) {
 			return getDeadline().getTime() < time.getTime();

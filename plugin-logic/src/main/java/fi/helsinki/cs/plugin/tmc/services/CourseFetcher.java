@@ -1,32 +1,37 @@
 package fi.helsinki.cs.plugin.tmc.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
+import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
 
 public class CourseFetcher {
-	private List<Course> courses;
 	
-	public CourseFetcher(){
-		courses = new ArrayList<Course>();
+	private Courses courses;
+	
+	public CourseFetcher(Courses courses) {
+		this.courses = courses;
 		updateCourses();
 	}
 	
-	public void updateCourses(){
-		courses.clear();
-		
-		for(int i = 0; i<5; i++){
-			courses.add(new Course("Kurssi"+i));
+	public void updateCourses() {
+		WebDao webDao = new WebDao();
+		try {
+			courses.setCourses(webDao.getCourses());
+		} catch(UserVisibleException e) {
+			// TODO: show error message to user
 		}
-
 	}
 	
-	public String[] getCourseNames(){
-		String[] names = new String[courses.size()];
-		for(int i = 0; i < names.length; i++){
-			names[i] = courses.get(i).getName();
+	public String[] getCourseNames() {
+		List<Course> courseList = courses.getCourses();
+		String[] names = new String[courseList.size()];
+		
+		for(int i = 0; i < courseList.size(); i++) {
+			names[i] = courseList.get(i).getName();
 		}
+		
 		return names;
 	}
 	
