@@ -53,7 +53,7 @@ public class LocalCourseStorage implements CourseDAO {
 		CoursesFileFormat courseList = new CoursesFileFormat();
 		courseList.courses = courses;
 		
-		if(io==null){
+		if(io == null){
 			// TODO: throw new UserVisibleException
 			return;
 		}
