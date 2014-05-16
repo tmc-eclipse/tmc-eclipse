@@ -1,15 +1,14 @@
 package fi.helsinki.cs.plugin.tmc.localcoursestorage;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.getJson.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.io.IO;
 import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
@@ -24,17 +23,28 @@ public class LocalCourseStorageTest {
 		lcs = new LocalCourseStorage(io);
 	}
 	
-	@Test
-	public void loadReturnsEmptyListIfFileDoesntExist() {
-		when(io.exists()).thenReturn(false);
-		
-		assertTrue(lcs.load() != null && lcs.load() instanceof List && lcs.load().size() == 0);
+	@Test(expected=UserVisibleException.class)
+	public void testExceptionIsThrownIfNullIO() throws UserVisibleException {
+		this.io = null;
+		lcs.load();
 	}
 	
-	@Test
-	public void testNullIO(){
-		LocalCourseStorage lcs = new LocalCourseStorage(null);
-		
+	@Test(expected=UserVisibleException.class)
+	public void testExceptionIsThrownIfFileDoesntExist() throws UserVisibleException {
+		when(io.exists()).thenReturn(false);
+		lcs.load();
 	}
-
+	
+	@Test(expected=UserVisibleException.class)
+	public void testExceptionIsThrownIfReaderIsNull() throws UserVisibleException {
+		when(io.getReader()).thenReturn(null);
+		lcs.load();
+	}
+	
+	@Test(expected=UserVisibleException.class)
+	public void testExceptionIsThrownIfWriterIsNull() throws UserVisibleException {
+		when(io.getWriter()).thenReturn(null);
+		lcs.save(new ArrayList<Course>());
+	}
+	
 }

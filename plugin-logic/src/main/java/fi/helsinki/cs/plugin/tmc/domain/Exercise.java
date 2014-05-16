@@ -1,7 +1,10 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Exercise implements Serializable {
@@ -35,7 +38,8 @@ public class Exercise implements Serializable {
 	@SerializedName("deadline_description")
 	private String deadlineDescription;
 
-	private Date deadline;
+	@SerializedName("deadline")
+	private String deadline;
 
 	private boolean returnable;
 	@SerializedName("requires_review")
@@ -111,8 +115,8 @@ public class Exercise implements Serializable {
 			throw new NullPointerException(
 					"Given time was null at Exercise.isDeadlineEnded");
 		}
-		if (deadline != null) {
-			return deadline.getTime() < time.getTime();
+		if (getDeadline() != null) {
+			return getDeadline().getTime() < time.getTime();
 		} else {
 			return false;
 		}
@@ -172,11 +176,17 @@ public class Exercise implements Serializable {
 	}
 
 	public Date getDeadline() {
-		return deadline;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+		try {
+			return sdf.parse(deadline);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public void setDeadline(Date deadline) {
-		this.deadline = deadline;
+		this.deadline = deadline.toString();
 	}
 
 	public boolean isReturnable() {
