@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugins.tmc.domain;
+package fi.helsinki.cs.plugin.tmc.domain;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;

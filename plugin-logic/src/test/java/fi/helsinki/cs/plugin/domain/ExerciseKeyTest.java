@@ -10,7 +10,7 @@ import com.google.gson.JsonPrimitive;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.ExerciseKey;
 
-public class exerciseKeyTest {
+public class ExerciseKeyTest {
 
 	private ExerciseKey ek;
 	private ExerciseKey ekDiffExName;

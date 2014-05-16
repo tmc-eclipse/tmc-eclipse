@@ -45,10 +45,10 @@ public final class ExerciseKey {
 	}
 
 	public static class GsonAdapter implements JsonSerializer<ExerciseKey>,
-			JsonDeserializer<ExerciseKey> {
+		JsonDeserializer<ExerciseKey> {
+		
 		@Override
-		public JsonElement serialize(ExerciseKey key, Type type,
-				JsonSerializationContext jsc) {
+		public JsonElement serialize(ExerciseKey key, Type type, JsonSerializationContext jsc) {
 			return new JsonPrimitive(key.toString());
 		}
 
@@ -57,9 +57,8 @@ public final class ExerciseKey {
 				JsonDeserializationContext jdc) throws JsonParseException {
 			String[] parts = je.getAsString().split("/", 2);
 			if (parts.length != 2) {
-				throw new JsonParseException(
-						"Invalid ExerciseKey representation: \""
-								+ je.getAsString() + "\"");
+				throw new JsonParseException("Invalid ExerciseKey representation: \"" 
+												+ je.getAsString() + "\"");
 			}
 			return new ExerciseKey(parts[0], parts[1]);
 		}
