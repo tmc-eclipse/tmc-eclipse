@@ -194,7 +194,6 @@ public class SettingsDialog extends Dialog {
 		
 		
 		addFieldData();
-
 	}
 	
 	private void addFieldData(){
@@ -203,7 +202,6 @@ public class SettingsDialog extends Dialog {
 		passWordText.setText(settings.getPassword());
 		serverAddress.setText(settings.getServerBaseUrl());
 		filePathText.setText(settings.getExerciseFilePath());
-		
 	}
 	
 	private final void setDirectory(String filePath){
