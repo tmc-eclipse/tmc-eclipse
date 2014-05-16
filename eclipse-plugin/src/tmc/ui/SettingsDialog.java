@@ -28,7 +28,7 @@ public class SettingsDialog extends Dialog {
 	private CourseFetcher courseFetcher;
 	private Label lblErrorText;
 	private Button btnSavePassword;
-	private final DirectoryDialog dirDialog;
+	private DirectoryDialog dirDialog;
 	private Button btnCheckFor;
 	private Button btnCheckThat;
 	private Button btnSendSnapshots;
@@ -39,7 +39,6 @@ public class SettingsDialog extends Dialog {
 		setText("Settings");
 		this.settings = settings;
 		this.courseFetcher = courseFetcher;
-		dirDialog = new DirectoryDialog(parent);
 	}
 
 	public Object open() {
@@ -60,6 +59,7 @@ public class SettingsDialog extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(548, 483);
 		shell.setText(getText());
+		dirDialog = new DirectoryDialog(shell);
 		
 		lblErrorText = new Label(shell, SWT.NONE);
 		lblErrorText.setForeground(SWTResourceManager.getColor(SWT.COLOR_LINK_FOREGROUND));

@@ -21,8 +21,7 @@ public class Settings {
 	public static final String PREF_KEY_SPYWARE_ENABLED = "spywareEnabled";
 	public static final String PREF_KEY_DETAILED_SPYWARE_ENABLED = "detailedSpywareEnabled";
 	public static final String PREF_ERROR_MSG_LOCALE = "errorMsgLocale";
-	public static final String[] AVAILABLE_LOCALES = new String[] { "English",
-			"Finnish" };
+	public static final String[] AVAILABLE_LOCALES = new String[] { "English","Finnish" };
 	public static final int DEFAULT_LOCALE_NUM = 1;
 	private Preferences prefs;
 
@@ -90,8 +89,7 @@ public class Settings {
 	}
 
 	public boolean isCheckingForUpdatesInTheBackground() {
-		return prefs.get(PREF_KEY_CHECK_FOR_UPDATES_IN_BACKGROUND, "1").equals(
-				"1");
+		return prefs.get(PREF_KEY_CHECK_FOR_UPDATES_IN_BACKGROUND, "1").equals("1");
 	}
 
 	public void setCheckingForUpdatesInTheBackground(boolean value) {
@@ -99,8 +97,7 @@ public class Settings {
 	}
 
 	public boolean isCheckingForUnopenedAtStartup() {
-		return prefs.get(PREF_KEY_CHECK_FOR_UNOPENED_AT_STARTUP, "1").equals(
-				"1");
+		return prefs.get(PREF_KEY_CHECK_FOR_UNOPENED_AT_STARTUP, "1").equals("1");
 	}
 
 	public void setCheckingForUnopenedAtStartup(boolean value) {
@@ -147,12 +144,11 @@ public class Settings {
 	}
 
 	public int getErrorMsgLocaleNum() {
-		return Integer.parseInt(prefs.get(PREF_ERROR_MSG_LOCALE,
-				""+DEFAULT_LOCALE_NUM));
+		return prefs.getInt(PREF_ERROR_MSG_LOCALE, DEFAULT_LOCALE_NUM);
 	}
 
 	public void setErrorMsgLocale(int localeNum) {
-		prefs.put(PREF_ERROR_MSG_LOCALE, "" + localeNum);
+		prefs.putInt(PREF_ERROR_MSG_LOCALE, localeNum);
 	}
 
 	private Locale parseLocale(String s) {
