@@ -14,6 +14,8 @@ public class Exercise implements Serializable {
 	private String name;
 
 	private String courseName;
+	
+	private Date dateFormatDeadline;
 
 	/**
 	 * The URL this exercise can be downloaded from.
@@ -176,9 +178,16 @@ public class Exercise implements Serializable {
 	}
 
 	public Date getDeadline() {
+		if (dateFormatDeadline == null && ("".equals(deadline) || deadline == null)) {
+			return null;
+		}
+		if (dateFormatDeadline != null){
+			return dateFormatDeadline;
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 		try {
-			return sdf.parse(deadline);
+			dateFormatDeadline = sdf.parse(deadline);
+			return dateFormatDeadline;
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;
@@ -186,7 +195,7 @@ public class Exercise implements Serializable {
 	}
 
 	public void setDeadline(Date deadline) {
-		this.deadline = deadline.toString();
+		this.dateFormatDeadline = deadline;
 	}
 
 	public boolean isReturnable() {

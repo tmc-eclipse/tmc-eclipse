@@ -3,7 +3,7 @@ package fi.helsinki.cs.plugin.tmc.services;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.getJson.UserVisibleException;
+import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.storage.CourseDAO;
 
 public class Courses {

@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson.web;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -22,7 +22,6 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.openide.util.Lookup;
 
-import fi.helsinki.cs.plugin.tmc.getJson.CancellableCallable;
 
 /**
 * Downloads a single file over HTTP into memory while being cancellable.

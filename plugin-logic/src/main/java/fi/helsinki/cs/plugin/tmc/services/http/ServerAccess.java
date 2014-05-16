@@ -1,9 +1,6 @@
-package fi.helsinki.cs.plugin.tmc.getJson.web;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 import java.util.List;
-
-import fi.helsinki.cs.plugin.tmc.getJson.UriUtils;
-import fi.helsinki.cs.plugin.tmc.getJson.UrlExtension;
 
 public class ServerAccess {
 	public static final int API_VERSION = 7;

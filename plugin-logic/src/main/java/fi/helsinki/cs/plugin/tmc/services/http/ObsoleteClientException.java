@@ -1,4 +1,6 @@
-package fi.helsinki.cs.plugin.tmc.getJson;
+package fi.helsinki.cs.plugin.tmc.services.http;
+
+import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 
 public class ObsoleteClientException extends UserVisibleException {
     public ObsoleteClientException() {

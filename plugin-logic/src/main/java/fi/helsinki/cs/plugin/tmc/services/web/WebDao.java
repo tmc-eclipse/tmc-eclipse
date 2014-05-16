@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson;
+package fi.helsinki.cs.plugin.tmc.services.web;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+
 
 public class WebDao {
 	private JsonGetter getter;

@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson.web;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 
 import java.io.UnsupportedEncodingException;
@@ -19,8 +19,6 @@ import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
-import fi.helsinki.cs.plugin.tmc.getJson.CancellableCallable;
 
 public class HttpTasks {
     private UsernamePasswordCredentials credentials = null;

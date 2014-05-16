@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 import java.net.URI;
 import java.net.URISyntaxException;

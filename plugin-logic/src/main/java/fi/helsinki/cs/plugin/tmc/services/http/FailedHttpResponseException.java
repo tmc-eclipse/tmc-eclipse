@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson.web;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 import java.io.IOException;
 import org.apache.http.HttpEntity;

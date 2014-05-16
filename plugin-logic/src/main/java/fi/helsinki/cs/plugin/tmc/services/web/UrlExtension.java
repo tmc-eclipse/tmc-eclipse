@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson;
+package fi.helsinki.cs.plugin.tmc.services.web;
 
 public enum UrlExtension {
 	COURSES("courses.json"),
@@ -12,8 +12,8 @@ public enum UrlExtension {
 	public String getExtension() {
 		return extension;
 	}
+	
 	public String getExtension(String id) {
 		return extension + id + ".json";
-	}
-	
+	}	
 }

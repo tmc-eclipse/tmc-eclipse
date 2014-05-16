@@ -1,17 +1,15 @@
-package fi.helsinki.cs.plugin.tmc.getJson;
+package fi.helsinki.cs.plugin.tmc.services.web;
 
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 
-import fi.helsinki.cs.plugin.tmc.getJson.web.HttpRequestExecutor;
-import fi.helsinki.cs.plugin.tmc.getJson.web.HttpTasks;
-import fi.helsinki.cs.plugin.tmc.getJson.web.ServerAccess;
-
+import fi.helsinki.cs.plugin.tmc.services.http.HttpRequestExecutor;
+import fi.helsinki.cs.plugin.tmc.services.http.HttpTasks;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerAccess;
 
 public class JsonGetter {
 
-	
 	public String getJson(String url){
 		ServerAccess sa = new ServerAccess();
 		HttpTasks tasks = sa.createHttpTasks();

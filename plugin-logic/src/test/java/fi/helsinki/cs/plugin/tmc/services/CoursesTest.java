@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.getJson.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
 public class CoursesTest {

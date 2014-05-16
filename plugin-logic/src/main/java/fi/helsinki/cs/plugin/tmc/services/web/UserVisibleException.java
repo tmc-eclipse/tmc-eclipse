@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.getJson;
+package fi.helsinki.cs.plugin.tmc.services.web;
 
 public class UserVisibleException extends Exception {
     public UserVisibleException(String msg) {
