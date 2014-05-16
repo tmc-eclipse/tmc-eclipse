@@ -21,15 +21,6 @@ public class SettingsTest {
 	}
 	
 	@Test
-	public void returnEmptyStringWhenNotSet(){
-		settings = Settings.getDefaultSettings();
-		assertEquals("", settings.getCurrentCourseName());
-		assertEquals("", settings.getServerBaseUrl());
-		assertEquals("", settings.getPassword());
-		assertEquals("", settings.getUsername());
-	}
-	
-	@Test
 	public void currentCourseReturnsCorrectValueWhenSet(){
 		when(prefs.get(Settings.PREF_KEY_CURRENT_COURSE, "")).thenReturn("correct");
 		assertEquals("correct", settings.getCurrentCourseName());
