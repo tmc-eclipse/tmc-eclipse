@@ -21,36 +21,73 @@ public class SettingsTest {
 	}
 	
 	@Test
-	public void testSavingServerBaseUrl() {
+	public void returnEmptyStringWhenNotSet(){
+		settings = Settings.getDefaultSettings();
+		assertEquals("", settings.getCurrentCourseName());
+		assertEquals("", settings.getServerBaseUrl());
+		assertEquals("", settings.getPassword());
+		assertEquals("", settings.getUsername());
+	}
+	
+	@Test
+	public void currentCourseReturnsCorrectValueWhenSet(){
+		when(prefs.get(Settings.PREF_KEY_CURRENT_COURSE, "")).thenReturn("correct");
+		assertEquals("correct", settings.getCurrentCourseName());
+		verify(prefs, times(1)).get(Settings.PREF_KEY_CURRENT_COURSE, "");
+		verifyNoMoreInteractions(prefs);
+	}
+	
+	@Test
+	public void serverBaseUrlReturnsCorrectValueWhenSet(){
+		when(prefs.get(Settings.PREF_KEY_TMC_SERVER_URL, "")).thenReturn("correct");
+		assertEquals("correct", settings.getServerBaseUrl());
+		verify(prefs, times(1)).get(Settings.PREF_KEY_TMC_SERVER_URL, "");
+		verifyNoMoreInteractions(prefs);
+	}
+	
+	@Test
+	public void usernameReturnsCorrectValueWhenSet(){
+		when(prefs.get(Settings.PREF_KEY_USERNAME, "")).thenReturn("correct");
+		assertEquals("correct", settings.getUsername());
+		verify(prefs, times(1)).get(Settings.PREF_KEY_USERNAME, "");
+		verifyNoMoreInteractions(prefs);
+	}
+	
+	@Test
+	public void passwordReturnsCorrectValueWhenSet(){
+		when(prefs.get(Settings.PREF_KEY_PASSWORD, "")).thenReturn("correct");
+		assertEquals("correct", settings.getPassword());
+		verify(prefs, times(1)).get(Settings.PREF_KEY_PASSWORD, "");
+		verifyNoMoreInteractions(prefs);
+	}
+	
+	@Test
+	public void canSaveServerBaseUrl() {
 		settings.setServerBaseUrl("http://tmc.mooc.fi");
-		
-		when(settings.getServerBaseUrl()).thenReturn("http://tmc.mooc.fi");
-		
-		assertEquals(settings.getServerBaseUrl(), "http://tmc.mooc.fi");
-		
-		verify(prefs).put(eq(Settings.PREF_KEY_TMC_SERVER_URL), eq("http://tmc.mooc.fi"));
+		verify(prefs, times(1)).put(Settings.PREF_KEY_TMC_SERVER_URL, "http://tmc.mooc.fi");
+		verifyNoMoreInteractions(prefs);
+	}
+	
+	@Test
+	public void canSaveCurrentCourse(){
+		settings.setCurrentCourseName("kurssi");
+		verify(prefs, times(1)).put(Settings.PREF_KEY_CURRENT_COURSE, "kurssi");
+		verifyNoMoreInteractions(prefs);
 	}
 
 	@Test
-	public void testSavingUsername() {
+	public void canSaveUsername() {
 		settings.setUsername("matti.meikalainen");
-		when(settings.getUsername()).thenReturn("matti.meikalainen");
-		
-		assertEquals(settings.getUsername(), "matti.meikalainen");
-		
-		verify(prefs).put(eq(Settings.PREF_KEY_USERNAME), eq("matti.meikalainen"));
+		verify(prefs, times(1)).put(Settings.PREF_KEY_USERNAME, "matti.meikalainen");
+		verifyNoMoreInteractions(prefs);
 	}
 	
 	@Test
-	public void testSavingPassword() {
+	public void canSavePassword() {
 		settings.setPassword("password123");
-		when(settings.getPassword()).thenReturn("password123");
-		
-		assertEquals(settings.getPassword(), "password123");
-		
-		verify(prefs).put(eq(Settings.PREF_KEY_PASSWORD), eq("password123"));
+		verify(prefs, times(1)).put(Settings.PREF_KEY_PASSWORD, "password123");
+		verifyNoMoreInteractions(prefs);
 	}
-	
 	
 	@Test
 	public void testSavingFailure() throws BackingStoreException{
