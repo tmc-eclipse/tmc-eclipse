@@ -51,13 +51,13 @@
 			<artifactId>httpmime</artifactId>
 			<version>4.3.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.4</version>
 		</dependency>
-            
+
 
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -111,6 +111,13 @@
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
+					<instrumentation>					
+						<excludes>
+							<!-- EXCLUDE INTERFACES FROM CODE COVERAGE REPORTS -->
+							<exclude>fi/helsinki/cs/plugin/tmc/io/IO.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/storage/CourseDAO.class</exclude>
+						</excludes>
+					</instrumentation>
 					<formats>
 						<format>xml</format>
 						<format>html</format>

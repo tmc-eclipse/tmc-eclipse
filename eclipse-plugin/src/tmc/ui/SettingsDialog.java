@@ -1,6 +1,7 @@
 package tmc.ui;
 
 import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
@@ -22,16 +23,23 @@ public class SettingsDialog extends Dialog {
 	private Text userNameText;
 	private Text passWordText;
 	private Text serverAddress;
-	private Text text;
+	private Text filePathText;
 	private Settings settings;
 	private CourseFetcher courseFetcher;
 	private Label lblErrorText;
+	private Button btnSavePassword;
+	private final DirectoryDialog dirDialog;
+	private Button btnCheckFor;
+	private Button btnCheckThat;
+	private Button btnSendSnapshots;
+	private Combo localeList;
 
 	public SettingsDialog(Shell parent, int style, Settings settings, CourseFetcher courseFetcher) {
 		super(parent, style);
 		setText("Settings");
 		this.settings = settings;
 		this.courseFetcher = courseFetcher;
+		dirDialog = new DirectoryDialog(parent);
 	}
 
 	public Object open() {
@@ -56,7 +64,7 @@ public class SettingsDialog extends Dialog {
 		lblErrorText = new Label(shell, SWT.NONE);
 		lblErrorText.setForeground(SWTResourceManager.getColor(SWT.COLOR_LINK_FOREGROUND));
 		lblErrorText.setBounds(10, 10, 430, 17);
-		lblErrorText.setText("");
+		
 		
 		Label lblUserName = new Label(shell, SWT.NONE);
 		lblUserName.setBounds(10, 44, 77, 17);
@@ -64,7 +72,7 @@ public class SettingsDialog extends Dialog {
 		
 		userNameText = new Text(shell, SWT.BORDER);
 		userNameText.setBounds(154, 44, 259, 27);
-		userNameText.setText(settings.getUsername());
+		
 		
 		Label lblPassword = new Label(shell, SWT.NONE);
 		lblPassword.setBounds(10, 83, 70, 17);
@@ -72,7 +80,7 @@ public class SettingsDialog extends Dialog {
 		
 		passWordText = new Text(shell, SWT.BORDER | SWT.PASSWORD);
 		passWordText.setBounds(154, 77, 259, 27);
-		passWordText.setText(settings.getPassword());
+		
 		
 		Label lblServerAddress = new Label(shell, SWT.NONE);
 		lblServerAddress.setText("Server Address");
@@ -80,9 +88,9 @@ public class SettingsDialog extends Dialog {
 		
 		serverAddress = new Text(shell, SWT.BORDER);
 		serverAddress.setBounds(154, 110, 386, 27);
-		serverAddress.setText(settings.getServerBaseUrl());
 		
-		Button btnSavePassword = new Button(shell, SWT.CHECK);
+		
+		btnSavePassword = new Button(shell, SWT.CHECK);
 		btnSavePassword.setBounds(419, 77, 131, 24);
 		btnSavePassword.setText("Save Password");
 		
@@ -93,6 +101,7 @@ public class SettingsDialog extends Dialog {
 		Combo combo = new Combo(shell, SWT.READ_ONLY);
 		combo.setBounds(154, 143, 259, 29);
 		combo.setItems(courseFetcher.getCourseNames());
+		
 		
 		Button btnRefreshCourses = new Button(shell, SWT.NONE);
 		btnRefreshCourses.setBounds(419, 143, 121, 29);
@@ -129,38 +138,47 @@ public class SettingsDialog extends Dialog {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 		      @Override
 		      public void widgetSelected(SelectionEvent e) {
-		    	settings.setUsername(userNameText.getText());
-		    	settings.setPassword(passWordText.getText());
-		    	settings.setServerBaseUrl(serverAddress.getText());
-		    	settings.save();
+		    	saveSettings();
 		        shell.close();
 		      }
 		    });
 		
-		text = new Text(shell, SWT.BORDER | SWT.READ_ONLY);
-		text.setBounds(154, 206, 259, 27);
+		filePathText = new Text(shell, SWT.BORDER | SWT.READ_ONLY);
+		filePathText.setBounds(154, 206, 259, 27);
 		
 		Button btnBrowse = new Button(shell, SWT.NONE);
 		btnBrowse.setText("Browse...");
 		btnBrowse.setBounds(419, 204, 121, 29);
+		btnBrowse.addSelectionListener(new SelectionAdapter() {
+		      @Override
+		      public void widgetSelected(SelectionEvent e) {
+		    	String filePath = dirDialog.open();
+		    	if(filePath != null){
+		    		settings.setExerciseFilePath(filePath);
+		    		setDirectory(filePath);
+		    	}
+		      }
+		    });
 		
 		Label label_1 = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_1.setBounds(10, 239, 530, 2);
 		
-		Button btnCheckFor = new Button(shell, SWT.CHECK);
-		btnCheckFor.setSelection(true);
+		btnCheckFor = new Button(shell, SWT.CHECK);
 		btnCheckFor.setText("Check for new or updated exercises regularly");
 		btnCheckFor.setBounds(10, 263, 403, 24);
+		btnCheckFor.setSelection(settings.isCheckingForUpdatesInTheBackground());
 		
-		Button btnCheckThat = new Button(shell, SWT.CHECK);
+		btnCheckThat = new Button(shell, SWT.CHECK);
 		btnCheckThat.setSelection(true);
 		btnCheckThat.setText("Check that all active active exercises are open on startup");
 		btnCheckThat.setBounds(10, 293, 430, 24);
+		btnCheckThat.setSelection(settings.isCheckingForUnopenedAtStartup());
 		
-		Button btnSendSnapshotsOf = new Button(shell, SWT.CHECK);
-		btnSendSnapshotsOf.setText("Send snapshots of your progress for study");
-		btnSendSnapshotsOf.setSelection(true);
-		btnSendSnapshotsOf.setBounds(10, 323, 430, 24);
+		btnSendSnapshots = new Button(shell, SWT.CHECK);
+		btnSendSnapshots.setText("Send snapshots of your progress for study");
+		btnSendSnapshots.setSelection(true);
+		btnSendSnapshots.setBounds(10, 323, 430, 24);
+		btnSendSnapshots.setSelection(settings.isSpywareEnabled());
 		
 		Label label_2 = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_2.setBounds(10, 353, 530, 2);
@@ -169,10 +187,38 @@ public class SettingsDialog extends Dialog {
 		lblPreferredErrorMessage.setText("Preferred error message language");
 		lblPreferredErrorMessage.setBounds(10, 376, 236, 17);
 		
-		Combo combo_1 = new Combo(shell, SWT.READ_ONLY);
-		combo_1.setItems(new String[] {"English", "Finnish"});
-		combo_1.setBounds(252, 375, 284, 29);
-		combo_1.select(1);
+	    localeList = new Combo(shell, SWT.READ_ONLY);
+	    localeList.setItems(settings.getAvailabelLocales());
+	    localeList.setBounds(252, 375, 284, 29);
+	    localeList.select(settings.getErrorMsgLocaleNum());
+		
+		
+		addFieldData();
 
+	}
+	
+	private void addFieldData(){
+		lblErrorText.setText("");
+		userNameText.setText(settings.getUsername());
+		passWordText.setText(settings.getPassword());
+		serverAddress.setText(settings.getServerBaseUrl());
+		filePathText.setText(settings.getExerciseFilePath());
+		
+	}
+	
+	private final void setDirectory(String filePath){
+		filePathText.setText(filePath);
+	}
+	
+	private final void saveSettings() {
+		settings.setUsername(userNameText.getText());
+    	settings.setPassword(passWordText.getText());
+    	settings.setServerBaseUrl(serverAddress.getText());
+    	settings.setExerciseFilePath(filePathText.getText());
+    	settings.setCheckingForUpdatesInTheBackground(btnCheckFor.getSelection());
+    	settings.setCheckingForUnopenedAtStartup(btnCheckThat.getSelection());
+    	settings.setIsSpywareEnabled(btnSendSnapshots.getSelection());
+    	settings.setErrorMsgLocale(localeList.getSelectionIndex());
+    	settings.save();
 	}
 }
