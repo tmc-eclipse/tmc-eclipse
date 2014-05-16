@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.localcoursestorage;
+package fi.helsinki.cs.plugin.tmc.storage;
 
 import static org.mockito.Mockito.*;
 
