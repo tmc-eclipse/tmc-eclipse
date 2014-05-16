@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +25,10 @@ public class LocalCourseStorageTest {
 	}
 	
 	@Test
-	public void loadReturnsNullIfFileDoesntExist() {
+	public void loadReturnsEmptyListIfFileDoesntExist() {
 		when(io.exists()).thenReturn(false);
 		
-		assertNull(lcs.load());
+		assertTrue(lcs.load() != null && lcs.load() instanceof List && lcs.load().size() == 0);
 	}
 	
 	@Test
