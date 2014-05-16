@@ -3,10 +3,11 @@ package fi.helsinki.cs.plugin.tmc.storage;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.getJson.UserVisibleException;
 
 public interface CourseDAO {
 
-	public List<Course> load();
-	public void save(List<Course> courses);
+	public List<Course> load() throws UserVisibleException;
+	public void save(List<Course> courses) throws UserVisibleException;
 	
 }

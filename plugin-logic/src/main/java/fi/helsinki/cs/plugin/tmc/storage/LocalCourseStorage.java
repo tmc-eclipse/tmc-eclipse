@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.domain.ExerciseKey;
+import fi.helsinki.cs.plugin.tmc.getJson.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.io.IO;
 
 public class LocalCourseStorage implements CourseDAO {
@@ -22,20 +25,22 @@ public class LocalCourseStorage implements CourseDAO {
 	
 	public LocalCourseStorage(IO io) {
 		this.io = io;
-		this.gson = new Gson();
+		this.gson = new GsonBuilder()
+			.serializeNulls()
+			.setPrettyPrinting()
+			.registerTypeAdapter(ExerciseKey.class, new ExerciseKey.GsonAdapter())
+			.create();
 	}
 	
 	@Override
-	public List<Course> load() {
+	public List<Course> load() throws UserVisibleException {
 		if(!io.exists()) {
-			// TODO: throw new UserVisibleException
-			return new ArrayList<Course>();
+			throw new UserVisibleException("Could not load course data from local storage.");
 		}
 		
 		Reader reader = io.getReader();
 		if(reader == null) {
-			// TODO: throw new UserVisibleException
-			return new ArrayList<Course>();
+			throw new UserVisibleException("Could not load course data from local storage.");
 		}
 		
 		CoursesFileFormat courseList = gson.fromJson(io.getReader(), CoursesFileFormat.class);
@@ -49,19 +54,17 @@ public class LocalCourseStorage implements CourseDAO {
 	}
 
 	@Override
-	public void save(List<Course> courses) {
+	public void save(List<Course> courses) throws UserVisibleException {
 		CoursesFileFormat courseList = new CoursesFileFormat();
 		courseList.courses = courses;
 		
 		if(io == null){
-			// TODO: throw new UserVisibleException
-			return;
+			throw new UserVisibleException("Could not save course data to local storage.");
 		}
 		
 		Writer writer = io.getWriter();
 		if(writer == null) {
-			// TODO: throw new UserVisibleException
-			return;
+			throw new UserVisibleException("Could not save course data to local storage.");
 		}
 		
 		gson.toJson(courseList, writer);
@@ -69,4 +72,5 @@ public class LocalCourseStorage implements CourseDAO {
 			writer.close();
 		} catch(IOException e) {}
 	}
+	
 }
