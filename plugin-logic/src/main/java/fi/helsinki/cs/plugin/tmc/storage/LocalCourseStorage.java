@@ -35,7 +35,7 @@ public class LocalCourseStorage implements CourseDAO {
 	@Override
 	public List<Course> load() throws UserVisibleException {
 		if(!io.exists()) {
-			throw new UserVisibleException("Could not load course data from local storage.");
+			return new ArrayList<Course>();
 		}
 		
 		Reader reader = io.getReader();

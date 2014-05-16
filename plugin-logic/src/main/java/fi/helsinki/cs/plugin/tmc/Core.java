@@ -1,31 +1,23 @@
 package fi.helsinki.cs.plugin.tmc;
 
-import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
+import fi.helsinki.cs.plugin.tmc.services.Courses;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
-
-import java.util.ArrayList;
-import java.util.List;
+import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
+import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
 public class Core {
 
-private List<Course> courses;
-private Settings settings;
-private CourseFetcher courseFetcher;
+	private Settings settings;
+	private CourseFetcher courseFetcher;
 
 	public Core() {
-		
 		settings = Settings.getDefaultSettings();
-		courseFetcher = new CourseFetcher();
-		generateDummyCourses();
-		
-		
-	}
-	
-	private void generateDummyCourses(){
-		courses = new ArrayList<Course>();
-		for(int i = 0; i < 5; i++){
-			courses.add(new Course("Kurssi"+i));
+		try {
+			courseFetcher = new CourseFetcher(new Courses(new LocalCourseStorage(new FileIO("courses.tmp"))));
+		} catch (UserVisibleException e) {
+			System.out.println("Virhe");
 		}
 	}
 	
