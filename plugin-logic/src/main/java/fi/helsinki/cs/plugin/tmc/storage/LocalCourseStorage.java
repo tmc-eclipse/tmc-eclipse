@@ -1,9 +1,9 @@
 package fi.helsinki.cs.plugin.tmc.storage;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -28,12 +28,14 @@ public class LocalCourseStorage implements CourseDAO {
 	@Override
 	public List<Course> load() {
 		if(!io.exists()) {
-			return new List<Course>();
+			// TODO: throw new UserVisibleException
+			return new ArrayList<Course>();
 		}
 		
 		Reader reader = io.getReader();
 		if(reader == null) {
-			return null;
+			// TODO: throw new UserVisibleException
+			return new ArrayList<Course>();
 		}
 		
 		CoursesFileFormat courseList = gson.fromJson(io.getReader(), CoursesFileFormat.class);
@@ -52,11 +54,13 @@ public class LocalCourseStorage implements CourseDAO {
 		courseList.courses = courses;
 		
 		if(io==null){
-			
+			// TODO: throw new UserVisibleException
+			return;
 		}
 		
 		Writer writer = io.getWriter();
 		if(writer == null) {
+			// TODO: throw new UserVisibleException
 			return;
 		}
 		

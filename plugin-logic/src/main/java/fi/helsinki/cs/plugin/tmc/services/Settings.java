@@ -67,7 +67,7 @@ public class Settings {
 	
 	/**
 	 * Forces the changes to be saved on a persistent store.
-	 * @return true if the changes are saved succesfully, false if an exception occurred.
+	 * @return true if the changes are saved successfully, false if an exception occurred.
 	 */
 	public boolean save() {
 		try {
