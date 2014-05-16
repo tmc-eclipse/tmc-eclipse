@@ -89,31 +89,31 @@ public class Settings {
 	}
 
 	public boolean isCheckingForUpdatesInTheBackground() {
-		return prefs.get(PREF_KEY_CHECK_FOR_UPDATES_IN_BACKGROUND, "1").equals("1");
+		return prefs.getBoolean(PREF_KEY_CHECK_FOR_UPDATES_IN_BACKGROUND, true);
 	}
 
 	public void setCheckingForUpdatesInTheBackground(boolean value) {
-		prefs.put(PREF_KEY_CHECK_FOR_UPDATES_IN_BACKGROUND, value ? "1" : "0");
+		prefs.putBoolean(PREF_KEY_CHECK_FOR_UPDATES_IN_BACKGROUND, value);
 	}
 
 	public boolean isCheckingForUnopenedAtStartup() {
-		return prefs.get(PREF_KEY_CHECK_FOR_UNOPENED_AT_STARTUP, "1").equals("1");
+		return prefs.getBoolean(PREF_KEY_CHECK_FOR_UNOPENED_AT_STARTUP, true);
 	}
 
 	public void setCheckingForUnopenedAtStartup(boolean value) {
-		prefs.put(PREF_KEY_CHECK_FOR_UNOPENED_AT_STARTUP, value ? "1" : "0");
+		prefs.putBoolean(PREF_KEY_CHECK_FOR_UNOPENED_AT_STARTUP, value);
 	}
 
 	public boolean isSpywareEnabled() {
-		return prefs.get(PREF_KEY_SPYWARE_ENABLED, "").equals("1");
+		return prefs.getBoolean(PREF_KEY_SPYWARE_ENABLED, true);
 	}
 
 	public void setIsSpywareEnabled(boolean value) {
-		prefs.put(PREF_KEY_SPYWARE_ENABLED, value ? "1" : "0");
+		prefs.putBoolean(PREF_KEY_SPYWARE_ENABLED, value);
 	}
 
 	public boolean isDetailedSpywareEnabled() {
-		return prefs.get(PREF_KEY_DETAILED_SPYWARE_ENABLED, "").equals("1");
+		return prefs.getBoolean(PREF_KEY_DETAILED_SPYWARE_ENABLED, true);
 	}
 
 	public int getDefaultLocaleNum() {
