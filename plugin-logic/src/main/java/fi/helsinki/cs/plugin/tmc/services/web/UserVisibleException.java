@@ -1,6 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.services.web;
 
-public class UserVisibleException extends Exception {
+public class UserVisibleException extends RuntimeException {
     public UserVisibleException(String msg) {
         super(msg);
     }

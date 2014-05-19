@@ -9,13 +9,15 @@ import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
 public class ProductionFactory {
 
+	private static ProductionFactory factory;
+	
 	public static final String LOCAL_COURSES_PATH = "courses.tmp";
 	
 	private Settings settings;
 	private Courses courses;
 	private CourseFetcher courseFetcher;
 	
-	public ProductionFactory() throws UserVisibleException {
+	private ProductionFactory() throws UserVisibleException {
 		this.settings = Settings.getDefaultSettings();
 		this.courses = new Courses(new LocalCourseStorage(new FileIO(LOCAL_COURSES_PATH)));
 		this.courseFetcher = new CourseFetcher(courses);
@@ -31,6 +33,13 @@ public class ProductionFactory {
 	
 	public CourseFetcher getCourseFetcher() {
 		return courseFetcher;
+	}
+	
+	public static ProductionFactory getInstance() {
+		if(factory == null) {
+			factory = new ProductionFactory();
+		}
+		return factory;
 	}
 	
 }
