@@ -9,7 +9,7 @@ public class Core {
 	private ProductionFactory factory;
 
 	public Core() throws UserVisibleException {
-		this.factory = new ProductionFactory();
+		this.factory = ProductionFactory.getInstance();
 	}
 	
 	public Settings getSettings(){
