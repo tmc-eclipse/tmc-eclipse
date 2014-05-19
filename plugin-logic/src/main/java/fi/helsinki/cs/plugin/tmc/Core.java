@@ -12,7 +12,7 @@ public class Core {
 	public Core(ErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 		try {
-			this.factory = new ProductionFactory();
+			this.factory = ProductionFactory.getInstance();
 		} catch (UserVisibleException e) {
 			errorHandler.handleException(e);
 		}
