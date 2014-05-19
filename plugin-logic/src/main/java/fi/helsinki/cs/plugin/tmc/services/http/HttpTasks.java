@@ -1,6 +1,5 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
-
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;

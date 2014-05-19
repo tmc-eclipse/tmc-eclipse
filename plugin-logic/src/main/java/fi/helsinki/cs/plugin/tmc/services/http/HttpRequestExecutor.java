@@ -144,8 +144,8 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
     }
 
     /**
-* May be called from another thread to cancel an ongoing download.
-*/
+     * May be called from another thread to cancel an ongoing download.
+     */
     @Override
     public boolean cancel() {
         synchronized (shutdownLock) {

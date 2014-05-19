@@ -1,7 +1,5 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
-import java.util.List;
-
 public class ServerAccess {
 	public static final int API_VERSION = 7;
 	
