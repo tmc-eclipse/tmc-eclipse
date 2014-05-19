@@ -9,7 +9,7 @@ public class Core {
 	
 	private static Core core;
 	
-	private ErrorHandler errorHandler;
+	private MyLittleErrorHandler errorHandler;
 	private Settings settings;
 	private CourseFetcher courseFetcher;
 
@@ -19,11 +19,11 @@ public class Core {
 		this.courseFetcher = factory.getCourseFetcher();
 	}
 	
-	public static void setErrorHandler(ErrorHandler errorHandler) {
+	public static void setMyLittleErrorHandler(MyLittleErrorHandler errorHandler) {
 		Core.getInstance().errorHandler = errorHandler;
 	}
 	
-	public static ErrorHandler getErrorHandler() {
+	public static MyLittleErrorHandler getErrorHandler() {
 		return Core.getInstance().errorHandler;
 	}
 	
