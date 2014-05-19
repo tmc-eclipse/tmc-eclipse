@@ -7,9 +7,19 @@ import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 public class Core {
 	
 	private ProductionFactory factory;
+	private ErrorHandler errorHandler;
 
-	public Core() throws UserVisibleException {
-		this.factory = new ProductionFactory();
+	public Core(ErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
+		try {
+			this.factory = new ProductionFactory();
+		} catch (UserVisibleException e) {
+			errorHandler.handleException(e);
+		}
+	}
+	
+	public ErrorHandler getErrorHandler(){
+		return errorHandler;
 	}
 	
 	public Settings getSettings(){
