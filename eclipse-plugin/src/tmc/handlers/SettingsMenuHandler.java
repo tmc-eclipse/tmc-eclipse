@@ -19,6 +19,7 @@ public class SettingsMenuHandler extends AbstractHandler {
 		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET, core.getSettings(), core.getCourseFetcher());
 		dialog.open();
 		
+		
 		return null;
 	}
 }

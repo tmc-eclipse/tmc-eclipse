@@ -7,6 +7,7 @@ public class Core {
 	
 	private static Core core;
 	
+	private ErrorHandler errorHandler;
 	private Settings settings;
 	private CourseFetcher courseFetcher;
 
@@ -14,6 +15,14 @@ public class Core {
 		ServiceFactory factory = new ServiceFactory();
 		this.settings = factory.getSettings();
 		this.courseFetcher = factory.getCourseFetcher();
+	}
+	
+	public static void setErrorHandler(ErrorHandler errorHandler) {
+		Core.getInstance().errorHandler = errorHandler;
+	}
+	
+	public static ErrorHandler getErrorHandler() {
+		return Core.getInstance().errorHandler;
 	}
 	
 	public static Settings getSettings(){
@@ -30,5 +39,5 @@ public class Core {
 		}
 		return core;
 	}
-	
+
 }
