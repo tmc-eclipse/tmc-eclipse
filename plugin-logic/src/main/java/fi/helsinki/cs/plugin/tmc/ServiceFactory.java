@@ -4,20 +4,17 @@ import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Courses;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
-import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
-public class ProductionFactory {
+public class ServiceFactory {
 
-	private static ProductionFactory factory;
-	
 	public static final String LOCAL_COURSES_PATH = "courses.tmp";
 	
 	private Settings settings;
 	private Courses courses;
 	private CourseFetcher courseFetcher;
 	
-	private ProductionFactory() throws UserVisibleException {
+	public ServiceFactory() {
 		this.settings = Settings.getDefaultSettings();
 		this.courses = new Courses(new LocalCourseStorage(new FileIO(LOCAL_COURSES_PATH)));
 		this.courseFetcher = new CourseFetcher(courses);
@@ -33,13 +30,6 @@ public class ProductionFactory {
 	
 	public CourseFetcher getCourseFetcher() {
 		return courseFetcher;
-	}
-	
-	public static ProductionFactory getInstance() {
-		if(factory == null) {
-			factory = new ProductionFactory();
-		}
-		return factory;
 	}
 	
 }

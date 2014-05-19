@@ -2,22 +2,33 @@ package fi.helsinki.cs.plugin.tmc;
 
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
-import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 
 public class Core {
 	
-	private ProductionFactory factory;
+	private static Core core;
+	
+	private Settings settings;
+	private CourseFetcher courseFetcher;
 
-	public Core() throws UserVisibleException {
-		this.factory = ProductionFactory.getInstance();
+	private Core() {
+		ServiceFactory factory = new ServiceFactory();
+		this.settings = factory.getSettings();
+		this.courseFetcher = factory.getCourseFetcher();
 	}
 	
-	public Settings getSettings(){
-		return factory.getSettings();
+	public static Settings getSettings(){
+		return Core.getInstance().settings;
 	}
 	
-	public CourseFetcher getCourseFetcher(){
-		return factory.getCourseFetcher();
+	public static CourseFetcher getCourseFetcher(){
+		return Core.getInstance().courseFetcher;
+	}
+	
+	public static Core getInstance() {
+		if(core == null) {
+			core = new Core();
+		}
+		return core;
 	}
 	
 }
