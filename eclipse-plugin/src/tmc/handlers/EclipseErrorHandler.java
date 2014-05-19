@@ -2,12 +2,11 @@ package tmc.handlers;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-
 import fi.helsinki.cs.plugin.tmc.ErrorHandler;
 
 public class EclipseErrorHandler implements ErrorHandler {
-	private Shell parent;
 	
+	private Shell parent;
 	
 	public EclipseErrorHandler(Shell parent){
 		this.parent = parent;

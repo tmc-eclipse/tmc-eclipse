@@ -1,8 +1,8 @@
 package tmc.handlers;
 
 import org.eclipse.ui.PlatformUI;
-
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.ErrorHandler;
 
 public class CoreInitializer {
 
