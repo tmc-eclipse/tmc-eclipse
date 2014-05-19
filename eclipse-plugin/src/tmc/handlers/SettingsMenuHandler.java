@@ -14,9 +14,8 @@ public class SettingsMenuHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		Core core = CoreInitializer.getCore();
 		
-		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET, core.getSettings(), core.getCourseFetcher());
+		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET);
 		dialog.open();
 		
 		

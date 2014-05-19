@@ -1,14 +1,17 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
+import fi.helsinki.cs.plugin.tmc.services.Settings;
+
 public class ServerAccess {
 	public static final int API_VERSION = 7;
+	private Settings settings = Settings.getDefaultSettings();
 	
 	private static String getClientVersion() {
 		return "0.0.1";
 	}
 
 	public String getUrl(String extension) {
-		return addApiCallQueryParameters("http://tmc.mooc.fi/test/" + extension);
+		return addApiCallQueryParameters(settings.getServerBaseUrl() +"/"+ extension);
 	}
 
 	private String addApiCallQueryParameters(String url) {
@@ -19,7 +22,7 @@ public class ServerAccess {
 	}
 
 	public HttpTasks createHttpTasks() {
-		return new HttpTasks().setCredentials("tmc-eclipse", "testUser1"); // kovakoodattu!
+		return new HttpTasks().setCredentials(settings.getUsername(), settings.getPassword());
 	}
 	
 

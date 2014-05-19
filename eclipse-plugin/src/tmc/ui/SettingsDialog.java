@@ -1,5 +1,7 @@
 package tmc.ui;
 
+import java.io.File;
+
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
@@ -33,9 +36,12 @@ public class SettingsDialog extends Dialog {
 	private Button btnCheckThat;
 	private Button btnSendSnapshots;
 	private Combo localeList;
+	private Combo combo;
 
-	public SettingsDialog(Shell parent, int style, Settings settings, CourseFetcher courseFetcher) {
+	public SettingsDialog(Shell parent, int style) {
 		super(parent, style);
+		settings = Core.getSettings();
+		courseFetcher = Core.getCourseFetcher();
 		setText("Settings");
 		this.settings = settings;
 		this.courseFetcher = courseFetcher;
@@ -98,9 +104,9 @@ public class SettingsDialog extends Dialog {
 		lblCurrentCourse.setText("Current course");
 		lblCurrentCourse.setBounds(10, 151, 123, 17);
 		
-		Combo combo = new Combo(shell, SWT.READ_ONLY);
+		combo = new Combo(shell, SWT.READ_ONLY);
 		combo.setBounds(154, 143, 259, 29);
-		combo.setItems(courseFetcher.getCourseNames());
+		
 		
 		
 		Button btnRefreshCourses = new Button(shell, SWT.NONE);
@@ -109,8 +115,12 @@ public class SettingsDialog extends Dialog {
 		btnRefreshCourses.addSelectionListener(new SelectionAdapter() {
 		      @Override
 		      public void widgetSelected(SelectionEvent e) {
-		    	courseFetcher.updateCourses();
-		        lblErrorText.setText("Senkin idiootti");
+		    	  settings.setUsername(userNameText.getText());
+		    	  settings.setPassword(passWordText.getText());
+		    	  settings.setServerBaseUrl(serverAddress.getText());
+			      courseFetcher.updateCourses();
+			      combo.setItems(courseFetcher.getCourseNames());
+	//		      lblErrorText.setText("Senkin idiootti");
 		      }
 		    });
 		

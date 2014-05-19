@@ -6,20 +6,11 @@ import fi.helsinki.cs.plugin.tmc.Core;
 
 public class CoreInitializer {
 
-	private static Core core;
-
 	public CoreInitializer() {
-
+		Core.setErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()));
 	}
-
-	public static Core getCore() {
-		if (core == null) {
-			core = new Core(new EclipseErrorHandler(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getShell()));
-
-			return core;
-		} else {
-			return core;
-		}
+	
+	public static Core getCore(){
+		return Core.getInstance();
 	}
 }

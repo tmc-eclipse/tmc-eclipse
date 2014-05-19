@@ -14,6 +14,7 @@ public class JsonGetter {
 		ServerAccess sa = new ServerAccess();
 		HttpTasks tasks = sa.createHttpTasks();
 		url = sa.getUrl(url);
+		System.out.println(url);
 		HttpRequestExecutor hre =  tasks.createExecutor(url);
 		try {
 			InputStream is = hre.call().getContent();

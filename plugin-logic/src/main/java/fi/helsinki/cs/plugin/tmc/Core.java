@@ -1,5 +1,7 @@
 package fi.helsinki.cs.plugin.tmc;
 
+import org.xml.sax.ErrorHandler;
+
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 

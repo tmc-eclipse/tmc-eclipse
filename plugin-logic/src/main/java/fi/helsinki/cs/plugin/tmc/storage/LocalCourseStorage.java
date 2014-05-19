@@ -72,5 +72,5 @@ public class LocalCourseStorage implements CourseDAO {
 			writer.close();
 		} catch(IOException e) {}
 	}
-	
+
 }

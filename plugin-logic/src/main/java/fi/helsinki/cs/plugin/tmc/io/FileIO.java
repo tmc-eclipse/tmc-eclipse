@@ -44,4 +44,8 @@ public class FileIO implements IO {
 		}
 	}
 	
+	public void clear(){
+		
+	}
+	
 }

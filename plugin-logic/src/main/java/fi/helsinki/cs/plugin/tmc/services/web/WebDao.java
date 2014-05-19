@@ -1,5 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.services.web;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class WebDao {
 	public List<Course> getCourses(){
 		String bodyText = getter.getJson(UrlExtension.COURSES.getExtension());
 		CourseList cl = mapper.fromJson(bodyText, CourseList.class);
+		System.out.println("WebDAO"+cl);
+		if(cl == null){
+			return new ArrayList<Course>();
+		}
 		return Arrays.asList(cl.getCourses());
 	}
 	
