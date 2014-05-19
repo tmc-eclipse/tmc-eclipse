@@ -21,17 +21,6 @@ public class ExcerciseTest {
 	public void setUp() {
 		exercise = new Exercise();
 	}
-	/*
-	 * 	public Exercise(String name) {
-		this(name, "unknown-course");
-	}
-
-	public Exercise(String name, String courseName) {
-		this.name = name;
-		this.courseName = courseName;
-	}
-
-	 * */
 	
 	@Test
 	public void constructorSetsNameFieldCorrectly() {
@@ -158,6 +147,27 @@ public class ExcerciseTest {
 		exercise.setReturnable(false);
 		assertFalse(exercise.isReturnable());
 	}
+	
+	@Test
+	public void deadlineIsNonNullAfterCallingFinalizeDeSerialization() {
+		exercise.setDeadlineString("2012-03-20T20:34:00+0200");
+		exercise.finalizeDeserialization();
+		assertNotNull(exercise.getDeadline());
+	}
+	
+	@Test
+	public void deadlineIsNullAfterCallingFinalizeDeSerialization() {
+		exercise.setDeadlineString("2012-03-20T20:34:00+0200");
+		assertNull(exercise.getDeadline());
+	}
+	
+	@Test
+	public void deadlineIsNullAfterCallingFinalizeDeSerializationAndStringIsEmpty() {
+		exercise.setDeadlineString("");
+		assertNull(exercise.getDeadline());
+	}
+	
+	
 }
 
 

@@ -27,6 +27,12 @@ public class WebDao {
 	public List<Exercise> getExercises(String courseId) {
 		String bodyText = getter.getJson(UrlExtension.EXERCISES.getExtension(courseId));
 		ExerciseList el = mapper.fromJson(bodyText, ExerciseList.class);
-		return el.getExercises();
+		List<Exercise> exercises = el.getExercises();
+		
+		// convert date string to Date object 
+		for (Exercise e : exercises) {
+			e.finalizeDeserialization();			
+		}
+		return exercises;
 	}
 }

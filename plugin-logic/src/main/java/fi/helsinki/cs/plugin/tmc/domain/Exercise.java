@@ -2,6 +2,8 @@ package fi.helsinki.cs.plugin.tmc.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +17,10 @@ public class Exercise implements Serializable {
 
 	private String courseName;
 	
-	private Date dateFormatDeadline;
+	private Date deadlineDate;
+	
+	@SerializedName("deadline")
+	private String deadlineString;
 
 	/**
 	 * The URL this exercise can be downloaded from.
@@ -40,8 +45,6 @@ public class Exercise implements Serializable {
 	@SerializedName("deadline_description")
 	private String deadlineDescription;
 
-	@SerializedName("deadline")
-	private String deadline;
 
 	private boolean returnable;
 	@SerializedName("requires_review")
@@ -67,6 +70,29 @@ public class Exercise implements Serializable {
 	public Exercise(String name, String courseName) {
 		this.name = name;
 		this.courseName = courseName;
+	}
+	/**
+	 * This method exists because api used by the original tmc plugin was deprecated.
+	 * Basically originally Date constructor accepted strings that contained date and it parsed them,
+	 * however this functionality has now been split to SimpleDateFormat class. 
+	 * As such we deserialize the date to separate string and then call this method to create Date-object 
+	 * from the string
+	 */
+	public void finalizeDeserialization() {
+		if (deadlineString == null || deadlineString.equals("")) {
+			return;
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+		try {
+			deadlineDate = sdf.parse(deadlineString);
+		} catch (ParseException e) {
+			// error logging perhaps?
+		}
+	}
+	
+	public void setDeadlineString(String deadline) {
+		deadlineString = deadline;	
 	}
 
 	public int getId() {
@@ -176,24 +202,11 @@ public class Exercise implements Serializable {
 	}
 
 	public Date getDeadline() {
-		if (dateFormatDeadline == null && ("".equals(deadline) || deadline == null)) {
-			return null;
-		}
-		if (dateFormatDeadline != null){
-			return dateFormatDeadline;
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-		try {
-			dateFormatDeadline = sdf.parse(deadline);
-			return dateFormatDeadline;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return deadlineDate;
 	}
 
 	public void setDeadline(Date deadline) {
-		this.dateFormatDeadline = deadline;
+		this.deadlineDate = deadline;
 	}
 
 	public boolean isReturnable() {
