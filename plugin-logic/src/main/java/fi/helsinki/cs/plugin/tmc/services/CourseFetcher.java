@@ -3,8 +3,8 @@ package fi.helsinki.cs.plugin.tmc.services;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class CourseFetcher {
 	

@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.ExerciseKey;
 import fi.helsinki.cs.plugin.tmc.io.IO;
-import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class LocalCourseStorage implements CourseDAO {
 

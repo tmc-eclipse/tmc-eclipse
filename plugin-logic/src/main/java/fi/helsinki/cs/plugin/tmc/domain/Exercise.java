@@ -2,7 +2,7 @@ package fi.helsinki.cs.plugin.tmc.domain;
 
 import com.google.gson.annotations.SerializedName;
 
-import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 import java.io.Serializable;
 import java.text.ParseException;
