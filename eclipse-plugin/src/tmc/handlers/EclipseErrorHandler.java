@@ -17,7 +17,7 @@ public class EclipseErrorHandler implements ErrorHandler {
 	public void handleException(Exception e) {
 		MessageDialog dialog = new MessageDialog(parent, "ERROR", null, e.getMessage(), MessageDialog.ERROR, new String[] {"OK"}, 0);
 		dialog.open();
-		parent.close();
+		
 	}
 
 }

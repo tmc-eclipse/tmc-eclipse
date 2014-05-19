@@ -5,7 +5,7 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.web.UserVisibleException;
 
 public class Core {
-	
+
 	private ProductionFactory factory;
 	private ErrorHandler errorHandler;
 
@@ -17,17 +17,18 @@ public class Core {
 			errorHandler.handleException(e);
 		}
 	}
-	
-	public ErrorHandler getErrorHandler(){
+
+	public ErrorHandler getErrorHandler() {
 		return errorHandler;
+
 	}
-	
-	public Settings getSettings(){
+
+	public Settings getSettings() {
 		return factory.getSettings();
 	}
-	
-	public CourseFetcher getCourseFetcher(){
+
+	public CourseFetcher getCourseFetcher() {
 		return factory.getCourseFetcher();
 	}
-	
+
 }
