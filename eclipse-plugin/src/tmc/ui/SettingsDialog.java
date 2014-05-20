@@ -114,7 +114,7 @@ public class SettingsDialog extends Dialog {
 		    	  settings.setServerBaseUrl(serverAddress.getText());
 			      courseFetcher.updateCourses();
 			      combo.setItems(courseFetcher.getCourseNames());
-			      //lblErrorText.setText("Senkin idiootti");
+			      lblErrorText.setText("Senkin idiootti");
 		      }
 		    });
 		

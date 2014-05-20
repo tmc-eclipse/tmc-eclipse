@@ -48,12 +48,12 @@
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
-               id="fi.helsinki.cs.plugins.eclipse.toolbars.pocToolbar">
+               id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
-                  commandId="fi.helsinki.cs.plugins.eclipse.commands.pocCommand"
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
                   icon="icons/sample.gif"
-                  tooltip="Proof of Concept"
-                  id="fi.helsinki.cs.plugins.eclipse.toolbars.pocCommand">
+                  tooltip="TMC settings"
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.settingsCommand">
             </command>
          </toolbar>
       </menuContribution>
