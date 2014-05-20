@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 
-
 public class WebDao {
 	private JsonGetter getter;
 	private Gson mapper;
