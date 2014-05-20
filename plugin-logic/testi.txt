@@ -1,6 +1,7 @@
 {
   "courses": [
     {
+      "id": 0,
       "name": "c1",
       "details_url": null,
       "unlock_url": null,
@@ -12,6 +13,7 @@
       "unlockables": []
     },
     {
+      "id": 0,
       "name": "c2",
       "details_url": null,
       "unlock_url": null,
@@ -23,6 +25,7 @@
       "unlockables": []
     },
     {
+      "id": 0,
       "name": "c3",
       "details_url": null,
       "unlock_url": null,

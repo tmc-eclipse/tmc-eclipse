@@ -1,5 +1,7 @@
 package tmc.ui;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -18,6 +20,8 @@ import org.eclipse.swt.widgets.Slider;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.services.ExerciseDownloader;
+import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -103,7 +107,7 @@ public class ExerciseSelectorDialog extends Dialog {
 		btnDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("TODO: Lataa valitut tehtävät.");
+				downloadExercises();
 			}
 		});
 		btnDownload.setBounds(361, 236, 80, 29);
@@ -131,6 +135,15 @@ public class ExerciseSelectorDialog extends Dialog {
 			}
 		}
 		return false;
+	}
+	
+	private void downloadExercises(){
+		ArrayList<Exercise> list = new ArrayList<Exercise>();
+		for(int i = 0; i < table.getItemCount(); i++){
+			list.add(Core.getExerciseFetcher().getExerciseByName(table.getItem(i).getText()));
+		}
+		ExerciseDownloader downloader = new ExerciseDownloader();
+		System.out.println(downloader.downloadExercises(list).get(0));
 	}
 
 	private void selectUnselectAction() {

@@ -29,6 +29,15 @@ public class ExerciseFetcher {
 		}
 	}
 	
+	public Exercise getExerciseByName(String name){
+		for(Exercise e: course.getExercises()){
+			if(e.getName().equals(name)){
+				return e;
+			}
+		}
+		return null;
+	}
+	
 	public List<Exercise> getExercisesForCurrentCourse(){
 		return course.getExercises();
 	}
