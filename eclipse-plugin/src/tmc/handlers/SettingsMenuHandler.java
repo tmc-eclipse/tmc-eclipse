@@ -6,6 +6,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import tmc.ui.ExerciseSelectorDialog;
 import tmc.ui.SettingsDialog;
 import fi.helsinki.cs.plugin.tmc.Core;
 

@@ -47,7 +47,7 @@ public class LoginDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shlTmcLogin = new Shell(getParent(), SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
+		shlTmcLogin = new Shell(getParent(), SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
 		shlTmcLogin.setSize(326, 233);
 		shlTmcLogin.setText("TMC Login");
 		
