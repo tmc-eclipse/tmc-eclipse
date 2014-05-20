@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.services;
 
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
@@ -19,7 +20,7 @@ public class CourseFetcher {
 		try {
 			courses.setCourses(webDao.getCourses());
 		} catch(UserVisibleException e) {
-			// TODO: show error message to user
+			Core.getErrorHandler().handleException(e);
 		}
 	}
 	

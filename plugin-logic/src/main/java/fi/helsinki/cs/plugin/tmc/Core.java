@@ -1,7 +1,5 @@
 package fi.helsinki.cs.plugin.tmc;
 
-import org.xml.sax.ErrorHandler;
-
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
@@ -20,12 +18,10 @@ public class Core {
 	}
 	
 	public static void setMyLittleErrorHandler(MyLittleErrorHandler errorHandler) {
-		System.out.println("set error handler: " + errorHandler);
 		Core.getInstance().errorHandler = errorHandler;
 	}
 	
 	public static MyLittleErrorHandler getErrorHandler() {
-		System.out.println("get error handler: " + Core.getInstance().errorHandler);
 		return Core.getInstance().errorHandler;
 	}
 	

@@ -16,10 +16,7 @@ public class JsonGetter {
 		try {
 			return IOUtils.toString(exec.call().getContent());
 		} catch(Exception e) {
-			//System.out.println("error " + e.getMessage());
-			
-			//System.out.println(Core.getErrorHandler());
-			
+			Core.getErrorHandler().handleException(new UserVisibleException("Error retrieving JSON data from " + url));
 			//throw new UserVisibleException("Error retrieving JSON data from " + url);
 			return "";
 		}

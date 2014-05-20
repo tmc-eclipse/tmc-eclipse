@@ -21,7 +21,7 @@ public class Settings {
 	public static final String PREF_KEY_SPYWARE_ENABLED = "spywareEnabled";
 	public static final String PREF_KEY_DETAILED_SPYWARE_ENABLED = "detailedSpywareEnabled";
 	public static final String PREF_ERROR_MSG_LOCALE = "errorMsgLocale";
-	public static final String[] AVAILABLE_LOCALES = new String[] { "English","Finnish" };
+	public static final String[] AVAILABLE_LOCALES = new String[] { "English", "Finnish" };
 	public static final int DEFAULT_LOCALE_NUM = 1;
 	private Preferences prefs;
 
