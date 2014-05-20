@@ -13,11 +13,6 @@
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand">
       </command>
-      <command
-            name="ProofOfConcept"
-            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
-            id="fi.helsinki.cs.plugins.eclipse.commands.pocCommand">
-      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -25,15 +20,11 @@
             commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
             class="tmc.handlers.SettingsMenuHandler">
       </handler>
-       <handler
-            commandId="fi.helsinki.cs.plugins.eclipse.commands.pocCommand"
-            class="tmc.handlers.SettingsMenuHandler">
-      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="fi.helsinki.cs.plugins.eclipse.commands.pocCommand"
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
             contextId="org.eclipse.ui.contexts.window"
             sequence="M1+6"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">

@@ -99,7 +99,10 @@ public class SettingsDialog extends Dialog {
 		
 		combo = new Combo(shell, SWT.READ_ONLY);
 		combo.setBounds(154, 143, 259, 29);
-		
+
+		combo.setItems(courseFetcher.getCourseNames());
+		combo.select(indexOfCurrentCourse());
+
 		Button btnRefreshCourses = new Button(shell, SWT.NONE);
 		btnRefreshCourses.setBounds(419, 143, 121, 29);
 		btnRefreshCourses.setText("Refresh");
@@ -139,6 +142,7 @@ public class SettingsDialog extends Dialog {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 		      @Override
 		      public void widgetSelected(SelectionEvent e) {
+		    	settings.setCurrentCourseName(combo.getText());
 		    	saveSettings();
 		        shell.close();
 		      }
@@ -195,6 +199,17 @@ public class SettingsDialog extends Dialog {
 		
 		
 		addFieldData();
+	}
+	
+	private int indexOfCurrentCourse(){
+		int index=0;
+		for(String name:courseFetcher.getCourseNames()){
+			if(settings.getCurrentCourseName().equals(courseFetcher.getCourseNames()[index])){
+				return index;
+			}
+			index++;
+		}
+		return 0;
 	}
 	
 	private void addFieldData(){
