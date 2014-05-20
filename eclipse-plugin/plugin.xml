@@ -30,6 +30,10 @@
             class="tmc.handlers.ExerciseSelectorHandler">
       </handler>
    </extension>
+   <extension 
+		point="org.eclipse.ui.startup">
+   		<startup class="tmc.activator.CoreInitializer"/>
+   </extension>
    <extension
          point="org.eclipse.ui.bindings">
       <key
