@@ -1,7 +1,5 @@
 package tmc.ui;
 
-import java.io.File;
-
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -40,11 +38,10 @@ public class SettingsDialog extends Dialog {
 
 	public SettingsDialog(Shell parent, int style) {
 		super(parent, style);
-		settings = Core.getSettings();
-		courseFetcher = Core.getCourseFetcher();
+		this.settings = Core.getSettings();
+		this.courseFetcher = Core.getCourseFetcher();
+		this.courseFetcher.updateCourses();
 		setText("Settings");
-		this.settings = settings;
-		this.courseFetcher = courseFetcher;
 	}
 
 	public Object open() {
@@ -71,14 +68,12 @@ public class SettingsDialog extends Dialog {
 		lblErrorText.setForeground(SWTResourceManager.getColor(SWT.COLOR_LINK_FOREGROUND));
 		lblErrorText.setBounds(10, 10, 430, 17);
 		
-		
 		Label lblUserName = new Label(shell, SWT.NONE);
 		lblUserName.setBounds(10, 44, 77, 17);
 		lblUserName.setText("Username");
 		
 		userNameText = new Text(shell, SWT.BORDER);
 		userNameText.setBounds(154, 44, 259, 27);
-		
 		
 		Label lblPassword = new Label(shell, SWT.NONE);
 		lblPassword.setBounds(10, 83, 70, 17);
@@ -87,14 +82,12 @@ public class SettingsDialog extends Dialog {
 		passWordText = new Text(shell, SWT.BORDER | SWT.PASSWORD);
 		passWordText.setBounds(154, 77, 259, 27);
 		
-		
 		Label lblServerAddress = new Label(shell, SWT.NONE);
 		lblServerAddress.setText("Server Address");
 		lblServerAddress.setBounds(10, 117, 123, 17);
 		
 		serverAddress = new Text(shell, SWT.BORDER);
 		serverAddress.setBounds(154, 110, 386, 27);
-		
 		
 		btnSavePassword = new Button(shell, SWT.CHECK);
 		btnSavePassword.setBounds(419, 77, 131, 24);
@@ -107,8 +100,6 @@ public class SettingsDialog extends Dialog {
 		combo = new Combo(shell, SWT.READ_ONLY);
 		combo.setBounds(154, 143, 259, 29);
 		
-		
-		
 		Button btnRefreshCourses = new Button(shell, SWT.NONE);
 		btnRefreshCourses.setBounds(419, 143, 121, 29);
 		btnRefreshCourses.setText("Refresh");
@@ -120,7 +111,7 @@ public class SettingsDialog extends Dialog {
 		    	  settings.setServerBaseUrl(serverAddress.getText());
 			      courseFetcher.updateCourses();
 			      combo.setItems(courseFetcher.getCourseNames());
-	//		      lblErrorText.setText("Senkin idiootti");
+			      //lblErrorText.setText("Senkin idiootti");
 		      }
 		    });
 		

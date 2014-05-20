@@ -12,7 +12,6 @@ public class CourseFetcher {
 	
 	public CourseFetcher(Courses courses) {
 		this.courses = courses;
-		updateCourses();
 	}
 	
 	public void updateCourses() {
