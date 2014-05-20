@@ -118,7 +118,6 @@ public class SettingsDialog extends Dialog {
 		    	  settings.setUsername(userNameText.getText());
 		    	  settings.setPassword(passWordText.getText());
 		    	  settings.setServerBaseUrl(serverAddress.getText());
-		    	  System.out.println(combo.getText());
 			      courseFetcher.updateCourses();
 			      combo.setItems(courseFetcher.getCourseNames());
 			      lblErrorText.setText("Senkin idiootti");
@@ -212,7 +211,6 @@ public class SettingsDialog extends Dialog {
 		int index=0;
 		for(String name:courseFetcher.getCourseNames()){
 			if(settings.getCurrentCourseName().equals(courseFetcher.getCourseNames()[index])){
-				System.out.println(index);
 				return index;
 			}
 			index++;
