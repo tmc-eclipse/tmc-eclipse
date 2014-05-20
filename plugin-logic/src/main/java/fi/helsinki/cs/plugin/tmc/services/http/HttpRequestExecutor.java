@@ -20,7 +20,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
-import org.openide.util.Lookup;
 
 
 /**
@@ -92,8 +91,7 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
     }
 
     private SystemDefaultRoutePlanner getProxy() {
-        ProxySelector proxys = Lookup.getDefault().lookup((ProxySelector.class));
-        return new SystemDefaultRoutePlanner(proxys);
+        return new SystemDefaultRoutePlanner(ProxySelector.getDefault());
     }
 
     private void disposeOfHttpClient(CloseableHttpClient httpClient) {
