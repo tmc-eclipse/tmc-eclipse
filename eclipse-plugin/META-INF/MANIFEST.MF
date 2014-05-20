@@ -3,9 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse tmc plugin
 Bundle-SymbolicName: eclipse-plugin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.ui
+Bundle-Activator: tmc.activator.CoreInitializer
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime;bundle-version="3.9.100",
+ org.eclipse.core.contenttype
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/tmc.eclipse-0.0.1-SNAPSHOT.jar,
  swing2swt.jar,
  swt-grouplayout.jar
+Bundle-ActivationPolicy: lazy
