@@ -106,8 +106,8 @@ public class SettingsDialog extends Dialog {
 		
 		combo = new Combo(shell, SWT.READ_ONLY);
 		combo.setBounds(154, 143, 259, 29);
-		
-		
+		combo.setItems(courseFetcher.getCourseNames());
+		combo.select(indexOfCurrentCourse());
 		
 		Button btnRefreshCourses = new Button(shell, SWT.NONE);
 		btnRefreshCourses.setBounds(419, 143, 121, 29);
@@ -118,9 +118,10 @@ public class SettingsDialog extends Dialog {
 		    	  settings.setUsername(userNameText.getText());
 		    	  settings.setPassword(passWordText.getText());
 		    	  settings.setServerBaseUrl(serverAddress.getText());
+		    	  System.out.println(combo.getText());
 			      courseFetcher.updateCourses();
 			      combo.setItems(courseFetcher.getCourseNames());
-	//		      lblErrorText.setText("Senkin idiootti");
+			      lblErrorText.setText("Senkin idiootti");
 		      }
 		    });
 		
@@ -148,6 +149,7 @@ public class SettingsDialog extends Dialog {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 		      @Override
 		      public void widgetSelected(SelectionEvent e) {
+		    	settings.setCurrentCourseName(combo.getText());
 		    	saveSettings();
 		        shell.close();
 		      }
@@ -204,6 +206,18 @@ public class SettingsDialog extends Dialog {
 		
 		
 		addFieldData();
+	}
+	
+	private int indexOfCurrentCourse(){
+		int index=0;
+		for(String name:courseFetcher.getCourseNames()){
+			if(settings.getCurrentCourseName().equals(courseFetcher.getCourseNames()[index])){
+				System.out.println(index);
+				return index;
+			}
+			index++;
+		}
+		return 0;
 	}
 	
 	private void addFieldData(){
