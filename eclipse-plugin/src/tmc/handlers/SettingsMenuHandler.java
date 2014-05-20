@@ -13,11 +13,13 @@ import fi.helsinki.cs.plugin.tmc.Core;
 public class SettingsMenuHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		
+		System.out.println("Saatanan idiootti settingsmenuhandler");
+		
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		
 		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET);
 		dialog.open();
-		
 		
 		return null;
 	}

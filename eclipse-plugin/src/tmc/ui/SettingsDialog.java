@@ -40,11 +40,9 @@ public class SettingsDialog extends Dialog {
 
 	public SettingsDialog(Shell parent, int style) {
 		super(parent, style);
-		settings = Core.getSettings();
-		courseFetcher = Core.getCourseFetcher();
+		this.settings = Core.getSettings();
+		this.courseFetcher = Core.getCourseFetcher();
 		setText("Settings");
-		this.settings = settings;
-		this.courseFetcher = courseFetcher;
 	}
 
 	public Object open() {
