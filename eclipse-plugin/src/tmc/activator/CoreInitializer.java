@@ -5,6 +5,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import tmc.handlers.EclipseErrorHandler;
 import fi.helsinki.cs.plugin.tmc.Core;
 
 public class CoreInitializer extends AbstractUIPlugin {
@@ -13,7 +14,7 @@ public class CoreInitializer extends AbstractUIPlugin {
 	private static CoreInitializer instance;
 	
 	public CoreInitializer() {
-		//Core.setMyLittleErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()));
+		Core.setMyLittleErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()));
 	}
 	
 	public void start(BundleContext context) throws Exception {
