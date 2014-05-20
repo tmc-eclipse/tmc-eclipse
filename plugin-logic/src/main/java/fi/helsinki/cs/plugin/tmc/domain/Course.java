@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Course {
 
+	private int id;
     private String name;
     
     @SerializedName("details_url")
@@ -20,7 +21,7 @@ public class Course {
     private List<String> spywareUrls;
 
     private boolean exercisesLoaded;
-
+    
     private List<Exercise> exercises;
     private List<String> unlockables; // Exercise names
     
@@ -36,6 +37,14 @@ public class Course {
         this.exercises = new ArrayList<Exercise>();
         this.unlockables = new ArrayList<String>();
         this.spywareUrls = new ArrayList<String>();
+    }
+    
+    public int getId(){
+    	return id;
+    }
+    
+    public void setId(int id){
+    	this.id = id;
     }
 
     public String getName() {
@@ -103,6 +112,7 @@ public class Course {
     }
     
     public List<Exercise> getExercises() {
+    	
         return exercises;
     }
 

@@ -1,6 +1,8 @@
 package fi.helsinki.cs.plugin.tmc;
 
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
+import fi.helsinki.cs.plugin.tmc.services.Courses;
+import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class Core {
@@ -10,11 +12,16 @@ public class Core {
 	private MyLittleErrorHandler errorHandler;
 	private Settings settings;
 	private CourseFetcher courseFetcher;
+	private ExerciseFetcher exerciseFetcher;
+	private Courses courses;
+	
 
 	private Core() {
 		ServiceFactory factory = new ServiceFactory();
 		this.settings = factory.getSettings();
 		this.courseFetcher = factory.getCourseFetcher();
+		this.exerciseFetcher = factory.getExerciseFetcher();
+		this.courses = factory.getCourses();
 	}
 	
 	public static void setMyLittleErrorHandler(MyLittleErrorHandler errorHandler) {
@@ -31,6 +38,14 @@ public class Core {
 	
 	public static CourseFetcher getCourseFetcher(){
 		return Core.getInstance().courseFetcher;
+	}
+	
+	public static ExerciseFetcher getExerciseFetcher(){
+		return Core.getInstance().exerciseFetcher;
+	}
+	
+	public static Courses getCourses(){
+		return Core.getInstance().courses;
 	}
 	
 	public static Core getInstance() {

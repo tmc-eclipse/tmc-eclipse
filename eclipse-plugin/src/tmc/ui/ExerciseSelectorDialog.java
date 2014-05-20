@@ -16,6 +16,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Slider;
 
+import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+
 public class ExerciseSelectorDialog extends Dialog {
 
 	protected Object result;
@@ -79,7 +82,6 @@ public class ExerciseSelectorDialog extends Dialog {
 
 		btnSelectAll = new Button(shell, SWT.NONE);
 		btnSelectAll.setBounds(418, 201, 91, 29);
-		updateSelectAllButtonState();
 		btnSelectAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -106,40 +108,20 @@ public class ExerciseSelectorDialog extends Dialog {
 		});
 		btnDownload.setBounds(361, 236, 80, 29);
 		btnDownload.setText("Download");
-
-		//DUMMY DATA
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
-		addTableItem("Tehtävä");
+		
+		Core.getExerciseFetcher().updateExercisesForCurrentCourse();
+		for(Exercise ex : Core.getExerciseFetcher().getExercisesForCurrentCourse()){
+			addTableItem(ex.getName());
+		}
+		
+		updateSelectAllButtonState();
 
 	}
 
 	private void addTableItem(String itemToAdd) {
 		TableItem tableItem = new TableItem(table, SWT.NONE);
 		tableItem.setText(itemToAdd);
+		tableItem.setChecked(true);
 	}
 
 	private boolean isAnySelected() {

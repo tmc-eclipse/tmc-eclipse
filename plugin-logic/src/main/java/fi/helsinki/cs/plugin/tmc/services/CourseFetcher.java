@@ -10,13 +10,14 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 public class CourseFetcher {
 	
 	private Courses courses;
+	private WebDao webDao;
 	
 	public CourseFetcher(Courses courses) {
 		this.courses = courses;
+		webDao = new WebDao();
 	}
 	
 	public void updateCourses() {
-		WebDao webDao = new WebDao();
 		try {
 			courses.setCourses(webDao.getCourses());
 		} catch(UserVisibleException e) {
