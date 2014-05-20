@@ -13,12 +13,21 @@
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand">
       </command>
+      <command
+            name="Exercises"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
             class="tmc.handlers.SettingsMenuHandler">
+      </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
+            class="tmc.handlers.ExerciseSelectorHandler">
       </handler>
    </extension>
    <extension
@@ -42,6 +51,11 @@
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
                   mnemonic="S"
                   id="fi.helsinki.cs.plugins.eclipse.menus.settingsCommand">
+            </command>
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
+                  mnemonic="E"
+                  id="fi.helsinki.cs.plugins.eclipse.menus.exercisesCommand">
             </command>
          </menu>
       </menuContribution>

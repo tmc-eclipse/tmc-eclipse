@@ -7,15 +7,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import tmc.ui.SettingsDialog;
+import tmc.ui.ExerciseSelectorDialog;
 
-
-public class SettingsMenuHandler extends AbstractHandler {
+public class ExerciseSelectorHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		
-		SettingsDialog dialog = new SettingsDialog(window.getShell(), SWT.SHEET);
+		ExerciseSelectorDialog dialog = new ExerciseSelectorDialog(window.getShell(), SWT.SHEET);
 		dialog.open();
 		
 		return null;
