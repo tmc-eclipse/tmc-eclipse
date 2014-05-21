@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.domain;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.prefs.Preferences;
@@ -88,6 +89,13 @@ public class ExcerciseTest {
 	}
 	
 	
+	@Test
+	public void hasDeadlinePassedReturnsFalseIfDeadlineIsNow(){
+		Date date = new Date();
+		exercise.setDeadline(date);
+		assertFalse(exercise.hasDeadlinePassedAt(date));
+	}
+	
 	@Test(expected=NullPointerException.class)
 	public void setDownloadUrlThrowsIfParameterIsNull() {
 		exercise.setDownloadUrl(null);
@@ -167,7 +175,122 @@ public class ExcerciseTest {
 		assertNull(exercise.getDeadline());
 	}
 	
+	@Test
+	public void testId(){
+		exercise.setId(1);
+		assertEquals(1, exercise.getId());
+	}
 	
+	@Test
+	public void testLocked(){
+		exercise.setLocked(true);
+		assertEquals(true, exercise.isLocked());
+	}
+	
+	@Test
+	public void testDeadlineDescription(){
+		exercise.setDeadlineDescription("desc");
+		assertEquals("desc", exercise.getDeadlineDescription());
+	}
+	
+	@Test
+	public void testExerciseKey(){
+		exercise.setName("name");
+		exercise.setCourseName("course");
+		
+		ExerciseKey ek = exercise.getKey();
+		assertEquals(exercise.getCourseName(), ek.courseName);
+		assertEquals(exercise.getName(), ek.exerciseName);
+	}
+	
+	@Test
+	public void testCourseName(){
+		exercise.setCourseName("course");
+		assertEquals("course", exercise.getCourseName());
+	}
+	
+	@Test
+	public void testDownloadUrl(){
+		exercise.setDownloadUrl("url");
+		assertEquals("url", exercise.getDownloadUrl());
+	}
+	
+	@Test
+	public void testSolutionDownloadUrl(){
+		exercise.setSolutionDownloadUrl("url");
+		assertEquals("url", exercise.getSolutionDownloadUrl());
+	}
+	
+	@Test
+	public void testRequiresReview(){
+		exercise.setRequiresReview(true);
+		assertEquals(true, exercise.requiresReview());
+	}
+	
+	@Test
+	public void testDownloaded(){
+		exercise.setDownloaded(true);
+		assertEquals(true, exercise.isDownloaded());
+	}
+	
+	@Test
+	public void testAttempted(){
+		exercise.setAttempted(true);
+		assertEquals(true, exercise.isAttempted());
+	}
+	
+	@Test
+	public void testCompleted(){
+		exercise.setCompleted(true);
+		assertEquals(true, exercise.isCompleted());
+	}
+	
+	@Test
+	public void testReviwed(){
+		exercise.setReviewed(true);
+		assertEquals(true, exercise.isReviewed());
+	}
+	
+	@Test
+	public void testAllReviewPointsGiven(){
+		exercise.setAllReviewPointsGiven(true);
+		assertEquals(true, exercise.isAllReviewPointsGiven());
+	}
+	
+	@Test
+	public void testChecksum(){
+		exercise.setChecksum("checksum");
+		assertEquals("checksum", exercise.getChecksum());
+	}
+	
+	@Test
+	public void testMemoryLimit(){
+		exercise.setMemoryLimit(1);
+		assertEquals(1, exercise.getMemoryLimit().intValue());
+	}
+	
+	@Test
+	public void testToStringReturnsName(){
+		exercise.setName("exerciseName");
+		assertEquals("exerciseName", exercise.toString());
+	}
+	
+	@Test
+	public void finalizeDeserializationDoesNotTouchDeadlineDateIfStringIsNull(){
+		exercise.finalizeDeserialization();
+		assertNull(exercise.getDeadline());
+	}
+	
+	@Test
+	public void finalizeDeserializationDoesNotTouchDeadlineDateIfStringIsEmpty() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+		//Not optimal but works
+		Field field = Exercise.class.getDeclaredField("deadlineString");
+		field.setAccessible(true);
+		field.set(exercise, "");
+		
+		exercise.finalizeDeserialization();
+		assertNull(exercise.getDeadline());
+		
+	}
 }
-
 

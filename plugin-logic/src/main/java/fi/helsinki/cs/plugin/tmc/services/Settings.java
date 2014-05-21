@@ -115,6 +115,10 @@ public class Settings {
 	public boolean isDetailedSpywareEnabled() {
 		return prefs.getBoolean(PREF_KEY_DETAILED_SPYWARE_ENABLED, true);
 	}
+	
+	public void setIsDetailedSpywareEnabled(boolean value) {
+		prefs.putBoolean(PREF_KEY_DETAILED_SPYWARE_ENABLED, value);
+	}
 
 	public int getDefaultLocaleNum() {
 		return DEFAULT_LOCALE_NUM;
@@ -155,17 +159,6 @@ public class Settings {
 		if (s.isEmpty()) {
 			return new Locale(AVAILABLE_LOCALES[DEFAULT_LOCALE_NUM]);
 		}
-		String[] parts = s.split("_");
-		switch (parts.length) {
-		case 1:
-			return new Locale(parts[0]);
-		case 2:
-			return new Locale(parts[0], parts[1]);
-		case 3:
-			return new Locale(parts[0], parts[1], parts[2]);
-		default:
-			return new Locale(AVAILABLE_LOCALES[DEFAULT_LOCALE_NUM]);
-		}
+		return new Locale(s);
 	}
-
 }

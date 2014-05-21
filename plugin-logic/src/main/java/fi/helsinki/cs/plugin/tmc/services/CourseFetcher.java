@@ -12,9 +12,9 @@ public class CourseFetcher {
 	private Courses courses;
 	private WebDao webDao;
 	
-	public CourseFetcher(Courses courses) {
+	public CourseFetcher(Courses courses, WebDao webDao) {
 		this.courses = courses;
-		webDao = new WebDao();
+		this.webDao = webDao;
 	}
 	
 	public void updateCourses() {

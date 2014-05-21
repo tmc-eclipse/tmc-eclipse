@@ -14,9 +14,9 @@ public class ExerciseFetcher {
 	private Courses courses;
 	private Course course;
 	
-	public ExerciseFetcher(Courses courses){
+	public ExerciseFetcher(Courses courses, WebDao webDAO){
 		this.courses = courses;
-		this.webDao = new WebDao();
+		this.webDao = webDAO;
 	}
 	
 	public void updateExercisesForCurrentCourse(){
