@@ -9,8 +9,9 @@ import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.Unzipper;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseDownloader;
 import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
-public class DownloaderTask implements BackgroundTask<Object> {
+public class DownloaderTask implements BackgroundTask {
 
     private boolean isRunning;
     private List<Exercise> exerciseList;
@@ -21,25 +22,28 @@ public class DownloaderTask implements BackgroundTask<Object> {
     }
 
     @Override
-    public Object start(TaskFeedback tf) {
-        tf.setAmountOfWork(exerciseList.size() * 2);
+    public Object start(TaskFeedback feedback) {
+        feedback.resetProgress("Downloading exercises...", exerciseList.size() * 2);
         
         ExerciseDownloader downloader = new ExerciseDownloader();
         
         for(Exercise e : exerciseList) {
+            if(feedback.isCanceled()) {
+                this.stop();
+            }
             if(!isRunning) {
                 break;
             }
-            
+
             ZippedProject zip = downloader.downloadExercise(e);
-            tf.setProgress(tf.getProgress() + 1);
+            feedback.updateProgress(1);
             
             try {
                 Unzipper unzipper = new Unzipper(zip);
                 unzipper.unzipTo(new FileIO(Core.getSettings().getExerciseFilePath() + "/" + Core.getSettings().getCurrentCourseName()));
-                tf.setProgress(tf.getProgress() + 1);
+                feedback.updateProgress(1);
             } catch(IOException exception) {
-                // TODO: handle exception
+                Core.getErrorHandler().handleException(new UserVisibleException("An error occurred while unzipping the exercises"));
             }
         }
         
@@ -53,7 +57,7 @@ public class DownloaderTask implements BackgroundTask<Object> {
     
     @Override
     public String getName() {
-        return "DownloaderTask";
+        return "Downloading exercises";
     }
 
 }

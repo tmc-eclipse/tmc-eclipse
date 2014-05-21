@@ -14,12 +14,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import tmc.tasks.EclipseTaskRunner;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.Unzipper;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseDownloader;
 import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.tasks.DownloaderTask;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -146,7 +148,8 @@ public class ExerciseSelectorDialog extends Dialog {
 			}
 		}
 		
-		
+		EclipseTaskRunner runner = new EclipseTaskRunner();
+		runner.runTask(new DownloaderTask(list));
 	}
 
 	private void selectUnselectAction() {
