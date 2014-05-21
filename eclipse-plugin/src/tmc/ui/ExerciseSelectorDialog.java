@@ -137,7 +137,7 @@ public class ExerciseSelectorDialog extends Dialog {
 		return false;
 	}
 
-	private void downloadExercises() {
+	private void downloadExercises() {  
 		ArrayList<Exercise> list = new ArrayList<Exercise>();
 		for (int i = 0; i < table.getItemCount(); i++) {
 			if (table.getItem(i).getChecked()) {
@@ -145,20 +145,8 @@ public class ExerciseSelectorDialog extends Dialog {
 						table.getItem(i).getText()));
 			}
 		}
-		ExerciseDownloader downloader = new ExerciseDownloader();
-		for (ZippedProject zipped : downloader.downloadExercises(list)) {
-			Unzipper unzipper = new Unzipper(zipped);
-			try {
-				unzipper.unzipTo(new FileIO(Core.getSettings()
-						.getExerciseFilePath()
-						+ "/"
-						+ Core.getSettings().getCurrentCourseName()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
+		
+		
 	}
 
 	private void selectUnselectAction() {
