@@ -89,6 +89,13 @@ public class ExcerciseTest {
 	}
 	
 	
+	@Test
+	public void hasDeadlinePassedReturnsFalseIfDeadlineIsNow(){
+		Date date = new Date();
+		exercise.setDeadline(date);
+		assertFalse(exercise.hasDeadlinePassedAt(date));
+	}
+	
 	@Test(expected=NullPointerException.class)
 	public void setDownloadUrlThrowsIfParameterIsNull() {
 		exercise.setDownloadUrl(null);
@@ -275,7 +282,7 @@ public class ExcerciseTest {
 	}
 	
 	@Test
-	public void inalizeDeserializationDoesNotTouchDeadlineDateIfStringIsEmpty() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+	public void finalizeDeserializationDoesNotTouchDeadlineDateIfStringIsEmpty() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 		//Not optimal but works
 		Field field = Exercise.class.getDeclaredField("deadlineString");
 		field.setAccessible(true);
