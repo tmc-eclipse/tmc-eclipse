@@ -5,6 +5,7 @@ import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Courses;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
 import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 
 public class ServiceFactory {
@@ -15,12 +16,14 @@ public class ServiceFactory {
 	private Courses courses;
 	private CourseFetcher courseFetcher;
 	private ExerciseFetcher exerciseFetcher;
+	private WebDao webDAO;
 	
 	public ServiceFactory() {
+		this.webDAO = new WebDao();
 		this.settings = Settings.getDefaultSettings();
 		this.courses = new Courses(new LocalCourseStorage(new FileIO(LOCAL_COURSES_PATH)));
-		this.courseFetcher = new CourseFetcher(courses);
-		this.exerciseFetcher = new ExerciseFetcher(courses);
+		this.courseFetcher = new CourseFetcher(courses, webDAO);
+		this.exerciseFetcher = new ExerciseFetcher(courses, webDAO);
 	}
 
 	public Settings getSettings() {
