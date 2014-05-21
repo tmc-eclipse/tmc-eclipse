@@ -34,7 +34,7 @@ public class LocalCourseStorage implements CourseDAO {
 	
 	@Override
 	public List<Course> load() throws UserVisibleException {
-		if(!io.exists()) {
+		if(!io.fileExists()) {
 			return new ArrayList<Course>();
 		}
 		

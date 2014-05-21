@@ -1,5 +1,6 @@
 package tmc.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Dialog;
@@ -7,21 +8,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Slider;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.io.Unzipper;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseDownloader;
-import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
+import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -67,7 +65,7 @@ public class ExerciseSelectorDialog extends Dialog {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setSize(515, 302);
 		shell.setText(getText());
-		
+
 		table = new Table(shell, SWT.BORDER | SWT.CHECK | SWT.MULTI
 				| SWT.V_SCROLL);
 		table.setTouchEnabled(true);
@@ -79,7 +77,7 @@ public class ExerciseSelectorDialog extends Dialog {
 				updateSelectAllButtonState();
 			}
 		});
-		
+
 		Label lblSelectExercisesTo = new Label(shell, SWT.NONE);
 		lblSelectExercisesTo.setBounds(10, 10, 469, 17);
 		lblSelectExercisesTo.setText("Exercises to download");
@@ -108,16 +106,18 @@ public class ExerciseSelectorDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				downloadExercises();
+				shell.close();
 			}
 		});
 		btnDownload.setBounds(361, 236, 80, 29);
 		btnDownload.setText("Download");
-		
+
 		Core.getExerciseFetcher().updateExercisesForCurrentCourse();
-		for(Exercise ex : Core.getExerciseFetcher().getExercisesForCurrentCourse()){
+		for (Exercise ex : Core.getExerciseFetcher()
+				.getExercisesForCurrentCourse()) {
 			addTableItem(ex.getName());
 		}
-		
+
 		updateSelectAllButtonState();
 
 	}
@@ -136,14 +136,29 @@ public class ExerciseSelectorDialog extends Dialog {
 		}
 		return false;
 	}
-	
-	private void downloadExercises(){
+
+	private void downloadExercises() {
 		ArrayList<Exercise> list = new ArrayList<Exercise>();
-		for(int i = 0; i < table.getItemCount(); i++){
-			list.add(Core.getExerciseFetcher().getExerciseByName(table.getItem(i).getText()));
+		for (int i = 0; i < table.getItemCount(); i++) {
+			if (table.getItem(i).getChecked()) {
+				list.add(Core.getExerciseFetcher().getExerciseByName(
+						table.getItem(i).getText()));
+			}
 		}
 		ExerciseDownloader downloader = new ExerciseDownloader();
-		System.out.println(downloader.downloadExercises(list).get(0));
+		for (ZippedProject zipped : downloader.downloadExercises(list)) {
+			Unzipper unzipper = new Unzipper(zipped);
+			try {
+				unzipper.unzipTo(new FileIO(Core.getSettings()
+						.getExerciseFilePath()
+						+ "/"
+						+ Core.getSettings().getCurrentCourseName()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private void selectUnselectAction() {

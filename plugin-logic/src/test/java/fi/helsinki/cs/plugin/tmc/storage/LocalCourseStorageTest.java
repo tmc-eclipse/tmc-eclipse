@@ -27,20 +27,20 @@ public class LocalCourseStorageTest {
 	
 	@Test(expected=UserVisibleException.class)
 	public void testExceptionIsThrownIfNullIO() throws UserVisibleException {
-		when(io.exists()).thenReturn(true);
+		when(io.fileExists()).thenReturn(true);
 		this.io = null;
 		lcs.load();
 	}
 
 	@Test
 	public void testExceptionIsThrownIfFileDoesntExist() throws UserVisibleException {
-		when(io.exists()).thenReturn(false);
+		when(io.fileExists()).thenReturn(false);
 		assertTrue(lcs.load() instanceof List && lcs.load().size() == 0);
 	}
 	
 	@Test(expected=UserVisibleException.class)
 	public void testExceptionIsThrownIfReaderIsNull() throws UserVisibleException {
-		when(io.exists()).thenReturn(true);
+		when(io.fileExists()).thenReturn(true);
 		when(io.getReader()).thenReturn(null);
 		lcs.load();
 	}

@@ -20,7 +20,17 @@ public class FileIO implements IO {
 	}
 	
 	@Override
-	public boolean exists() {
+	public String getName() {
+		return file.getName();
+	}
+	
+	@Override
+	public String getPath() {
+		return file.getAbsolutePath();
+	}
+	
+	@Override
+	public boolean fileExists() {
 		return file.exists() && !file.isDirectory();
 	}
 	
@@ -44,8 +54,26 @@ public class FileIO implements IO {
 		}
 	}
 	
-	public void clear(){
-		
+	@Override
+	public void createFolderTree(boolean onlyParents) {
+		if(onlyParents) {
+			file.getParentFile().mkdirs();
+		} else {
+			file.mkdirs();
+		}
+	}
+	
+	@Override
+	public void write(byte[] bytes) {
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			for(int i = 0; i < bytes.length; i++) {
+				fos.write(bytes[i]);
+			}
+			fos.close();
+		} catch(IOException ioe) {
+			// TODO: handle exception
+		}
 	}
 	
 }

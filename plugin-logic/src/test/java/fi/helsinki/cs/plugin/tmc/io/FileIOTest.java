@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class FileIOTest {
 
-	private FileIO io;
+	private IO io;
 	
 	@Before
 	public void setUp() {
