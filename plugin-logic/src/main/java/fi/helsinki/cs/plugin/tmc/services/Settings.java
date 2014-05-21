@@ -120,7 +120,7 @@ public class Settings {
 		return DEFAULT_LOCALE_NUM;
 	}
 
-	public String[] getAvailabelLocales() {
+	public String[] getAvailableLocales() {
 		return AVAILABLE_LOCALES;
 	}
 

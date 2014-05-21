@@ -192,7 +192,7 @@ public class SettingsDialog extends Dialog {
 		lblPreferredErrorMessage.setBounds(10, 376, 236, 17);
 		
 	    localeList = new Combo(shell, SWT.READ_ONLY);
-	    localeList.setItems(settings.getAvailabelLocales());
+	    localeList.setItems(settings.getAvailableLocales());
 	    localeList.setBounds(252, 375, 284, 29);
 	    localeList.select(settings.getErrorMsgLocaleNum());
 		
