@@ -6,10 +6,10 @@ import org.junit.Test;
 
 public class ObsoleteClientExceptionTest {
 
-	@Test
-	public void containsCorrectString(){
-		assertEquals("Please update the TMC plugin.\nUse Help -> Check for Updates.",
-				new ObsoleteClientException().getMessage());
-	}
+    @Test
+    public void containsCorrectString() {
+        assertEquals("Please update the TMC plugin.\nUse Help -> Check for Updates.",
+                new ObsoleteClientException().getMessage());
+    }
 
 }

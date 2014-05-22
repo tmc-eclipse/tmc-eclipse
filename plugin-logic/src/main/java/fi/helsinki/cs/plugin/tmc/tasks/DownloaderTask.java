@@ -24,29 +24,31 @@ public class DownloaderTask implements BackgroundTask {
     @Override
     public Object start(TaskFeedback feedback) {
         feedback.resetProgress("Downloading exercises...", exerciseList.size() * 2);
-        
+
         ExerciseDownloader downloader = new ExerciseDownloader();
-        
-        for(Exercise e : exerciseList) {
-            if(feedback.isCanceled()) {
+
+        for (Exercise e : exerciseList) {
+            if (feedback.isCanceled()) {
                 this.stop();
             }
-            if(!isRunning) {
+            if (!isRunning) {
                 break;
             }
 
             ZippedProject zip = downloader.downloadExercise(e);
             feedback.updateProgress(1);
-            
+
             try {
                 Unzipper unzipper = new Unzipper(zip);
-                unzipper.unzipTo(new FileIO(Core.getSettings().getExerciseFilePath() + "/" + Core.getSettings().getCurrentCourseName()));
+                unzipper.unzipTo(new FileIO(Core.getSettings().getExerciseFilePath() + "/"
+                        + Core.getSettings().getCurrentCourseName()));
                 feedback.updateProgress(1);
-            } catch(IOException exception) {
-                Core.getErrorHandler().handleException(new UserVisibleException("An error occurred while unzipping the exercises"));
+            } catch (IOException exception) {
+                Core.getErrorHandler().handleException(
+                        new UserVisibleException("An error occurred while unzipping the exercises"));
             }
         }
-        
+
         return null;
     }
 
@@ -54,7 +56,7 @@ public class DownloaderTask implements BackgroundTask {
     public void stop() {
         this.isRunning = false;
     }
-    
+
     @Override
     public String getName() {
         return "Downloading exercises";

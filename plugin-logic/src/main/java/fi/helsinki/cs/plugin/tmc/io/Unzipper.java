@@ -10,30 +10,31 @@ import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
 
 public class Unzipper {
 
-	private ZippedProject project;
-	
-	public Unzipper(ZippedProject project) {
-		this.project = project;
-	}
-	
-	public void unzipTo(IO destinationFolder) throws IOException {
-		destinationFolder.createFolderTree(false);
-		
-		ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(project.getBytes()));
-		
-		ZipEntry zipEntry = zipStream.getNextEntry();
-		
-		while(zipEntry != null) {	
-			FileIO file = new FileIO(destinationFolder.getPath() + File.separator + zipEntry.getName());
-			file.createFolderTree(!zipEntry.isDirectory());
-			
-			byte[] unzippedBytes = new byte[(int)zipEntry.getSize()];
-			int returnVal = zipStream.read(unzippedBytes, 0, (int) zipEntry.getSize());
+    private ZippedProject project;
 
-			file.write(unzippedBytes);
-			
-			zipEntry = zipStream.getNextEntry();
-		}
-	}
-	
+    public Unzipper(ZippedProject project) {
+        this.project = project;
+    }
+
+    public void unzipTo(IO destinationFolder) throws IOException {
+        destinationFolder.createFolderTree(false);
+
+        ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(project.getBytes()));
+
+        ZipEntry zipEntry = zipStream.getNextEntry();
+
+        while (zipEntry != null) {
+            FileIO file = new FileIO(destinationFolder.getPath() + File.separator + zipEntry.getName());
+            file.createFolderTree(!zipEntry.isDirectory());
+
+            byte[] unzippedBytes = new byte[(int) zipEntry.getSize()];
+            int returnVal = zipStream.read(unzippedBytes, 0, (int) zipEntry.getSize()); // TODO:
+                                                                                        // ??
+
+            file.write(unzippedBytes);
+
+            zipEntry = zipStream.getNextEntry();
+        }
+    }
+
 }

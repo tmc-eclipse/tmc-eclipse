@@ -7,7 +7,8 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public interface CourseDAO {
 
-	public List<Course> load() throws UserVisibleException;
-	public void save(List<Course> courses) throws UserVisibleException;
-	
+    List<Course> load() throws UserVisibleException;
+
+    void save(List<Course> courses) throws UserVisibleException;
+
 }

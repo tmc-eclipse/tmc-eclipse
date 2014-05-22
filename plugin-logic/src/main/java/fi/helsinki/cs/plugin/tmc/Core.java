@@ -5,11 +5,11 @@ import fi.helsinki.cs.plugin.tmc.services.Courses;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
-public class Core {
+public final class Core {
 
     private static Core core;
 
-    private MyLittleErrorHandler errorHandler;
+    private TMCErrorHandler errorHandler;
     private Settings settings;
     private CourseFetcher courseFetcher;
     private ExerciseFetcher exerciseFetcher;
@@ -23,11 +23,11 @@ public class Core {
         this.courses = factory.getCourses();
     }
 
-    public static void setMyLittleErrorHandler(MyLittleErrorHandler errorHandler) {
+    public static void setTMCErrorHandler(TMCErrorHandler errorHandler) {
         Core.getInstance().errorHandler = errorHandler;
     }
 
-    public static MyLittleErrorHandler getErrorHandler() {
+    public static TMCErrorHandler getErrorHandler() {
         return Core.getInstance().errorHandler;
     }
 
