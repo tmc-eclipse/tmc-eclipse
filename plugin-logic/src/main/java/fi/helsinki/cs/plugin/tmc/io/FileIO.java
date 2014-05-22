@@ -64,11 +64,15 @@ public class FileIO implements IO {
     }
 
     @Override
-    public void write(byte[] bytes) throws IOException {
-        FileOutputStream fos = new FileOutputStream(file);
-        for (int i = 0; i < bytes.length; i++) {
-            fos.write(bytes[i]);
+    public void write(byte[] bytes) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            for (int i = 0; i < bytes.length; i++) {
+                fos.write(bytes[i]);
+            }
+            fos.close();
+        } catch (IOException e) {
+            System.out.println(e.getLocalizedMessage());
         }
-        fos.close();
     }
 }

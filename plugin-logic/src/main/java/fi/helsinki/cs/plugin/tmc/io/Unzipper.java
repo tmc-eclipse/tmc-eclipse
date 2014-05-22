@@ -30,7 +30,9 @@ public class Unzipper {
             byte[] unzippedBytes = new byte[(int) zipEntry.getSize()];
             zipStream.read(unzippedBytes, 0, (int) zipEntry.getSize());
 
-            file.write(unzippedBytes);
+            if (!zipEntry.isDirectory()) {
+                file.write(unzippedBytes);
+            }
 
             zipEntry = zipStream.getNextEntry();
         }
