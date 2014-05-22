@@ -1,7 +1,8 @@
 package fi.helsinki.cs.plugin.tmc.storage;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,6 @@ import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.io.IO;
-import fi.helsinki.cs.plugin.tmc.storage.LocalCourseStorage;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class LocalCourseStorageTest {

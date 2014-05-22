@@ -1,6 +1,7 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
 import java.io.IOException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 

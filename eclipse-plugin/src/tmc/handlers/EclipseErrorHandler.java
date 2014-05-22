@@ -2,6 +2,7 @@ package tmc.handlers;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 
 public class EclipseErrorHandler implements TMCErrorHandler {

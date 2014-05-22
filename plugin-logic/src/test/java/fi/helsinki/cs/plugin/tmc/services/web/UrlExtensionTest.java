@@ -1,6 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.services.web;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
