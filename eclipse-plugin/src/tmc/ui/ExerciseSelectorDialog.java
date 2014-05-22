@@ -14,12 +14,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import tmc.tasks.EclipseTaskRunner;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.Unzipper;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseDownloader;
 import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.tasks.DownloaderTask;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -137,7 +139,7 @@ public class ExerciseSelectorDialog extends Dialog {
 		return false;
 	}
 
-	private void downloadExercises() {
+	private void downloadExercises() {  
 		ArrayList<Exercise> list = new ArrayList<Exercise>();
 		for (int i = 0; i < table.getItemCount(); i++) {
 			if (table.getItem(i).getChecked()) {
@@ -145,20 +147,9 @@ public class ExerciseSelectorDialog extends Dialog {
 						table.getItem(i).getText()));
 			}
 		}
-		ExerciseDownloader downloader = new ExerciseDownloader();
-		for (ZippedProject zipped : downloader.downloadExercises(list)) {
-			Unzipper unzipper = new Unzipper(zipped);
-			try {
-				unzipper.unzipTo(new FileIO(Core.getSettings()
-						.getExerciseFilePath()
-						+ "/"
-						+ Core.getSettings().getCurrentCourseName()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
+		
+		EclipseTaskRunner runner = new EclipseTaskRunner();
+		runner.runTask(new DownloaderTask(list));
 	}
 
 	private void selectUnselectAction() {

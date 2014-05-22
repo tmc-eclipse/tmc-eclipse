@@ -56,10 +56,6 @@ public final class ExerciseKey {
 		public ExerciseKey deserialize(JsonElement je, Type type,
 				JsonDeserializationContext jdc) throws JsonParseException {
 			String[] parts = je.getAsString().split("/", 2);
-			if (parts.length != 2) {
-				throw new JsonParseException("Invalid ExerciseKey representation: \"" 
-												+ je.getAsString() + "\"");
-			}
 			return new ExerciseKey(parts[0], parts[1]);
 		}
 	}

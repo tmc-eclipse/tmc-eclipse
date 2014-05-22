@@ -13,9 +13,9 @@ public class WebDao {
 	private JsonGetter getter;
 	private Gson mapper;
 	
-	public WebDao(){
-		this.getter = new JsonGetter();
-		this.mapper = new Gson();
+	public WebDao(Gson mapper, JsonGetter getter){
+		this.getter = getter;
+		this.mapper = mapper;
 	}
 	
 	public List<Course> getCourses() {

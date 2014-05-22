@@ -51,4 +51,10 @@ public class LocalCourseStorageTest {
 		lcs.save(new ArrayList<Course>());
 	}
 	
+	@Test(expected=UserVisibleException.class)
+	public void saveThrowsErrorWhenIoIsNull(){
+		LocalCourseStorage l = new LocalCourseStorage(null);
+		l.save(new ArrayList<Course>());
+	}
+	
 }

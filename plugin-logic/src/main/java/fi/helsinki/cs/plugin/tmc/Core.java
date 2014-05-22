@@ -6,53 +6,52 @@ import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class Core {
-	
-	private static Core core;
-	
-	private MyLittleErrorHandler errorHandler;
-	private Settings settings;
-	private CourseFetcher courseFetcher;
-	private ExerciseFetcher exerciseFetcher;
-	private Courses courses;
-	
 
-	private Core() {
-		ServiceFactory factory = new ServiceFactory();
-		this.settings = factory.getSettings();
-		this.courseFetcher = factory.getCourseFetcher();
-		this.exerciseFetcher = factory.getExerciseFetcher();
-		this.courses = factory.getCourses();
-	}
-	
-	public static void setMyLittleErrorHandler(MyLittleErrorHandler errorHandler) {
-		Core.getInstance().errorHandler = errorHandler;
-	}
-	
-	public static MyLittleErrorHandler getErrorHandler() {
-		return Core.getInstance().errorHandler;
-	}
-	
-	public static Settings getSettings(){
-		return Core.getInstance().settings;
-	}
-	
-	public static CourseFetcher getCourseFetcher(){
-		return Core.getInstance().courseFetcher;
-	}
-	
-	public static ExerciseFetcher getExerciseFetcher(){
-		return Core.getInstance().exerciseFetcher;
-	}
-	
-	public static Courses getCourses(){
-		return Core.getInstance().courses;
-	}
-	
-	public static Core getInstance() {
-		if(core == null) {
-			core = new Core();
-		}
-		return core;
-	}
+    private static Core core;
+
+    private MyLittleErrorHandler errorHandler;
+    private Settings settings;
+    private CourseFetcher courseFetcher;
+    private ExerciseFetcher exerciseFetcher;
+    private Courses courses;
+
+    private Core() {
+        ServiceFactory factory = new ServiceFactory();
+        this.settings = factory.getSettings();
+        this.courseFetcher = factory.getCourseFetcher();
+        this.exerciseFetcher = factory.getExerciseFetcher();
+        this.courses = factory.getCourses();
+    }
+
+    public static void setMyLittleErrorHandler(MyLittleErrorHandler errorHandler) {
+        Core.getInstance().errorHandler = errorHandler;
+    }
+
+    public static MyLittleErrorHandler getErrorHandler() {
+        return Core.getInstance().errorHandler;
+    }
+
+    public static Settings getSettings() {
+        return Core.getInstance().settings;
+    }
+
+    public static CourseFetcher getCourseFetcher() {
+        return Core.getInstance().courseFetcher;
+    }
+
+    public static ExerciseFetcher getExerciseFetcher() {
+        return Core.getInstance().exerciseFetcher;
+    }
+
+    public static Courses getCourses() {
+        return Core.getInstance().courses;
+    }
+
+    public static Core getInstance() {
+        if (core == null) {
+            core = new Core();
+        }
+        return core;
+    }
 
 }

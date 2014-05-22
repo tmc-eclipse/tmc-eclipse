@@ -18,6 +18,11 @@
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
       </command>
+      <command
+            name="Run Tests"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -28,6 +33,10 @@
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
             class="tmc.handlers.ExerciseSelectorHandler">
+      </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
+            class="tmc.handlers.TestRunnerHandler">
       </handler>
    </extension>
    <extension 
@@ -61,6 +70,11 @@
                   mnemonic="E"
                   id="fi.helsinki.cs.plugins.eclipse.menus.exercisesCommand">
             </command>
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
+                  mnemonic="T"
+                  id="fi.helsinki.cs.plugins.eclipse.menus.testRunnerCommand">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -77,4 +91,10 @@
       </menuContribution>
    </extension>
 
+	<extension point="org.eclipse.ui.views">
+        <view id="fi.helsinki.cs.plugins.eclipse.views.tmcTestUi"
+             name="Label View"
+             icon="icons/sample.gif"
+          class="tmc.ui.TestRunnerDialog"/>
+	</extension>
 </plugin>
