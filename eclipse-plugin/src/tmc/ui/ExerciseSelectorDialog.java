@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import tmc.services.GenericProjectOpener;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.tasks.DownloaderTask;
@@ -140,6 +141,7 @@ public class ExerciseSelectorDialog extends Dialog {
         }
 
         Core.getTaskRunner().runTask(new DownloaderTask(list));
+        new GenericProjectOpener().openProjects(list);
     }
 
     private void selectUnselectAction() {
