@@ -6,7 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: tmc.activator.CoreInitializer
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime;bundle-version="3.9.100",
- org.eclipse.core.contenttype
+ org.eclipse.core.contenttype,
+ org.eclipse.core.resources;bundle-version="3.8.101",
+ org.eclipse.m2e.core;bundle-version="1.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/tmc.eclipse-0.0.1-SNAPSHOT.jar,
