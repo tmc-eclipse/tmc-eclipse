@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
@@ -21,31 +22,26 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 
-
 /**
-* Downloads a single file over HTTP into memory while being cancellable.
-*
-* If the response was not a successful one (status code 2xx) then a
-* {@link FailedHttpResponseException} with a preloaded buffered entity is
-* thrown.
-*/
+ * Downloads a single file over HTTP into memory while being cancellable.
+ * 
+ * If the response was not a successful one (status code 2xx) then a
+ * {@link FailedHttpResponseException} with a preloaded buffered entity is
+ * thrown.
+ */
 public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEntity> {
-
-    private static final int DEFAULT_TIMEOUT = 30 * 1000;
-
     private final Object shutdownLock = new Object();
 
-    private int timeout = DEFAULT_TIMEOUT;
     private HttpUriRequest request;
-    private static final Logger log = Logger.getLogger(HttpRequestExecutor.class.getName());
+    private static final Logger LOG = Logger.getLogger(HttpRequestExecutor.class.getName());
 
     private UsernamePasswordCredentials credentials; // May be null
 
-    /*package*/ HttpRequestExecutor(String url) {
+    /* package */HttpRequestExecutor(String url) {
         this(new HttpGet(url));
     }
 
-    /*package*/ HttpRequestExecutor(HttpUriRequest request) {
+    /* package */HttpRequestExecutor(HttpUriRequest request) {
         this.request = request;
         if (request.getURI().getUserInfo() != null) {
             credentials = new UsernamePasswordCredentials(request.getURI().getUserInfo());
@@ -82,8 +78,7 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
 
     private CloseableHttpClient makeHttpClient() throws IOException {
 
-        HttpClientBuilder httpClientBuilder = HttpClients.custom()
-                .useSystemProperties()
+        HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties()
                 .setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         maybeSetProxy(httpClientBuilder);
 
@@ -98,35 +93,38 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
         try {
             httpClient.close();
         } catch (IOException ex) {
-            log.log(Level.WARNING, "Dispose of httpClient failed {0}", ex);
+            LOG.log(Level.WARNING, "Dispose of httpClient failed {0}", ex);
         }
     }
 
-    private BufferedHttpEntity executeRequest(HttpClient httpClient) throws IOException, InterruptedException, FailedHttpResponseException {
+    private BufferedHttpEntity executeRequest(HttpClient httpClient) throws IOException, InterruptedException,
+            FailedHttpResponseException {
 
         HttpResponse response = null;
 
         try {
             if (this.credentials != null) {
-                request.addHeader(new BasicScheme(Charset.forName("UTF-8")).authenticate(this.credentials, request, null));
+                request.addHeader(new BasicScheme(Charset.forName("UTF-8")).authenticate(this.credentials, request,
+                        null));
             }
             response = httpClient.execute(request);
         } catch (IOException ex) {
-            log.log(Level.INFO, "Executing http request failed: {0}", ex.toString());
+            LOG.log(Level.INFO, "Executing http request failed: {0}", ex.toString());
             if (request.isAborted()) {
                 throw new InterruptedException();
             } else {
                 throw new IOException("Download failed: " + ex.getMessage(), ex);
             }
         } catch (AuthenticationException ex) {
-            log.log(Level.INFO, "Auth failed {0}", ex);
+            LOG.log(Level.INFO, "Auth failed {0}", ex);
             throw new InterruptedException();
         }
 
         return handleResponse(response);
     }
 
-    private BufferedHttpEntity handleResponse(HttpResponse response) throws IOException, InterruptedException, FailedHttpResponseException {
+    private BufferedHttpEntity handleResponse(HttpResponse response) throws IOException, InterruptedException,
+            FailedHttpResponseException {
         int responseCode = response.getStatusLine().getStatusCode();
         if (response.getEntity() == null) {
             throw new IOException("HTTP " + responseCode + " with no response");
@@ -134,11 +132,19 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
 
         BufferedHttpEntity entity = new BufferedHttpEntity(response.getEntity());
         EntityUtils.consume(entity); // Ensure it's loaded into memory
-        if (200 <= responseCode && responseCode <= 299) {
+        if (success(responseCode)) {
             return entity;
         } else {
             throw new FailedHttpResponseException(responseCode, entity);
         }
+    }
+
+    /*
+     * Returns true for statuscodes in the 2xx (success) range. SC_OK = 200,
+     * SC_MULTIPLE_CHOICES = 300.
+     */
+    private boolean success(int responseCode) {
+        return HttpStatus.SC_OK <= responseCode && responseCode < HttpStatus.SC_MULTIPLE_CHOICES;
     }
 
     /**

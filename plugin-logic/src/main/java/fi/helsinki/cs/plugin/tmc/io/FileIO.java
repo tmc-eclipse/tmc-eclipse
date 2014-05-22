@@ -12,68 +12,69 @@ import java.io.Reader;
 import java.io.Writer;
 
 public class FileIO implements IO {
-	
-	private File file;
-	
-	public FileIO(String file) {
-		this.file = new File(file);
-	}
-	
-	@Override
-	public String getName() {
-		return file.getName();
-	}
-	
-	@Override
-	public String getPath() {
-		return file.getAbsolutePath();
-	}
-	
-	@Override
-	public boolean fileExists() {
-		return file.exists() && !file.isDirectory();
-	}
-	
-	@Override
-	public Writer getWriter() {
-		try {
-			FileOutputStream fos = new FileOutputStream(file);
-			return new OutputStreamWriter(new BufferedOutputStream(fos), "UTF-8");
-		} catch(IOException e) {
-			return null;
-		}
-	}
-	
-	@Override
-	public Reader getReader() {
-		try {
-			FileInputStream fis = new FileInputStream(file);
-			return new InputStreamReader(new BufferedInputStream(fis), "UTF-8");
-		} catch(IOException e) {
-			return null;
-		}
-	}
-	
-	@Override
-	public void createFolderTree(boolean onlyParents) {
-		if(onlyParents) {
-			file.getParentFile().mkdirs();
-		} else {
-			file.mkdirs();
-		}
-	}
-	
-	@Override
-	public void write(byte[] bytes) {
-		try {
-			FileOutputStream fos = new FileOutputStream(file);
-			for(int i = 0; i < bytes.length; i++) {
-				fos.write(bytes[i]);
-			}
-			fos.close();
-		} catch(IOException ioe) {
-			// TODO: handle exception
-		}
-	}
-	
+
+    private File file;
+
+    public FileIO(String file) {
+        this.file = new File(file);
+    }
+
+    @Override
+    public String getName() {
+        return file.getName();
+    }
+
+    @Override
+    public String getPath() {
+        return file.getAbsolutePath();
+    }
+
+    @Override
+    public boolean fileExists() {
+        return file.exists() && !file.isDirectory();
+    }
+
+    @Override
+    public Writer getWriter() {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            return new OutputStreamWriter(new BufferedOutputStream(fos), "UTF-8");
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Reader getReader() {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            return new InputStreamReader(new BufferedInputStream(fis), "UTF-8");
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void createFolderTree(boolean onlyParents) {
+        if (onlyParents) {
+            file.getParentFile().mkdirs();
+        } else {
+            file.mkdirs();
+        }
+    }
+
+    @Override
+    public void write(byte[] bytes) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            for (int i = 0; i < bytes.length; i++) {
+                fos.write(bytes[i]);
+            }
+            fos.close();
+        } catch (IOException ioe) {
+            // TODO: handle exception
+            return;
+        }
+    }
+
 }

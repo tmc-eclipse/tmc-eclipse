@@ -7,16 +7,16 @@ import org.junit.Test;
 
 public class FileIOTest {
 
-	private IO io;
-	
-	@Before
-	public void setUp() {
-		io = new FileIO("invalid.file");
-	}
-	
-	@Test
-	public void testGetReaderReturnsNullIfFileDoesntExist() {
-		assertNull(io.getReader());
-	}
+    private IO io;
+
+    @Before
+    public void setUp() {
+        io = new FileIO("invalid.file");
+    }
+
+    @Test
+    public void testGetReaderReturnsNullIfFileDoesntExist() {
+        assertNull(io.getReader());
+    }
 
 }
