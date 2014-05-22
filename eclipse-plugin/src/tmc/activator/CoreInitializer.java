@@ -8,6 +8,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import tmc.handlers.EclipseErrorHandler;
+import tmc.tasks.EclipseTaskRunner;
 import fi.helsinki.cs.plugin.tmc.Core;
 
 public class CoreInitializer extends AbstractUIPlugin implements IStartup {
@@ -44,6 +45,7 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
             public void run() {
                 Core.setErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                         .getShell()));
+                Core.setTaskRunner(new EclipseTaskRunner());
             }
         });
 
