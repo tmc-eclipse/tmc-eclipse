@@ -93,8 +93,8 @@
 
 	<extension point="org.eclipse.ui.views">
         <view id="fi.helsinki.cs.plugins.eclipse.views.tmcTestUi"
-             name="Label View"
+             name="TMC Test Results"
              icon="icons/sample.gif"
-          class="tmc.ui.TestRunnerDialog"/>
+          class="tmc.ui.TestRunnerView"/>
 	</extension>
 </plugin>
