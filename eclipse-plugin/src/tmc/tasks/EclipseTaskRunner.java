@@ -17,7 +17,7 @@ public class EclipseTaskRunner implements BackgroundTaskRunner {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                Object returnValue = task.start(new EclipseTaskFeedbackAdapter(monitor));
+                task.start(new EclipseTaskFeedbackAdapter(monitor));
                 return Status.OK_STATUS;
             }
 

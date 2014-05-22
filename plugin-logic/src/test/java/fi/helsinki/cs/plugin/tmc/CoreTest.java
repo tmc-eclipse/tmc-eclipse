@@ -44,7 +44,7 @@ public class CoreTest {
     @Test
     public void canSetErrorHandler() {
         TMCErrorHandler eh = mock(TMCErrorHandler.class);
-        Core.setTMCErrorHandler(eh);
+        Core.setErrorHandler(eh);
         assertEquals(eh, Core.getErrorHandler());
     }
 }

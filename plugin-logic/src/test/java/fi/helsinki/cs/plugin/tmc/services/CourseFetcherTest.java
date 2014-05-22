@@ -51,7 +51,7 @@ public class CourseFetcherTest {
     @Test
     public void updateCoursesPassesExceptiontoErrorHandlerAndStopsExecution() {
         TMCErrorHandler errorHandler = mock(TMCErrorHandler.class);
-        Core.setTMCErrorHandler(errorHandler);
+        Core.setErrorHandler(errorHandler);
 
         when(webDAO.getCourses()).thenThrow(new UserVisibleException("mock"));
         courseFetcher.updateCourses();

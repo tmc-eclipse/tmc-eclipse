@@ -1,10 +1,17 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class ServerAccess {
+
     public static final int API_VERSION = 7;
-    private Settings settings = Settings.getDefaultSettings();
+
+    private Settings settings;
+
+    public ServerAccess() {
+        this.settings = Core.getSettings();
+    }
 
     private static String getClientVersion() {
         return "0.0.1";

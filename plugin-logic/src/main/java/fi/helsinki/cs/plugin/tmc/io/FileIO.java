@@ -71,10 +71,8 @@ public class FileIO implements IO {
                 fos.write(bytes[i]);
             }
             fos.close();
-        } catch (IOException ioe) {
-            // TODO: handle exception
-            return;
+        } catch (IOException e) {
+            System.out.println(e.getLocalizedMessage());
         }
     }
-
 }
