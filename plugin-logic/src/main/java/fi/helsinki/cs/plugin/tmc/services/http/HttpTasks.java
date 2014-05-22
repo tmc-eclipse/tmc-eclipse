@@ -13,9 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -132,19 +130,16 @@ public class HttpTasks {
             throws URISyntaxException {
         HttpPost request = new HttpPost(url);
 
-        // TODO: Replace with MultipartEntityBuilder (1/3)
-        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.setCharset(Charset.forName("UTF-8"));
+
         for (Map.Entry<String, String> e : params.entrySet()) {
-            try {
-                // TODO: Replace with MultipartEntityBuilder (2/3)
-                entity.addPart(e.getKey(), new StringBody(e.getValue(), Charset.forName("UTF-8")));
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            builder.addTextBody(e.getKey(), e.getValue());
         }
-        // TODO: Replace with MultipartEntityBuilder (3/3)
-        entity.addPart(fileField, new ByteArrayBody(data, "file"));
-        request.setEntity(entity);
+
+        builder.addBinaryBody(fileField, data);
+        request.setEntity(builder.build());
         return request;
     }
 }

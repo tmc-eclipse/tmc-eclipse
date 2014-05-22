@@ -5,10 +5,10 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.Unzipper;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseDownloader;
-import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class DownloaderTask implements BackgroundTask {

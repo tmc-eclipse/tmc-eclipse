@@ -1,18 +1,17 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.prefs.Preferences;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import fi.helsinki.cs.plugin.tmc.domain.Exercise;
-import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class ExcerciseTest {
 

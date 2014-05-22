@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.services;
+package fi.helsinki.cs.plugin.tmc.domain;
 
 public class ZippedProject {
 

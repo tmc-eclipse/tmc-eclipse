@@ -1,11 +1,10 @@
 package fi.helsinki.cs.plugin.tmc.http;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.services.http.UriUtils;

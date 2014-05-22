@@ -47,7 +47,7 @@ public class LocalCourseStorage implements CourseDAO {
         try {
             reader.close();
         } catch (IOException e) {
-            // TODO: Log here
+            // TODO: Log here?
             return courseList.courses;
         }
 
@@ -72,7 +72,7 @@ public class LocalCourseStorage implements CourseDAO {
         try {
             writer.close();
         } catch (IOException e) {
-            // TODO: Log here
+            // TODO: Log here?
             return;
         }
     }

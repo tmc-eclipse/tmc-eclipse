@@ -1,8 +1,9 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
-import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Course {
 

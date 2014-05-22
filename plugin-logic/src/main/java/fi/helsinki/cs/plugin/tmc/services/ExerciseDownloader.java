@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.http.HttpTasks;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerAccess;
 

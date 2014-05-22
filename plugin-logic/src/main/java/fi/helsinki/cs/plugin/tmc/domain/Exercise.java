@@ -1,11 +1,11 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Exercise implements Serializable {
     private static final long serialVersionUID = 1L;
