@@ -11,12 +11,12 @@ import tmc.ui.ExerciseSelectorDialog;
 
 public class ExerciseSelectorHandler extends AbstractHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		
-		ExerciseSelectorDialog dialog = new ExerciseSelectorDialog(window.getShell(), SWT.SHEET);
-		dialog.open();
-		
-		return null;
-	}
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+
+        ExerciseSelectorDialog dialog = new ExerciseSelectorDialog(window.getShell(), SWT.SHEET);
+        dialog.open();
+
+        return null;
+    }
 }

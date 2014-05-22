@@ -12,17 +12,19 @@ import org.eclipse.ui.part.ViewPart;
 import tmc.ui.TestRunnerDialog;
 
 public class TestRunnerHandler extends AbstractHandler {
-	
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		TestRunnerDialog dialog = new TestRunnerDialog();
-		
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
+
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        TestRunnerDialog dialog = new TestRunnerDialog();
+
+        try {
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
+
+        } catch (PartInitException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

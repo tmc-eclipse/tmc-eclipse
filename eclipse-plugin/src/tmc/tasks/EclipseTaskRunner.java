@@ -20,12 +20,12 @@ public class EclipseTaskRunner implements BackgroundTaskRunner {
                 Object returnValue = task.start(new EclipseTaskFeedbackAdapter(monitor));
                 return Status.OK_STATUS;
             }
-            
+
         };
 
         job.schedule();
     }
-    
+
     @Override
     public void cancelTask(BackgroundTask task) {
         task.stop();
