@@ -42,7 +42,7 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
             @Override
             public void run() {
-                Core.setTMCErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                Core.setErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                         .getShell()));
             }
         });

@@ -35,7 +35,7 @@ public class ExerciseFetcherTest {
         webDAO = mock(WebDao.class);
         courses = mock(Courses.class);
         errorHandler = mock(TMCErrorHandler.class);
-        Core.setTMCErrorHandler(errorHandler);
+        Core.setErrorHandler(errorHandler);
 
         fetcher = new ExerciseFetcher(courses, webDAO);
     }
