@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import fi.helsinki.cs.plugin.tmc.services.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 
 public class Unzipper {
 

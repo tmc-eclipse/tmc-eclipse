@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.services.web;
+package fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers;
 
 import com.google.gson.annotations.SerializedName;
 

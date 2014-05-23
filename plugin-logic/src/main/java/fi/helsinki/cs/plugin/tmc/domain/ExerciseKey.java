@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.domain;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -61,6 +62,9 @@ public final class ExerciseKey {
         @Override
         public ExerciseKey deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) {
             String[] parts = je.getAsString().split("/", 2);
+            if (parts.length != 2) {
+                throw new JsonParseException("Invalid ExerciseKey representation: \"" + je.getAsString() + "\"");
+            }
             return new ExerciseKey(parts[0], parts[1]);
         }
     }

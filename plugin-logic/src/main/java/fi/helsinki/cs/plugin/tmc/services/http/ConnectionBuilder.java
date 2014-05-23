@@ -2,7 +2,7 @@ package fi.helsinki.cs.plugin.tmc.services.http;
 
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
-public class ServerAccess {
+/*package*/class ConnectionBuilder {
     public static final int API_VERSION = 7;
     private Settings settings = Settings.getDefaultSettings();
 
@@ -21,8 +21,8 @@ public class ServerAccess {
         return url;
     }
 
-    public HttpTasks createHttpTasks() {
-        return new HttpTasks().setCredentials(settings.getUsername(), settings.getPassword());
+    public RequestBuilder createConnection() {
+        return new RequestBuilder().setCredentials(settings.getUsername(), settings.getPassword());
     }
 
     public boolean hasEnoughSettings() { // kovakoodattu!

@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.services.web;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 public enum UrlExtension {
     COURSES("courses.json"), EXERCISES("courses/");
