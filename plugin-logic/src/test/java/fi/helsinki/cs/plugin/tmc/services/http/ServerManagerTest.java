@@ -80,7 +80,6 @@ public class ServerManagerTest {
         List<Exercise> returned = server.getExercises("11");
 
         for (Exercise orig : el.getExercises()) {
-            String name = orig.getName();
             boolean found = false;
             for (Exercise ret : returned) {
                 if (ret.getName().equals(orig.getName())) {
