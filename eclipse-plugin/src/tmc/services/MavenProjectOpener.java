@@ -29,36 +29,40 @@ public class MavenProjectOpener {
     protected static final IProgressMonitor monitor = new NullProgressMonitor();
 
     public MavenProjectOpener(String pathToPom) {
+        System.out.println("MPO constructor");
         workspace = ResourcesPlugin.getWorkspace();
         resolverConfiguration = new ResolverConfiguration();
         pomFile = new File(pathToPom);
+        System.out.println("Constructor finished");
     }
 
     public void importAndOpen() throws CoreException, IOException {
+        System.out.println("import and open called");
         try {
             baseDir = pomFile.getParentFile().getCanonicalPath();
         } catch (IOException e) {
             System.out.println("Failed to parse base directory from pomFile");
             e.printStackTrace();
         }
-
+        System.out.println("basedir set");
         IProject project = importProject();
-
+        System.out.println("project imported");
         if (project != null) {
             project.open(monitor);
+            System.out.println("project opened");
         }
     }
 
     public IProject importProject() throws CoreException, IOException {
         MavenModelManager mavenModelManager = MavenPlugin.getMavenModelManager();
+        System.out.println("Mavenmodelmanager generated");
         IWorkspaceRoot root = workspace.getRoot();
-        File src = new File(baseDir);
-        File dst = new File(root.getLocation().toFile(), src.getName());
 
         final ArrayList<MavenProjectInfo> projectInfos = new ArrayList<MavenProjectInfo>();
-        File pomFile = new File(dst, this.pomFile.getName());
-        Model model = mavenModelManager.readMavenModel(pomFile);
+        Model model = mavenModelManager.readMavenModel(this.pomFile);
+        System.out.println("pomfile read");
         MavenProjectInfo projectInfo = new MavenProjectInfo(pomFile.getName(), pomFile, model, null);
+        System.out.println("projectinfo generated");
         setBasedirRename(projectInfo);
         projectInfos.add(projectInfo);
 
@@ -70,11 +74,13 @@ public class MavenProjectOpener {
 
                 importResults.addAll(MavenPlugin.getProjectConfigurationManager().importProjects(projectInfos,
                         importConfiguration, monitor));
+                System.out.println("importresults added");
 
             }
         }, MavenPlugin.getProjectConfigurationManager().getRule(), IWorkspace.AVOID_UPDATE, monitor);
 
         IProject project = importResults.get(0).getProject();
+        System.out.println("project returned");
 
         return project;
 
