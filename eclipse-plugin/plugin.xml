@@ -90,11 +90,12 @@
          </toolbar>
       </menuContribution>
    </extension>
-
-	<extension point="org.eclipse.ui.views">
+   
+   <extension point="org.eclipse.ui.views">
         <view id="fi.helsinki.cs.plugins.eclipse.views.tmcTestUi"
              name="TMC Test Results"
-             icon="icons/sample.gif"
-          class="tmc.ui.TestRunnerView"/>
+          	 class="tmc.ui.TestRunnerView"/>
 	</extension>
+
+	
 </plugin>
