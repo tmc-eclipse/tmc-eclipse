@@ -6,10 +6,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileIO implements IO {
 
@@ -35,10 +39,32 @@ public class FileIO implements IO {
     }
 
     @Override
+    public boolean directoryExists() {
+        return file.exists() && file.isDirectory();
+    }
+
+    @Override
+    public OutputStream getOutputStream() {
+        try {
+            return new FileOutputStream(file);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public InputStream getInputStream() {
+        try {
+            return new FileInputStream(file);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
     public Writer getWriter() {
         try {
-            FileOutputStream fos = new FileOutputStream(file);
-            return new OutputStreamWriter(new BufferedOutputStream(fos), "UTF-8");
+            return new OutputStreamWriter(new BufferedOutputStream(getOutputStream()), "UTF-8");
         } catch (IOException e) {
             return null;
         }
@@ -47,8 +73,7 @@ public class FileIO implements IO {
     @Override
     public Reader getReader() {
         try {
-            FileInputStream fis = new FileInputStream(file);
-            return new InputStreamReader(new BufferedInputStream(fis), "UTF-8");
+            return new InputStreamReader(new BufferedInputStream(getInputStream()), "UTF-8");
         } catch (IOException e) {
             return null;
         }
@@ -61,6 +86,17 @@ public class FileIO implements IO {
         } else {
             file.mkdirs();
         }
+    }
+
+    @Override
+    public List<IO> getChildren() {
+        List<IO> children = new ArrayList<IO>();
+        if (directoryExists()) {
+            for (File f : file.listFiles()) {
+                children.add(new FileIO(f.getAbsolutePath()));
+            }
+        }
+        return children;
     }
 
     @Override

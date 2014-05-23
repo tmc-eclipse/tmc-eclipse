@@ -1,8 +1,11 @@
 package fi.helsinki.cs.plugin.tmc.io;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.List;
 
 public interface IO {
 
@@ -12,6 +15,12 @@ public interface IO {
 
     boolean fileExists();
 
+    boolean directoryExists();
+
+    OutputStream getOutputStream();
+
+    InputStream getInputStream();
+
     Writer getWriter();
 
     Reader getReader();
@@ -19,5 +28,7 @@ public interface IO {
     void write(byte[] bytes) throws IOException;
 
     void createFolderTree(boolean onlyParents);
+
+    List<IO> getChildren();
 
 }
