@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.http;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 import static org.junit.Assert.*;
 

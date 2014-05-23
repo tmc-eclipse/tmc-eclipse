@@ -14,7 +14,15 @@ public class CourseList {
         return apiVersion;
     }
 
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
     public Course[] getCourses() {
         return courses;
+    }
+
+    public void setCourses(Course[] courses) {
+        this.courses = courses;
     }
 }

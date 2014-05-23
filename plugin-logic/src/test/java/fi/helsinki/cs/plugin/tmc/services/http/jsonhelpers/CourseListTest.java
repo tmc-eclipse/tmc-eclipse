@@ -1,10 +1,12 @@
-package fi.helsinki.cs.plugin.tmc.services.web;
+package fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import com.google.gson.Gson;
+
+import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 
 public class CourseListTest {
 

@@ -6,10 +6,6 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
     public static final int API_VERSION = 7;
     private Settings settings = Settings.getDefaultSettings();
 
-    private static String getClientVersion() {
-        return "0.0.1";
-    }
-
     public String getUrl(String extension) {
         return addApiCallQueryParameters(settings.getServerBaseUrl() + "/" + extension);
     }
@@ -19,6 +15,10 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
         url = UriUtils.withQueryParam(url, "client", "eclipse_plugin");
         url = UriUtils.withQueryParam(url, "client_version", getClientVersion());
         return url;
+    }
+
+    private static String getClientVersion() {
+        return "0.0.1";
     }
 
     public RequestBuilder createConnection() {

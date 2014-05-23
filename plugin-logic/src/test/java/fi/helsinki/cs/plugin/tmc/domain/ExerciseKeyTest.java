@@ -1,11 +1,14 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 
 import fi.helsinki.cs.plugin.tmc.domain.ExerciseKey.GsonAdapter;
 
@@ -78,5 +81,32 @@ public class ExerciseKeyTest {
         ExerciseKey deserializedKey = adapter.deserialize(element, getClass(), null);
 
         assertEquals(ek, deserializedKey);
+    }
+
+    @Test
+    public void testGsonAdapterSerialize() {
+        ExerciseKey.GsonAdapter ga = new ExerciseKey.GsonAdapter();
+        assertEquals(ga.serialize(ek, ek.getClass(), null), new JsonPrimitive("a/b"));
+    }
+
+    @Test
+    public void testGsonAdapterDeserialize() {
+        ExerciseKey.GsonAdapter ga = new ExerciseKey.GsonAdapter();
+        JsonPrimitive jp = new JsonPrimitive("a/b");
+        assertEquals(ga.deserialize(jp, jp.getClass(), null), ek);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testGsonAdapterDeserializeFailure() throws JsonParseException {
+        ExerciseKey.GsonAdapter ga = new ExerciseKey.GsonAdapter();
+        JsonPrimitive jp = new JsonPrimitive("aa");
+        ga.deserialize(jp, jp.getClass(), null);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testGsonAdapterDeserializeFailureEmptyString() throws JsonParseException {
+        ExerciseKey.GsonAdapter ga = new ExerciseKey.GsonAdapter();
+        JsonPrimitive jp = new JsonPrimitive("");
+        ga.deserialize(jp, jp.getClass(), null);
     }
 }

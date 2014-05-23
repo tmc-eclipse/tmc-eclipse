@@ -1,8 +1,10 @@
-package fi.helsinki.cs.plugin.tmc.services.web;
+package fi.helsinki.cs.plugin.tmc.services.http;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import fi.helsinki.cs.plugin.tmc.services.http.UrlExtension;
 
 public class UrlExtensionTest {
 

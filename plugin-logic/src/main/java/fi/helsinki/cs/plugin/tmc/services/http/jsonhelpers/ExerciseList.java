@@ -19,4 +19,8 @@ public class ExerciseList {
         return course.getExercises();
     }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
 }
