@@ -28,7 +28,11 @@ public class Unzipper {
             file.createFolderTree(!zipEntry.isDirectory());
 
             byte[] unzippedBytes = new byte[(int) zipEntry.getSize()];
-            zipStream.read(unzippedBytes, 0, (int) zipEntry.getSize());
+
+            int bytesRead = 0;
+            while (bytesRead < zipEntry.getSize()) {
+                bytesRead += zipStream.read(unzippedBytes, bytesRead, (int) zipEntry.getSize() - bytesRead);
+            }
 
             if (!zipEntry.isDirectory()) {
                 file.write(unzippedBytes);
@@ -37,5 +41,4 @@ public class Unzipper {
             zipEntry = zipStream.getNextEntry();
         }
     }
-
 }
