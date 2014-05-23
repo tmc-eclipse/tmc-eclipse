@@ -75,7 +75,6 @@ public class ServerManager {
         String json;
         try {
             json = connectionBuilder.createConnection().getForText(url);
-            System.out.println(url);
         } catch (Exception e) {
             // TODO: Better errorhandling?
             e.printStackTrace();
