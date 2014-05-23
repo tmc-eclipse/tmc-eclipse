@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import tmc.services.GenericProjectOpener;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.tasks.DownloaderTask;
@@ -138,19 +139,7 @@ public class ExerciseSelectorDialog extends Dialog {
                 list.add(Core.getExerciseFetcher().getExerciseByName(table.getItem(i).getText()));
             }
         }
-
-        Core.getTaskRunner().runTask(new DownloaderTask(list));
-        // Job job = new Job("Open Projects") {
-        //
-        // @Override
-        // protected IStatus run(IProgressMonitor monitor) {
-        // new GenericProjectOpener();
-        // return Status.OK_STATUS;
-        // }
-        //
-        // };
-        //
-        // job.schedule();
+        Core.getTaskRunner().runTask(new DownloaderTask(list, new GenericProjectOpener()));
 
     }
 

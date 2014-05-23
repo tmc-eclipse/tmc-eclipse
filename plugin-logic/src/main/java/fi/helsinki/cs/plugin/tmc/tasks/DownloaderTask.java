@@ -15,10 +15,12 @@ public class DownloaderTask implements BackgroundTask {
 
     private boolean isRunning;
     private List<Exercise> exerciseList;
+    private ProjectOpener projectOpener;
 
-    public DownloaderTask(List<Exercise> exerciseList) {
+    public DownloaderTask(List<Exercise> exerciseList, ProjectOpener projectOpener) {
         this.isRunning = true;
         this.exerciseList = exerciseList;
+        this.projectOpener = projectOpener;
     }
 
     @Override
@@ -47,6 +49,7 @@ public class DownloaderTask implements BackgroundTask {
                 Core.getErrorHandler().handleException(
                         new UserVisibleException("An error occurred while unzipping the exercises"));
             }
+            projectOpener.open(e);
         }
 
         return null;
