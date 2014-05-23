@@ -64,7 +64,11 @@ public class FileIO implements IO {
     @Override
     public Writer getWriter() {
         try {
-            return new OutputStreamWriter(new BufferedOutputStream(getOutputStream()), "UTF-8");
+            OutputStream os = getOutputStream();
+            if (os == null) {
+                return null;
+            }
+            return new OutputStreamWriter(new BufferedOutputStream(os), "UTF-8");
         } catch (IOException e) {
             return null;
         }
@@ -73,7 +77,11 @@ public class FileIO implements IO {
     @Override
     public Reader getReader() {
         try {
-            return new InputStreamReader(new BufferedInputStream(getInputStream()), "UTF-8");
+            InputStream is = getInputStream();
+            if (is == null) {
+                return null;
+            }
+            return new InputStreamReader(new BufferedInputStream(is), "UTF-8");
         } catch (IOException e) {
             return null;
         }

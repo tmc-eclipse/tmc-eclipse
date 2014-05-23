@@ -1,6 +1,7 @@
 package fi.helsinki.cs.plugin.tmc.io;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -27,15 +28,16 @@ public class Unzipper {
             FileIO file = new FileIO(destinationFolder.getPath() + File.separator + zipEntry.getName());
             file.createFolderTree(!zipEntry.isDirectory());
 
-            byte[] unzippedBytes = new byte[(int) zipEntry.getSize()];
-
-            int bytesRead = 0;
-            while (bytesRead < zipEntry.getSize()) {
-                bytesRead += zipStream.read(unzippedBytes, bytesRead, (int) zipEntry.getSize() - bytesRead);
+            byte[] buffer = new byte[1024];
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            int read = 0;
+            while ((read = zipStream.read(buffer)) != -1) {
+                stream.write(buffer, 0, read);
+                buffer = new byte[1024];
             }
 
             if (!zipEntry.isDirectory()) {
-                file.write(unzippedBytes);
+                file.write(stream.toByteArray());
             }
 
             zipEntry = zipStream.getNextEntry();
