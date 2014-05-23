@@ -26,7 +26,8 @@ public class ServerManager {
     }
 
     public List<Course> getCourses() {
-        String bodyText = getString(UrlExtension.COURSES.getExtension());
+        String url = connectionBuilder.getUrl(UrlExtension.COURSES.getExtension());
+        String bodyText = getString(url);
         CourseList cl = mapper.fromJson(bodyText, CourseList.class);
         if (cl == null) {
             return new ArrayList<Course>();
@@ -35,7 +36,8 @@ public class ServerManager {
     }
 
     public List<Exercise> getExercises(String courseId) {
-        String bodyText = getString(UrlExtension.EXERCISES.getExtension(courseId));
+        String url = connectionBuilder.getUrl(UrlExtension.EXERCISES.getExtension(courseId));
+        String bodyText = getString(url);
         ExerciseList el = mapper.fromJson(bodyText, ExerciseList.class);
         List<Exercise> exercises = el.getExercises();
 
@@ -73,8 +75,10 @@ public class ServerManager {
         String json;
         try {
             json = connectionBuilder.createConnection().getForText(url);
+            System.out.println(url);
         } catch (Exception e) {
             // TODO: Better errorhandling?
+            e.printStackTrace();
             json = "";
         }
         return json;
