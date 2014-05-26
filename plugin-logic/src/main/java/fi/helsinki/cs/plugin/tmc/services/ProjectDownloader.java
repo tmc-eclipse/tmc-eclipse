@@ -7,11 +7,11 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
-public class ProjectFetcher {
+public class ProjectDownloader {
 
     private ServerManager server;
 
-    public ProjectFetcher(ServerManager server) {
+    public ProjectDownloader(ServerManager server) {
         this.server = server;
     }
 
