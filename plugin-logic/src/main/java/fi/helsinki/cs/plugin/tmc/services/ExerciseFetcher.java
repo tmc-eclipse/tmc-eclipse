@@ -22,8 +22,10 @@ public class ExerciseFetcher {
     public void updateExercisesForCurrentCourse() {
         try {
             this.course = courses.getCourseByName(Core.getSettings().getCurrentCourseName());
-            int id = course.getId();
-            course.setExercises(webDao.getExercises("" + id));
+            List<Exercise> exercises = webDao.getExercises("" + course.getId());
+            if (exercises != null) {
+                course.setExercises(exercises);
+            }
         } catch (UserVisibleException e) {
             Core.getErrorHandler().handleException(e);
         }
