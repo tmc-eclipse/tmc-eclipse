@@ -13,6 +13,9 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.ZIP_ALL_THE_THINGS;
+
 public class RecursiveZipperTest {
 
     private String path;
@@ -46,7 +49,7 @@ public class RecursiveZipperTest {
     }
 
     private void zipDirectory(IO directory, String zipName) throws Exception {
-        RecursiveZipper zipper = new RecursiveZipper(directory, RecursiveZipper.ZIP_ALL_THE_THINGS);
+        RecursiveZipper zipper = new RecursiveZipper(directory, new ZIP_ALL_THE_THINGS());
 
         byte[] zip = zipper.zipProjectSources();
 

@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.io;
+package fi.helsinki.cs.plugin.tmc.io.zipper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,6 +8,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.io.IO;
 
 public class Unzipper {
 
