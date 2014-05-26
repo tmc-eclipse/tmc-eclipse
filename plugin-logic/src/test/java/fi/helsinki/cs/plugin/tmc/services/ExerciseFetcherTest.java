@@ -21,18 +21,18 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
-import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ExerciseFetcherTest {
-    private WebDao webDAO;
+    private ServerManager webDAO;
     private Courses courses;
     private TMCErrorHandler errorHandler;
     private ExerciseFetcher fetcher;
 
     @Before
     public void setup() {
-        webDAO = mock(WebDao.class);
+        webDAO = mock(ServerManager.class);
         courses = mock(Courses.class);
         errorHandler = mock(TMCErrorHandler.class);
         Core.setErrorHandler(errorHandler);

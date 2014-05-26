@@ -4,22 +4,22 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class CourseFetcher {
 
     private Courses courses;
-    private WebDao webDao;
+    private ServerManager server;
 
-    public CourseFetcher(Courses courses, WebDao webDao) {
+    public CourseFetcher(Courses courses, ServerManager server) {
         this.courses = courses;
-        this.webDao = webDao;
+        this.server = server;
     }
 
     public void updateCourses() {
         try {
-            courses.setCourses(webDao.getCourses());
+            courses.setCourses(server.getCourses());
         } catch (UserVisibleException e) {
             Core.getErrorHandler().handleException(e);
         }

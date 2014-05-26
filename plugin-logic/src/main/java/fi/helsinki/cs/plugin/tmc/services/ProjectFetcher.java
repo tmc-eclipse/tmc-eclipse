@@ -5,15 +5,14 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
-import fi.helsinki.cs.plugin.tmc.services.http.HttpTasks;
-import fi.helsinki.cs.plugin.tmc.services.http.ServerAccess;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
-public class ExerciseDownloader {
+public class ProjectFetcher {
 
-    private HttpTasks http;
+    private ServerManager server;
 
-    public ExerciseDownloader() {
-        this.http = new ServerAccess().createHttpTasks();
+    public ProjectFetcher(ServerManager server) {
+        this.server = server;
     }
 
     public List<ZippedProject> downloadExercises(List<Exercise> exercises) {
@@ -26,13 +25,7 @@ public class ExerciseDownloader {
 
     public ZippedProject downloadExercise(Exercise exercise) {
         String zipUrl = exercise.getDownloadUrl();
-        ZippedProject zippedProject = new ZippedProject();
-        try {
-            zippedProject.setBytes(http.getForBinary(zipUrl).call());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return zippedProject;
+        return server.getExerciseZip(zipUrl);
     }
 
 }

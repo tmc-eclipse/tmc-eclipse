@@ -5,24 +5,24 @@ import java.util.List;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
-import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ExerciseFetcher {
 
-    private WebDao webDao;
+    private ServerManager server;
     private Courses courses;
     private Course course;
 
-    public ExerciseFetcher(Courses courses, WebDao webDAO) {
+    public ExerciseFetcher(Courses courses, ServerManager server) {
         this.courses = courses;
-        this.webDao = webDAO;
+        this.server = server;
     }
 
     public void updateExercisesForCurrentCourse() {
         try {
             this.course = courses.getCourseByName(Core.getSettings().getCurrentCourseName());
-            List<Exercise> exercises = webDao.getExercises("" + course.getId());
+            List<Exercise> exercises = server.getExercises("" + course.getId());
             if (exercises != null) {
                 course.setExercises(exercises);
             }
