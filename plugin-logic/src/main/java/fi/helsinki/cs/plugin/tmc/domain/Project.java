@@ -32,7 +32,7 @@ public class Project {
     }
 
     public boolean containsFile(String file) {
-        return rootPath.contains(file);
+        return file.contains(rootPath);
     }
 
     @Override
