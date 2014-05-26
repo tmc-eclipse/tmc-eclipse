@@ -3,40 +3,39 @@ package fi.helsinki.cs.plugin.tmc.services;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.storage.CourseDAO;
-import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
+import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 
-public class Courses {
+public class CourseDAO {
 
-    private CourseDAO dao;
+    private DataSource<Course> dataSource;
     private List<Course> courses;
 
-    public Courses(CourseDAO dao) throws UserVisibleException {
-        this.dao = dao;
+    public CourseDAO(DataSource<Course> dataSource) {
+        this.dataSource = dataSource;
         loadCourses();
+    }
+
+    public void loadCourses() {
+        this.courses = dataSource.load();
     }
 
     public List<Course> getCourses() {
         return courses;
     }
 
-    public void loadCourses() throws UserVisibleException {
-        this.courses = dao.load();
-    }
-
-    public void setCourses(List<Course> courses) throws UserVisibleException {
+    public void setCourses(List<Course> courses) {
         this.courses = courses;
-        dao.save(courses);
+        dataSource.save(courses);
     }
 
-    public void updateCourse(Course course) throws UserVisibleException {
+    public void updateCourse(Course course) {
         for (int i = 0; i < courses.size(); i++) {
             if (courses.get(i).getName().equals(course.getName())) {
                 courses.set(i, course);
                 break;
             }
         }
-        dao.save(courses);
+        dataSource.save(courses);
     }
 
     public Course getCourseByName(String name) {

@@ -10,7 +10,8 @@ public class ServiceFactoryTest {
     public void constructorInitialisesEverythingCorrectly() {
         ServiceFactory serviceFactory = new ServiceFactory();
         assertNotNull(serviceFactory.getSettings());
-        assertNotNull(serviceFactory.getCourses());
+        assertNotNull(serviceFactory.getCourseDAO());
+        assertNotNull(serviceFactory.getProjectDAO());
         assertNotNull(serviceFactory.getCourseFetcher());
         assertNotNull(serviceFactory.getExerciseFetcher());
     }

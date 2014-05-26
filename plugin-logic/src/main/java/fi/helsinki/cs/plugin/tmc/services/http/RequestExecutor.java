@@ -29,19 +29,17 @@ import org.apache.http.util.EntityUtils;
  * {@link FailedHttpResponseException} with a preloaded buffered entity is
  * thrown.
  */
-public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEntity> {
-    private final Object shutdownLock = new Object();
-
+class RequestExecutor {
     private HttpUriRequest request;
-    private static final Logger LOG = Logger.getLogger(HttpRequestExecutor.class.getName());
+    private static final Logger LOG = Logger.getLogger(RequestExecutor.class.getName());
 
     private UsernamePasswordCredentials credentials; // May be null
 
-    /* package */HttpRequestExecutor(String url) {
+    /* package */RequestExecutor(String url) {
         this(new HttpGet(url));
     }
 
-    /* package */HttpRequestExecutor(HttpUriRequest request) {
+    /* package */RequestExecutor(HttpUriRequest request) {
         this.request = request;
         if (request.getURI().getUserInfo() != null) {
             credentials = new UsernamePasswordCredentials(request.getURI().getUserInfo());
@@ -49,31 +47,19 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
 
     }
 
-    public HttpRequestExecutor setCredentials(String username, String password) {
+    public RequestExecutor setCredentials(String username, String password) {
         return setCredentials(new UsernamePasswordCredentials(username, password));
     }
 
-    public HttpRequestExecutor setCredentials(UsernamePasswordCredentials credentials) {
+    public RequestExecutor setCredentials(UsernamePasswordCredentials credentials) {
         this.credentials = credentials;
         return this;
     }
 
-    public HttpRequestExecutor setTimeout(int timeoutMs) {
-        return this;
-    }
-
-    @Override
-    public BufferedHttpEntity call() throws IOException, InterruptedException, FailedHttpResponseException {
+    public BufferedHttpEntity execute() throws IOException, InterruptedException, FailedHttpResponseException {
         CloseableHttpClient httpClient = makeHttpClient();
 
-        try {
-            return executeRequest(httpClient);
-        } finally {
-            synchronized (shutdownLock) {
-                request = null;
-                disposeOfHttpClient(httpClient);
-            }
-        }
+        return executeRequest(httpClient);
     }
 
     private CloseableHttpClient makeHttpClient() throws IOException {
@@ -83,18 +69,6 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
         maybeSetProxy(httpClientBuilder);
 
         return httpClientBuilder.build();
-    }
-
-    private SystemDefaultRoutePlanner getProxy() {
-        return new SystemDefaultRoutePlanner(ProxySelector.getDefault());
-    }
-
-    private void disposeOfHttpClient(CloseableHttpClient httpClient) {
-        try {
-            httpClient.close();
-        } catch (IOException ex) {
-            LOG.log(Level.WARNING, "Dispose of httpClient failed {0}", ex);
-        }
     }
 
     private BufferedHttpEntity executeRequest(HttpClient httpClient) throws IOException, InterruptedException,
@@ -147,23 +121,10 @@ public class HttpRequestExecutor implements CancellableCallable<BufferedHttpEnti
         return HttpStatus.SC_OK <= responseCode && responseCode < HttpStatus.SC_MULTIPLE_CHOICES;
     }
 
-    /**
-     * May be called from another thread to cancel an ongoing download.
-     */
-    @Override
-    public boolean cancel() {
-        synchronized (shutdownLock) {
-            if (request != null) {
-                request.abort();
-            }
-        }
-        return true;
-    }
-
     private void maybeSetProxy(HttpClientBuilder httpClientBuilder) {
-        SystemDefaultRoutePlanner systemDefaultRoutePlanner = getProxy();
-        if (systemDefaultRoutePlanner != null) {
-            httpClientBuilder.setRoutePlanner(systemDefaultRoutePlanner);
+        SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(ProxySelector.getDefault());
+        if (routePlanner != null) {
+            httpClientBuilder.setRoutePlanner(routePlanner);
         }
     }
 }

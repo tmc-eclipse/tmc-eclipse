@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.services.web;
+package fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers;
 
 import java.util.List;
 
@@ -16,7 +16,15 @@ public class ExerciseList {
     private Course course;
 
     public List<Exercise> getExercises() {
+        for (Exercise e : course.getExercises()) {
+            e.setCourseName(course.getName());
+        }
+
         return course.getExercises();
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
 }

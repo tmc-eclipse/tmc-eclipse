@@ -19,33 +19,33 @@ import org.junit.Test;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.services.web.WebDao;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class CourseFetcherTest {
-    private WebDao webDAO;
-    private Courses courses;
+    private ServerManager server;
+    private CourseDAO courseDAO;
     private CourseFetcher courseFetcher;
 
     @Before
     public void setup() {
-        webDAO = mock(WebDao.class);
-        courses = mock(Courses.class);
-        courseFetcher = new CourseFetcher(courses, webDAO);
+        server = mock(ServerManager.class);
+        courseDAO = mock(CourseDAO.class);
+        courseFetcher = new CourseFetcher(server, courseDAO);
     }
 
     @Test
     public void updateCoursesFetchesDataFromWebDAOAndInputsDataToCourses() {
         List<Course> courseList = new ArrayList<Course>();
-        when(webDAO.getCourses()).thenReturn(courseList);
+        when(server.getCourses()).thenReturn(courseList);
 
         courseFetcher.updateCourses();
 
-        verify(webDAO, times(1)).getCourses();
-        verifyNoMoreInteractions(webDAO);
+        verify(server, times(1)).getCourses();
+        verifyNoMoreInteractions(server);
 
-        verify(courses, times(1)).setCourses(courseList);
-        verifyNoMoreInteractions(courses);
+        verify(courseDAO, times(1)).setCourses(courseList);
+        verifyNoMoreInteractions(courseDAO);
     }
 
     @Test
@@ -53,11 +53,11 @@ public class CourseFetcherTest {
         TMCErrorHandler errorHandler = mock(TMCErrorHandler.class);
         Core.setErrorHandler(errorHandler);
 
-        when(webDAO.getCourses()).thenThrow(new UserVisibleException("mock"));
+        when(server.getCourses()).thenThrow(new UserVisibleException("mock"));
         courseFetcher.updateCourses();
 
         // Do not update courselist on exception
-        verifyNoMoreInteractions(courses);
+        verifyNoMoreInteractions(courseDAO);
 
         // Pass error to ErrorHandler
         verify(errorHandler, times(1)).handleException(any(Exception.class));
@@ -70,7 +70,7 @@ public class CourseFetcherTest {
         mockCourseList.add(new Course("course2"));
         mockCourseList.add(new Course("course3"));
 
-        when(courses.getCourses()).thenReturn(mockCourseList);
+        when(courseDAO.getCourses()).thenReturn(mockCourseList);
         String[] courseNames = courseFetcher.getCourseNames();
 
         assertTrue(Arrays.asList(courseNames).contains("course1"));

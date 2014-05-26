@@ -10,7 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-public final class UriUtils {
+final class UriUtils {
 
     private UriUtils() {
     }
