@@ -16,6 +16,10 @@ public class ExerciseList {
     private Course course;
 
     public List<Exercise> getExercises() {
+        for (Exercise e : course.getExercises()) {
+            e.setCourseName(course.getName());
+        }
+
         return course.getExercises();
     }
 

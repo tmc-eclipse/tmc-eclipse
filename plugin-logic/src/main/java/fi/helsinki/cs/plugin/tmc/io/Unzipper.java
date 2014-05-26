@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -17,15 +19,18 @@ public class Unzipper {
         this.project = project;
     }
 
-    public void unzipTo(IO destinationFolder) throws IOException {
+    public List<String> unzipTo(IO destinationFolder) throws IOException {
+        List<String> projectFiles = new ArrayList<String>();
+
         destinationFolder.createFolderTree(false);
-
         ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(project.getBytes()));
-
         ZipEntry zipEntry = zipStream.getNextEntry();
 
         while (zipEntry != null) {
-            FileIO file = new FileIO(destinationFolder.getPath() + File.separator + zipEntry.getName());
+            String entryPath = destinationFolder.getPath() + File.separator + zipEntry.getName();
+            projectFiles.add(entryPath);
+
+            FileIO file = new FileIO(entryPath);
             file.createFolderTree(!zipEntry.isDirectory());
 
             byte[] buffer = new byte[1024];
@@ -42,6 +47,8 @@ public class Unzipper {
 
             zipEntry = zipStream.getNextEntry();
         }
+
+        return projectFiles;
     }
 
 }

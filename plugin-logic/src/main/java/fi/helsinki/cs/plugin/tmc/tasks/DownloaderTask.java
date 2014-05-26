@@ -5,6 +5,7 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.Unzipper;
@@ -42,8 +43,12 @@ public class DownloaderTask implements BackgroundTask {
 
             try {
                 Unzipper unzipper = new Unzipper(zip);
-                unzipper.unzipTo(new FileIO(Core.getSettings().getExerciseFilePath() + "/"
-                        + Core.getSettings().getCurrentCourseName()));
+                FileIO fileIO = new FileIO(Core.getSettings().getExerciseFilePath() + "/"
+                        + Core.getSettings().getCurrentCourseName());
+                List<String> fileList = unzipper.unzipTo(fileIO);
+                Project project = new Project(e, fileList);
+                Core.getProjectDAO().addProject(project);
+
                 feedback.updateProgress(1);
             } catch (IOException exception) {
                 Core.getErrorHandler().handleException(

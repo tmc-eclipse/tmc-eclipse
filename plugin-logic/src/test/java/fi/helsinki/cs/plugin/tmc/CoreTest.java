@@ -33,7 +33,7 @@ public class CoreTest {
 
     @Test
     public void coursesNotNullAfterSingletonInitialization() {
-        assertNotNull(core.getCourses());
+        assertNotNull(core.getCourseDAO());
     }
 
     @Test
