@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.io.zipper.Unzipper;
 
 public class UnzipperTest {
 	private String path;
