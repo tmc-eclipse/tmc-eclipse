@@ -42,9 +42,8 @@ public class TestRunnerComposite extends Composite {
         progressBar.addPaintListener(new PaintListener() {
             @Override
             public void paintControl(PaintEvent e) {
-                Point widgetSize = getSize();
-                int percentage = (int) (100f * progressBar.getSelection() / (progressBar.getMaximum() - progressBar
-                        .getMinimum()));
+                Point widgetSize = progressBar.getSize();
+                int percentage = progressBar.getSelection()/PROGRESS_BAR_MULTIPLIER;
                 String text = percentage + "%";
                 Point textSize = e.gc.stringExtent(text);
                 e.gc.setForeground(progressBar.getDisplay().getSystemColor(SWT.COLOR_BLACK));
@@ -66,7 +65,7 @@ public class TestRunnerComposite extends Composite {
 
         lblTestspassed = new Label(this, SWT.NONE);
         lblTestspassed.setBounds(19, 10, 183, 17);
-        lblTestspassed.setText("Tests passed: " + howManyTestsPassedPercent + "%");
+        lblTestspassed.setText("Tests passed: " + (int)howManyTestsPassedCount );
 
         updateProgress();
 
