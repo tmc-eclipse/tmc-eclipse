@@ -3,8 +3,6 @@ package tmc.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.maven.model.Model;
 import org.eclipse.core.resources.IProject;
@@ -16,17 +14,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.MavenModelManager;
-import org.eclipse.m2e.core.internal.project.ResolverConfigurationIO;
 import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.m2e.core.project.ResolverConfiguration;
 
 //TODO: Refaktoroi koko paska.
+
 public class MavenProjectOpener {
     private IWorkspace workspace;
     private File pomFile;
-    private ResolverConfiguration resolveri;
     protected static final IProgressMonitor monitor = new NullProgressMonitor();
 
     public MavenProjectOpener(String pathToPom) {
@@ -37,13 +33,8 @@ public class MavenProjectOpener {
     }
 
     public void importAndOpen() throws CoreException, IOException {
-        System.out.println("import and open called");
-        try {
-            pomFile.getParentFile().getCanonicalPath();
-        } catch (IOException e) {
-            System.out.println("Failed to parse base directory from pomFile");
-            e.printStackTrace();
-        }
+        pomFile.getParentFile().getCanonicalPath();
+
         IProject project = importProject();
         if (project != null) {
             project.open(monitor);
@@ -51,12 +42,7 @@ public class MavenProjectOpener {
     }
 
     public IProject importProject() throws CoreException, IOException {
-        MavenModelManager mavenModelManager = MavenPlugin.getMavenModelManager();
-        final ArrayList<MavenProjectInfo> projectInfos = new ArrayList<MavenProjectInfo>();
-        Model model = mavenModelManager.readMavenModel(this.pomFile);
-        MavenProjectInfo projectInfo = new MavenProjectInfo(pomFile.getName(), pomFile, model, null);
-        setBasedirRename(projectInfo);
-        projectInfos.add(projectInfo);
+        final ArrayList<MavenProjectInfo> projectInfos = initializeProjectinfo();
 
         final ProjectImportConfiguration importConfiguration = new ProjectImportConfiguration();
 
@@ -67,16 +53,24 @@ public class MavenProjectOpener {
 
                 importResults.addAll(MavenPlugin.getProjectConfigurationManager().importProjects(projectInfos,
                         importConfiguration, monitor));
-                System.out.println("importresults added");
 
             }
         }, MavenPlugin.getProjectConfigurationManager().getRule(), IWorkspace.AVOID_UPDATE, monitor);
 
         IProject project = importResults.get(0).getProject();
-        System.out.println("project returned");
 
         return project;
 
+    }
+
+    private ArrayList<MavenProjectInfo> initializeProjectinfo() throws CoreException, IOException {
+        MavenModelManager mavenModelManager = MavenPlugin.getMavenModelManager();
+        final ArrayList<MavenProjectInfo> projectInfos = new ArrayList<MavenProjectInfo>();
+        Model model = mavenModelManager.readMavenModel(this.pomFile);
+        MavenProjectInfo projectInfo = new MavenProjectInfo(pomFile.getName(), pomFile, model, null);
+        setBasedirRename(projectInfo);
+        projectInfos.add(projectInfo);
+        return projectInfos;
     }
 
     private void setBasedirRename(MavenProjectInfo projectInfo) throws IOException {
