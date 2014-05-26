@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.io;
+package fi.helsinki.cs.plugin.tmc.io.zipper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,27 +10,13 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 
+import fi.helsinki.cs.plugin.tmc.io.IO;
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.ZippingDecider;
+
 public class RecursiveZipper {
 
     private IO rootDirectory;
     private ZippingDecider zippingDecider;
-
-    public static interface ZippingDecider {
-        /**
-         * Tells whether the given file or directory should be zipped.
-         * 
-         * Zip paths are separated by slashes and don't have a starting slash.
-         * Directory paths always end in a slash.
-         */
-        public boolean shouldZip(String zipPath);
-    }
-
-    public static final ZippingDecider ZIP_ALL_THE_THINGS = new ZippingDecider() {
-        @Override
-        public boolean shouldZip(String zipPath) {
-            return true;
-        }
-    };
 
     public RecursiveZipper(IO rootDirectory, ZippingDecider zippingDecider) {
         this.rootDirectory = rootDirectory;

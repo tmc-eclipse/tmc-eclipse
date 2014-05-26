@@ -25,41 +25,41 @@ import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ExerciseFetcherTest {
-    private ServerManager webDAO;
-    private Courses courses;
+    private ServerManager server;
+    private CourseDAO courseDAO;
     private TMCErrorHandler errorHandler;
     private ExerciseFetcher fetcher;
 
     @Before
     public void setup() {
-        webDAO = mock(ServerManager.class);
-        courses = mock(Courses.class);
+        server = mock(ServerManager.class);
+        courseDAO = mock(CourseDAO.class);
         errorHandler = mock(TMCErrorHandler.class);
         Core.setErrorHandler(errorHandler);
 
-        fetcher = new ExerciseFetcher(courses, webDAO);
+        fetcher = new ExerciseFetcher(server, courseDAO);
     }
 
     @Test
     public void updateExercisesForCurrentCourseCallsWebDAO() {
         List<Exercise> exerciseList = new ArrayList<Exercise>();
-        when(courses.getCourseByName(any(String.class))).thenReturn(new Course("kurssi"));
-        when(webDAO.getExercises(any(String.class))).thenReturn(exerciseList);
+        when(courseDAO.getCourseByName(any(String.class))).thenReturn(new Course("kurssi"));
+        when(server.getExercises(any(String.class))).thenReturn(exerciseList);
 
         fetcher.updateExercisesForCurrentCourse();
 
-        verify(webDAO, times(1)).getExercises(any(String.class));
-        verifyNoMoreInteractions(webDAO);
+        verify(server, times(1)).getExercises(any(String.class));
+        verifyNoMoreInteractions(server);
 
         assertEquals(exerciseList, fetcher.getExercisesForCurrentCourse());
     }
 
     @Test
     public void updateExerciseExceptionIsPassedToCoreErrorHandler() {
-        when(courses.getCourseByName(any(String.class))).thenReturn(new Course("kurssi"));
+        when(courseDAO.getCourseByName(any(String.class))).thenReturn(new Course("kurssi"));
 
         UserVisibleException mockException = new UserVisibleException("mock");
-        when(webDAO.getExercises(any(String.class))).thenThrow(mockException);
+        when(server.getExercises(any(String.class))).thenThrow(mockException);
 
         fetcher.updateExercisesForCurrentCourse();
 
@@ -79,8 +79,8 @@ public class ExerciseFetcherTest {
 
         Course course = new Course("c1");
 
-        when(courses.getCourseByName(any(String.class))).thenReturn(course);
-        when(webDAO.getExercises(any(String.class))).thenReturn(exerciseList);
+        when(courseDAO.getCourseByName(any(String.class))).thenReturn(course);
+        when(server.getExercises(any(String.class))).thenReturn(exerciseList);
 
         fetcher.updateExercisesForCurrentCourse();
 
@@ -102,8 +102,8 @@ public class ExerciseFetcherTest {
 
         Course course = new Course("c1");
 
-        when(courses.getCourseByName(any(String.class))).thenReturn(course);
-        when(webDAO.getExercises(any(String.class))).thenReturn(exerciseList);
+        when(courseDAO.getCourseByName(any(String.class))).thenReturn(course);
+        when(server.getExercises(any(String.class))).thenReturn(exerciseList);
 
         fetcher.updateExercisesForCurrentCourse();
 
@@ -123,8 +123,8 @@ public class ExerciseFetcherTest {
 
         Course course = new Course("c1");
 
-        when(courses.getCourseByName(any(String.class))).thenReturn(course);
-        when(webDAO.getExercises(any(String.class))).thenReturn(exerciseList);
+        when(courseDAO.getCourseByName(any(String.class))).thenReturn(course);
+        when(server.getExercises(any(String.class))).thenReturn(exerciseList);
 
         fetcher.updateExercisesForCurrentCourse();
 

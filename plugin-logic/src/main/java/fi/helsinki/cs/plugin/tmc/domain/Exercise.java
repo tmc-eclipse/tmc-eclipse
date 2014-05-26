@@ -284,4 +284,22 @@ public class Exercise implements Serializable {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Exercise)) {
+            return false;
+        }
+
+        Exercise e = (Exercise) o;
+        if (this.courseName == null || e.courseName == null) {
+            return false;
+        }
+        if (this.name == null || e.name == null) {
+            return false;
+        }
+
+        return this.courseName.equals(e.courseName) && this.name.equals(e.name);
+    }
+
 }

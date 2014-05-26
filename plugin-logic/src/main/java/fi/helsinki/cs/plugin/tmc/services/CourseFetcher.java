@@ -9,10 +9,10 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class CourseFetcher {
 
-    private Courses courses;
+    private CourseDAO courses;
     private ServerManager server;
 
-    public CourseFetcher(Courses courses, ServerManager server) {
+    public CourseFetcher(ServerManager server, CourseDAO courses) {
         this.courses = courses;
         this.server = server;
     }

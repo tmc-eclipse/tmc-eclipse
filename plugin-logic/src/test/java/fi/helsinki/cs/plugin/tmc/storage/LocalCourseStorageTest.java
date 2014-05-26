@@ -23,12 +23,12 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 public class LocalCourseStorageTest {
 
     private IO io;
-    private LocalCourseStorage lcs;
+    private CourseStorage lcs;
 
     @Before
     public void setUp() {
         this.io = mock(IO.class);
-        lcs = new LocalCourseStorage(io);
+        lcs = new CourseStorage(io);
 
         when(io.fileExists()).thenReturn(true);
     }
@@ -59,7 +59,7 @@ public class LocalCourseStorageTest {
 
     @Test(expected = UserVisibleException.class)
     public void saveThrowsErrorWhenIoIsNull() {
-        LocalCourseStorage l = new LocalCourseStorage(null);
+        CourseStorage l = new CourseStorage(null);
         l.save(new ArrayList<Course>());
     }
 

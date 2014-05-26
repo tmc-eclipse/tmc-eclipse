@@ -12,27 +12,22 @@ import com.google.gson.GsonBuilder;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.ExerciseKey;
 import fi.helsinki.cs.plugin.tmc.io.IO;
+import fi.helsinki.cs.plugin.tmc.storage.formats.CoursesFileFormat;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
-public class LocalCourseStorage implements CourseDAO {
+public class CourseStorage implements DataSource<Course> {
 
     private Gson gson;
     private IO io;
 
-    private static class CoursesFileFormat {
-        // Outer class can access private attributes of an inner class, no need
-        // for public here
-        private List<Course> courses;
-    }
-
-    public LocalCourseStorage(IO io) {
+    public CourseStorage(IO io) {
         this.io = io;
         this.gson = new GsonBuilder().serializeNulls().setPrettyPrinting()
                 .registerTypeAdapter(ExerciseKey.class, new ExerciseKey.GsonAdapter()).create();
     }
 
     @Override
-    public List<Course> load() throws UserVisibleException {
+    public List<Course> load() {
         if (!io.fileExists()) {
             return new ArrayList<Course>();
         }
@@ -48,16 +43,16 @@ public class LocalCourseStorage implements CourseDAO {
             reader.close();
         } catch (IOException e) {
             // TODO: Log here?
-            return courseList.courses;
+            return courseList.getCourses();
         }
 
-        return courseList.courses;
+        return courseList.getCourses();
     }
 
     @Override
-    public void save(List<Course> courses) throws UserVisibleException {
+    public void save(List<Course> courses) {
         CoursesFileFormat courseList = new CoursesFileFormat();
-        courseList.courses = courses;
+        courseList.setCourses(courses);
 
         if (io == null) {
             throw new UserVisibleException("Could not save course data to local storage.");

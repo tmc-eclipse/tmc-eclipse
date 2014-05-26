@@ -11,17 +11,17 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 public class ExerciseFetcher {
 
     private ServerManager server;
-    private Courses courses;
+    private CourseDAO courseDAO;
     private Course course;
 
-    public ExerciseFetcher(Courses courses, ServerManager server) {
-        this.courses = courses;
+    public ExerciseFetcher(ServerManager server, CourseDAO courseDAO) {
+        this.courseDAO = courseDAO;
         this.server = server;
     }
 
     public void updateExercisesForCurrentCourse() {
         try {
-            this.course = courses.getCourseByName(Core.getSettings().getCurrentCourseName());
+            this.course = courseDAO.getCourseByName(Core.getSettings().getCurrentCourseName());
             List<Exercise> exercises = server.getExercises("" + course.getId());
             if (exercises != null) {
                 course.setExercises(exercises);
