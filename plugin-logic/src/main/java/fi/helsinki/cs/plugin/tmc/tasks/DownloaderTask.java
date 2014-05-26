@@ -8,7 +8,7 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.Unzipper;
-import fi.helsinki.cs.plugin.tmc.services.ProjectFetcher;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
@@ -27,7 +27,7 @@ public class DownloaderTask implements BackgroundTask {
         feedback.resetProgress("Downloading exercises...", exerciseList.size() * 2);
 
         // TODO: Dependency injection?
-        ProjectFetcher downloader = new ProjectFetcher(new ServerManager());
+        ProjectDownloader downloader = new ProjectDownloader(new ServerManager());
 
         for (Exercise e : exerciseList) {
             if (feedback.isCanceled()) {

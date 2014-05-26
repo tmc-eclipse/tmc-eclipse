@@ -20,12 +20,12 @@ import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
 public class ProjectFetcherTest {
     private ServerManager server;
-    private ProjectFetcher fetcher;
+    private ProjectDownloader fetcher;
     
     @Before
     public void setup() {
         server = mock(ServerManager.class);
-        fetcher = new ProjectFetcher(server);
+        fetcher = new ProjectDownloader(server);
     }
 
     @Test
