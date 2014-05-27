@@ -25,19 +25,19 @@ public class GenericProjectOpener implements ProjectOpener {
 
     public void open(Exercise e) {
 
-        Project p = projectDAO.getProjectByExercise(e);
-        ProjectType pt = p.getProjectType();
+        Project project = projectDAO.getProjectByExercise(e);
+        ProjectType projectType = project.getProjectType();
 
         try {
-            switch (pt.getBuildFile()) {
-            case ("build.xml"):
-                openAntProject(e);
+            switch (project.getProjectType()) {
+            case JAVA_ANT:
+                openAntProject(project, projectType);
                 break;
-            case ("pom.xml"):
-                openMavenProject(e);
+            case JAVA_MAVEN:
+                openMavenProject(project, projectType);
                 break;
-            case ("Makefile"):
-                openCProject(e);
+            case MAKEFILE:
+                openCProject(project, projectType);
                 break;
 
             }
@@ -47,34 +47,23 @@ public class GenericProjectOpener implements ProjectOpener {
 
     }
 
-    private void openCProject(Exercise e) throws OperationCanceledException, URISyntaxException, CoreException {
+    private void openCProject(Project project, ProjectType projectType) throws OperationCanceledException,
+            URISyntaxException, CoreException {
 
-        new CProjectOpener(Core.getSettings().getExerciseFilePath() + "/" + Core.getSettings().getCurrentCourseName()
-                + parsePath(e.getName()), e.getName()).importAndOpen();
-
-    }
-
-    private void openMavenProject(Exercise e) throws CoreException, IOException {
-
-        new MavenProjectOpener(Core.getSettings().getExerciseFilePath() + "/"
-                + Core.getSettings().getCurrentCourseName() + parsePath(e.getName()) + "pom.xml").importAndOpen();
+        new CProjectOpener(project.getRootPath(), project.getExercise().getName()).importAndOpen();
 
     }
 
-    private void openAntProject(Exercise e) throws CoreException {
+    private void openMavenProject(Project project, ProjectType projectType) throws CoreException, IOException {
 
-        new AntProjectOpener(Core.getSettings().getExerciseFilePath() + "/" + Core.getSettings().getCurrentCourseName()
-                + parsePath(e.getName()) + ".project").importAndOpen();
+        new MavenProjectOpener(project.getRootPath() + projectType.getBuildFile()).importAndOpen();
 
     }
 
-    public String parsePath(String path) {
-        String[] parts = path.split("-");
-        String toReturn = "/";
-        for (int i = 0; i < parts.length; i++) {
-            toReturn += parts[i] + "/";
-        }
-        return toReturn;
+    private void openAntProject(Project project, ProjectType projectType) throws CoreException {
+
+        new AntProjectOpener(project.getRootPath() + projectType.getBuildFile()).importAndOpen();
+
     }
 
 }
