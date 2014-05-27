@@ -17,12 +17,14 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
     private Settings settings;
     private ProjectDownloader downloader;
+    private ProjectOpener opener;
 
-    public DownloaderTask(ProjectDownloader downloader, List<Exercise> exercises) {
+    public DownloaderTask(ProjectDownloader downloader, ProjectOpener opener, List<Exercise> exercises) {
         super("Downloading exercises", exercises);
 
         this.settings = Core.getSettings();
         this.downloader = downloader;
+        this.opener = opener;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             List<String> fileList = unzipper.unzipTo(folder);
 
             Core.getProjectDAO().addProject(new Project(exercise, fileList));
+            opener.open(exercise);
         } catch (IOException exception) {
             Core.getErrorHandler().raise("An error occurred while unzipping the exercises");
         }
