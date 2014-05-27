@@ -18,8 +18,6 @@ import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
-//TODO: Refaktoroi koko paska.
-
 public class MavenProjectOpener {
     private IWorkspace workspace;
     private File pomFile;
@@ -36,16 +34,15 @@ public class MavenProjectOpener {
         pomFile.getParentFile().getCanonicalPath();
 
         IProject project = importProject();
+
         if (project != null) {
             project.open(monitor);
         }
     }
 
     public IProject importProject() throws CoreException, IOException {
-        final ArrayList<MavenProjectInfo> projectInfos = initializeProjectinfo();
-
+        final ArrayList<MavenProjectInfo> projectInfos = initializeProjectinfoList();
         final ProjectImportConfiguration importConfiguration = new ProjectImportConfiguration();
-
         final ArrayList<IMavenProjectImportResult> importResults = new ArrayList<IMavenProjectImportResult>();
 
         workspace.run(new IWorkspaceRunnable() {
@@ -63,7 +60,8 @@ public class MavenProjectOpener {
 
     }
 
-    private ArrayList<MavenProjectInfo> initializeProjectinfo() throws CoreException, IOException {
+    private ArrayList<MavenProjectInfo> initializeProjectinfoList() throws CoreException, IOException {
+
         MavenModelManager mavenModelManager = MavenPlugin.getMavenModelManager();
         final ArrayList<MavenProjectInfo> projectInfos = new ArrayList<MavenProjectInfo>();
         Model model = mavenModelManager.readMavenModel(this.pomFile);
@@ -71,6 +69,7 @@ public class MavenProjectOpener {
         setBasedirRename(projectInfo);
         projectInfos.add(projectInfo);
         return projectInfos;
+
     }
 
     private void setBasedirRename(MavenProjectInfo projectInfo) throws IOException {
