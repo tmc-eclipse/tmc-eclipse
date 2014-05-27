@@ -4,11 +4,12 @@ import java.util.List;
 
 public enum ProjectType {
 
-    JAVA_ANT("build.xml"), JAVA_MAVEN("pom.xml"), MAKEFILE("Makefile");
+    JAVA_ANT("ANT", "build.xml"), JAVA_MAVEN("MAVEN", "pom.xml"), MAKEFILE("C", "Makefile");
 
     private final String buildFile;
 
-    private ProjectType(String buildFile) {
+    private ProjectType(String typeName, String buildFile) {
+
         this.buildFile = buildFile;
     }
 

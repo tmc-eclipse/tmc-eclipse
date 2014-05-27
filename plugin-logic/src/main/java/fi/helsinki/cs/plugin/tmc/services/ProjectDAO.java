@@ -25,12 +25,10 @@ public class ProjectDAO {
     }
 
     public void addProject(Project project) {
-        if (projects.contains(project)) {
-            return;
+        if (!projects.contains(project)) {
+            projects.add(project);
+            dataSource.save(projects);
         }
-
-        projects.add(project);
-        dataSource.save(projects);
     }
 
     public Project getProjectByFile(String filePath) {
