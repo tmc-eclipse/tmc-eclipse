@@ -6,6 +6,6 @@ public interface TaskFeedback {
 
     void incrementProgress(int progress);
 
-    boolean isCanceled();
+    boolean isCancelRequested();
 
 }

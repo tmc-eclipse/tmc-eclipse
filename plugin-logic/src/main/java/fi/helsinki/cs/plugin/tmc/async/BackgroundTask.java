@@ -2,10 +2,10 @@ package fi.helsinki.cs.plugin.tmc.async;
 
 public interface BackgroundTask {
 
-    void start(TaskFeedback progress);
+    public abstract void start(TaskFeedback progress);
 
-    void stop();
+    public abstract void stop();
 
-    String getName();
+    public abstract String getDescription();
 
 }
