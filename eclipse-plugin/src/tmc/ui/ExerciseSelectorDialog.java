@@ -14,8 +14,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
-import fi.helsinki.cs.plugin.tmc.tasks.DownloaderTask;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -139,7 +140,8 @@ public class ExerciseSelectorDialog extends Dialog {
             }
         }
 
-        Core.getTaskRunner().runTask(new DownloaderTask(list));
+        ProjectDownloader downloader = new ProjectDownloader(Core.getServerManager());
+        Core.getTaskRunner().runTask(new DownloaderTask(downloader, list));
     }
 
     private void selectUnselectAction() {
