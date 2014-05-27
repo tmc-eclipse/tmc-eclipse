@@ -1,11 +1,12 @@
 package fi.helsinki.cs.plugin.tmc;
 
+import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskRunner;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
-import fi.helsinki.cs.plugin.tmc.tasks.BackgroundTaskRunner;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
 public final class Core {
 
@@ -20,6 +21,8 @@ public final class Core {
     private CourseDAO courseDAO;
     private ProjectDAO projectDAO;
 
+    private ServerManager server;
+
     private Core() {
         ServiceFactory factory = new ServiceFactory();
         this.settings = factory.getSettings();
@@ -28,6 +31,8 @@ public final class Core {
 
         this.courseDAO = factory.getCourseDAO();
         this.projectDAO = factory.getProjectDAO();
+
+        this.server = factory.getServerManager();
     }
 
     public static void setErrorHandler(TMCErrorHandler errorHandler) {
@@ -64,6 +69,10 @@ public final class Core {
 
     public static ProjectDAO getProjectDAO() {
         return Core.getInstance().projectDAO;
+    }
+
+    public static ServerManager getServerManager() {
+        return Core.getInstance().server;
     }
 
     public static Core getInstance() {

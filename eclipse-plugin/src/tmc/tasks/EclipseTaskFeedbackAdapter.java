@@ -2,7 +2,7 @@ package tmc.tasks;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import fi.helsinki.cs.plugin.tmc.tasks.TaskFeedback;
+import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 
 public class EclipseTaskFeedbackAdapter implements TaskFeedback {
 
@@ -13,17 +13,17 @@ public class EclipseTaskFeedbackAdapter implements TaskFeedback {
     }
 
     @Override
-    public void resetProgress(String message, int amountOfWork) {
+    public void startProgress(String message, int amountOfWork) {
         monitor.beginTask(message, amountOfWork);
     }
 
     @Override
-    public void updateProgress(int progress) {
+    public void incrementProgress(int progress) {
         monitor.worked(progress);
     }
 
     @Override
-    public boolean isCanceled() {
+    public boolean isCancelRequested() {
         return monitor.isCanceled();
     }
 

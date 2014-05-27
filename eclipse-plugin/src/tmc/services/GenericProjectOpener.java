@@ -8,11 +8,11 @@ import org.eclipse.core.runtime.OperationCanceledException;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
+import fi.helsinki.cs.plugin.tmc.async.tasks.ProjectOpener;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ProjectType;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
-import fi.helsinki.cs.plugin.tmc.tasks.ProjectOpener;
 
 public class GenericProjectOpener implements ProjectOpener {
     ProjectDAO projectDAO;
