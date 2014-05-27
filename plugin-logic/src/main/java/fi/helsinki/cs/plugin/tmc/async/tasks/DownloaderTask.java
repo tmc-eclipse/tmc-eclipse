@@ -1,37 +1,38 @@
-package fi.helsinki.cs.plugin.tmc.tasks;
+package fi.helsinki.cs.plugin.tmc.async.tasks;
 
 import java.io.IOException;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
+import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.Unzipper;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
-import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class DownloaderTask implements BackgroundTask {
 
     private boolean isRunning;
+
+    private ProjectDownloader downloader;
     private List<Exercise> exerciseList;
 
-    public DownloaderTask(List<Exercise> exerciseList) {
+    public DownloaderTask(ProjectDownloader downloader, List<Exercise> exerciseList) {
         this.isRunning = true;
+        this.downloader = downloader;
         this.exerciseList = exerciseList;
     }
 
     @Override
-    public Object start(TaskFeedback feedback) {
-        feedback.resetProgress("Downloading exercises...", exerciseList.size() * 2);
-
-        // TODO: Dependency injection?
-        ProjectDownloader downloader = new ProjectDownloader(new ServerManager());
+    public void start(TaskFeedback progress) {
+        progress.startProgress("Downloading exercises...", exerciseList.size() * 2);
 
         for (Exercise e : exerciseList) {
-            if (feedback.isCanceled()) {
+            if (progress.isCanceled()) {
                 this.stop();
             }
             if (!isRunning) {
@@ -39,7 +40,7 @@ public class DownloaderTask implements BackgroundTask {
             }
 
             ZippedProject zip = downloader.downloadExercise(e);
-            feedback.updateProgress(1);
+            progress.incrementProgress(1);
 
             try {
                 Unzipper unzipper = new Unzipper(zip);
@@ -49,14 +50,13 @@ public class DownloaderTask implements BackgroundTask {
                 Project project = new Project(e, fileList);
                 Core.getProjectDAO().addProject(project);
 
-                feedback.updateProgress(1);
+                progress.incrementProgress(1);
             } catch (IOException exception) {
                 Core.getErrorHandler().handleException(
                         new UserVisibleException("An error occurred while unzipping the exercises"));
             }
         }
 
-        return null;
     }
 
     @Override
