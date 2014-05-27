@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.services.web;
+package fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -15,8 +15,15 @@ public class CourseList {
         return apiVersion;
     }
 
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
     public Course[] getCourses() {
         return courses;
     }
 
+    public void setCourses(Course[] courses) {
+        this.courses = courses;
+    }
 }

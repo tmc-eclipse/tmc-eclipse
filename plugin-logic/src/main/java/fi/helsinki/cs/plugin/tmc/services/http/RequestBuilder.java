@@ -17,79 +17,58 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-public class HttpTasks {
+class RequestBuilder {
     private UsernamePasswordCredentials credentials = null;
 
-    public HttpTasks setCredentials(String username, String password) {
+    RequestBuilder setCredentials(String username, String password) {
         this.credentials = new UsernamePasswordCredentials(username, password);
         return this;
     }
 
-    public HttpRequestExecutor createExecutor(String url) {
-        return new HttpRequestExecutor(url).setCredentials(credentials);
+    private RequestExecutor createExecutor(String url) {
+        return new RequestExecutor(url).setCredentials(credentials);
     }
 
-    private HttpRequestExecutor createExecutor(HttpPost request) {
-        return new HttpRequestExecutor(request).setCredentials(credentials);
+    private RequestExecutor createExecutor(HttpPost request) {
+        return new RequestExecutor(request).setCredentials(credentials);
     }
 
-    public CancellableCallable<byte[]> getForBinary(String url) {
+    public byte[] getForBinary(String url) throws Exception {
         return downloadToBinary(createExecutor(url));
     }
 
-    public CancellableCallable<String> getForText(String url) {
+    public String getForText(String url) throws Exception {
         return downloadToText(createExecutor(url));
     }
 
-    public CancellableCallable<byte[]> postForBinary(String url, Map<String, String> params) throws URISyntaxException {
+    public byte[] postForBinary(String url, Map<String, String> params) throws Exception {
         return downloadToBinary(createExecutor(makePostRequest(url, params)));
     }
 
-    public CancellableCallable<String> postForText(String url, Map<String, String> params) throws URISyntaxException {
+    public String postForText(String url, Map<String, String> params) throws Exception {
         return downloadToText(createExecutor(makePostRequest(url, params)));
     }
 
-    public CancellableCallable<String> rawPostForText(String url, byte[] data) throws URISyntaxException {
+    public String postForText(String url, byte[] data) throws Exception {
         return downloadToText(createExecutor(makeRawPostRequest(url, data)));
     }
 
-    public CancellableCallable<String> rawPostForText(String url, byte[] data, Map<String, String> extraHeaders)
-            throws URISyntaxException {
+    public String postForText(String url, byte[] data, Map<String, String> extraHeaders) throws Exception {
         return downloadToText(createExecutor(makeRawPostRequest(url, data, extraHeaders)));
     }
 
-    public CancellableCallable<String> uploadFileForTextDownload(String url, Map<String, String> params,
-            String fileField, byte[] data) throws URISyntaxException {
+    public String uploadFileForTextDownload(String url, Map<String, String> params, String fileField, byte[] data)
+            throws Exception {
         HttpPost request = makeFileUploadRequest(url, params, fileField, data);
         return downloadToText(createExecutor(request));
     }
 
-    private CancellableCallable<byte[]> downloadToBinary(final HttpRequestExecutor download) {
-        return new CancellableCallable<byte[]>() {
-            @Override
-            public byte[] call() throws Exception {
-                return EntityUtils.toByteArray(download.call());
-            }
-
-            @Override
-            public boolean cancel() {
-                return download.cancel();
-            }
-        };
+    private byte[] downloadToBinary(final RequestExecutor download) throws Exception {
+        return EntityUtils.toByteArray(download.execute());
     }
 
-    private CancellableCallable<String> downloadToText(final HttpRequestExecutor download) {
-        return new CancellableCallable<String>() {
-            @Override
-            public String call() throws Exception {
-                return EntityUtils.toString(download.call(), "UTF-8");
-            }
-
-            @Override
-            public boolean cancel() {
-                return download.cancel();
-            }
-        };
+    private String downloadToText(final RequestExecutor download) throws Exception {
+        return EntityUtils.toString(download.execute(), "UTF-8");
     }
 
     private HttpPost makePostRequest(String url, Map<String, String> params) throws URISyntaxException {
