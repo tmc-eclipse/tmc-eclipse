@@ -21,7 +21,7 @@ public class ProjectStorage implements DataSource<Project> {
 
     public ProjectStorage(FileIO io) {
         this.io = io;
-        this.gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+        this.gson = createGson();
     }
 
     @Override
@@ -68,6 +68,10 @@ public class ProjectStorage implements DataSource<Project> {
             // TODO: Log here?
             return;
         }
+    }
+
+    private Gson createGson() {
+        return new GsonBuilder().serializeNulls().setPrettyPrinting().create();
     }
 
 }

@@ -11,19 +11,18 @@ import com.google.gson.GsonBuilder;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.ExerciseKey;
-import fi.helsinki.cs.plugin.tmc.io.IO;
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.storage.formats.CoursesFileFormat;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class CourseStorage implements DataSource<Course> {
 
     private Gson gson;
-    private IO io;
+    private FileIO io;
 
-    public CourseStorage(IO io) {
+    public CourseStorage(FileIO io) {
         this.io = io;
-        this.gson = new GsonBuilder().serializeNulls().setPrettyPrinting()
-                .registerTypeAdapter(ExerciseKey.class, new ExerciseKey.GsonAdapter()).create();
+        this.gson = createGson();
     }
 
     @Override
@@ -70,6 +69,11 @@ public class CourseStorage implements DataSource<Course> {
             // TODO: Log here?
             return;
         }
+    }
+
+    private Gson createGson() {
+        return new GsonBuilder().serializeNulls().setPrettyPrinting()
+                .registerTypeAdapter(ExerciseKey.class, new ExerciseKey.GsonAdapter()).create();
     }
 
 }
