@@ -33,38 +33,21 @@ public class CProjectOpener {
     }
 
     public void importAndOpen() throws URISyntaxException, OperationCanceledException, CoreException {
-        // IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        // IWorkspaceRoot root = workspace.getRoot();
-        //
-        // IProject project = root.getProject(projectName);
-        // IndexerPreferences.set(project, IndexerPreferences.KEY_INDEXER_ID,
-        // IPDOMManager.ID_NO_INDEXER);
-        //
-        // IProjectDescription description =
-        // workspace.newProjectDescription(projectName);
-        //
-        // description.setLocationURI(new URI(projectPath));
-        //
-        // // project = CCorePlugin.getDefault().createCDTProject(description,
-        // // project, new NullProgressMonitor());
-        // project = CCorePlugin.getDefault().createCProject(description,
-        // project, new NullProgressMonitor(), projectName);
-        // project.create(new NullProgressMonitor());
-        //
-        // project.open(new NullProgressMonitor());
-        //
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRoot root = workspace.getRoot();
 
-        try {
-            IWorkspaceRoot theRoot = ResourcesPlugin.getWorkspace().getRoot();
-            IProject theProject = theRoot.getProject(projectName);
-            IProjectDescription theDesc = theProject.getWorkspace().newProjectDescription(projectName);
-            theDesc.setLocation(new Path(projectPath));
-            theProject.create(theDesc, new NullProgressMonitor());
-            if (theProject.exists()) {
-                theProject.open(new NullProgressMonitor());
-            }
-        } catch (CoreException err) {
-            err.printStackTrace();
-        }
+        IProject project = root.getProject(projectName);
+        IndexerPreferences.set(project, IndexerPreferences.KEY_INDEXER_ID, IPDOMManager.ID_NO_INDEXER);
+
+        IProjectDescription description = workspace.newProjectDescription(projectName);
+
+        description.setLocationURI(new URI(projectPath));
+
+        // project = CCorePlugin.getDefault().createCDTProject(description,
+        // project, new NullProgressMonitor());
+        project = CCorePlugin.getDefault().createCProject(description, project, new NullProgressMonitor(), projectName);
+
+        project.open(new NullProgressMonitor());
+
     }
 }
