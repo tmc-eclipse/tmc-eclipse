@@ -61,4 +61,8 @@ public final class ServiceFactory {
         return exerciseFetcher;
     }
 
+    public ServerManager getServerManager() {
+        return server;
+    }
+
 }

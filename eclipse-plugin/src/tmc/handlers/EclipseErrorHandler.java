@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class EclipseErrorHandler implements TMCErrorHandler {
 
@@ -12,6 +13,11 @@ public class EclipseErrorHandler implements TMCErrorHandler {
 
     public EclipseErrorHandler(Shell parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public void raise(String message) {
+        handleException(new UserVisibleException(message));
     }
 
     @Override
