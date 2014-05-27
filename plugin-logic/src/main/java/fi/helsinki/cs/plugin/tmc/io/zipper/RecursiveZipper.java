@@ -40,7 +40,6 @@ public class RecursiveZipper {
         } finally {
             zipStream.close();
         }
-
         return zipBuffer.toByteArray();
     }
 
@@ -49,9 +48,10 @@ public class RecursiveZipper {
 
         InputStream in = file.getInputStream();
         try {
-            IOUtils.copy(file.getInputStream(), zipStream);
+            IOUtils.copy(in, zipStream);
         } finally {
             in.close();
+
         }
 
         zipStream.closeEntry();
@@ -73,18 +73,21 @@ public class RecursiveZipper {
         zipStream.closeEntry();
 
         for (IO file : directory.getChildren()) {
-            boolean isDirectory = file.directoryExists();
+            try {
+                boolean isDirectory = file.directoryExists();
 
-            String zipPath = thisDirZipPath + File.separator + file.getName();
-            if (isDirectory) {
-                zipPath += File.separator;
-            }
-            if (zippingDecider.shouldZip(zipPath)) {
+                String zipPath = thisDirZipPath + File.separator + file.getName();
                 if (isDirectory) {
-                    zipRecursively(file, zipStream, thisDirZipPath);
-                } else {
-                    writeEntry(file, zipStream, thisDirZipPath);
+                    zipPath += File.separator;
                 }
+                if (zippingDecider.shouldZip(zipPath)) {
+                    if (isDirectory) {
+                        zipRecursively(file, zipStream, thisDirZipPath);
+                    } else {
+                        writeEntry(file, zipStream, thisDirZipPath);
+                    }
+                }
+            } finally {
             }
         }
     }

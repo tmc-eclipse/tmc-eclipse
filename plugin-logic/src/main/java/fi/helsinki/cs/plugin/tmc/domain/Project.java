@@ -49,6 +49,15 @@ public class Project {
         return this.exercise.equals(p.exercise);
     }
 
+    @Override
+    public int hashCode() {
+        if (exercise == null) {
+            return 0;
+        }
+
+        return exercise.hashCode();
+    }
+
     private String buildRootPath() {
         ProjectType type = getProjectType();
         for (String file : projectFiles) {

@@ -4,11 +4,12 @@ import java.util.regex.Pattern;
 
 public class MavenZippingDecider extends AbstractZippingDecider {
 
-    private static final Pattern rejectPattern = Pattern.compile("^[^/]+/(target|lib/testrunner)/.*");
+    private static final Pattern REJECT_PATTERN = Pattern.compile("^[^/]+/(target|lib/testrunner)/.*");
 
-   /* public MavenZippingDecider(TmcProjectInfo projectInfo) {
-        super(projectInfo);
-    }*/
+    /*
+     * public MavenZippingDecider(TmcProjectInfo projectInfo) {
+     * super(projectInfo); }
+     */
 
     @Override
     public boolean shouldZip(String zipPath) {
@@ -16,6 +17,6 @@ public class MavenZippingDecider extends AbstractZippingDecider {
             return false;
         }
 
-        return !rejectPattern.matcher(zipPath).matches();
+        return !REJECT_PATTERN.matcher(zipPath).matches();
     }
 }

@@ -12,13 +12,18 @@ import java.util.zip.ZipInputStream;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.IO;
+import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UnzippingDecider;
 
 public class Unzipper {
 
-    private ZippedProject project;
+    private static final int BUFFER_SIZE = 1024;
 
-    public Unzipper(ZippedProject project) {
+    private ZippedProject project;
+    private UnzippingDecider decider;
+
+    public Unzipper(ZippedProject project, UnzippingDecider decider) {
         this.project = project;
+        this.decider = decider;
     }
 
     public List<String> unzipTo(IO destinationFolder) throws IOException {
@@ -30,17 +35,23 @@ public class Unzipper {
 
         while (zipEntry != null) {
             String entryPath = destinationFolder.getPath() + File.separator + zipEntry.getName();
+
+            if (!decider.shouldUnzip(entryPath)) {
+                zipEntry = zipStream.getNextEntry();
+                continue;
+            }
+
             projectFiles.add(entryPath);
 
             FileIO file = new FileIO(entryPath);
             file.createFolderTree(!zipEntry.isDirectory());
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[BUFFER_SIZE];
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             int read = 0;
             while ((read = zipStream.read(buffer)) != -1) {
                 stream.write(buffer, 0, read);
-                buffer = new byte[1024];
+                buffer = new byte[BUFFER_SIZE];
             }
 
             if (!zipEntry.isDirectory()) {

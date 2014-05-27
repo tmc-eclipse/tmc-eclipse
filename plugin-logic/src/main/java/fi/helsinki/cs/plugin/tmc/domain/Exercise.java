@@ -302,4 +302,9 @@ public class Exercise implements Serializable {
         return this.courseName.equals(e.courseName) && this.name.equals(e.name);
     }
 
+    @Override
+    public int hashCode() {
+        return courseName.hashCode() + 7 * name.hashCode();
+    }
+
 }

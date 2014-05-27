@@ -9,6 +9,7 @@ import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.Unzipper;
+import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UnzippingDeciderFactory;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
@@ -44,7 +45,7 @@ public class DownloaderTask implements BackgroundTask {
             feedback.updateProgress(1);
 
             try {
-                Unzipper unzipper = new Unzipper(zip);
+                Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.noSrcOverwrite());
                 FileIO fileIO = new FileIO(Core.getSettings().getExerciseFilePath() + "/"
                         + Core.getSettings().getCurrentCourseName());
                 List<String> fileList = unzipper.unzipTo(fileIO);
