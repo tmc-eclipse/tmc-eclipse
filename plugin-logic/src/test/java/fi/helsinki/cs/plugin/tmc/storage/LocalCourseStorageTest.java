@@ -16,18 +16,18 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.io.IO;
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class LocalCourseStorageTest {
 
-    private IO io;
+    private FileIO io;
     private CourseStorage lcs;
 
     @Before
     public void setUp() {
-        this.io = mock(IO.class);
+        this.io = mock(FileIO.class);
         lcs = new CourseStorage(io);
 
         when(io.fileExists()).thenReturn(true);
