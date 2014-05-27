@@ -1,14 +1,20 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
 
@@ -60,6 +66,39 @@ public class ServerManager {
         return zip;
     }
 
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data) {
+        String submitUrl = connectionBuilder.addApiCallQueryParameters(exercise.getReturnUrl());
+
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
+        params.put("client_nanotime", "" + System.nanoTime());
+        params.put("error_msg_locale", Settings.getDefaultSettings().getErrorMsgLocale().toString());
+
+        String response = "";
+        try {
+            response = connectionBuilder.createConnection().uploadFileForTextDownload(submitUrl, params,
+                    "submission[file]", data);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
+
+        if (respJson.get("error") != null) {
+            throw new RuntimeException("Server responded with error: " + respJson.get("error"));
+        } else if (respJson.get("submission_url") != null) {
+            try {
+                URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
+                URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
+                return new SubmissionResponse(submissionUrl, pasteUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Server responded with malformed submission url");
+            }
+        } else {
+            throw new RuntimeException("Server returned unknown response");
+        }
+    }
+
     private byte[] getBytes(String url) {
         byte[] bytes;
         try {
@@ -82,4 +121,5 @@ public class ServerManager {
         }
         return json;
     }
+
 }

@@ -1,17 +1,23 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
+import java.util.Collections;
 import java.util.List;
+
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.DefaultZippingDecider;
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.MavenZippingDecider;
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.ZippingDecider;
 
 public class Project {
 
     private Exercise exercise;
     private List<String> projectFiles;
+    private List<String> extraStudentFiles;
     private String rootPath;
 
     public Project(Exercise exercise, List<String> projectFiles) {
         this.exercise = exercise;
         this.projectFiles = projectFiles;
-
+        this.extraStudentFiles = Collections.emptyList();
         this.rootPath = buildRootPath();
     }
 
@@ -66,6 +72,27 @@ public class Project {
             }
         }
         return "";
+    }
+
+    public ZippingDecider getZippingDecider() {
+        switch (getProjectType()) {
+        case JAVA_MAVEN:
+            return new MavenZippingDecider(this);
+        case JAVA_ANT:
+            return new DefaultZippingDecider(this);
+        case MAKEFILE:
+            return new DefaultZippingDecider(this);
+        default:
+            throw new RuntimeException("Invalid project type");
+        }
+    }
+
+    public void setExtraStudentFiles(List<String> files) {
+        extraStudentFiles = Collections.unmodifiableList(files);
+    }
+
+    public List<String> getExtraStudentFiles() {
+        return extraStudentFiles;
     }
 
 }
