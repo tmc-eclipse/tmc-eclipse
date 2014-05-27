@@ -7,41 +7,64 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.ProjectType;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.tasks.ProjectOpener;
 
 public class GenericProjectOpener implements ProjectOpener {
-    // TODO: projektien avaus.
-    public GenericProjectOpener() {
+    ProjectDAO projectDAO;
+    TMCErrorHandler errorHandler;
 
+    public GenericProjectOpener() {
+        projectDAO = Core.getProjectDAO();
+        errorHandler = Core.getErrorHandler();
     }
 
     public void open(Exercise e) {
-        // try {
-        // new MavenProjectOpener(Core.getSettings().getExerciseFilePath() + "/"
-        // + Core.getSettings().getCurrentCourseName() + parsePath(e.getName())
-        // + "pom.xml").importAndOpen();
-        // } catch (CoreException | IOException e1) {
-        // // TODO Auto-generated catch block
-        // e1.printStackTrace();
-        // }
 
-        // try {
-        // new AntProjectOpener(Core.getSettings().getExerciseFilePath() + "/"
-        // + Core.getSettings().getCurrentCourseName() + parsePath(e.getName())
-        // + ".project").importAndOpen();
-        // } catch (CoreException e1) {
-        // // TODO Auto-generated catch block
-        // e1.printStackTrace();
-        // }
+        Project p = projectDAO.getProjectByExercise(e);
+        ProjectType pt = p.getProjectType();
 
         try {
-            new CProjectOpener(Core.getSettings().getExerciseFilePath() + "/"
-                    + Core.getSettings().getCurrentCourseName() + parsePath(e.getName()), e.getName()).importAndOpen();
-        } catch (OperationCanceledException | URISyntaxException | CoreException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            switch (pt.getBuildFile()) {
+            case ("build.xml"):
+                openAntProject(e);
+                break;
+            case ("pom.xml"):
+                openMavenProject(e);
+                break;
+            case ("Makefile"):
+                openCProject(e);
+                break;
+
+            }
+        } catch (Exception exception) {
+            errorHandler.handleException(exception);
         }
+
+    }
+
+    private void openCProject(Exercise e) throws OperationCanceledException, URISyntaxException, CoreException {
+
+        new CProjectOpener(Core.getSettings().getExerciseFilePath() + "/" + Core.getSettings().getCurrentCourseName()
+                + parsePath(e.getName()), e.getName()).importAndOpen();
+
+    }
+
+    private void openMavenProject(Exercise e) throws CoreException, IOException {
+
+        new MavenProjectOpener(Core.getSettings().getExerciseFilePath() + "/"
+                + Core.getSettings().getCurrentCourseName() + parsePath(e.getName()) + "pom.xml").importAndOpen();
+
+    }
+
+    private void openAntProject(Exercise e) throws CoreException {
+
+        new AntProjectOpener(Core.getSettings().getExerciseFilePath() + "/" + Core.getSettings().getCurrentCourseName()
+                + parsePath(e.getName()) + ".project").importAndOpen();
 
     }
 

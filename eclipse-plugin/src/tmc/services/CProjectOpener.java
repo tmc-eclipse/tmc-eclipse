@@ -1,17 +1,11 @@
 package tmc.services;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.dom.IPDOMManager;
-import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
-import org.eclipse.cdt.core.settings.model.extension.CConfigurationData;
 import org.eclipse.cdt.internal.core.pdom.indexer.IndexerPreferences;
-import org.eclipse.cdt.make.core.MakeCorePlugin;
-import org.eclipse.cdt.make.core.makefile.IMakefile;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
@@ -20,7 +14,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
 
 @SuppressWarnings("restriction")
 public class CProjectOpener {
@@ -43,8 +36,6 @@ public class CProjectOpener {
 
         description.setLocationURI(new URI(projectPath));
 
-        // project = CCorePlugin.getDefault().createCDTProject(description,
-        // project, new NullProgressMonitor());
         project = CCorePlugin.getDefault().createCProject(description, project, new NullProgressMonitor(), projectName);
 
         project.open(new NullProgressMonitor());
