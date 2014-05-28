@@ -37,8 +37,42 @@ public class TestRunnerView extends ViewPart {
             public void controlResized(final ControlEvent e) {
                 master.setSize(master.getParent().getSize().x, master.getParent().getSize().y - 5);
                 comp.resize();
+
+                // IJavaProject p2 = null;
+
+                // IWorkspaceRoot workspaceRoot =
+                // ResourcesPlugin.getWorkspace().getRoot();
+                // IProject project = workspaceRoot.getProject("main");
+                //
+                // try {
+                // p2 = JavaCore.create(project);
+                // } catch (Throwable ex) {
+                // }
+                //
+                // IProgressMonitor myProgressMonitor = new
+                // NullProgressMonitor();
+                // try {
+                // ((IProject)
+                // project).build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
+                // myProgressMonitor);
+                // launch(p2, "main");
+                // } catch (CoreException ce) {
+                // System.out.println();
+                // ce.printStackTrace();
+                // }
             }
         });
 
     }
+    //
+    // public void launch(IJavaProject proj, String main) throws CoreException {
+    // IVMInstall vm = JavaRuntime.getVMInstall(proj);
+    // if (vm == null)
+    // vm = JavaRuntime.getDefaultVMInstall();
+    // IVMRunner vmr = vm.getVMRunner(ILaunchManager.RUN_MODE);
+    // String[] cp = JavaRuntime.computeDefaultRuntimeClassPath(proj);
+    // VMRunnerConfiguration config = new VMRunnerConfiguration(main, cp);
+    // ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
+    // vmr.run(config, launch, null);
+    // }
 }

@@ -1,7 +1,7 @@
 package fi.helsinki.cs.plugin.tmc;
 
-import fi.helsinki.cs.tmc.testrunner.TestCase;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
@@ -14,10 +14,10 @@ public class AppTest extends TestCase {
      * @param testName
      *            name of the test case
      */
-    static String[] a={"ASd"};
-    
-    public AppTest() {    
-        super("asd","asd", a);
+    static String[] a = {"ASd"};
+
+    public AppTest() {
+        super();
     }
 
     /**
@@ -30,7 +30,7 @@ public class AppTest extends TestCase {
     /**
      * Rigourous Test :-)
      */
-    
+
     public void testApp() {
         junit.framework.TestCase.assertTrue(true);
     }

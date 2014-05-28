@@ -65,6 +65,13 @@
 			<version>1.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>tmc-junit-runner</groupId>
+			<artifactId>tmc-junit-runner</artifactId>
+			<version>0.2.5</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/tmc-junit-runner.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
