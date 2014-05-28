@@ -97,7 +97,7 @@ public class ProjectTest {
 	public void testRootPath(){
 		projectFiles.add("directory/pom.xml");
 		Project p = new Project(exercise, projectFiles);
-		assertEquals("directory/", p.getRootPath());
+		assertEquals("directory", p.getRootPath());
 		
 		p = new Project(exercise, new ArrayList<String>());
 		assertEquals("", p.getRootPath());
