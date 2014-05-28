@@ -8,14 +8,18 @@ public class FileUtil {
         return getUnixPath(a) + "/" + getUnixPath(b);
     }
 
-    public static String getUnixPath(String file) {
-        String unixPath = file.replace(File.separator, "/");
+    public static String getUnixPath(String path) {
+        String unixPath = path.replace(File.separator, "/");
 
         if (!unixPath.isEmpty() && unixPath.charAt(unixPath.length() - 1) == '/') {
             unixPath = unixPath.substring(0, unixPath.length() - 1);
         }
 
         return unixPath;
+    }
+
+    public static String getNativePath(String path) {
+        return new File(path).getAbsolutePath();
     }
 
 }
