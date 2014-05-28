@@ -16,7 +16,7 @@ public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
     }
 
     @Override
-    public void start(TaskFeedback progress) {
+    public int start(TaskFeedback progress) {
         progress.startProgress(description, list.size());
 
         for (T t : list) {
@@ -24,13 +24,15 @@ public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
                 this.stop();
             }
             if (!isRunning) {
-                break;
+                return BackgroundTask.RETURN_FAILURE;
             }
 
             run(t);
 
             progress.incrementProgress(1);
         }
+
+        return BackgroundTask.RETURN_SUCCESS;
     }
 
     @Override

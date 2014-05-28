@@ -78,7 +78,6 @@ public class FileIO implements IO {
     @Override
     public Reader getReader() {
         try {
-
             InputStream is = getInputStream();
             if (is == null) {
                 return null;
