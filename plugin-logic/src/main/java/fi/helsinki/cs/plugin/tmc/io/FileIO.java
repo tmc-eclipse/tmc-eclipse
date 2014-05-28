@@ -68,6 +68,7 @@ public class FileIO implements IO {
             if (os == null) {
                 return null;
             }
+
             return new OutputStreamWriter(new BufferedOutputStream(os), "UTF-8");
         } catch (IOException e) {
             return null;
@@ -77,6 +78,7 @@ public class FileIO implements IO {
     @Override
     public Reader getReader() {
         try {
+
             InputStream is = getInputStream();
             if (is == null) {
                 return null;
@@ -109,14 +111,22 @@ public class FileIO implements IO {
 
     @Override
     public void write(byte[] bytes) {
+        FileOutputStream fos = null;
         try {
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             for (int i = 0; i < bytes.length; i++) {
                 fos.write(bytes[i]);
             }
-            fos.close();
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    // JAVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                }
+            }
         }
     }
 }

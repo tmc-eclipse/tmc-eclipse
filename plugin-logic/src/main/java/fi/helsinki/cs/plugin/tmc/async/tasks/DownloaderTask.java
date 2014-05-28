@@ -10,6 +10,7 @@ import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.Unzipper;
+import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UnzippingDeciderFactory;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
@@ -32,8 +33,9 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
         try {
             ZippedProject zip = downloader.downloadExercise(exercise);
 
-            Unzipper unzipper = new Unzipper(zip);
+            Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.noSrcOverwrite());
             FileIO folder = new FileIO(settings.getExerciseFilePath() + "/" + settings.getCurrentCourseName());
+            System.out.println("Taskissa:" + folder.getPath());
             List<String> fileList = unzipper.unzipTo(folder);
 
             Core.getProjectDAO().addProject(new Project(exercise, fileList));

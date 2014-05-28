@@ -7,5 +7,5 @@ public interface ZippingDecider {
      * Zip paths are separated by slashes and don't have a starting slash.
      * Directory paths always end in a slash.
      */
-    public boolean shouldZip(String zipPath);
+    boolean shouldZip(String zipPath);
 }

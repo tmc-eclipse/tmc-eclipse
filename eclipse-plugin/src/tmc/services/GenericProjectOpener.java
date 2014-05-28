@@ -27,7 +27,6 @@ public class GenericProjectOpener implements ProjectOpener {
 
         Project project = projectDAO.getProjectByExercise(e);
         ProjectType projectType = project.getProjectType();
-
         try {
             switch (project.getProjectType()) {
             case JAVA_ANT:
@@ -61,8 +60,7 @@ public class GenericProjectOpener implements ProjectOpener {
     }
 
     private void openAntProject(Project project, ProjectType projectType) throws CoreException {
-
-        new AntProjectOpener(project.getRootPath() + projectType.getBuildFile()).importAndOpen();
+        new AntProjectOpener(project.getRootPath() + ".project").importAndOpen();
 
     }
 
