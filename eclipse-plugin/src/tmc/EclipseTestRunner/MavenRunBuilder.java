@@ -8,8 +8,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.m2e.jdt.MavenJdtPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IViewPart;
@@ -76,13 +74,15 @@ public class MavenRunBuilder {
         IProject activeProject = file.getProject();
 
         String classPath = "";
-        try {
-            classPath = MavenJdtPlugin.getDefault().getBuildpathManager().getClasspath(activeProject, 0, true, null)
-                    .toString();
-        } catch (CoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // try {
+        // classPath =
+        // MavenJdtPlugin.getDefault().getBuildpathManager().getClasspath(activeProject,
+        // 0, true, null)
+        // .toString();
+        // } catch (CoreException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
 
         String[] command = buildCommand(javaExe, classPath);
 

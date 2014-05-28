@@ -15,6 +15,9 @@ public class TestrunnerTask implements BackgroundTask {
     private String testClasspath;
 
     public TestrunnerTask(File rootPath, File testDir, File resultFile, String testClasspath, Integer memoryLimit) {
+        System.out.println("Constructed with \n" + "rootpath: " + rootPath + "\n" + "testdir: " + testDir + "\n"
+                + "resultFile: " + resultFile + "\n" + "testClasspath: " + testClasspath + "\n");
+
         args = new ArrayList<String>();
         args.add("-Dtmc.test_class_dir=" + testDir.getAbsolutePath());
         args.add("-Dtmc.results_file=" + resultFile.getAbsolutePath());
@@ -35,6 +38,11 @@ public class TestrunnerTask implements BackgroundTask {
         }
 
         this.testClasspath = testClasspath;
+
+        System.out.println("ARGS:");
+        for (String arg : args) {
+            System.out.println(arg);
+        }
     }
 
     private boolean endorserLibsExists(File rootPath) {
@@ -56,7 +64,7 @@ public class TestrunnerTask implements BackgroundTask {
 
     @Override
     public void start(TaskFeedback progress) {
-        String[] argArray = (String[]) args.toArray();
+        String[] argArray = args.toArray(new String[args.size()]);
         fi.helsinki.cs.tmc.testrunner.Main.main(argArray);
     }
 
