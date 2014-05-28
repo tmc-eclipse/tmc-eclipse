@@ -1,7 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.io.zipper;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +9,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 import fi.helsinki.cs.plugin.tmc.io.IO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.ZippingDecider;
 
@@ -44,7 +44,7 @@ public class RecursiveZipper {
     }
 
     private void writeEntry(IO file, ZipOutputStream zipStream, String zipPath) throws IOException {
-        zipStream.putNextEntry(new ZipEntry(zipPath + File.separator + file.getName()));
+        zipStream.putNextEntry(new ZipEntry(FileUtil.append(zipPath, file.getName())));
 
         InputStream in = file.getInputStream();
         try {
@@ -65,20 +65,20 @@ public class RecursiveZipper {
         if (parentZipPath.isEmpty()) {
             thisDirZipPath = directory.getName();
         } else {
-            thisDirZipPath = parentZipPath + File.separator + directory.getName();
+            thisDirZipPath = FileUtil.append(parentZipPath, directory.getName());
         }
 
         // Create an entry for the directory
-        zipStream.putNextEntry(new ZipEntry(thisDirZipPath + File.separator));
+        zipStream.putNextEntry(new ZipEntry(FileUtil.append(thisDirZipPath, "")));
         zipStream.closeEntry();
 
         for (IO file : directory.getChildren()) {
             try {
                 boolean isDirectory = file.directoryExists();
 
-                String zipPath = thisDirZipPath + File.separator + file.getName();
+                String zipPath = FileUtil.append(thisDirZipPath, file.getName());
                 if (isDirectory) {
-                    zipPath += File.separator;
+                    zipPath += "/";
                 }
                 if (zippingDecider.shouldZip(zipPath)) {
                     if (isDirectory) {
