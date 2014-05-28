@@ -2,6 +2,8 @@ package fi.helsinki.cs.plugin.tmc.domain;
 
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+
 public class Project {
 
     private Exercise exercise;
@@ -62,7 +64,7 @@ public class Project {
         ProjectType type = getProjectType();
         for (String file : projectFiles) {
             if (file.contains(type.getBuildFile())) {
-                return file.replace(type.getBuildFile(), "");
+                return FileUtil.getUnixPath(file.replace(type.getBuildFile(), ""));
             }
         }
         return "";

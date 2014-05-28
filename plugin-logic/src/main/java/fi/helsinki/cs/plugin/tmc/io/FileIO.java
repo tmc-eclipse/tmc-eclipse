@@ -30,7 +30,7 @@ public class FileIO implements IO {
 
     @Override
     public String getPath() {
-        return file.getAbsolutePath();
+        return FileUtil.getUnixPath(file.getAbsolutePath());
     }
 
     @Override
@@ -98,8 +98,8 @@ public class FileIO implements IO {
     }
 
     @Override
-    public List<IO> getChildren() {
-        List<IO> children = new ArrayList<IO>();
+    public List<FileIO> getChildren() {
+        List<FileIO> children = new ArrayList<FileIO>();
         if (directoryExists()) {
             for (File f : file.listFiles()) {
                 children.add(new FileIO(f.getAbsolutePath()));
@@ -123,7 +123,6 @@ public class FileIO implements IO {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    // JAVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                 }
             }
         }

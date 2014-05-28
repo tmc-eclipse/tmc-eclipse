@@ -2,7 +2,6 @@ package fi.helsinki.cs.plugin.tmc.io.zipper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.zip.ZipInputStream;
 
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 import fi.helsinki.cs.plugin.tmc.io.IO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UnzippingDecider;
 
@@ -34,7 +34,7 @@ public class Unzipper {
         ZipEntry zipEntry = zipStream.getNextEntry();
 
         while (zipEntry != null) {
-            String entryPath = destinationFolder.getPath() + File.separator + zipEntry.getName();
+            String entryPath = FileUtil.append(destinationFolder.getPath(), zipEntry.getName());
 
             if (!decider.shouldUnzip(entryPath)) {
                 zipEntry = zipStream.getNextEntry();

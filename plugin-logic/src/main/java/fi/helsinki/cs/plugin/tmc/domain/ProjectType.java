@@ -9,7 +9,6 @@ public enum ProjectType {
     private final String buildFile;
 
     private ProjectType(String typeName, String buildFile) {
-
         this.buildFile = buildFile;
     }
 
