@@ -11,7 +11,7 @@ public class FileUtil {
     public static String getUnixPath(String file) {
         String unixPath = file.replace(File.separator, "/");
 
-        if (unixPath.charAt(unixPath.length() - 1) == '/') {
+        if (!unixPath.isEmpty() && unixPath.charAt(unixPath.length() - 1) == '/') {
             unixPath = unixPath.substring(0, unixPath.length() - 1);
         }
 
