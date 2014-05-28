@@ -32,6 +32,9 @@ public class Project {
     }
 
     public boolean containsFile(String file) {
+    	if (file == null){
+    		return false;
+    	}
         return file.contains(rootPath);
     }
 
@@ -60,6 +63,10 @@ public class Project {
 
     private String buildRootPath() {
         ProjectType type = getProjectType();
+        if (type == null){
+        	return "";
+        }
+        
         for (String file : projectFiles) {
             if (file.contains(type.getBuildFile())) {
                 return file.replace(type.getBuildFile(), "");
