@@ -66,7 +66,7 @@ public class GenericProjectOpener implements ProjectOpener {
 
 	private void openAntProject(Project project, ProjectType projectType)
 			throws CoreException {
-		new AntProjectOpener(project.getRootPath() + ".project")
+		new AntProjectOpener(FileUtil.append(project.getRootPath(), ".project"))
 				.importAndOpen();
 
 	}
