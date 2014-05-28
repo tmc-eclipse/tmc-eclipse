@@ -28,7 +28,7 @@ public class TestRunnerHandler extends AbstractHandler {
 
         IProgressMonitor monitor = new NullProgressMonitor();
         AntRunner runner = new AntRunner();
-        runner.setBuildFileLocation("/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/build.xml");
+        runner.setBuildFileLocation("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/build.xml");
         runner.setArguments("-Dmessage=Building -verbose");
 
         String[] target = {"compile-test"};
@@ -43,17 +43,19 @@ public class TestRunnerHandler extends AbstractHandler {
             e.printStackTrace();
         }
 
-        String classpath = "/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/bin/;"
-                + "/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/lib/junit-4.10.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/lib/edu-test-utils-0.4.1.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/eclipse/configuration/org.eclipse.osgi/bundles/165/1/.cp/;"
-                + "/cs/fs2/home/jphelio/Desktop/eclipse/configuration/org.eclipse.osgi/bundles/164/1/.cp/;"
-                + "/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/test";
+        String cp = "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/bin;"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/junit-4.10.jar;"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/edu-test-utils-0.4.1.jar;"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/gson-2.2.4.jar;"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/hamcrest-core-1.3.jar;"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/junit-4.11.jar;"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/tmc-junit-runner.jar";
 
         // rootDir, testDir, resultFile, testClasspath, memorylimit
-        new TestrunnerTask(new File("/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs"), new File(
-                "/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/test"), new File(
-                "/cs/fs2/home/jphelio/Desktop/eclipseAntTest/arith_funcs/results.txt"), null, null).start(null);
+        new TestrunnerTask(new File("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs"),
+                new File("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/test"), new File(
+                        "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/results.txt"), cp,
+                null).start(null);
 
         return null;
     }
