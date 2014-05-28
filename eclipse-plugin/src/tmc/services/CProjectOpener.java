@@ -1,5 +1,6 @@
 package tmc.services;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -48,7 +49,8 @@ public class CProjectOpener {
 				.newProjectDescription(projectName);
 
 		description
-				.setLocationURI(new URI(FileUtil.getNativePath(projectPath)));
+				.setLocationURI(new File(FileUtil.getNativePath(projectPath))
+						.toURI());
 
 		project = CCorePlugin.getDefault().createCProject(description, project,
 				new NullProgressMonitor(), MakeCorePlugin.MAKE_PROJECT_ID);
