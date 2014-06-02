@@ -1,5 +1,7 @@
 package tmc.ui;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -87,6 +89,9 @@ public class TestRunnerView extends ViewPart {
         for (int i = 0; i < cp.length; i++) {
             System.out.println(cp[i]);
         }
+        Properties prop = System.getProperties();
+        prop.setProperty("java.class.path", prop.getProperty("java.class.path", null));
+        System.out.println("java.class.path now = " + prop.getProperty("java.class.path", null));
         System.out.println("--");
 
         VMRunnerConfiguration config = new VMRunnerConfiguration(main, cp);

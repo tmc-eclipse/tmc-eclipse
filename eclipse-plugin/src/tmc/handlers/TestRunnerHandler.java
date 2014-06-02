@@ -43,13 +43,15 @@ public class TestRunnerHandler extends AbstractHandler {
             e.printStackTrace();
         }
 
-        String cp = "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/bin;"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/junit-4.10.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/edu-test-utils-0.4.1.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/gson-2.2.4.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/hamcrest-core-1.3.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/junit-4.11.jar;"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/tmc-junit-runner.jar";
+        String cp = "\"/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/bin/:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/test/:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/junit-4.10.jar:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/edu-test-utils-0.4.1.jar:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/gson-2.2.4.jar:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/hamcrest-core-1.3.jar:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/junit-4.11.jar:"
+                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/tmc-junit-runner.jar\"";
 
         // rootDir, testDir, resultFile, testClasspath, memorylimit
         new TestrunnerTask(new File("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs"),

@@ -1,9 +1,5 @@
 package tmc.EclipseTestRunner;
 
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 
@@ -26,17 +22,18 @@ public abstract class AbstractExerciseRunner implements ExerciseRunner {
         }
     }
 
-    protected IViewPart getIoTab() {
-        try {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
-
-        } catch (PartInitException e) {
-
-        }
-
-        return null;
-    }
+    // protected IViewPart getIoTab() {
+    // try {
+    // return
+    // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+    // .showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
+    //
+    // } catch (PartInitException e) {
+    //
+    // }
+    //
+    // return null;
+    // }
 
     // protected Callable<Integer> executorTaskToCallable(final ExecutorTask et)
     // {
