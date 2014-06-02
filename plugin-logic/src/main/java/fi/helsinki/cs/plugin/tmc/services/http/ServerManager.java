@@ -13,10 +13,12 @@ import com.google.gson.JsonParser;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
+import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
 
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
@@ -47,7 +49,8 @@ public class ServerManager {
         ExerciseList el = mapper.fromJson(bodyText, ExerciseList.class);
         List<Exercise> exercises = el.getExercises();
 
-        // convert date string to Date object
+        // convert date string to Date object. Ugly hack due to some older code
+        // getting deprecated
         for (Exercise e : exercises) {
             e.finalizeDeserialization();
         }
@@ -97,6 +100,12 @@ public class ServerManager {
         } else {
             throw new RuntimeException("Server returned unknown response");
         }
+    }
+
+    public SubmissionResult getSubmissionResult(URI resultURI) {
+        String json = getString(resultURI.toString());
+        System.out.println("Submission result json: " + json);
+        return (new SubmissionResultParser()).parseFromJson(json);
     }
 
     private byte[] getBytes(String url) {

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 public class SubmissionResult {
 
     public static enum Status {
-        OK, FAIL, ERROR
+        OK, FAIL, ERROR, PROCESSING
     }
 
     @SerializedName("status")

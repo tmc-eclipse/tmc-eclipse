@@ -24,9 +24,9 @@ public class UploadHandler extends AbstractHandler {
 
         final IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getActiveEditor();
-        if (activeEditor == null)
-            return "active editor null";
-
+        if (activeEditor == null) {
+            return null;
+        }
         IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
         IFile file = input.getFile();
         IProject activeProject = file.getProject();
