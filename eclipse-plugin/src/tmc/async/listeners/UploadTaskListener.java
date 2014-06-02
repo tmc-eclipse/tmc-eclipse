@@ -1,5 +1,10 @@
 package tmc.async.listeners;
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+
+import tmc.ui.TestRunnerView;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
@@ -21,10 +26,20 @@ public class UploadTaskListener implements BackgroundTaskListener {
     @Override
     public void onSuccess() {
 
-        SubmissionResult result = task.getResult();
+        final SubmissionResult result = task.getResult();
 
-        System.out.println("OnSuccess");
-        System.out.println("Status: " + result.getStatus());
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                try {
+                    TestRunnerView trv = (TestRunnerView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                            .getActivePage().showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
+                    trv.addSubmissionResult(result);
+
+                } catch (PartInitException e) {
+
+                }
+            }
+        });
 
     }
 
