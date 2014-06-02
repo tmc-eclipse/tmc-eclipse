@@ -9,7 +9,6 @@ public enum ProjectType {
     private final String buildFile;
 
     private ProjectType(String typeName, String buildFile) {
-
         this.buildFile = buildFile;
     }
 
@@ -20,7 +19,7 @@ public enum ProjectType {
     public static ProjectType findProjectType(List<String> fileList) {
         for (String file : fileList) {
             for (ProjectType type : ProjectType.values()) {
-                if (file.contains(type.getBuildFile())) {
+                if (file.toLowerCase().endsWith(((type.getBuildFile().toLowerCase())))) {
                     return type;
                 }
             }
