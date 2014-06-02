@@ -10,6 +10,8 @@ import org.eclipse.ui.part.ViewPart;
 
 public class TestRunnerView extends ViewPart {
 
+    TestRunnerComposite comp = null;
+
     public TestRunnerView() {
         super();
     }
@@ -28,7 +30,7 @@ public class TestRunnerView extends ViewPart {
         master.setLayout(gridLayout);
         master.setExpandHorizontal(true);
         master.setExpandVertical(true);
-        final TestRunnerComposite comp = new TestRunnerComposite(master, SWT.SMOOTH);
+        comp = new TestRunnerComposite(master, SWT.SMOOTH);
         master.setContent(comp);
         master.setMinSize(500, 100);
 
@@ -39,6 +41,10 @@ public class TestRunnerView extends ViewPart {
                 comp.resize();
             }
         });
-
     }
+
+    public void addSubmissionResult(SubmissionResult sr) {
+        comp.addSubmissionResult(sr);
+    }
+
 }

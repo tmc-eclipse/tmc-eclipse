@@ -10,6 +10,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Text;
+
+import tmc.testRunnerDomain.SubmissionResult;
+import tmc.testRunnerDomain.TestCaseResult;
 
 public class TestRunnerComposite extends Composite {
 
@@ -80,6 +84,14 @@ public class TestRunnerComposite extends Composite {
 
     private void updateProgress() {
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
+    }
+
+    public void addSubmissionResult(SubmissionResult sr) {
+        for (TestCaseResult tcr : sr.getTestCases()) {
+            Text text = new Text(scrolledComposite, SWT.SMOOTH);
+            text.setText(tcr.getMessage());
+            text.setSize(680, 100);
+        }
     }
 
     @Override

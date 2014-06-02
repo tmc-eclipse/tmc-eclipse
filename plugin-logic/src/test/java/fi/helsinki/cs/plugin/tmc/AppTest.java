@@ -14,8 +14,10 @@ public class AppTest extends TestCase {
      * @param testName
      *            name of the test case
      */
-    public AppTest(String testName) {
-        super(testName);
+    static String[] a = {"ASd"};
+
+    public AppTest() {
+        super();
     }
 
     /**
@@ -28,7 +30,8 @@ public class AppTest extends TestCase {
     /**
      * Rigourous Test :-)
      */
+
     public void testApp() {
-        assertTrue(true);
+        junit.framework.TestCase.assertTrue(true);
     }
 }
