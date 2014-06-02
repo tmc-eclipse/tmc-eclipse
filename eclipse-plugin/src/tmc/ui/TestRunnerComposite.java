@@ -2,6 +2,9 @@ package tmc.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -31,11 +34,22 @@ public class TestRunnerComposite extends Composite {
         howManyTestsPassedPercent += (howManyTestsPassedCount / howManyTestsRan) * 100;
 
         progressBar = new ProgressBar(this, SWT.SMOOTH);
-        progressBar.setToolTipText("");
-        progressBar.setBackground(Display.getDefault().getSystemColor(5));
+        progressBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
         progressBar.setMinimum(0);
         progressBar.setMaximum(700);
         progressBar.setBounds(19, 33, 300, 30);
+
+        progressBar.addPaintListener(new PaintListener() {
+            @Override
+            public void paintControl(PaintEvent e) {
+                Point widgetSize = progressBar.getSize();
+                int percentage = progressBar.getSelection() / PROGRESS_BAR_MULTIPLIER;
+                String text = percentage + "%";
+                Point textSize = e.gc.stringExtent(text);
+                e.gc.setForeground(progressBar.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+                e.gc.drawString(text, ((widgetSize.x - textSize.x) / 2), ((widgetSize.y - textSize.y) / 2), true);
+            }
+        });
 
         Button btnShowAllTests = new Button(this, SWT.CHECK);
         btnShowAllTests.setBounds(325, 33, 128, 24);
@@ -47,11 +61,11 @@ public class TestRunnerComposite extends Composite {
         scrolledComposite.setLocation(10, 69);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
-        scrolledComposite.setBackground(Display.getCurrent().getSystemColor(1));
+        scrolledComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 
         lblTestspassed = new Label(this, SWT.NONE);
         lblTestspassed.setBounds(19, 10, 183, 17);
-        lblTestspassed.setText("TestsPassed: " + howManyTestsPassedPercent + "%");
+        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
 
         updateProgress();
 
