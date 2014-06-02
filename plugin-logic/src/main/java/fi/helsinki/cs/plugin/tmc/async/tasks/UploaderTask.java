@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.async.tasks;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 
 public class UploaderTask implements BackgroundTask {
@@ -12,6 +13,8 @@ public class UploaderTask implements BackgroundTask {
     private TaskFeedback progress;
     private String description = "Uploading exercises";
     private String path;
+
+    SubmissionResult result;
 
     public interface StopStatus {
         boolean mustStop();
@@ -48,18 +51,24 @@ public class UploaderTask implements BackgroundTask {
                 return BackgroundTask.RETURN_FAILURE;
             }
             progress.incrementProgress(1);
+
             uploader.handleSumissionResponse();
             if (!isRunning()) {
                 return BackgroundTask.RETURN_FAILURE;
             }
             progress.incrementProgress(1);
-            uploader.handleSubmissionResult(new StopStatus() {
+
+            result = uploader.handleSubmissionResult(new StopStatus() {
                 @Override
                 public boolean mustStop() {
                     return !isRunning();
                 }
-
             });
+
+            if (result == null) {
+                return BackgroundTask.RETURN_FAILURE;
+            }
+
             progress.incrementProgress(1);
 
         } catch (Exception ex) {
@@ -67,6 +76,10 @@ public class UploaderTask implements BackgroundTask {
         }
 
         return BackgroundTask.RETURN_SUCCESS;
+    }
+
+    public SubmissionResult getResult() {
+        return result;
     }
 
     @Override

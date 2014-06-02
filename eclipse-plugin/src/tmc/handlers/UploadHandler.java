@@ -9,6 +9,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 
+import tmc.async.listeners.UploadTaskListener;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
@@ -28,7 +29,9 @@ public class UploadHandler extends AbstractHandler {
         IFile file = input.getFile();
         IProject activeProject = file.getProject();
 
-        Core.getTaskRunner().runTask(new UploaderTask(uploader, activeProject.getRawLocation().toString() + "/"));
+        UploaderTask task = new UploaderTask(uploader, activeProject.getRawLocation().toString() + "/");
+        Core.getTaskRunner().runTask(task, new UploadTaskListener(task));
+
         return null;
     }
 }

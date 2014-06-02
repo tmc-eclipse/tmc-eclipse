@@ -48,7 +48,7 @@ public class ProjectUploader {
         response = server.uploadFile(project.getExercise(), data);
     }
 
-    public void handleSubmissionResult(StopStatus stopStatus) {
+    public SubmissionResult handleSubmissionResult(StopStatus stopStatus) {
 
         SubmissionResult result = server.getSubmissionResult(response.submissionUrl);
 
@@ -60,7 +60,7 @@ public class ProjectUploader {
             for (int i = 0; i < LOOP_COUNT; ++i) {
 
                 if (stopStatus.mustStop()) {
-                    return;
+                    return null;
                 }
 
                 try {
@@ -73,7 +73,7 @@ public class ProjectUploader {
         }
 
         if (stopStatus.mustStop()) {
-            return;
+            return null;
         }
 
         System.out.println("All test cases failed: " + result.allTestCasesFailed());
@@ -91,5 +91,7 @@ public class ProjectUploader {
             System.out.println("  Message: " + r.getMessage());
             System.out.println("  Exception: " + r.getException());
         }
+
+        return result;
     }
 }
