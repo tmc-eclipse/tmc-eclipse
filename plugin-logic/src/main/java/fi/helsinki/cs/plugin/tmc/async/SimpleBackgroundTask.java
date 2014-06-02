@@ -43,10 +43,6 @@ public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
         return description;
     }
 
-    protected boolean isRunning() {
-        return isRunning;
-    }
-
     public abstract void run(T t);
 
 }

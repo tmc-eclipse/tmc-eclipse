@@ -6,6 +6,7 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -45,9 +46,6 @@ public class ProjectUploader {
         }
 
         response = server.uploadFile(project.getExercise(), data);
-        System.out.println("submissionUrl: " + response.submissionUrl);
-        System.out.println("pasteUrl: " + response.pasteUrl);
-
     }
 
     public void handleSubmissionResult(StopStatus stopStatus) {
@@ -74,6 +72,10 @@ public class ProjectUploader {
             result = server.getSubmissionResult(response.submissionUrl);
         }
 
+        if (stopStatus.mustStop()) {
+            return;
+        }
+
         System.out.println("All test cases failed: " + result.allTestCasesFailed());
         System.out.println("Feedback answer url: " + result.getFeedbackAnswerUrl());
         System.out.println("Solution url: " + result.getSolutionUrl());
@@ -81,7 +83,13 @@ public class ProjectUploader {
         System.out.println("Missing review points: " + result.getMissingReviewPoints());
         System.out.println("Points: " + result.getPoints());
         System.out.println("Status: " + result.getStatus());
-        System.out.println("Test cases: " + result.getTestCases());
-    }
 
+        System.out.println("Test cases: ");
+        for (TestCaseResult r : result.getTestCases()) {
+            System.out.println("  Name: " + r.getName());
+            System.out.println("  isSuccessful: " + r.isSuccessful());
+            System.out.println("  Message: " + r.getMessage());
+            System.out.println("  Exception: " + r.getException());
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package tmc.handlers;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -20,7 +18,6 @@ public class UploadHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
-        ArrayList<String> projectRoot = new ArrayList<String>();
 
         final IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getActiveEditor();
@@ -31,9 +28,7 @@ public class UploadHandler extends AbstractHandler {
         IFile file = input.getFile();
         IProject activeProject = file.getProject();
 
-        projectRoot.add(activeProject.getRawLocation().toString() + "/");
-
-        Core.getTaskRunner().runTask(new UploaderTask(uploader, projectRoot));
+        Core.getTaskRunner().runTask(new UploaderTask(uploader, activeProject.getRawLocation().toString() + "/"));
         return null;
     }
 }

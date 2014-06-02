@@ -1,38 +1,58 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks;
 
-import java.util.List;
-
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.async.SimpleBackgroundTask;
+import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
+import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 
-public class UploaderTask extends SimpleBackgroundTask<String> {
+public class UploaderTask implements BackgroundTask {
 
     private ProjectUploader uploader;
+    private boolean isRunning;
+    private TaskFeedback progress;
+    private String description = "Uploading exercises";
+    private String path;
 
     public interface StopStatus {
         boolean mustStop();
     }
 
-    public UploaderTask(ProjectUploader uploader, List<String> path) {
-        super("Uploading exercises", path);
+    public UploaderTask(ProjectUploader uploader, String path) {
         this.uploader = uploader;
+        isRunning = true;
+        this.path = path;
+    }
+
+    private boolean isRunning() {
+        if (!isRunning) {
+            return false;
+        }
+
+        isRunning = !progress.isCancelRequested();
+        return isRunning;
     }
 
     @Override
-    public void run(String path) {
-        try {
+    public void start(TaskFeedback p) {
+        progress = p;
+        progress.startProgress(description, 3);
 
+        run();
+
+    }
+
+    public void run() {
+        try {
             uploader.zipProjects(path);
             if (!isRunning()) {
                 return;
             }
-
+            progress.incrementProgress(1);
             uploader.handleSumissionResponse();
             if (!isRunning()) {
                 return;
             }
-
+            progress.incrementProgress(1);
             uploader.handleSubmissionResult(new StopStatus() {
                 @Override
                 public boolean mustStop() {
@@ -40,10 +60,21 @@ public class UploaderTask extends SimpleBackgroundTask<String> {
                 }
 
             });
+            progress.incrementProgress(1);
 
         } catch (Exception ex) {
             Core.getErrorHandler().raise("An error occurred while uploading exercises: " + ex.getMessage());
         }
+    }
+
+    @Override
+    public void stop() {
+        isRunning = false;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 
 }
