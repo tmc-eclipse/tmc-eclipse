@@ -10,6 +10,10 @@ public class UploaderTask extends SimpleBackgroundTask<String> {
 
     private ProjectUploader uploader;
 
+    public interface StopStatus {
+        boolean mustStop();
+    }
+
     public UploaderTask(ProjectUploader uploader, List<String> path) {
         super("Uploading exercises", path);
         this.uploader = uploader;
@@ -18,7 +22,24 @@ public class UploaderTask extends SimpleBackgroundTask<String> {
     @Override
     public void run(String path) {
         try {
-            uploader.uploadProject(path);
+
+            uploader.zipProjects(path);
+            if (!isRunning()) {
+                return;
+            }
+
+            uploader.handleSumissionResponse();
+            if (!isRunning()) {
+                return;
+            }
+
+            uploader.handleSubmissionResult(new StopStatus() {
+                @Override
+                public boolean mustStop() {
+                    return !isRunning();
+                }
+
+            });
 
         } catch (Exception ex) {
             Core.getErrorHandler().raise("An error occurred while uploading exercises: " + ex.getMessage());
