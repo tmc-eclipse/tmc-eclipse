@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.domain;
 import java.util.Collections;
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.DefaultZippingDecider;
 import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.MavenZippingDecider;
 import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.ZippingDecider;
@@ -38,6 +39,9 @@ public class Project {
     }
 
     public boolean containsFile(String file) {
+        if (file == null) {
+            return false;
+        }
         return file.contains(rootPath);
     }
 
@@ -66,10 +70,13 @@ public class Project {
 
     private String buildRootPath() {
         ProjectType type = getProjectType();
+        if (type == null) {
+            return "";
+        }
+
         for (String file : projectFiles) {
             if (file.contains(type.getBuildFile())) {
-                String temp = file.replace(type.getBuildFile(), "");
-                return temp;
+                return FileUtil.getUnixPath(file.replace(type.getBuildFile(), ""));
             }
         }
         return "";

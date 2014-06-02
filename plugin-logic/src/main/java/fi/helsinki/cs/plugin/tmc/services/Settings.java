@@ -4,6 +4,8 @@ import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+
 /**
  * Settings class for storing user preferences, such as TMC username and
  * password, in a platform independent way. Wraps java.util.prefs.Preferences.
@@ -51,7 +53,7 @@ public class Settings {
 
     public void setExerciseFilePath(String exerciseFilePath) {
         if (exerciseFilePath != null) {
-            prefs.put(PREF_KEY_EXERCISE_FILEPATH, exerciseFilePath);
+            prefs.put(PREF_KEY_EXERCISE_FILEPATH, FileUtil.getUnixPath(exerciseFilePath));
         }
     }
 

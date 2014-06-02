@@ -33,24 +33,24 @@ public class UploaderTask implements BackgroundTask {
     }
 
     @Override
-    public void start(TaskFeedback p) {
+    public int start(TaskFeedback p) {
         progress = p;
         progress.startProgress(description, 3);
 
-        run();
+        return run();
 
     }
 
-    public void run() {
+    public int run() {
         try {
             uploader.zipProjects(path);
             if (!isRunning()) {
-                return;
+                return BackgroundTask.RETURN_FAILURE;
             }
             progress.incrementProgress(1);
             uploader.handleSumissionResponse();
             if (!isRunning()) {
-                return;
+                return BackgroundTask.RETURN_FAILURE;
             }
             progress.incrementProgress(1);
             uploader.handleSubmissionResult(new StopStatus() {
@@ -65,6 +65,8 @@ public class UploaderTask implements BackgroundTask {
         } catch (Exception ex) {
             Core.getErrorHandler().raise("An error occurred while uploading exercises: " + ex.getMessage());
         }
+
+        return BackgroundTask.RETURN_SUCCESS;
     }
 
     @Override

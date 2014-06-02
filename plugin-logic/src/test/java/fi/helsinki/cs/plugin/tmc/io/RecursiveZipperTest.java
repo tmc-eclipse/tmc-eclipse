@@ -45,10 +45,10 @@ public class RecursiveZipperTest {
         try {
             unzipFolder("testDirectory.zip");
 
-            zipDirectory(new FileIO(path + "testDirectory"), "testDirectoryOutput.zip");
+            zipDirectory(new FileIO(FileUtil.append(path, "testDirectory")), "testDirectoryOutput.zip");
 
-            ZipFile original = new ZipFile(path + "testDirectory.zip");
-            ZipFile zipped = new ZipFile(path + "testDirectoryOutput.zip");
+            ZipFile original = new ZipFile(FileUtil.append(path, "testDirectory.zip"));
+            ZipFile zipped = new ZipFile(FileUtil.append(path, "testDirectoryOutput.zip"));
 
             Set<Long> originalContents = new LinkedHashSet<Long>();
             for (Enumeration<?> e = original.entries(); e.hasMoreElements();) {
@@ -65,7 +65,7 @@ public class RecursiveZipperTest {
 
             assertEquals(originalContents, zippedContents);
         } finally {
-            FileUtils.deleteDirectory(new File(path + "testDirectory/"));
+            FileUtils.deleteDirectory(new File(FileUtil.append(path, "testDirectory/")));
         }
     }
 
@@ -176,8 +176,9 @@ public class RecursiveZipperTest {
         }
     }
 
-    private void unzipFolder(String zip) throws IOException, FileNotFoundException {
-        File f = new File(path + zip);
+    private void unzipFolder(String zipname) throws IOException, FileNotFoundException {
+        File f = new File(FileUtil.append(path, zipname));
+
         byte[] b = IOUtils.toByteArray(new FileInputStream(f));
         ZippedProject project = new ZippedProject();
         project.setBytes(b);
@@ -194,7 +195,7 @@ public class RecursiveZipperTest {
 
         byte[] zip = zipper.zipProjectSources();
 
-        OutputStream os = new FileIO(path + zipName).getOutputStream();
+        OutputStream os = new FileIO(FileUtil.append(path, zipName)).getOutputStream();
         try {
             IOUtils.write(zip, os);
         } finally {

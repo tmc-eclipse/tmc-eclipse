@@ -15,7 +15,8 @@ public class PreventFolderOverwriteUnzippingDecider implements UnzippingDecider 
 
         for (String folder : protectedFolders) {
 
-            String folderPath = File.separator + folder + File.separator;
+            String folderPath = "/" + folder + "/";
+
             if (filePath.contains(folderPath)) {
                 File f = new File(filePath);
                 if (f.exists()) {

@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.m2e.maven.runtime,
  org.eclipse.cdt.managedbuilder.core;bundle-version="8.3.0",
  org.eclipse.cdt.core;bundle-version="5.6.0",
- org.eclipse.ui.ide;bundle-version="3.9.2"
+ org.eclipse.ui.ide;bundle-version="3.9.2",
+ org.eclipse.cdt.ui;bundle-version="5.7.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/tmc.eclipse-0.0.1-SNAPSHOT.jar,
