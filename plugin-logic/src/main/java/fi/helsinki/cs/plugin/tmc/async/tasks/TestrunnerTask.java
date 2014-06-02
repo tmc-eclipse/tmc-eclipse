@@ -63,9 +63,10 @@ public class TestrunnerTask implements BackgroundTask {
     }
 
     @Override
-    public void start(TaskFeedback progress) {
+    public int start(TaskFeedback progress) {
         String[] argArray = args.toArray(new String[args.size()]);
         fi.helsinki.cs.tmc.testrunner.Main.main(argArray);
+        return BackgroundTask.RETURN_SUCCESS;
     }
 
     @Override
