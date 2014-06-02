@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class FeedbackDialog extends Dialog {
+public class SuccesfulSubmitDialog extends Dialog {
 
     protected Object result;
     protected Shell shell;
@@ -24,7 +24,7 @@ public class FeedbackDialog extends Dialog {
      * @param parent
      * @param style
      */
-    public FeedbackDialog(Shell parent, int style) {
+    public SuccesfulSubmitDialog(Shell parent, int style) {
         super(parent, style);
         setText("Server results");
     }
@@ -83,13 +83,33 @@ public class FeedbackDialog extends Dialog {
         btnViewModelSolution.setBounds(10, 76, 163, 29);
         btnViewModelSolution.setText("View model solution");
 
+        createFeedbackForm();
+    }
+
+    private void createFeedbackForm() {
         Label lblFeedbackleaveEmpty = new Label(shell, SWT.NONE);
         lblFeedbackleaveEmpty.setBounds(10, 118, 250, 17);
         lblFeedbackleaveEmpty.setText("Feedback (leave empty to not send):");
 
+        addRatingFeedbackField("Miten vaikealta tehtävä tuntui?");
+
+        addTextFeedbackField("Kommentteja?");
+    }
+
+    private void addTextFeedbackField(String label) {
+        Label lblKommentteja = new Label(shell, SWT.NONE);
+        lblKommentteja.setText(label);
+        lblKommentteja.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
+        lblKommentteja.setBounds(26, 210, 325, 17);
+
+        text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        text.setBounds(29, 233, 325, 72);
+    }
+
+    private void addRatingFeedbackField(String label) {
         Label lblMitenVaikealtaTehtv = new Label(shell, SWT.NONE);
         lblMitenVaikealtaTehtv.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
-        lblMitenVaikealtaTehtv.setText("Miten vaikealta tehtävä tuntui?");
+        lblMitenVaikealtaTehtv.setText(label);
         lblMitenVaikealtaTehtv.setBounds(26, 150, 325, 17);
 
         Button btnRadioButton = new Button(shell, SWT.RADIO);
@@ -98,6 +118,12 @@ public class FeedbackDialog extends Dialog {
             public void widgetSelected(SelectionEvent e) {
             }
         });
+
+        Button btnNa = new Button(shell, SWT.RADIO);
+        btnNa.setSelection(true);
+        btnNa.setBounds(26, 173, 52, 24);
+        btnNa.setText("N/A");
+
         btnRadioButton.setBounds(136, 173, 37, 24);
         btnRadioButton.setText("1");
 
@@ -122,21 +148,9 @@ public class FeedbackDialog extends Dialog {
         button_3.setText("5");
         button_3.setBounds(308, 173, 37, 24);
 
-        Button btnNa = new Button(shell, SWT.RADIO);
-        btnNa.setSelection(true);
-        btnNa.setBounds(26, 173, 52, 24);
-        btnNa.setText("N/A");
-
         Button button_4 = new Button(shell, SWT.RADIO);
         button_4.setBounds(93, 173, 37, 24);
         button_4.setText("0");
-
-        Label lblKommentteja = new Label(shell, SWT.NONE);
-        lblKommentteja.setText("Kommentteja?");
-        lblKommentteja.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
-        lblKommentteja.setBounds(26, 210, 325, 17);
-
-        text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        text.setBounds(29, 233, 325, 72);
     }
+
 }

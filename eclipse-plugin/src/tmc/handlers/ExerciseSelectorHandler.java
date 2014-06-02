@@ -7,14 +7,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import tmc.ui.FeedbackDialog;
+import tmc.ui.SuccesfulSubmitDialog;
 
 public class ExerciseSelectorHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 
-        FeedbackDialog dialog = new FeedbackDialog(window.getShell(), SWT.SHEET);
+        SuccesfulSubmitDialog dialog = new SuccesfulSubmitDialog(window.getShell(), SWT.SHEET);
         // ExerciseSelectorDialog dialog = new
         // ExerciseSelectorDialog(window.getShell(), SWT.SHEET);
         dialog.open();
