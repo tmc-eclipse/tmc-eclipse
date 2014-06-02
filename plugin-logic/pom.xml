@@ -136,6 +136,15 @@
 							<!-- EXCLUDE INTERFACES FROM CODE COVERAGE REPORTS -->
 							<exclude>fi/helsinki/cs/plugin/tmc/io/IO.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/storage/CourseDAO.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/async/BackgroundTask.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/async/BackgroundTaskListener.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/async/BackgroundTaskRunner.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/async/TaskFeedback.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/async/tasks/ProjectOpener.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/TMCErrorHandler.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/storage/DataSource.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/io/zipper/zippingdecider/ZippingDecider.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/io/zipper/unzippingdecider/UnzippingDecider.class</exclude>
 						</excludes>
 					</instrumentation>
 					<formats>
