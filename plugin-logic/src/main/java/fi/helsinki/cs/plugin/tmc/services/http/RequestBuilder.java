@@ -12,6 +12,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -107,6 +108,7 @@ class RequestBuilder {
 
     private HttpPost makeFileUploadRequest(String url, Map<String, String> params, String fileField, byte[] data)
             throws URISyntaxException {
+
         HttpPost request = new HttpPost(url);
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -117,8 +119,9 @@ class RequestBuilder {
             builder.addTextBody(e.getKey(), e.getValue());
         }
 
-        builder.addBinaryBody(fileField, data);
+        builder.addBinaryBody(fileField, data, ContentType.APPLICATION_OCTET_STREAM, "file");
         request.setEntity(builder.build());
+
         return request;
     }
 }

@@ -14,6 +14,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>local-m2-repo</id>
+			<url>file://${project.basedir}/local-m2-repo</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -27,6 +34,12 @@
 			<version>2.2.4</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>fi.helsinki.cs.tmc</groupId>
+			<artifactId>tmc-junit-runner</artifactId>
+			<version>0.2.5</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -68,7 +81,7 @@
 	</dependencies>
 
 	<build>
-		<plugins>		
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>

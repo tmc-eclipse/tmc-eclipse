@@ -68,7 +68,8 @@ public class Project {
         ProjectType type = getProjectType();
         for (String file : projectFiles) {
             if (file.contains(type.getBuildFile())) {
-                return file.replace(type.getBuildFile(), "");
+                String temp = file.replace(type.getBuildFile(), "");
+                return temp;
             }
         }
         return "";
