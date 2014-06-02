@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FeedbackQuestion {
+
     private static final Pattern intRangeRegex = Pattern.compile("^intrange\\[(-?\\d+)\\.\\.(-?\\d+)\\]$");
 
     private int id;
