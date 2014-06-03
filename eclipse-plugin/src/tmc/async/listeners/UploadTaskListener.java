@@ -31,9 +31,11 @@ public class UploadTaskListener implements BackgroundTaskListener {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
                 try {
-                    TestRunnerView trv = (TestRunnerView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                            .getActivePage().showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
-                    trv.addSubmissionResult(result);
+                    if (!result.allTestCasesSucceeded()) {
+                        TestRunnerView trv = (TestRunnerView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                                .getActivePage().showView("fi.helsinki.cs.plugins.eclipse.views.tmcTestUi");
+                        trv.addSubmissionResult(result);
+                    }
 
                 } catch (PartInitException e) {
 

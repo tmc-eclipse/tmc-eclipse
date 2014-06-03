@@ -116,4 +116,13 @@ public class SubmissionResult {
         }
         return true;
     }
+
+    public boolean allTestCasesSucceeded() {
+        for (TestCaseResult tcr : testCases) {
+            if (!tcr.isSuccessful()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
