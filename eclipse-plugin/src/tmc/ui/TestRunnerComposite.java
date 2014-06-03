@@ -1,5 +1,7 @@
 package tmc.ui;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
@@ -14,7 +16,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 
-import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerComposite extends Composite {
@@ -31,7 +32,7 @@ public class TestRunnerComposite extends Composite {
     private double howManyTestsPassedCount = 4;
     private double howManyTestsRan = 8;
 
-    private SubmissionResult result;
+    private List<TestCaseResult> results;
     private boolean showAllTests = false;
 
     /**
@@ -106,21 +107,21 @@ public class TestRunnerComposite extends Composite {
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
     }
 
-    public void addSubmissionResult(SubmissionResult sr) {
+    public void addSubmissionResult(List<TestCaseResult> tcr) {
 
-        result = sr;
+        results = tcr;
         showTestResults();
     }
 
     private void showTestResults() {
-        if (result == null) {
+        if (results == null) {
             return;
         }
         howManyTestsPassedCount = 0;
-        howManyTestsRan = result.getTestCases().size();
+        howManyTestsRan = results.size();
 
         StringBuilder b = new StringBuilder();
-        for (TestCaseResult tcr : result.getTestCases()) {
+        for (TestCaseResult tcr : results) {
 
             if (tcr.isSuccessful()) {
                 ++howManyTestsPassedCount;

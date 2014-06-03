@@ -30,7 +30,7 @@ public class UploadTaskListener implements BackgroundTaskListener {
             return;
         }
         String exerciseName = task.getProject().getExercise().getName();
-        uiInvoker.invokeTestResultWindow(result);
+        uiInvoker.invokeTestResultWindow(result.getTestCases());
 
         if (result.allTestCasesSucceeded()) {
             uiInvoker.invokeAllTestsPassedWindow(result, exerciseName);

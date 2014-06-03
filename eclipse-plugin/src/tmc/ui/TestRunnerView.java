@@ -1,5 +1,7 @@
 package tmc.ui;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
@@ -8,7 +10,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerView extends ViewPart {
 
@@ -46,10 +48,8 @@ public class TestRunnerView extends ViewPart {
         });
     }
 
-    public void addSubmissionResult(SubmissionResult sr) {
-        // if (comp != null) {
-        comp.addSubmissionResult(sr);
-        // }
+    public void addSubmissionResult(List<TestCaseResult> tcr) {
+        comp.addSubmissionResult(tcr);
     }
 
 }
