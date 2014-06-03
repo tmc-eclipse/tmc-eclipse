@@ -8,7 +8,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import tmc.testRunnerDomain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 
 public class TestRunnerView extends ViewPart {
 
