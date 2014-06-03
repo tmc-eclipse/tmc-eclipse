@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
+import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
+
 public class SubmissionResult {
 
     public static enum Status {
