@@ -13,7 +13,6 @@ import org.eclipse.ui.part.ViewPart;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerView extends ViewPart {
-
     TestRunnerComposite comp = null;
     ScrolledComposite master = null;
 
@@ -51,5 +50,4 @@ public class TestRunnerView extends ViewPart {
     public void addSubmissionResult(List<TestCaseResult> tcr) {
         comp.addSubmissionResult(tcr);
     }
-
 }

@@ -18,7 +18,6 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.TestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.TestrunnerListener;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
-import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 
 public class TestRunnerHandler extends AbstractHandler {
 
@@ -35,22 +34,22 @@ public class TestRunnerHandler extends AbstractHandler {
 
         }
 
-        String projectRoot = getProjectRootPath() + "/";
+        String projectRoot = getProjectRootPath();
         Project project = Core.getProjectDAO().getProjectByFile(projectRoot);
 
-        TestRunResult results = null;
+        if (project == null) {
+            return null;
+        }
+
         switch (project.getProjectType()) {
         case JAVA_ANT:
             runTestsForAntProject();
             break;
         case JAVA_MAVEN:
-            results = null;
             break;
         case MAKEFILE:
-            results = null;
             break;
         default:
-            results = null;
             break;
         }
         return null;
@@ -81,6 +80,7 @@ public class TestRunnerHandler extends AbstractHandler {
                 .getActiveEditor();
         IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
         String projectRoot = input.getFile().getProject().getRawLocation().makeAbsolute().toString();
+
         return projectRoot;
     }
 
