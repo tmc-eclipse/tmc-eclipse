@@ -6,7 +6,6 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
-import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -19,9 +18,10 @@ public class ProjectUploader {
     private static int SLEEP_DURATION = 40;
     private static int LOOP_COUNT = 2000 / SLEEP_DURATION;
 
-    Project project;
-    byte[] data;
-    SubmissionResponse response;
+    private Project project;
+    private byte[] data;
+    private SubmissionResponse response;
+    private SubmissionResult result;
 
     public ProjectUploader(ServerManager server) {
         this.server = server;
@@ -48,9 +48,9 @@ public class ProjectUploader {
         response = server.uploadFile(project.getExercise(), data);
     }
 
-    public SubmissionResult handleSubmissionResult(StopStatus stopStatus) {
+    public void handleSubmissionResult(StopStatus stopStatus) {
 
-        SubmissionResult result = server.getSubmissionResult(response.submissionUrl);
+        result = server.getSubmissionResult(response.submissionUrl);
 
         // basically we try to stop the thread being completely unresponsive
         // while sleeping
@@ -60,7 +60,7 @@ public class ProjectUploader {
             for (int i = 0; i < LOOP_COUNT; ++i) {
 
                 if (stopStatus.mustStop()) {
-                    return null;
+                    return;
                 }
 
                 try {
@@ -73,25 +73,15 @@ public class ProjectUploader {
         }
 
         if (stopStatus.mustStop()) {
-            return null;
+            return;
         }
+    }
 
-        System.out.println("All test cases failed: " + result.allTestCasesFailed());
-        System.out.println("Feedback answer url: " + result.getFeedbackAnswerUrl());
-        System.out.println("Solution url: " + result.getSolutionUrl());
-        System.out.println("Feedback questions: " + result.getFeedbackQuestions());
-        System.out.println("Missing review points: " + result.getMissingReviewPoints());
-        System.out.println("Points: " + result.getPoints());
-        System.out.println("Status: " + result.getStatus());
-
-        System.out.println("Test cases: ");
-        for (TestCaseResult r : result.getTestCases()) {
-            System.out.println("  Name: " + r.getName());
-            System.out.println("  isSuccessful: " + r.isSuccessful());
-            System.out.println("  Message: " + r.getMessage());
-            System.out.println("  Exception: " + r.getException());
-        }
-
+    public SubmissionResult getResult() {
         return result;
+    }
+
+    public Project getProject() {
+        return project;
     }
 }

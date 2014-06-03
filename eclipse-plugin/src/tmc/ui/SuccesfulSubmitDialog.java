@@ -51,7 +51,7 @@ public class SuccesfulSubmitDialog extends Dialog {
      * @param parent
      * @param style
      */
-    public SuccesfulSubmitDialog(Shell parent) {
+    public SuccesfulSubmitDialog(Shell parent, String title) {
         super(parent, SWT.SHEET);
 
         questions = new ArrayList<FeedbackQuestion>();
@@ -60,7 +60,7 @@ public class SuccesfulSubmitDialog extends Dialog {
         pointsAwarded = 0;
         modelSolutionUrl = "";
 
-        setText("Server results");
+        setText(title);
     }
 
     public void setPointsAwarded(int pointsAwarded) {
