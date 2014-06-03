@@ -29,11 +29,15 @@ public class UploadTaskListener implements BackgroundTaskListener {
         if (result == null) {
             return;
         }
-
-        uiInvoker.invokeTestResultWindow(result);
+        String exerciseName = task.getProject().getExercise().getName();
+        uiInvoker.invokeTestResultWindow(result.getTestCases());
 
         if (result.allTestCasesSucceeded()) {
-            uiInvoker.invokeAllTestsPassedWindow(result);
+            uiInvoker.invokeAllTestsPassedWindow(result, exerciseName);
+        } else if (result.allTestCasesFailed()) {
+            uiInvoker.invokeAllTestsFailedWindow(result, exerciseName);
+        } else {
+            uiInvoker.invokeSomeTestsFailedWindow(result, exerciseName);
         }
 
     }
@@ -43,5 +47,4 @@ public class UploadTaskListener implements BackgroundTaskListener {
         System.out.println("OnFailure");
 
     }
-
 }
