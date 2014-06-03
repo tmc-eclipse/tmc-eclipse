@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.async.tasks.listeners;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class UploadTaskListener implements BackgroundTaskListener {
@@ -23,21 +24,21 @@ public class UploadTaskListener implements BackgroundTaskListener {
     @Override
     public void onSuccess() {
 
-        uiInvoker.invokeSomeTestsFailedWindow(null);
-        uiInvoker.invokeAllTestsFailedWindow(null);
+        final SubmissionResult result = task.getResult();
 
-        //
-        // final SubmissionResult result = task.getResult();
-        //
-        // if (result == null) {
-        // return;
-        // }
-        //
-        // uiInvoker.invokeTestResultWindow(result);
-        //
-        // if (result.allTestCasesSucceeded()) {
-        // uiInvoker.invokeAllTestsPassedWindow(result);
-        // }
+        if (result == null) {
+            return;
+        }
+        String exerciseName = task.getProject().getExercise().getName();
+        uiInvoker.invokeTestResultWindow(result);
+
+        if (result.allTestCasesSucceeded()) {
+            uiInvoker.invokeAllTestsPassedWindow(result, exerciseName);
+        } else if (result.allTestCasesFailed()) {
+            uiInvoker.invokeAllTestsFailedWindow(result, exerciseName);
+        } else {
+            uiInvoker.invokeSomeTestsFailedWindow(result, exerciseName);
+        }
 
     }
 
@@ -46,5 +47,4 @@ public class UploadTaskListener implements BackgroundTaskListener {
         System.out.println("OnFailure");
 
     }
-
 }

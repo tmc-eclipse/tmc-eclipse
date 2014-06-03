@@ -5,10 +5,10 @@ import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 public interface IdeUIInvoker {
     public void invokeTestResultWindow(SubmissionResult result);
 
-    public void invokeAllTestsPassedWindow(SubmissionResult result);
+    public void invokeAllTestsPassedWindow(SubmissionResult result, String exerciseName);
 
-    public void invokeSomeTestsFailedWindow(SubmissionResult result);
+    public void invokeSomeTestsFailedWindow(SubmissionResult result, String exerciseName);
 
-    public void invokeAllTestsFailedWindow(SubmissionResult result);
+    public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName);
 
 }

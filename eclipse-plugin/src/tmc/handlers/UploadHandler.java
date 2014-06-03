@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import tmc.ui.EclipseIdeUIInvoker;
 import fi.helsinki.cs.plugin.tmc.Core;
@@ -31,7 +32,10 @@ public class UploadHandler extends AbstractHandler {
         IProject activeProject = file.getProject();
 
         UploaderTask task = new UploaderTask(uploader, activeProject.getRawLocation().toString() + "/");
-        Core.getTaskRunner().runTask(task, new UploadTaskListener(task, new EclipseIdeUIInvoker()));
+        Core.getTaskRunner().runTask(
+                task,
+                new UploadTaskListener(task, new EclipseIdeUIInvoker(HandlerUtil.getActiveWorkbenchWindowChecked(event)
+                        .getShell())));
 
         return null;
     }

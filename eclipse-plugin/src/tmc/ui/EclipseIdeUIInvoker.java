@@ -11,6 +11,12 @@ import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class EclipseIdeUIInvoker implements IdeUIInvoker {
 
+    private Shell shell;
+
+    public EclipseIdeUIInvoker(Shell shell) {
+        this.shell = shell;
+    }
+
     @Override
     public void invokeTestResultWindow(final SubmissionResult result) {
         Display.getDefault().asyncExec(new Runnable() {
@@ -28,33 +34,48 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     }
 
     @Override
-    public void invokeAllTestsPassedWindow(SubmissionResult result) {
+    public void invokeAllTestsPassedWindow(final SubmissionResult result, final String exerciseName) {
+
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                SuccesfulSubmitDialog dialog = new SuccesfulSubmitDialog(new Shell());
+                SuccesfulSubmitDialog dialog = new SuccesfulSubmitDialog(shell, exerciseName);
+
+                int points = 0; // getPoints(result);
+                System.out.println(result.getPoints());
+                dialog.setPointsAwarded(points);
+                dialog.setModelSolutionUrl(result.getSolutionUrl());
+
                 dialog.open();
 
+            }
+
+            private int getPoints(final SubmissionResult result) {
+                int points = 0;
+                for (String point : result.getPoints()) {
+                    points += Integer.parseInt(point);
+                }
+                return points;
             }
         });
     }
 
     @Override
-    public void invokeSomeTestsFailedWindow(SubmissionResult result) {
-        String messageStr = "Exercise " + "name here" + " failed.\n" + "Some tests failed on the server.\nSee Below";
+    public void invokeSomeTestsFailedWindow(SubmissionResult result, String exerciseName) {
+        String messageStr = "Exercise " + exerciseName + " failed.\n" + "Some tests failed on the server.\nSee Below";
         invokeMessageBox(messageStr);
 
     }
 
     @Override
-    public void invokeAllTestsFailedWindow(SubmissionResult result) {
-        String messageStr = "Exercise " + "name here" + " failed.\n" + "All tests failed on the server.\nSee Below";
+    public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName) {
+        String messageStr = "Exercise " + exerciseName + " failed.\n" + "All tests failed on the server.\nSee Below";
         invokeMessageBox(messageStr);
     }
 
     private void invokeMessageBox(final String messageStr) {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                MessageDialog dialog = new MessageDialog(new Shell(), "", null, messageStr, MessageDialog.ERROR,
+                MessageDialog dialog = new MessageDialog(shell, "", null, messageStr, MessageDialog.ERROR,
                         new String[] {"OK"}, 0);
                 dialog.open();
 
