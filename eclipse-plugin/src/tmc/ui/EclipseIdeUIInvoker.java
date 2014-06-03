@@ -45,6 +45,7 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
 
                 dialog.setPointsAwarded(result.getPoints());
                 dialog.setModelSolutionUrl(result.getSolutionUrl());
+                dialog.setFeedbackQuestions(result.getFeedbackQuestions());
 
                 dialog.open();
 
