@@ -12,44 +12,46 @@ import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 
 public class TestRunnerView extends ViewPart {
 
-    TestRunnerComposite comp = null;
-    ScrolledComposite master = null;
+	TestRunnerComposite comp = null;
+	ScrolledComposite master = null;
 
-    public TestRunnerView() {
-        super();
-    }
+	public TestRunnerView() {
+		super();
+	}
 
-    public void setFocus() {
-    }
+	public void setFocus() {
+	}
 
-    public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent) {
 
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.marginWidth = 0;
-        gridLayout.numColumns = 1;
-        parent.setLayout(gridLayout);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.marginWidth = 0;
+		gridLayout.numColumns = 1;
+		parent.setLayout(gridLayout);
 
-        master = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        master.setLayout(gridLayout);
-        master.setExpandHorizontal(true);
-        master.setExpandVertical(true);
-        comp = new TestRunnerComposite(master, SWT.SMOOTH);
-        master.setContent(comp);
-        master.setMinSize(500, 100);
+		master = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.BORDER);
+		master.setLayout(gridLayout);
+		master.setExpandHorizontal(true);
+		master.setExpandVertical(true);
+		comp = new TestRunnerComposite(master, SWT.SMOOTH);
+		master.setContent(comp);
+		master.setMinSize(500, 100);
 
-        master.addControlListener(new ControlAdapter() {
-            @Override
-            public void controlResized(final ControlEvent e) {
-                master.setSize(master.getParent().getSize().x, master.getParent().getSize().y - 5);
-                comp.resize();
-            }
-        });
-    }
+		master.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(final ControlEvent e) {
+				master.setSize(master.getParent().getSize().x, master
+						.getParent().getSize().y - 5);
+				comp.resize();
+			}
+		});
+	}
 
-    public void addSubmissionResult(SubmissionResult sr) {
-        // if (comp != null) {
-        comp.addSubmissionResult(sr);
-        // }
-    }
+	public void addSubmissionResult(SubmissionResult sr) {
+		// if (comp != null) {
+		comp.addSubmissionResult(sr);
+		// }
+	}
 
 }
