@@ -8,11 +8,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import tmc.testRunnerDomain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 
 public class TestRunnerView extends ViewPart {
 
     TestRunnerComposite comp = null;
+    ScrolledComposite master = null;
 
     public TestRunnerView() {
         super();
@@ -21,14 +22,14 @@ public class TestRunnerView extends ViewPart {
     public void setFocus() {
     }
 
-    public void createPartControl(final Composite parent) {
+    public void createPartControl(Composite parent) {
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginWidth = 0;
         gridLayout.numColumns = 1;
         parent.setLayout(gridLayout);
 
-        final ScrolledComposite master = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        master = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         master.setLayout(gridLayout);
         master.setExpandHorizontal(true);
         master.setExpandVertical(true);
@@ -46,7 +47,9 @@ public class TestRunnerView extends ViewPart {
     }
 
     public void addSubmissionResult(SubmissionResult sr) {
+        // if (comp != null) {
         comp.addSubmissionResult(sr);
+        // }
     }
 
 }

@@ -14,6 +14,11 @@
             id="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand">
       </command>
       <command
+    	    name="Upload_Test"
+    	    categoryID="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+    	    id="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand">
+      </command>
+      <command
             name="Exercises"
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
@@ -34,6 +39,11 @@
             commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
             class="tmc.handlers.ExerciseSelectorHandler">
       </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
+            class="tmc.handlers.UploadHandler">
+      </handler>
+      
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
             class="tmc.handlers.TestRunnerHandler">
@@ -69,6 +79,11 @@
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
                   mnemonic="E"
                   id="fi.helsinki.cs.plugins.eclipse.menus.exercisesCommand">
+            </command>
+             <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
+                  mnemonic="U"
+                  id="fi.helsinki.cs.plugins.eclipse.menus.uploadCommand">
             </command>
             <command
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"

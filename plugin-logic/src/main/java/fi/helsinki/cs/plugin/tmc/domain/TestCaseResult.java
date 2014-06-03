@@ -1,5 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
+import static fi.helsinki.cs.tmc.testrunner.TestCase.Status.PASSED;
 import fi.helsinki.cs.tmc.testrunner.CaughtException;
 import fi.helsinki.cs.tmc.testrunner.TestCase;
 
@@ -9,7 +10,6 @@ public class TestCaseResult {
     private boolean successful;
     private String message;
     private CaughtException exception;
-    private String detailedMessage;
 
     public TestCaseResult() {
     }
@@ -20,11 +20,6 @@ public class TestCaseResult {
         this.message = message;
     }
 
-    public TestCaseResult(String name, boolean successful, String message, String valgrindTrace) {
-        this(name, successful, message);
-        this.detailedMessage = valgrindTrace;
-    }
-
     public String getName() {
         return name;
     }
@@ -33,16 +28,14 @@ public class TestCaseResult {
         return successful;
     }
 
+    // may be null
     public String getMessage() {
         return message;
     }
 
+    // may be null
     public CaughtException getException() {
         return exception;
-    }
-
-    public String getDetailedMessage() {
-        return detailedMessage;
     }
 
     /**
@@ -52,7 +45,7 @@ public class TestCaseResult {
     public static TestCaseResult fromTestCaseRecord(TestCase tc) {
         TestCaseResult tcr = new TestCaseResult();
         tcr.name = tc.className + " " + tc.methodName;
-        tcr.successful = (tc.status == TestCase.Status.PASSED);
+        tcr.successful = (tc.status == PASSED);
         tcr.message = tc.message;
         tcr.exception = tc.exception;
         return tcr;

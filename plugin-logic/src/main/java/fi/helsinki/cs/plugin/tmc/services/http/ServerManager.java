@@ -1,16 +1,24 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
+import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
 
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
@@ -41,7 +49,8 @@ public class ServerManager {
         ExerciseList el = mapper.fromJson(bodyText, ExerciseList.class);
         List<Exercise> exercises = el.getExercises();
 
-        // convert date string to Date object
+        // convert date string to Date object. Ugly hack due to some older code
+        // getting deprecated
         for (Exercise e : exercises) {
             e.finalizeDeserialization();
         }
@@ -58,6 +67,45 @@ public class ServerManager {
             e.printStackTrace();
         }
         return zip;
+    }
+
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data) {
+        String submitUrl = connectionBuilder.addApiCallQueryParameters(exercise.getReturnUrl());
+
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
+        params.put("client_nanotime", "" + System.nanoTime());
+        params.put("error_msg_locale", Settings.getDefaultSettings().getErrorMsgLocale().toString());
+
+        String response = "";
+        try {
+            response = connectionBuilder.createConnection().uploadFileForTextDownload(submitUrl, params,
+                    "submission[file]", data);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
+
+        if (respJson.get("error") != null) {
+            throw new RuntimeException("Server responded with error: " + respJson.get("error"));
+        } else if (respJson.get("submission_url") != null) {
+            try {
+                URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
+                URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
+                return new SubmissionResponse(submissionUrl, pasteUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Server responded with malformed submission url");
+            }
+        } else {
+            throw new RuntimeException("Server returned unknown response");
+        }
+    }
+
+    public SubmissionResult getSubmissionResult(URI resultURI) {
+        String json = getString(resultURI.toString());
+        System.out.println("Submission result json: " + json);
+        return (new SubmissionResultParser()).parseFromJson(json);
     }
 
     private byte[] getBytes(String url) {
@@ -82,4 +130,5 @@ public class ServerManager {
         }
         return json;
     }
+
 }

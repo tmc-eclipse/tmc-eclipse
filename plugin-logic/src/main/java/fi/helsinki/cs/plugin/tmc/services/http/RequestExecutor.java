@@ -19,6 +19,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 
@@ -65,7 +66,8 @@ class RequestExecutor {
     private CloseableHttpClient makeHttpClient() throws IOException {
 
         HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties()
-                .setConnectionReuseStrategy(new NoConnectionReuseStrategy());
+                .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
+                .setRedirectStrategy(new LaxRedirectStrategy());
         maybeSetProxy(httpClientBuilder);
 
         return httpClientBuilder.build();

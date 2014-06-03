@@ -4,6 +4,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -12,8 +14,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 
-import tmc.testRunnerDomain.SubmissionResult;
-import tmc.testRunnerDomain.TestCaseResult;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerComposite extends Composite {
 
@@ -22,9 +24,15 @@ public class TestRunnerComposite extends Composite {
     private ScrolledComposite scrolledComposite;
     private ProgressBar progressBar;
     private Label lblTestspassed;
+    private Button btnShowAllTests;
+    private Text resultText;
+
     private int howManyTestsPassedPercent;
     private double howManyTestsPassedCount = 4;
     private double howManyTestsRan = 8;
+
+    private SubmissionResult result;
+    private boolean showAllTests = false;
 
     /**
      * Create the composite.
@@ -34,8 +42,6 @@ public class TestRunnerComposite extends Composite {
      */
     public TestRunnerComposite(Composite parent, int style) {
         super(parent, style);
-
-        howManyTestsPassedPercent += (howManyTestsPassedCount / howManyTestsRan) * 100;
 
         progressBar = new ProgressBar(this, SWT.SMOOTH);
         progressBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
@@ -55,9 +61,20 @@ public class TestRunnerComposite extends Composite {
             }
         });
 
-        Button btnShowAllTests = new Button(this, SWT.CHECK);
+        final Button btnShowAllTests = new Button(this, SWT.CHECK);
         btnShowAllTests.setBounds(325, 33, 128, 24);
         btnShowAllTests.setText("Show all tests");
+        btnShowAllTests.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (btnShowAllTests.getSelection()) {
+                    showAllTests = true;
+                } else {
+                    showAllTests = false;
+                }
+                showTestResults();
+            }
+        });
 
         scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         scrolledComposite.setSize(680, 220);
@@ -69,7 +86,8 @@ public class TestRunnerComposite extends Composite {
 
         lblTestspassed = new Label(this, SWT.NONE);
         lblTestspassed.setBounds(19, 10, 183, 17);
-        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
+
+        resultText = new Text(scrolledComposite, SWT.SMOOTH | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
 
         updateProgress();
 
@@ -83,15 +101,46 @@ public class TestRunnerComposite extends Composite {
     }
 
     private void updateProgress() {
+        howManyTestsPassedPercent = (int) ((howManyTestsPassedCount / howManyTestsRan) * 100);
+        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
     }
 
     public void addSubmissionResult(SubmissionResult sr) {
-        for (TestCaseResult tcr : sr.getTestCases()) {
-            Text text = new Text(scrolledComposite, SWT.SMOOTH);
-            text.setText(tcr.getMessage());
-            text.setSize(680, 100);
+
+        result = sr;
+        showTestResults();
+    }
+
+    private void showTestResults() {
+        if (result == null) {
+            return;
         }
+        howManyTestsPassedCount = 0;
+        howManyTestsRan = result.getTestCases().size();
+
+        StringBuilder b = new StringBuilder();
+        for (TestCaseResult tcr : result.getTestCases()) {
+
+            if (tcr.isSuccessful()) {
+                ++howManyTestsPassedCount;
+            }
+
+            if (!showAllTests && tcr.isSuccessful()) {
+                continue;
+            }
+
+            b.append(tcr.getName());
+            b.append("\n");
+            b.append(tcr.getMessage());
+            b.append("\n\n");
+
+        }
+
+        resultText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+        resultText.setSize(resultText.getParent().getSize().x, resultText.getParent().getSize().y);
+        resultText.setText(b.toString());
+        updateProgress();
     }
 
     @Override

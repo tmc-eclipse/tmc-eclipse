@@ -12,7 +12,7 @@ import fi.helsinki.cs.plugin.tmc.Core;
         return addApiCallQueryParameters(Core.getSettings().getServerBaseUrl() + "/" + extension);
     }
 
-    private String addApiCallQueryParameters(String url) {
+    public String addApiCallQueryParameters(String url) {
         url = UriUtils.withQueryParam(url, "api_version", "" + API_VERSION);
         url = UriUtils.withQueryParam(url, "client", "eclipse_plugin");
         url = UriUtils.withQueryParam(url, "client_version", getClientVersion());
