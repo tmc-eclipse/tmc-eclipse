@@ -9,6 +9,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 
+import tmc.ui.EclipseIdeUIInvoker;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.UploadTaskListener;
@@ -30,7 +31,7 @@ public class UploadHandler extends AbstractHandler {
         IProject activeProject = file.getProject();
 
         UploaderTask task = new UploaderTask(uploader, activeProject.getRawLocation().toString() + "/");
-        Core.getTaskRunner().runTask(task, new UploadTaskListener(task));
+        Core.getTaskRunner().runTask(task, new UploadTaskListener(task, new EclipseIdeUIInvoker()));
 
         return null;
     }
