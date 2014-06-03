@@ -1,14 +1,16 @@
-package tmc.testRunnerDomain;
+package fi.helsinki.cs.plugin.tmc.domain;
 
 import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
+import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
+
 public class SubmissionResult {
 
     public static enum Status {
-        OK, FAIL, ERROR
+        OK, FAIL, ERROR, PROCESSING
     }
 
     @SerializedName("status")
@@ -111,6 +113,15 @@ public class SubmissionResult {
     public boolean allTestCasesFailed() {
         for (TestCaseResult tcr : testCases) {
             if (tcr.isSuccessful()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean allTestCasesSucceeded() {
+        for (TestCaseResult tcr : testCases) {
+            if (!tcr.isSuccessful()) {
                 return false;
             }
         }

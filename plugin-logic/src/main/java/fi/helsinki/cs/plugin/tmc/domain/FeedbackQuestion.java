@@ -12,7 +12,6 @@ public class FeedbackQuestion {
     private String kind;
 
     public FeedbackQuestion() {
-
     }
 
     public FeedbackQuestion(int id, String question, String kind) {
@@ -50,8 +49,7 @@ public class FeedbackQuestion {
     }
 
     public boolean isIntRange() {
-        return !isText();
-        // return intRangeMatcher().matches();
+        return intRangeMatcher().matches();
     }
 
     public int getIntRangeMin() {

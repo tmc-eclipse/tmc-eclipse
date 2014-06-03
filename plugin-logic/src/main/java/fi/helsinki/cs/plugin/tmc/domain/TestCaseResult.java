@@ -1,4 +1,4 @@
-package tmc.testRunnerDomain;
+package fi.helsinki.cs.plugin.tmc.domain;
 
 import static fi.helsinki.cs.tmc.testrunner.TestCase.Status.PASSED;
 import fi.helsinki.cs.tmc.testrunner.CaughtException;
@@ -28,10 +28,12 @@ public class TestCaseResult {
         return successful;
     }
 
+    // may be null
     public String getMessage() {
         return message;
     }
 
+    // may be null
     public CaughtException getException() {
         return exception;
     }

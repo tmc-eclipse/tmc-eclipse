@@ -1,5 +1,7 @@
 package fi.helsinki.cs.plugin.tmc.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -53,7 +55,13 @@ public class Settings {
 
     public void setExerciseFilePath(String exerciseFilePath) {
         if (exerciseFilePath != null) {
-            prefs.put(PREF_KEY_EXERCISE_FILEPATH, FileUtil.getUnixPath(exerciseFilePath));
+            // Resolve symbolic links
+            String realPath;
+            try {
+                realPath = new File(exerciseFilePath).getCanonicalPath();
+                prefs.put(PREF_KEY_EXERCISE_FILEPATH, FileUtil.getUnixPath(realPath));
+            } catch (IOException e) {
+            }
         }
     }
 

@@ -6,35 +6,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
 
 public class SuccesfulSubmitDialog extends Dialog {
 
-    public static final int QUESTIONS_HEIGHT_OFFSET = 150;
+    private static final int NULL_OFFSET = 1;
+    private static final String DEFAULT_FONT = "Ubuntu";
 
-    public static final int RATING_QUESTION_HEIGHT = 55;
-    public static final int TEXT_QUESTION_HEIGHT = 105;
+    private static final int TEXT_FIELD_CHAR_LENGTH = 10;
+    private static final int TEXT_FIELD_MIN_SIZE = 10;
+
+    public static final int QUESTIONS_HEIGHT_OFFSET = 150;
+    public static final int RATING_QUESTION_HEIGHT = 60;
+    public static final int TEXT_QUESTION_HEIGHT = 110;
 
     protected Object result;
     protected Shell shell;
-    private Text text;
 
     private int pointsAwarded;
     private String modelSolutionUrl;
 
     private List<FeedbackQuestion> questions;
+    private List<FeedbackAnswer> answers;
 
     /**
      * Create the dialog.
@@ -46,6 +55,7 @@ public class SuccesfulSubmitDialog extends Dialog {
         super(parent, SWT.SHEET);
 
         questions = new ArrayList<FeedbackQuestion>();
+        answers = new ArrayList<FeedbackAnswer>();
 
         pointsAwarded = 0;
         modelSolutionUrl = "";
@@ -63,6 +73,10 @@ public class SuccesfulSubmitDialog extends Dialog {
 
     public void addFeedbackQuestion(FeedbackQuestion question) {
         this.questions.add(question);
+    }
+
+    public List<FeedbackAnswer> getFeedbackAnswers() {
+        return answers;
     }
 
     /**
@@ -91,24 +105,24 @@ public class SuccesfulSubmitDialog extends Dialog {
         shell.setSize(320, 170);
         shell.setText(getText());
 
-        Label lblNewLabel = new Label(shell, SWT.NONE);
-        lblNewLabel.setFont(SWTResourceManager.getFont("Ubuntu", 12, SWT.NORMAL));
-        lblNewLabel.setText("All tests passed on the server.");
-        lblNewLabel.setForeground(SWTResourceManager.getColor(34, 139, 34));
-        lblNewLabel.setBounds(53, 10, 301, 37);
+        Label testStatusLabel = new Label(shell, SWT.NONE);
+        testStatusLabel.setFont(SWTResourceManager.getFont(DEFAULT_FONT, 12, SWT.NORMAL));
+        testStatusLabel.setText("All tests passed on the server.");
+        testStatusLabel.setForeground(SWTResourceManager.getColor(34, 139, 34));
+        testStatusLabel.setBounds(53, 10, 301, 37);
 
-        Label lblNewLabel_1 = new Label(shell, SWT.NONE);
-        lblNewLabel_1.setImage(ResourceManager.getPluginImage("eclipse-plugin", "resources/smile.gif"));
-        lblNewLabel_1.setBounds(10, 0, 37, 47);
+        Label imageLabel = new Label(shell, SWT.NONE);
+        imageLabel.setImage(ResourceManager.getPluginImage("eclipse-plugin", "resources/smile.gif"));
+        imageLabel.setBounds(10, 0, 37, 47);
 
-        Label lblPointsPermanentlyAwarded = new Label(shell, SWT.NONE);
-        lblPointsPermanentlyAwarded.setBounds(10, 53, 344, 17);
-        lblPointsPermanentlyAwarded.setText("Points permanently awarded: " + pointsAwarded + ".");
+        Label pointsAwardedLabel = new Label(shell, SWT.NONE);
+        pointsAwardedLabel.setBounds(10, 53, 344, 17);
+        pointsAwardedLabel.setText("Points permanently awarded: " + pointsAwarded + ".");
 
-        Button btnViewModelSolution = new Button(shell, SWT.NONE);
-        btnViewModelSolution.setBounds(10, 76, 163, 29);
-        btnViewModelSolution.setText("View model solution");
-        btnViewModelSolution.addSelectionListener(new SelectionAdapter() {
+        Button viewModelSolutionButton = new Button(shell, SWT.NONE);
+        viewModelSolutionButton.setBounds(10, 76, 163, 29);
+        viewModelSolutionButton.setText("View model solution");
+        viewModelSolutionButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (!modelSolutionUrl.isEmpty()) {
@@ -122,15 +136,16 @@ public class SuccesfulSubmitDialog extends Dialog {
         int heightOffset = createFeedbackForm();
         shell.setSize(370, 75 + heightOffset);
 
-        Button btnOk = new Button(shell, SWT.NONE);
-        btnOk.setText("OK");
-        btnOk.addSelectionListener(new SelectionAdapter() {
+        Button closeButton = new Button(shell, SWT.NONE);
+        closeButton.setText("OK");
+        closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 shell.close();
             }
         });
-        btnOk.setBounds(290, 10 + heightOffset, 64, 29);
+        closeButton.setBounds(290, 10 + heightOffset, 64, 29);
+
     }
 
     private void openUrl(String modelSolutionUrl) {
@@ -149,79 +164,114 @@ public class SuccesfulSubmitDialog extends Dialog {
             return heightOffset - 20;
         }
 
-        Label lblFeedbackleaveEmpty = new Label(shell, SWT.NONE);
-        lblFeedbackleaveEmpty.setBounds(10, 118, 250, 17);
-        lblFeedbackleaveEmpty.setText("Feedback (leave empty to not send):");
+        Label feedbackLabel = new Label(shell, SWT.NONE);
+        feedbackLabel.setBounds(10, 118, 250, 17);
+        feedbackLabel.setText("Feedback (leave empty to not send):");
 
         for (FeedbackQuestion question : questions) {
             if (question.isIntRange()) {
-                addRatingFeedbackField(question.getQuestion(), heightOffset);
+                addRatingFeedbackField(question.getId(), question.getQuestion(), heightOffset,
+                        question.getIntRangeMin(), question.getIntRangeMax());
                 heightOffset += RATING_QUESTION_HEIGHT;
             }
             if (question.isText()) {
-                addTextFeedbackField(question.getQuestion(), heightOffset);
+                addTextFeedbackField(question.getId(), question.getQuestion(), heightOffset);
                 heightOffset += TEXT_QUESTION_HEIGHT;
             }
+            answers.add(new FeedbackAnswer(question));
         }
 
         return heightOffset;
     }
 
-    private void addTextFeedbackField(String label, int heightOffset) {
-        Label lblKommentteja = new Label(shell, SWT.NONE);
-        lblKommentteja.setText(label);
-        lblKommentteja.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
-        lblKommentteja.setBounds(26, heightOffset, 325, 17);
+    private void addTextFeedbackField(final int id, String question, int heightOffset) {
+        Label label = new Label(shell, SWT.NONE);
+        label.setText(question);
+        label.setFont(SWTResourceManager.getFont(DEFAULT_FONT, 10, SWT.NORMAL));
+        label.setBounds(26, heightOffset, 325, 17);
 
-        text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        final Text text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         text.setBounds(29, heightOffset + 23, 325, 72);
+
+        text.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                updateAnswer(id, text.getText());
+            }
+
+        });
     }
 
-    private void addRatingFeedbackField(String label, int heightOffset) {
-        Label lblMitenVaikealtaTehtv = new Label(shell, SWT.NONE);
-        lblMitenVaikealtaTehtv.setFont(SWTResourceManager.getFont("Ubuntu", 10, SWT.NORMAL));
-        lblMitenVaikealtaTehtv.setText(label);
-        lblMitenVaikealtaTehtv.setBounds(26, heightOffset, 325, 17);
+    private void addRatingFeedbackField(final int id, String question, int heightOffset, final int minValue,
+            final int maxValue) {
 
-        Button btnRadioButton = new Button(shell, SWT.RADIO);
-        btnRadioButton.addSelectionListener(new SelectionAdapter() {
+        Label label = new Label(shell, SWT.NONE);
+        label.setFont(SWTResourceManager.getFont(DEFAULT_FONT, 10, SWT.NORMAL));
+        label.setText(question);
+        label.setBounds(26, heightOffset, 325, 17);
+
+        final Scale scale = new Scale(shell, SWT.HORIZONTAL);
+
+        scale.setSelection(minValue);
+        scale.setMinimum(minValue);
+        scale.setMaximum(maxValue + NULL_OFFSET);
+
+        scale.setIncrement(1);
+        scale.setPageIncrement(1);
+        scale.setBounds(26, heightOffset + 20, 250, 24);
+
+        final Text text = new Text(shell, SWT.BORDER);
+        text.setText("");
+
+        int textFieldDigits = (int) Math.ceil(Math.log10(maxValue));
+
+        text.setBounds(280, heightOffset + 20, (TEXT_FIELD_CHAR_LENGTH * textFieldDigits) + TEXT_FIELD_MIN_SIZE, 24);
+        text.addModifyListener(new ModifyListener() {
+
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void modifyText(ModifyEvent e) {
+                try {
+                    if (Integer.parseInt(text.getText()) >= minValue - 1
+                            && Integer.parseInt(text.getText()) <= (maxValue)) {
+                        scale.setSelection(Integer.parseInt(text.getText()) + 1);
+                    } else {
+                        scale.setSelection(minValue);
+                        text.setText("");
+                    }
+
+                    updateAnswer(id, scale.getSelection() - NULL_OFFSET + "");
+                } catch (Exception e1) {
+                }
+
             }
+
         });
 
-        Button btnNa = new Button(shell, SWT.RADIO);
-        btnNa.setSelection(true);
-        btnNa.setBounds(26, heightOffset + 23, 52, 24);
-        btnNa.setText("N/A");
+        scale.addSelectionListener(new SelectionAdapter() {
 
-        btnRadioButton.setBounds(136, heightOffset + 23, 37, 24);
-        btnRadioButton.setText("1");
-
-        Button button = new Button(shell, SWT.RADIO);
-        button.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                if (scale.getSelection() == minValue) {
+                    text.setText("");
+                } else {
+                    text.setText("" + (scale.getSelection() - 1));
+                }
+                text.setFocus();
+                text.selectAll();
+
+                updateAnswer(id, scale.getSelection() - NULL_OFFSET + "");
             }
+
         });
-        button.setText("2");
-        button.setBounds(179, heightOffset + 23, 37, 24);
 
-        Button button_1 = new Button(shell, SWT.RADIO);
-        button_1.setText("3");
-        button_1.setBounds(222, heightOffset + 23, 37, 24);
-
-        Button button_2 = new Button(shell, SWT.RADIO);
-        button_2.setText("4");
-        button_2.setBounds(265, heightOffset + 23, 37, 24);
-
-        Button button_3 = new Button(shell, SWT.RADIO);
-        button_3.setText("5");
-        button_3.setBounds(308, heightOffset + 23, 37, 24);
-
-        Button button_4 = new Button(shell, SWT.RADIO);
-        button_4.setBounds(93, heightOffset + 23, 37, 24);
-        button_4.setText("0");
     }
 
+    protected void updateAnswer(int id, String value) {
+        for (FeedbackAnswer answer : answers) {
+            if (answer.getQuestion().getId() == id) {
+                answer.setAnswer(value);
+            }
+        }
+    }
 }

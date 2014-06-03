@@ -1,18 +1,21 @@
 package tmc.handlers;
 
-import java.io.File;
-
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import tmc.listeners.TestrunnerListener;
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.TestrunnerTask;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 
 public class TestRunnerHandler extends AbstractHandler {
 
@@ -26,39 +29,59 @@ public class TestRunnerHandler extends AbstractHandler {
 
         }
 
-        IProgressMonitor monitor = new NullProgressMonitor();
-        AntRunner runner = new AntRunner();
-        runner.setBuildFileLocation("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/build.xml");
-        runner.setArguments("-Dmessage=Building -verbose");
+        String projectRoot = getProjectRootPath() + "/";
+        Project project = Core.getProjectDAO().getProjectByFile(projectRoot);
 
-        String[] target = {"compile-test"};
-        runner.setExecutionTargets(target);
+        TestRunResult results = null;
+        switch (project.getProjectType()) {
+        case JAVA_ANT:
+            runTestsForAntProject();
+            break;
+        case JAVA_MAVEN:
+            results = null;
+            break;
+        case MAKEFILE:
+            results = null;
+            break;
+        default:
+            results = null;
+            break;
+        }
+        return null;
+    }
+
+    private void runTestsForAntProject() {
+        String projectRoot = getProjectRootPath();
+        String javaExecutable = System.getProperty("java.home") + "/bin/java";
+
         try {
-            runner.run(monitor);
-        } catch (CoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            antBuild(projectRoot);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            System.out.println("Failed building");
             e.printStackTrace();
+            return;
+
+            // TODO: Handle build failure
         }
 
-        String cp = "\"/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/bin/:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/test/:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/junit-4.10.jar:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/edu-test-utils-0.4.1.jar:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/gson-2.2.4.jar:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/hamcrest-core-1.3.jar:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/junit-4.11.jar:"
-                + "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/lib/testrunner/tmc-junit-runner.jar\"";
+        TestrunnerTask testrun = new TestrunnerTask(projectRoot, projectRoot + "/test", javaExecutable, null);
+        TestrunnerListener listener = new TestrunnerListener(testrun);
+        Core.getTaskRunner().runTask(testrun, listener);
+    }
 
-        // rootDir, testDir, resultFile, testClasspath, memorylimit
-        new TestrunnerTask(new File("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs"),
-                new File("/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/test"), new File(
-                        "/cs/fs2/home/jphelio/Desktop/Untitled Folder/eclipseAntTest/arith_funcs/results.txt"), cp,
-                null).start(null);
+    private String getProjectRootPath() {
+        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
+        IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
+        String projectRoot = input.getFile().getProject().getRawLocation().makeAbsolute().toString();
+        return projectRoot;
+    }
 
-        return null;
+    private void antBuild(String root) throws Exception {
+        IProgressMonitor monitor = new NullProgressMonitor();
+        AntRunner runner = new AntRunner();
+        runner.setBuildFileLocation(root + "/build.xml");
+        runner.setArguments(new String[] {"compile-test"});
+        runner.run(monitor);
     }
 }
