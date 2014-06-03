@@ -73,6 +73,7 @@ public class UploaderTask implements BackgroundTask {
 
         } catch (Exception ex) {
             Core.getErrorHandler().raise("An error occurred while uploading exercises: " + ex.getMessage());
+            ex.printStackTrace();
         }
 
         return BackgroundTask.RETURN_SUCCESS;

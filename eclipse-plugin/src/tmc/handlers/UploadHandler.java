@@ -9,9 +9,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 
-import tmc.async.listeners.UploadTaskListener;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
+import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.UploadTaskListener;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 
 public class UploadHandler extends AbstractHandler {

@@ -15,7 +15,7 @@ public class DefaultZippingDecider extends AbstractZippingDecider {
             return false;
         }
 
-        if (project.getExtraStudentFiles().contains(withoutRootDir(zipPath))) {
+        if (project.getExtraStudentFiles() != null && project.getExtraStudentFiles().contains(withoutRootDir(zipPath))) {
             return true;
         } else {
             return zipPath.contains("/src/");
