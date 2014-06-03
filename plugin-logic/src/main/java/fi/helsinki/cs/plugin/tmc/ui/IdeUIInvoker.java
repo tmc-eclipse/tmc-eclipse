@@ -4,4 +4,7 @@ import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 
 public interface IdeUIInvoker {
     public void invokeTestResultWindow(SubmissionResult result);
+
+    public void invokeAllTestsPassedWindow(SubmissionResult result);
+
 }

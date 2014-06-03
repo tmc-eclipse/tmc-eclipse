@@ -25,16 +25,21 @@ public class UploadTaskListener implements BackgroundTaskListener {
     public void onSuccess() {
 
         final SubmissionResult result = task.getResult();
+
         if (result == null) {
             return;
         }
 
         uiInvoker.invokeTestResultWindow(result);
+
+        if (result.allTestCasesSucceeded()) {
+            uiInvoker.invokeAllTestsPassedWindow(result);
+        }
+
     }
 
     @Override
     public void onFailure() {
-
         System.out.println("OnFailure");
 
     }

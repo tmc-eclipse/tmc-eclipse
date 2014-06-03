@@ -25,4 +25,10 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
         });
     }
 
+    @Override
+    public void invokeAllTestsPassedWindow(SubmissionResult result) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
