@@ -8,6 +8,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import tmc.testRunnerDomain.SubmissionResult;
+
 public class TestRunnerView extends ViewPart {
 
     TestRunnerComposite comp = null;
