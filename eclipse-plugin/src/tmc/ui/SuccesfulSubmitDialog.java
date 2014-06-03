@@ -39,7 +39,7 @@ public class SuccesfulSubmitDialog extends Dialog {
     protected Object result;
     protected Shell shell;
 
-    private int pointsAwarded;
+    private List<String> pointsAwarded;
     private String modelSolutionUrl;
 
     private List<FeedbackQuestion> questions;
@@ -57,13 +57,13 @@ public class SuccesfulSubmitDialog extends Dialog {
         questions = new ArrayList<FeedbackQuestion>();
         answers = new ArrayList<FeedbackAnswer>();
 
-        pointsAwarded = 0;
+        pointsAwarded = new ArrayList<String>();
         modelSolutionUrl = "";
 
         setText(title);
     }
 
-    public void setPointsAwarded(int pointsAwarded) {
+    public void setPointsAwarded(List<String> pointsAwarded) {
         this.pointsAwarded = pointsAwarded;
     }
 
@@ -117,7 +117,7 @@ public class SuccesfulSubmitDialog extends Dialog {
 
         Label pointsAwardedLabel = new Label(shell, SWT.NONE);
         pointsAwardedLabel.setBounds(10, 53, 344, 17);
-        pointsAwardedLabel.setText("Points permanently awarded: " + pointsAwarded + ".");
+        pointsAwardedLabel.setText(getPointsAwardedMessage());
 
         Button viewModelSolutionButton = new Button(shell, SWT.NONE);
         viewModelSolutionButton.setBounds(10, 76, 163, 29);
@@ -146,6 +146,17 @@ public class SuccesfulSubmitDialog extends Dialog {
         });
         closeButton.setBounds(290, 10 + heightOffset, 64, 29);
 
+    }
+
+    private String getPointsAwardedMessage() {
+        StringBuilder b = new StringBuilder();
+        b.append("Points permanently awarded:");
+        for (String point : pointsAwarded) {
+            b.append(" " + point);
+        }
+
+        b.append(".");
+        return b.toString();
     }
 
     private void openUrl(String modelSolutionUrl) {

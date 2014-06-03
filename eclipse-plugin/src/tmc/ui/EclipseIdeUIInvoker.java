@@ -40,21 +40,11 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
             public void run() {
                 SuccesfulSubmitDialog dialog = new SuccesfulSubmitDialog(shell, exerciseName);
 
-                int points = 0; // getPoints(result);
-                System.out.println(result.getPoints());
-                dialog.setPointsAwarded(points);
+                dialog.setPointsAwarded(result.getPoints());
                 dialog.setModelSolutionUrl(result.getSolutionUrl());
 
                 dialog.open();
 
-            }
-
-            private int getPoints(final SubmissionResult result) {
-                int points = 0;
-                for (String point : result.getPoints()) {
-                    points += Integer.parseInt(point);
-                }
-                return points;
             }
         });
     }
