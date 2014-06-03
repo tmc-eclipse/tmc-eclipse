@@ -11,6 +11,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -158,9 +160,9 @@ public class SettingsTest {
     }
 
     @Test
-    public void canSaveExerciseFilePath() {
+    public void canSaveExerciseFilePath() throws IOException {
         settings.setExerciseFilePath("path");
-        verify(prefs, times(1)).put(Settings.PREF_KEY_EXERCISE_FILEPATH, "path");
+        verify(prefs, times(1)).put(Settings.PREF_KEY_EXERCISE_FILEPATH, new File("path").getCanonicalPath());
         verifyNoMoreInteractions(prefs);
     }
 
