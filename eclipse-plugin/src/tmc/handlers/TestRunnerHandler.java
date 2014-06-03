@@ -11,9 +11,9 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import tmc.listeners.TestrunnerListener;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.TestrunnerTask;
+import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.TestrunnerListener;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 

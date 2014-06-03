@@ -1,4 +1,4 @@
-package tmc.listeners;
+package fi.helsinki.cs.plugin.tmc.async.tasks.listeners;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.TestrunnerTask;
