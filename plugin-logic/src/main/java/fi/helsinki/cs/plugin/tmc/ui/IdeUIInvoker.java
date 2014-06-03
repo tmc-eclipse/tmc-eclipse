@@ -7,4 +7,8 @@ public interface IdeUIInvoker {
 
     public void invokeAllTestsPassedWindow(SubmissionResult result);
 
+    public void invokeSomeTestsFailedWindow(SubmissionResult result);
+
+    public void invokeAllTestsFailedWindow(SubmissionResult result);
+
 }

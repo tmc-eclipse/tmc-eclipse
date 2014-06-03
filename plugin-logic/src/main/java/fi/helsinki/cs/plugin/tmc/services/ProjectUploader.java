@@ -19,9 +19,10 @@ public class ProjectUploader {
     private static int SLEEP_DURATION = 40;
     private static int LOOP_COUNT = 2000 / SLEEP_DURATION;
 
-    Project project;
-    byte[] data;
-    SubmissionResponse response;
+    private Project project;
+    private byte[] data;
+    private SubmissionResponse response;
+    private SubmissionResult result;
 
     public ProjectUploader(ServerManager server) {
         this.server = server;
@@ -48,9 +49,9 @@ public class ProjectUploader {
         response = server.uploadFile(project.getExercise(), data);
     }
 
-    public SubmissionResult handleSubmissionResult(StopStatus stopStatus) {
+    public void handleSubmissionResult(StopStatus stopStatus) {
 
-        SubmissionResult result = server.getSubmissionResult(response.submissionUrl);
+        result = server.getSubmissionResult(response.submissionUrl);
 
         // basically we try to stop the thread being completely unresponsive
         // while sleeping
@@ -60,7 +61,7 @@ public class ProjectUploader {
             for (int i = 0; i < LOOP_COUNT; ++i) {
 
                 if (stopStatus.mustStop()) {
-                    return null;
+                    return;
                 }
 
                 try {
@@ -73,7 +74,7 @@ public class ProjectUploader {
         }
 
         if (stopStatus.mustStop()) {
-            return null;
+            return;
         }
 
         System.out.println("All test cases failed: " + result.allTestCasesFailed());
@@ -92,6 +93,13 @@ public class ProjectUploader {
             System.out.println("  Exception: " + r.getException());
         }
 
+    }
+
+    public SubmissionResult getResult() {
         return result;
+    }
+
+    public Project getProject() {
+        return project;
     }
 }

@@ -2,7 +2,6 @@ package fi.helsinki.cs.plugin.tmc.async.tasks.listeners;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
-import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class UploadTaskListener implements BackgroundTaskListener {
@@ -24,17 +23,21 @@ public class UploadTaskListener implements BackgroundTaskListener {
     @Override
     public void onSuccess() {
 
-        final SubmissionResult result = task.getResult();
+        uiInvoker.invokeSomeTestsFailedWindow(null);
+        uiInvoker.invokeAllTestsFailedWindow(null);
 
-        if (result == null) {
-            return;
-        }
-
-        uiInvoker.invokeTestResultWindow(result);
-
-        if (result.allTestCasesSucceeded()) {
-            uiInvoker.invokeAllTestsPassedWindow(result);
-        }
+        //
+        // final SubmissionResult result = task.getResult();
+        //
+        // if (result == null) {
+        // return;
+        // }
+        //
+        // uiInvoker.invokeTestResultWindow(result);
+        //
+        // if (result.allTestCasesSucceeded()) {
+        // uiInvoker.invokeAllTestsPassedWindow(result);
+        // }
 
     }
 
