@@ -44,5 +44,4 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             Core.getErrorHandler().raise("An error occurred while unzipping the exercises");
         }
     }
-
 }
