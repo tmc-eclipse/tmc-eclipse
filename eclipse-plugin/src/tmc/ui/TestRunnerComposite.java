@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 
-import tmc.testRunnerDomain.SubmissionResult;
-import tmc.testRunnerDomain.TestCaseResult;
+import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerComposite extends Composite {
 

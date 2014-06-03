@@ -1,9 +1,11 @@
-package tmc.testRunnerDomain;
+package fi.helsinki.cs.plugin.tmc.domain;
 
 import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
+
+import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
 
 public class SubmissionResult {
 

@@ -1,4 +1,4 @@
-package tmc.testRunnerDomain;
+package fi.helsinki.cs.plugin.tmc.domain;
 
 import static fi.helsinki.cs.tmc.testrunner.TestCase.Status.PASSED;
 import fi.helsinki.cs.tmc.testrunner.CaughtException;
