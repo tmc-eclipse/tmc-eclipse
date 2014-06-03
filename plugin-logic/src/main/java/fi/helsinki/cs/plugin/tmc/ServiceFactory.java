@@ -26,8 +26,8 @@ public final class ServiceFactory {
     private ServerManager server;
 
     public ServiceFactory() {
-        this.server = new ServerManager();
         this.settings = Settings.getDefaultSettings();
+        this.server = new ServerManager(settings);
 
         FileIO coursesFile = new FileIO(LOCAL_COURSES_PATH);
         DataSource<Course> courseStorage = new CourseStorage(coursesFile);
@@ -38,7 +38,7 @@ public final class ServiceFactory {
         this.projectDAO = new ProjectDAO(projectStorage);
 
         this.courseFetcher = new CourseFetcher(server, courseDAO);
-        this.exerciseFetcher = new ExerciseFetcher(server, courseDAO);
+        this.exerciseFetcher = new ExerciseFetcher(server, courseDAO, settings);
     }
 
     public Settings getSettings() {

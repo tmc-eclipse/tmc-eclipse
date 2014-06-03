@@ -1,15 +1,19 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
-import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 
-/*package*/class ConnectionBuilder {
+class ConnectionBuilder {
+
     public static final int API_VERSION = 7;
 
-    public ConnectionBuilder() {
+    private Settings settings;
+
+    public ConnectionBuilder(Settings settings) {
+        this.settings = settings;
     }
 
     public String getUrl(String extension) {
-        return addApiCallQueryParameters(Core.getSettings().getServerBaseUrl() + "/" + extension);
+        return addApiCallQueryParameters(settings.getServerBaseUrl() + "/" + extension);
     }
 
     public String addApiCallQueryParameters(String url) {
@@ -24,7 +28,7 @@ import fi.helsinki.cs.plugin.tmc.Core;
     }
 
     public RequestBuilder createConnection() {
-        return new RequestBuilder().setCredentials(Core.getSettings().getUsername(), Core.getSettings().getPassword());
+        return new RequestBuilder().setCredentials(settings.getUsername(), settings.getPassword());
     }
 
     public boolean hasEnoughSettings() { // kovakoodattu!

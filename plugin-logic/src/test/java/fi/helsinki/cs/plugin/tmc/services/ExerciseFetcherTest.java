@@ -37,7 +37,7 @@ public class ExerciseFetcherTest {
         errorHandler = mock(TMCErrorHandler.class);
         Core.setErrorHandler(errorHandler);
 
-        fetcher = new ExerciseFetcher(server, courseDAO);
+        fetcher = new ExerciseFetcher(server, courseDAO, Settings.getDefaultSettings());
     }
 
     @Test
