@@ -285,4 +285,8 @@ public class SuccesfulSubmitDialog extends Dialog {
             }
         }
     }
+
+    public void setFeedbackQuestions(List<FeedbackQuestion> feedbackQuestions) {
+        questions = feedbackQuestions;
+    }
 }
