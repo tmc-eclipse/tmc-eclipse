@@ -71,6 +71,7 @@ public class Updater {
                 }
             }
 
+            course.setExercises(newExercises);
         } catch (UserVisibleException uve) {
             Core.getErrorHandler().handleException(uve);
         } catch (NullPointerException npe) {
@@ -81,10 +82,14 @@ public class Updater {
     private void updateExercise(Exercise oldExercise, Exercise newExercise) {
         // Update Exercise.course
         newExercise.setCourse(oldExercise.getCourse());
+        // Update Exercise.downloaded
+        newExercise.setDownloaded(oldExercise.isDownloaded());
 
         // Update Project.exercise
         Project project = projectDAO.getProjectByExercise(oldExercise);
-        project.setExercise(newExercise);
+        if (project != null) {
+            project.setExercise(newExercise);
+        }
     }
 
     private Exercise findEqualExercise(List<Exercise> list, Exercise exercise) {
