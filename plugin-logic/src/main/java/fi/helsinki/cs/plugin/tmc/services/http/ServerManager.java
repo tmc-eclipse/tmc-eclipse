@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.services.http;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +14,14 @@ import com.google.gson.JsonParser;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
+import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
 
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
@@ -108,6 +111,29 @@ public class ServerManager {
         return (new SubmissionResultParser()).parseFromJson(json);
     }
 
+    public String submitFeedback(String answerUrl, List<FeedbackAnswer> answers) {
+
+        final String submitUrl = connectionBuilder.addApiCallQueryParameters(answerUrl);
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        for (int i = 0; i < answers.size(); ++i) {
+            String keyPrefix = "answers[" + i + "]";
+            FeedbackAnswer answer = answers.get(i);
+            params.put(keyPrefix + "[question_id]", "" + answer.getQuestion().getId());
+            params.put(keyPrefix + "[answer]", answer.getAnswer());
+        }
+
+        try {
+            return connectionBuilder.createConnection().postForText(submitUrl, params);
+        } catch (FailedHttpResponseException e) {
+            return checkForObsoleteClient(e);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occured while submitting feedback: " + e.getMessage());
+        }
+
+    }
+
     private byte[] getBytes(String url) {
         byte[] bytes;
         try {
@@ -129,6 +155,23 @@ public class ServerManager {
             json = "";
         }
         return json;
+    }
+
+    private <T> T checkForObsoleteClient(FailedHttpResponseException ex) throws ObsoleteClientException,
+            FailedHttpResponseException {
+        if (ex.getStatusCode() == 404) {
+            boolean obsolete;
+            try {
+                obsolete = new JsonParser().parse(ex.getEntityAsString()).getAsJsonObject().get("obsolete_client")
+                        .getAsBoolean();
+            } catch (Exception ex2) {
+                obsolete = false;
+            }
+            if (obsolete) {
+                throw new ObsoleteClientException();
+            }
+        }
+        throw ex;
     }
 
 }
