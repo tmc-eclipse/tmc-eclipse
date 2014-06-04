@@ -36,7 +36,7 @@ public class TestRunnerView extends ViewPart {
         master.setExpandVertical(true);
         comp = new TestRunnerComposite(master, SWT.SMOOTH);
         master.setContent(comp);
-        master.setMinSize(500, 100);
+        master.setMinSize(100, 100);
 
         master.addControlListener(new ControlAdapter() {
             @Override
