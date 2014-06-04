@@ -20,11 +20,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.async.tasks.FeedbackSubmissionTask;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
-import fi.helsinki.cs.plugin.tmc.services.FeedbackAnswerSubmitter;
 
 public class SuccesfulSubmitDialog extends Dialog {
 
@@ -148,18 +147,13 @@ public class SuccesfulSubmitDialog extends Dialog {
         closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                sendFeedback();
+                TaskStarter.startFeedbackSubmissionTask(answers, feedbackUrl);
                 shell.close();
             }
 
         });
         closeButton.setBounds(290, 10 + heightOffset, 64, 29);
 
-    }
-
-    private void sendFeedback() {
-        FeedbackAnswerSubmitter submitter = new FeedbackAnswerSubmitter(Core.getServerManager());
-        Core.getTaskRunner().runTask(new FeedbackSubmissionTask(submitter, answers, feedbackUrl));
     }
 
     private String getPointsAwardedMessage() {
