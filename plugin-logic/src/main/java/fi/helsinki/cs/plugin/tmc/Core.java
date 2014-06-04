@@ -6,6 +6,7 @@ import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
 public final class Core {
@@ -23,6 +24,8 @@ public final class Core {
 
     private ServerManager server;
 
+    private Updater updater;
+
     private Core() {
         ServiceFactory factory = new ServiceFactory();
         this.settings = factory.getSettings();
@@ -33,6 +36,7 @@ public final class Core {
         this.projectDAO = factory.getProjectDAO();
 
         this.server = factory.getServerManager();
+        this.updater = factory.getUpdater();
     }
 
     public static void setErrorHandler(TMCErrorHandler errorHandler) {
@@ -73,6 +77,10 @@ public final class Core {
 
     public static ServerManager getServerManager() {
         return Core.getInstance().server;
+    }
+
+    public static Updater getUpdater() {
+        return Core.getInstance().updater;
     }
 
     public static Core getInstance() {

@@ -6,6 +6,7 @@ import fi.helsinki.cs.plugin.tmc.services.DAOManager;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
 public final class ServiceFactory {
@@ -16,6 +17,7 @@ public final class ServiceFactory {
     private CourseFetcher courseFetcher;
     private ExerciseFetcher exerciseFetcher;
     private ServerManager server;
+    private Updater updater;
 
     public ServiceFactory() {
         this.settings = Settings.getDefaultSettings();
@@ -27,6 +29,8 @@ public final class ServiceFactory {
 
         this.courseFetcher = new CourseFetcher(server, courseDAO);
         this.exerciseFetcher = new ExerciseFetcher(server, courseDAO, settings);
+
+        this.updater = new Updater(server, courseDAO, projectDAO);
     }
 
     public Settings getSettings() {
@@ -51,6 +55,10 @@ public final class ServiceFactory {
 
     public ServerManager getServerManager() {
         return server;
+    }
+
+    public Updater getUpdater() {
+        return updater;
     }
 
 }
