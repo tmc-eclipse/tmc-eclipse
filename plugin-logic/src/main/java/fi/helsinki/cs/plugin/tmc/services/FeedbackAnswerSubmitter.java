@@ -18,6 +18,19 @@ public class FeedbackAnswerSubmitter {
             return;
         }
 
+        if (answersAreEmpty(answers)) {
+            return;
+        }
+
         server.submitFeedback(answerUrl, answers);
+    }
+
+    private boolean answersAreEmpty(List<FeedbackAnswer> answers) {
+        for (FeedbackAnswer a : answers) {
+            if (a.getAnswer().trim().length() != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }

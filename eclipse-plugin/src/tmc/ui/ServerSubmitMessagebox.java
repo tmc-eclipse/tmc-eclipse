@@ -15,7 +15,7 @@ public class ServerSubmitMessagebox {
         this.response = messageBox.open();
     }
 
-    public boolean getResponse() {
+    public boolean submitExercises() {
         return response == SWT.YES;
     }
 

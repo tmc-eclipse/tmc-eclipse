@@ -14,4 +14,6 @@ public interface IdeUIInvoker {
 
     public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName);
 
+    public void invokeSubmitToServerWindow();
+
 }

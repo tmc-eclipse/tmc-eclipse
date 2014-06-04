@@ -32,7 +32,8 @@ public class ProjectUploader {
     public void zipProjects(String projectPath) throws IOException {
         project = Core.getProjectDAO().getProjectByFile(projectPath);
         if (project == null) {
-            throw new RuntimeException("Not a TMC project!");
+
+            throw new RuntimeException("Not a TMC project! ");
         }
         RecursiveZipper zipper = new RecursiveZipper(new FileIO(project.getRootPath()), project.getZippingDecider());
 

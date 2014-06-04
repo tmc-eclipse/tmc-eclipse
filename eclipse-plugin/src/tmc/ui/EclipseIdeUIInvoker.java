@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
@@ -73,6 +74,20 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
                 MessageDialog dialog = new MessageDialog(shell, "", null, messageStr, MessageDialog.ERROR,
                         new String[] {"OK"}, 0);
                 dialog.open();
+
+            }
+        });
+    }
+
+    @Override
+    public void invokeSubmitToServerWindow() {
+        final EclipseIdeUIInvoker invoker = this;
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                ServerSubmitMessagebox dialog = new ServerSubmitMessagebox(shell);
+                if (dialog.submitExercises()) {
+                    TaskStarter.startExerciseUploadTask(invoker);
+                }
 
             }
         });
