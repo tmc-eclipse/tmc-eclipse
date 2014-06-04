@@ -1,22 +1,14 @@
 package fi.helsinki.cs.plugin.tmc;
 
-import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.domain.Project;
-import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
+import fi.helsinki.cs.plugin.tmc.services.DAOManager;
 import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
-import fi.helsinki.cs.plugin.tmc.storage.CourseStorage;
-import fi.helsinki.cs.plugin.tmc.storage.DataSource;
-import fi.helsinki.cs.plugin.tmc.storage.ProjectStorage;
 
 public final class ServiceFactory {
-
-    public static final String LOCAL_COURSES_PATH = "courses.tmp";
-    public static final String LOCAL_PROJECTS_PATH = "projects.tmp";
 
     private Settings settings;
     private CourseDAO courseDAO;
@@ -29,13 +21,9 @@ public final class ServiceFactory {
         this.settings = Settings.getDefaultSettings();
         this.server = new ServerManager(settings);
 
-        FileIO coursesFile = new FileIO(LOCAL_COURSES_PATH);
-        DataSource<Course> courseStorage = new CourseStorage(coursesFile);
-        this.courseDAO = new CourseDAO(courseStorage);
-
-        FileIO projectsFile = new FileIO(LOCAL_PROJECTS_PATH);
-        DataSource<Project> projectStorage = new ProjectStorage(projectsFile);
-        this.projectDAO = new ProjectDAO(projectStorage);
+        DAOManager manager = new DAOManager();
+        this.courseDAO = manager.getCourseDAO();
+        this.projectDAO = manager.getProjectDAO();
 
         this.courseFetcher = new CourseFetcher(server, courseDAO);
         this.exerciseFetcher = new ExerciseFetcher(server, courseDAO, settings);

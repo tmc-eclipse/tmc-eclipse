@@ -42,6 +42,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
             List<String> fileList = unzipper.unzipTo(folder);
 
+            exercise.setDownloaded(true);
             projectDao.addProject(new Project(exercise, fileList));
             opener.open(exercise);
         } catch (IOException exception) {

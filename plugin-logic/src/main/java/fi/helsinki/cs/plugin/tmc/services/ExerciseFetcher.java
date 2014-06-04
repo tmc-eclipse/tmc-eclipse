@@ -60,6 +60,17 @@ public class ExerciseFetcher {
         }
     }
 
+    public List<Exercise> getDownloadableExercises() {
+        List<Exercise> downloadableExercises = new ArrayList<Exercise>();
+        for (Exercise e : getExercisesForCurrentCourse()) {
+            System.out.println(e.getName() + ", downloaded: " + e.isDownloaded());
+            if (!e.isDownloaded()) {
+                downloadableExercises.add(e);
+            }
+        }
+        return downloadableExercises;
+    }
+
     public String[] getCurrentCoursesExerciseNames() {
         List<Exercise> exerciseNames = course.getExercises();
         String[] names = new String[exerciseNames.size()];
