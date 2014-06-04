@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
@@ -40,6 +41,7 @@ public class SuccesfulSubmitDialog extends Dialog {
     protected Shell shell;
 
     private List<String> pointsAwarded;
+    private String feedbackUrl;
     private String modelSolutionUrl;
 
     private List<FeedbackQuestion> questions;
@@ -65,6 +67,10 @@ public class SuccesfulSubmitDialog extends Dialog {
 
     public void setPointsAwarded(List<String> pointsAwarded) {
         this.pointsAwarded = pointsAwarded;
+    }
+
+    public void SetFeedbackUrl(String url) {
+        this.feedbackUrl = url;
     }
 
     public void setModelSolutionUrl(String modelSolutionUrl) {
@@ -141,8 +147,10 @@ public class SuccesfulSubmitDialog extends Dialog {
         closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                TaskStarter.startFeedbackSubmissionTask(answers, feedbackUrl);
                 shell.close();
             }
+
         });
         closeButton.setBounds(290, 10 + heightOffset, 64, 29);
 

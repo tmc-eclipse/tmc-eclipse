@@ -43,7 +43,7 @@ public class UploaderTask implements BackgroundTask {
 
     }
 
-    public int run() {
+    private int run() {
 
         try {
             uploader.zipProjects(path);
