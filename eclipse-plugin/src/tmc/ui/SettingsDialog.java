@@ -1,5 +1,8 @@
 package tmc.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,7 +17,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
+import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.services.DomainUtil;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class SettingsDialog extends Dialog {
@@ -26,7 +30,6 @@ public class SettingsDialog extends Dialog {
     private Text serverAddress;
     private Text filePathText;
     private Settings settings;
-    private CourseFetcher courseFetcher;
     private Label lblErrorText;
     private Button btnSavePassword;
     private DirectoryDialog dirDialog;
@@ -39,7 +42,6 @@ public class SettingsDialog extends Dialog {
     public SettingsDialog(Shell parent, int style) {
         super(parent, style);
         this.settings = Core.getSettings();
-        this.courseFetcher = Core.getCourseFetcher();
         setText("Settings");
     }
 
@@ -100,7 +102,12 @@ public class SettingsDialog extends Dialog {
         combo = new Combo(shell, SWT.READ_ONLY);
         combo.setBounds(154, 143, 259, 29);
 
-        combo.setItems(courseFetcher.getCourseNames());
+        List<String> courseNames = new ArrayList<String>();
+        for (Course c : Core.getCourseDAO().getCourses()) {
+            courseNames.add(c.getName());
+        }
+
+        combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO().getCourses()));
         combo.select(indexOfCurrentCourse());
 
         Button btnRefreshCourses = new Button(shell, SWT.NONE);
@@ -117,7 +124,7 @@ public class SettingsDialog extends Dialog {
 
                 Core.getUpdater().updateCourses();
 
-                combo.setItems(courseFetcher.getCourseNames());
+                combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO().getCourses()));
                 combo.select(indexOfCurrentCourse());
                 combo.setEnabled(true);
             }
@@ -212,8 +219,9 @@ public class SettingsDialog extends Dialog {
 
     private int indexOfCurrentCourse() {
         int index = 0;
-        for (String name : courseFetcher.getCourseNames()) {
-            if (settings.getCurrentCourseName().equals(courseFetcher.getCourseNames()[index])) {
+        for (String name : DomainUtil.getCourseNames(Core.getCourseDAO().getCourses())) {
+            if (settings.getCurrentCourseName().equals(
+                    DomainUtil.getCourseNames(Core.getCourseDAO().getCourses())[index])) {
                 return index;
             }
             index++;

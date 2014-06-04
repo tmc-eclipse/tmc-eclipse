@@ -110,7 +110,7 @@ public class ExerciseSelectorDialog extends Dialog {
         btnDownload.setBounds(361, 236, 80, 29);
         btnDownload.setText("Download");
 
-        Course currentCourse = Core.getCourseDAO().getCourseByName(Core.getSettings().getCurrentCourseName());
+        Course currentCourse = Core.getCourseDAO().getCurrentCourse();
         Core.getUpdater().updateExercises(currentCourse);
 
         if (currentCourse != null) {
@@ -142,7 +142,16 @@ public class ExerciseSelectorDialog extends Dialog {
         final ArrayList<Exercise> list = new ArrayList<Exercise>();
         for (int i = 0; i < table.getItemCount(); i++) {
             if (table.getItem(i).getChecked()) {
-                list.add(Core.getExerciseFetcher().getExerciseByName(table.getItem(i).getText()));
+                String exerciseName = table.getItem(i).getText();
+                Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+
+                if (currentCourse != null) {
+                    for (Exercise e : currentCourse.getExercises()) {
+                        if (e.getName().equals(exerciseName)) {
+                            list.add(e);
+                        }
+                    }
+                }
             }
         }
         ProjectDownloader downloader = new ProjectDownloader(Core.getServerManager());

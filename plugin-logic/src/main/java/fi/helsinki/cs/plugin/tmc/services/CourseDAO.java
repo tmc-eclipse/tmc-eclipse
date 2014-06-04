@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.services;
 
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 
@@ -36,6 +37,10 @@ public class CourseDAO {
             }
         }
         dataSource.save(courses);
+    }
+
+    public Course getCurrentCourse() {
+        return getCourseByName(Core.getSettings().getCurrentCourseName());
     }
 
     public Course getCourseByName(String name) {

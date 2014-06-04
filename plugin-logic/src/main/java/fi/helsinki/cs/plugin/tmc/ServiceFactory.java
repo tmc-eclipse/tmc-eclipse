@@ -1,9 +1,7 @@
 package fi.helsinki.cs.plugin.tmc;
 
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
-import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.DAOManager;
-import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
@@ -14,8 +12,6 @@ public final class ServiceFactory {
     private Settings settings;
     private CourseDAO courseDAO;
     private ProjectDAO projectDAO;
-    private CourseFetcher courseFetcher;
-    private ExerciseFetcher exerciseFetcher;
     private ServerManager server;
     private Updater updater;
 
@@ -26,9 +22,6 @@ public final class ServiceFactory {
         DAOManager manager = new DAOManager();
         this.courseDAO = manager.getCourseDAO();
         this.projectDAO = manager.getProjectDAO();
-
-        this.courseFetcher = new CourseFetcher(server, courseDAO);
-        this.exerciseFetcher = new ExerciseFetcher(server, courseDAO, settings);
 
         this.updater = new Updater(server, courseDAO, projectDAO);
     }
@@ -43,14 +36,6 @@ public final class ServiceFactory {
 
     public ProjectDAO getProjectDAO() {
         return projectDAO;
-    }
-
-    public CourseFetcher getCourseFetcher() {
-        return courseFetcher;
-    }
-
-    public ExerciseFetcher getExerciseFetcher() {
-        return exerciseFetcher;
     }
 
     public ServerManager getServerManager() {
