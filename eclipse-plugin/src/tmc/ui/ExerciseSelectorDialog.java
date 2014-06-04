@@ -114,7 +114,7 @@ public class ExerciseSelectorDialog extends Dialog {
         Core.getUpdater().updateExercises(currentCourse);
 
         if (currentCourse != null) {
-            for (Exercise e : currentCourse.getExercises()) {
+            for (Exercise e : currentCourse.getDownloadableExercises()) {
                 addTableItem(e.getName());
             }
         }

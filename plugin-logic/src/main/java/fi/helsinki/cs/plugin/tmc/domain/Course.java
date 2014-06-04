@@ -115,8 +115,17 @@ public class Course {
         this.unlockables = unlockables;
     }
 
-    public List<Exercise> getExercises() {
+    public List<Exercise> getDownloadableExercises() {
+        List<Exercise> downloadableExercises = new ArrayList<Exercise>();
+        for (Exercise e : getExercises()) {
+            if (!e.isDownloaded()) {
+                downloadableExercises.add(e);
+            }
+        }
+        return downloadableExercises;
+    }
 
+    public List<Exercise> getExercises() {
         return exercises;
     }
 
