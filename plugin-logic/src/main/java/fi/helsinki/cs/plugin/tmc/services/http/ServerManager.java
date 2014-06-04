@@ -32,8 +32,8 @@ public class ServerManager {
         this.mapper = mapper;
     }
 
-    public ServerManager() {
-        this(new Gson(), new ConnectionBuilder());
+    public ServerManager(Settings settings) {
+        this(new Gson(), new ConnectionBuilder(settings));
     }
 
     public List<Course> getCourses() {

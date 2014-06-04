@@ -141,7 +141,9 @@ public class ExerciseSelectorDialog extends Dialog {
             }
         }
         ProjectDownloader downloader = new ProjectDownloader(Core.getServerManager());
-        Core.getTaskRunner().runTask(new DownloaderTask(downloader, new GenericProjectOpener(), list));
+        Core.getTaskRunner().runTask(
+                new DownloaderTask(downloader, new GenericProjectOpener(), list, Core.getProjectDAO(), Core
+                        .getSettings()));
     }
 
     private void selectUnselectAction() {

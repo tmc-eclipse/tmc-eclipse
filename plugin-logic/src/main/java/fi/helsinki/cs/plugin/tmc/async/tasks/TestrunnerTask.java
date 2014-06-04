@@ -16,6 +16,7 @@ import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 public class TestrunnerTask implements BackgroundTask {
+
     private List<String> args;
     private ClassPath classpath;
 

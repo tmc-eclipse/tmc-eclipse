@@ -30,7 +30,7 @@ public class ClassPath {
         String cp = subPaths.get(0);
 
         for (int i = 1; i < subPaths.size(); i++) {
-            cp += ":" + subPaths.get(i);
+            cp += System.getProperty("path.separator") + subPaths.get(i);
         }
 
         return cp;

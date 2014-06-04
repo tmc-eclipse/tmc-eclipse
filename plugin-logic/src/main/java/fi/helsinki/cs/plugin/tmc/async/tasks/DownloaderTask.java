@@ -12,21 +12,25 @@ import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 import fi.helsinki.cs.plugin.tmc.io.zipper.Unzipper;
 import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UnzippingDeciderFactory;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
+    private ProjectDAO projectDao;
     private Settings settings;
     private ProjectDownloader downloader;
     private ProjectOpener opener;
 
-    public DownloaderTask(ProjectDownloader downloader, ProjectOpener opener, List<Exercise> exercises) {
+    public DownloaderTask(ProjectDownloader downloader, ProjectOpener opener, List<Exercise> exercises,
+            ProjectDAO projectDao, Settings settings) {
         super("Downloading exercises", exercises);
 
-        this.settings = Core.getSettings();
+        this.settings = settings;
         this.downloader = downloader;
         this.opener = opener;
+        this.projectDao = projectDao;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
             List<String> fileList = unzipper.unzipTo(folder);
 
-            Core.getProjectDAO().addProject(new Project(exercise, fileList));
+            projectDao.addProject(new Project(exercise, fileList));
             opener.open(exercise);
         } catch (IOException exception) {
             Core.getErrorHandler().raise("An error occurred while unzipping the exercises");

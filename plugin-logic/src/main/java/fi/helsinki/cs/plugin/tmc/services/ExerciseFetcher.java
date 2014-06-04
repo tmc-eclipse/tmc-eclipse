@@ -11,63 +11,63 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ExerciseFetcher {
 
-	private ServerManager server;
-	private CourseDAO courseDAO;
-	private Course course;
+    private Settings settings;
 
-	public ExerciseFetcher(ServerManager server, CourseDAO courseDAO) {
-		this.courseDAO = courseDAO;
-		this.server = server;
-	}
+    private ServerManager server;
+    private CourseDAO courseDAO;
+    private Course course;
 
-	public void updateExercisesForCurrentCourse() {
-		try {
-			this.course = courseDAO.getCourseByName(Core.getSettings()
-					.getCurrentCourseName());
-			List<Exercise> exercises;
-			if (this.course != null) {
-				exercises = server.getExercises("" + course.getId());
-			} else {
-				exercises = new ArrayList<Exercise>();
-			}
-			if (exercises != null) {
-				course.setExercises(exercises);
-			}
-		} catch (UserVisibleException e) {
-			Core.getErrorHandler().handleException(e);
-		} catch (NullPointerException n) {
-			Core.getErrorHandler()
-					.handleException(
-							new NullPointerException(
-									"Remember to select your course from TMC -> Settings"));
-		}
-	}
+    public ExerciseFetcher(ServerManager server, CourseDAO courseDAO, Settings settings) {
+        this.courseDAO = courseDAO;
+        this.server = server;
+        this.settings = settings;
+    }
 
-	public Exercise getExerciseByName(String name) {
-		for (Exercise e : course.getExercises()) {
-			if (e.getName().equals(name)) {
-				return e;
-			}
-		}
-		return null;
-	}
+    public void updateExercisesForCurrentCourse() {
+        try {
+            this.course = courseDAO.getCourseByName(settings.getCurrentCourseName());
+            List<Exercise> exercises;
+            if (this.course != null) {
+                exercises = server.getExercises("" + course.getId());
+            } else {
+                exercises = new ArrayList<Exercise>();
+            }
+            if (exercises != null) {
+                course.setExercises(exercises);
+            }
+        } catch (UserVisibleException e) {
+            Core.getErrorHandler().handleException(e);
+        } catch (NullPointerException n) {
+            Core.getErrorHandler().handleException(
+                    new NullPointerException("Remember to select your course from TMC -> Settings"));
+        }
+    }
 
-	public List<Exercise> getExercisesForCurrentCourse() {
-		if (course != null) {
-			return course.getExercises();
-		} else {
-			return new ArrayList<Exercise>();
-		}
-	}
+    public Exercise getExerciseByName(String name) {
+        for (Exercise e : course.getExercises()) {
+            if (e.getName().equals(name)) {
+                return e;
+            }
+        }
+        return null;
+    }
 
-	public String[] getCurrentCoursesExerciseNames() {
-		List<Exercise> exerciseNames = course.getExercises();
-		String[] names = new String[exerciseNames.size()];
+    public List<Exercise> getExercisesForCurrentCourse() {
+        if (course != null) {
+            return course.getExercises();
+        } else {
+            return new ArrayList<Exercise>();
+        }
+    }
 
-		for (int i = 0; i < exerciseNames.size(); i++) {
-			names[i] = exerciseNames.get(i).getName();
-		}
+    public String[] getCurrentCoursesExerciseNames() {
+        List<Exercise> exerciseNames = course.getExercises();
+        String[] names = new String[exerciseNames.size()];
 
-		return names;
-	}
+        for (int i = 0; i < exerciseNames.size(); i++) {
+            names[i] = exerciseNames.get(i).getName();
+        }
+
+        return names;
+    }
 }

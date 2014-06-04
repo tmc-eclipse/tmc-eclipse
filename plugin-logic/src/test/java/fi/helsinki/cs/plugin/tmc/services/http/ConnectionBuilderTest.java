@@ -12,7 +12,7 @@ public class ConnectionBuilderTest {
 
     @Before
     public void setup() {
-        cb = new ConnectionBuilder();
+        cb = new ConnectionBuilder(Settings.getDefaultSettings());
     }
 
     @Test
