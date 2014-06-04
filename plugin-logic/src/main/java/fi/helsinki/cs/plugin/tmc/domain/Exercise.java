@@ -16,7 +16,7 @@ public class Exercise implements Serializable {
 
     private String name;
 
-    private Course course;
+    private transient Course course;
 
     private String courseName;
 
