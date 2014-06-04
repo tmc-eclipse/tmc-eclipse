@@ -20,6 +20,8 @@ import java.util.prefs.Preferences;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+
 public class SettingsTest {
 
     Preferences prefs;
@@ -162,7 +164,7 @@ public class SettingsTest {
     @Test
     public void canSaveExerciseFilePath() throws IOException {
         settings.setExerciseFilePath("path");
-        verify(prefs, times(1)).put(Settings.PREF_KEY_EXERCISE_FILEPATH, new File("path").getCanonicalPath());
+        verify(prefs, times(1)).put(Settings.PREF_KEY_EXERCISE_FILEPATH, FileUtil.getUnixPath(new File("path").getCanonicalPath()));
         verifyNoMoreInteractions(prefs);
     }
 

@@ -58,20 +58,22 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     @Override
     public void invokeSomeTestsFailedWindow(SubmissionResult result, String exerciseName) {
         String messageStr = "Exercise " + exerciseName + " failed.\n" + "Some tests failed on the server.\nSee Below";
-        invokeMessageBox(messageStr);
+        String title = "Some tests failed on server";
+        invokeMessageBox(messageStr, title);
 
     }
 
     @Override
     public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName) {
         String messageStr = "Exercise " + exerciseName + " failed.\n" + "All tests failed on the server.\nSee Below";
-        invokeMessageBox(messageStr);
+        String title = "All tests failed on server";
+        invokeMessageBox(messageStr, title);
     }
 
-    private void invokeMessageBox(final String messageStr) {
+    private void invokeMessageBox(final String messageStr, final String title) {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                MessageDialog dialog = new MessageDialog(shell, "", null, messageStr, MessageDialog.ERROR,
+                MessageDialog dialog = new MessageDialog(shell, title, null, messageStr, MessageDialog.ERROR,
                         new String[] {"OK"}, 0);
                 dialog.open();
 

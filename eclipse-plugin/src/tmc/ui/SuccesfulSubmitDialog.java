@@ -118,7 +118,7 @@ public class SuccesfulSubmitDialog extends Dialog {
         testStatusLabel.setBounds(53, 10, 301, 37);
 
         Label imageLabel = new Label(shell, SWT.NONE);
-        imageLabel.setImage(ResourceManager.getPluginImage("eclipse-plugin", "resources/smile.gif"));
+        imageLabel.setImage(ResourceManager.getPluginImage("eclipse-plugin", "icons/smile.gif"));
         imageLabel.setBounds(10, 0, 37, 47);
 
         Label pointsAwardedLabel = new Label(shell, SWT.NONE);
