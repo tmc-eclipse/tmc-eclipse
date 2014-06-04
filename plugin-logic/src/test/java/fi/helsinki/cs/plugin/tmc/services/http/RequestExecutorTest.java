@@ -29,7 +29,7 @@ public class RequestExecutorTest {
 				"xdxd", 
 				"dsfsd"));
 		executor = new RequestExecutor(request);
-		assertTrue(executor.toString().startsWith("fi.helsinki.cs.plugin.tmc.services.http.RequestRequestExecutor"));
+		assertTrue(executor.toString().startsWith("fi.helsinki.cs.plugin.tmc.services.http.RequestExecutor"));
 		assertTrue(executor.toString().contains("POST"));
 		assertTrue(executor.toString().contains("userInfo"));
 	}
