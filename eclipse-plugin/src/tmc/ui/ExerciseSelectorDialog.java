@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.TableItem;
 import tmc.services.GenericProjectOpener;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
+import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 
@@ -109,9 +110,13 @@ public class ExerciseSelectorDialog extends Dialog {
         btnDownload.setBounds(361, 236, 80, 29);
         btnDownload.setText("Download");
 
-        Core.getExerciseFetcher().updateExercisesForCurrentCourse();
-        for (Exercise ex : Core.getExerciseFetcher().getExercisesForCurrentCourse()) {
-            addTableItem(ex.getName());
+        Course currentCourse = Core.getCourseDAO().getCourseByName(Core.getSettings().getCurrentCourseName());
+        Core.getUpdater().updateExercises(currentCourse);
+
+        if (currentCourse != null) {
+            for (Exercise e : currentCourse.getExercises()) {
+                addTableItem(e.getName());
+            }
         }
 
         updateSelectAllButtonState();

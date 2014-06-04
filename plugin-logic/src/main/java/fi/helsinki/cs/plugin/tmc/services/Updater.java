@@ -60,6 +60,11 @@ public class Updater {
     }
 
     public void updateExercises(Course course) {
+        if (course == null) {
+            Core.getErrorHandler().raise("Remember to select your course from TMC -> Settings");
+            return;
+        }
+
         try {
             List<Exercise> oldExercises = course.getExercises();
             List<Exercise> newExercises = server.getExercises(course.getId() + "");
@@ -74,8 +79,6 @@ public class Updater {
             course.setExercises(newExercises);
         } catch (UserVisibleException uve) {
             Core.getErrorHandler().handleException(uve);
-        } catch (NullPointerException npe) {
-            Core.getErrorHandler().raise("Remember to select your course from TMC -> Settings");
         }
     }
 

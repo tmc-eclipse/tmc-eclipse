@@ -26,14 +26,14 @@ public class ExerciseFetcher {
     public void updateExercisesForCurrentCourse() {
         try {
             this.course = courseDAO.getCourseByName(settings.getCurrentCourseName());
-            List<Exercise> exercises;
+            List<Exercise> newExercises;
             if (this.course != null) {
-                exercises = server.getExercises("" + course.getId());
+                newExercises = server.getExercises("" + course.getId());
             } else {
-                exercises = new ArrayList<Exercise>();
+                newExercises = new ArrayList<Exercise>();
             }
-            if (exercises != null) {
-                course.setExercises(exercises);
+            if (newExercises != null) {
+                course.setExercises(newExercises);
             }
         } catch (UserVisibleException e) {
             Core.getErrorHandler().handleException(e);
@@ -44,6 +44,7 @@ public class ExerciseFetcher {
     }
 
     public Exercise getExerciseByName(String name) {
+        Course course = courseDAO.getCourseByName(settings.getCurrentCourseName());
         for (Exercise e : course.getExercises()) {
             if (e.getName().equals(name)) {
                 return e;
