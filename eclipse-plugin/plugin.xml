@@ -94,7 +94,7 @@
       </menuContribution>
       
       <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
@@ -107,7 +107,7 @@
       </menuContribution>
       
       <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
@@ -120,7 +120,7 @@
       </menuContribution>
       
       <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
