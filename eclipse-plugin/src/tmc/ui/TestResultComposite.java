@@ -1,21 +1,32 @@
 package tmc.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
+
+import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestResultComposite extends Composite {
     private Text colorBar;
-    private Text text;
+    private Label testResultName;
+    private Button showMoreBtn;
+    private Label testResultMessage;
+    private final Color PASS = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+
+    private final Color FAIL = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+
+    private final Color BACKGROUND = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+
+    private int colorBarHeight;
 
     /**
      * Create the composite.
@@ -23,55 +34,96 @@ public class TestResultComposite extends Composite {
      * @param parent
      * @param style
      */
-    public TestResultComposite(Composite parent, int style) {
+    public TestResultComposite(Composite parent, int style, final TestCaseResult tcr) {
         super(parent, style);
-        setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+        setBackground(BACKGROUND);
 
-        text = new Text(this, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
-        text.setBounds(5, 0, parent.getSize().x, 100);
-        text.setText("aaaaaaaaaaaa\n" + "asdasd");
-        GC gc = new GC(Display.getDefault());
-        Point i = gc.stringExtent(text.getText());
-        text.setSize(i);
-        text.addPaintListener(new PaintListener() {
-            @Override
-            public void paintControl(PaintEvent e) {
-                Point textSize = e.gc.stringExtent(text.getText());
+        final GC gc = new GC(Display.getDefault());
 
-                if (text.getText().contains("FAIL: ")) {
-                    text.setBounds(5, 0, textSize.x + 5, textSize.y * 2);
-                } else {
-                    text.setBounds(5, 0, textSize.x + 5, textSize.y);
-                }
-                colorBar.setBounds(0, 0, 5, text.getSize().y);
-            }
-        });
+        testResultName = new Label(this, SWT.SMOOTH);
+        testResultName.setBackground(BACKGROUND);
+        testResultName.setText(tcr.getName());
+        testResultName.setForeground(PASS);
+        testResultName.setFont(new Font(Display.getCurrent(), "Arial", 12, SWT.BOLD));
+
+        Point i = gc.stringExtent(testResultName.getText());
+
+        testResultName.setBounds(10, 0, parent.getSize().x, i.y + 5);
 
         colorBar = new Text(this, SWT.READ_ONLY);
-        colorBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+        colorBar.setBounds(0, 0, 5, testResultName.getSize().y);
+        colorBar.setBackground(PASS);
+        if (!tcr.isSuccessful()) {
+            testResultName.setForeground(FAIL);
 
-        Button btnNewButton = new Button(this, SWT.NONE);
-        btnNewButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
+            testResultMessage = new Label(this, SWT.SMOOTH);
+            testResultMessage.setBackground(BACKGROUND);
+            testResultMessage.setText(tcr.getMessage());
 
-        btnNewButton.setBounds(80, 106, 169, 29);
-        btnNewButton.setText("Show detailed message");
+            i = gc.stringExtent(testResultMessage.getText());
+
+            testResultMessage.setBounds(10, testResultName.getSize().y, parent.getSize().x, i.y);
+
+            showMoreBtn = new Button(this, SWT.SMOOTH);
+            showMoreBtn.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    showMoreDetails(tcr, gc);
+                }
+            });
+
+            showMoreBtn.setBounds(10, testResultMessage.getSize().y + 25, 170, 29);
+            showMoreBtn.setText("Show detailed message");
+
+            colorBarHeight = testResultName.getSize().y + testResultMessage.getSize().y + showMoreBtn.getSize().y + 20;
+
+            colorBar.setBounds(0, 0, 5, colorBarHeight);
+
+            colorBar.setBackground(FAIL);
+
+        }
 
     }
 
+    public void setTestResultName(String message) {
+        testResultName.setText(message);
+    }
+
     public void setTestResultMessage(String message) {
-        text.setText(message);
+        testResultMessage.setText(message);
     }
 
     public Text getColorBar() {
         return colorBar;
     }
 
-    public Text getText() {
-        return text;
+    public Label getTestResultName() {
+        return testResultName;
+    }
+
+    private void showMoreDetails(TestCaseResult tcr, GC gc) {
+        Label moreDetails = new Label(this, SWT.SMOOTH);
+        int i = 0;
+        StringBuilder b = new StringBuilder();
+        for (StackTraceElement st : tcr.getException().stackTrace) {
+            b.append(st.toString());
+            b.append("\n");
+            i++;
+        }
+        moreDetails.setText(b.toString());
+        moreDetails.setBounds(10, testResultMessage.getSize().y, testResultMessage.getSize().x,
+                gc.stringExtent(moreDetails.getText()).y * i - 5);
+
+        colorBar.setBounds(0, 0, 5, colorBarHeight + moreDetails.getSize().y);
+        if (this.getParent().getParent().getParent() instanceof TestRunnerComposite) {
+            ((TestRunnerComposite) this.getParent().getParent().getParent()).enlargeTestStack(this);
+        } else {
+            System.out.println(this.getParent().getParent().getParent());
+        }
+
+        if (showMoreBtn != null) {
+            showMoreBtn.dispose();
+        }
     }
 
     @Override
