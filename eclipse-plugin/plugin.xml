@@ -92,6 +92,7 @@
             </command>
          </menu>
       </menuContribution>
+      
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
@@ -104,6 +105,33 @@
             </command>
          </toolbar>
       </menuContribution>
+      
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
+                  icon="icons/sample.gif"
+                  tooltip="TMC settings"
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.settingsCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+      
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
+                  icon="icons/sample.gif"
+                  tooltip="TMC settings"
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.settingsCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+      
    </extension>
    
    <extension point="org.eclipse.ui.views">
