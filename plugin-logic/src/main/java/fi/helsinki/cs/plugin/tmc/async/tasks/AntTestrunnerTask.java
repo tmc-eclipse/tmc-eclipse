@@ -16,6 +16,7 @@ import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
+
     private List<String> args;
     private ClassPath classpath;
 
@@ -25,6 +26,9 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     private Integer memoryLimit;
     private String resultFilePath;
     private TestRunResult result;
+    private Process process;
+
+    private boolean isRunning;
 
     public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit) {
         this.rootPath = rootPath;
@@ -38,6 +42,8 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         classpath.add(rootPath + "/lib/testrunner/*");
         classpath.add(rootPath + "/build/classes/");
         classpath.add(rootPath + "/build/test/classes/");
+
+        this.isRunning = true;
     }
 
     public TestRunResult get() {
@@ -48,13 +54,20 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     public int start(TaskFeedback progress) {
         buildTestRunnerArgs();
 
+        if (!isRunning) {
+            return BackgroundTask.RETURN_FAILURE;
+        }
+
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.redirectError(Redirect.INHERIT);
 
-        Process p;
         try {
-            p = pb.start();
-            p.waitFor();
+            process = pb.start();
+            process.waitFor();
+
+            if (!isRunning) {
+                return BackgroundTask.RETURN_FAILURE;
+            }
 
             File resultFile = new File(resultFilePath);
             result = new TestResultParser().parseTestResults(resultFile);
@@ -73,13 +86,15 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
     @Override
     public void stop() {
-        // TODO Auto-generated method stub
-
+        this.isRunning = false;
+        if (process != null) {
+            process.destroy();
+        }
     }
 
     @Override
     public String getDescription() {
-        return "TMC Testrunner task";
+        return "Running Ant tests";
     }
 
     private List<String> buildTestScannerArgs(String testPath) {
@@ -128,7 +143,7 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     }
 
     private File endorsedLibsPath(String rootPath) {
-        return new File(rootPath + File.separator + "lib" + File.separator + "endorsed");
+        return new File(rootPath + "/lib/endorsed");
     }
 
     private List<String> findProjectTests(String testPath) {
@@ -137,10 +152,10 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         ProcessBuilder pb = new ProcessBuilder(testScannerArgs);
         pb.redirectError(Redirect.INHERIT);
         try {
-            Process p = pb.start();
-            p.waitFor();
+            process = pb.start();
+            process.waitFor();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             List<String> results = new ArrayList<String>();
 
             String line;

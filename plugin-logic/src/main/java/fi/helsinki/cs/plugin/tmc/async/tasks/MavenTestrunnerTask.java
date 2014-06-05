@@ -12,12 +12,15 @@ import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerTask {
+
     private Project project;
-    
     private TestRunResult results;
+
+    private boolean isRunning;
 
     public MavenTestrunnerTask(Project project) {
         this.project = project;
+        this.isRunning = true;
     }
 
     public TestRunResult get() {
@@ -29,41 +32,38 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
         List<String> goals = new ArrayList<String>();
         goals.add("test-compile");
 
-        if (runMaven(goals, project) != 0) {
-            return 1;
+        if (runMaven(goals, project) != 0 || !isRunning) {
+            return BackgroundTask.RETURN_FAILURE;
         }
 
         File resultFile = new File(project.getRootPath() + "/target/test_output.txt");
 
         goals.clear();
         goals.add("fi.helsinki.cs.tmc:tmc-maven-plugin:1.6:test");
-        if (runMaven(goals, project) != 0) {
-            return 1;
+        if (runMaven(goals, project) != 0 || !isRunning) {
+            return BackgroundTask.RETURN_FAILURE;
         }
 
         try {
             this.results = new TestResultParser().parseTestResults(resultFile);
             resultFile.delete();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return 1;
+            return BackgroundTask.RETURN_FAILURE;
         }
-        
-        return 0;
+
+        return BackgroundTask.RETURN_SUCCESS;
     }
 
     public abstract int runMaven(List<String> goals, Project project);
 
     @Override
     public void stop() {
-        // TODO Auto-generated method stub
-
+        this.isRunning = false;
     }
 
     @Override
     public String getDescription() {
-        return "MAVEN Testrunner task";
+        return "Running Maven tests";
     }
 
 }
