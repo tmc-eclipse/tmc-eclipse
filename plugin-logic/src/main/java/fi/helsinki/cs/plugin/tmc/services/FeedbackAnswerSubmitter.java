@@ -14,7 +14,7 @@ public class FeedbackAnswerSubmitter {
     }
 
     public void submitFeedback(List<FeedbackAnswer> answers, String answerUrl) {
-        if (answers.isEmpty() || answerUrl == null || answerUrl.trim().length() == 0) {
+        if (answers == null || answers.isEmpty() || answerUrl == null || answerUrl.trim().length() == 0) {
             return;
         }
 
