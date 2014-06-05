@@ -18,35 +18,39 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
 
 public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
-    private ProjectDAO projectDao;
-    private Settings settings;
-    private ProjectDownloader downloader;
-    private ProjectOpener opener;
+	private ProjectDAO projectDao;
+	private Settings settings;
+	private ProjectDownloader downloader;
+	private ProjectOpener opener;
 
-    public DownloaderTask(ProjectDownloader downloader, ProjectOpener opener, List<Exercise> exercises,
-            ProjectDAO projectDao, Settings settings) {
-        super("Downloading exercises", exercises);
+	public DownloaderTask(ProjectDownloader downloader, ProjectOpener opener,
+			List<Exercise> exercises, ProjectDAO projectDao, Settings settings) {
+		super("Downloading exercises", exercises);
 
-        this.settings = settings;
-        this.downloader = downloader;
-        this.opener = opener;
-        this.projectDao = projectDao;
-    }
+		this.settings = settings;
+		this.downloader = downloader;
+		this.opener = opener;
+		this.projectDao = projectDao;
+	}
 
-    @Override
-    public void run(Exercise exercise) {
-        try {
-            ZippedProject zip = downloader.downloadExercise(exercise);
+	@Override
+	public void run(Exercise exercise) {
+		try {
+			ZippedProject zip = downloader.downloadExercise(exercise);
+			Unzipper unzipper = new Unzipper(zip,
+					UnzippingDeciderFactory.createUnzippingDecider(projectDao
+							.getProjectByExercise(exercise)));
+			FileIO folder = new FileIO(FileUtil.append(
+					settings.getExerciseFilePath(),
+					settings.getCurrentCourseName()));
+			List<String> fileList = unzipper.unzipTo(folder);
 
-            Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.noSrcOverwrite());
-            FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
-            List<String> fileList = unzipper.unzipTo(folder);
-
-            exercise.setDownloaded(true);
-            projectDao.addProject(new Project(exercise, fileList));
-            opener.open(exercise);
-        } catch (IOException exception) {
-            Core.getErrorHandler().raise("An error occurred while unzipping the exercises");
-        }
-    }
+			exercise.setDownloaded(true);
+			projectDao.addProject(new Project(exercise, fileList));
+			opener.open(exercise);
+		} catch (IOException exception) {
+			Core.getErrorHandler().raise(
+					"An error occurred while unzipping the exercises");
+		}
+	}
 }
