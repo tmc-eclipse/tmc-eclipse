@@ -8,12 +8,11 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -27,16 +26,17 @@ public class TestRunnerComposite extends Composite {
     private ScrolledComposite scrolledComposite;
     private ProgressBar progressBar;
     private Label lblTestspassed;
-    private Button btnShowAllTests;
 
     private int howManyTestsPassedPercent;
-    private double howManyTestsPassedCount = 4;
-    private double howManyTestsRan = 8;
+    private double howManyTestsPassedCount = 0;
+    private double howManyTestsRan = 0;
 
     private List<TestCaseResult> results;
     private boolean showAllTests = false;
 
     private int heightOffset = 0;
+    private Composite parent;
+    private int style;
 
     /**
      * Create the composite.
@@ -46,6 +46,14 @@ public class TestRunnerComposite extends Composite {
      */
     public TestRunnerComposite(final Composite parent, int style) {
         super(parent, style);
+        this.parent = parent;
+        this.style = style;
+        makeScrolledComposite(parent);
+    }
+
+    private void createTestRunnerComposite(final Composite parent, int style) {
+
+        scrolledComposite.dispose();
 
         this.setSize(parent.getSize().x, parent.getSize().y);
 
@@ -128,12 +136,13 @@ public class TestRunnerComposite extends Composite {
     }
 
     public void addSubmissionResult(List<TestCaseResult> tcr) {
+        createTestRunnerComposite(this.parent, this.style);
         results = tcr;
         showTestResults();
     }
 
     private void showTestResults() {
-
+        System.out.println("showing off");
         if (results == null) {
             return;
         }
@@ -155,43 +164,27 @@ public class TestRunnerComposite extends Composite {
 
             addTestResult(tcr, c);
         }
+        scrolledComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
         scrolledComposite.setContent(c);
         updateProgress();
 
     }
 
     private void addTestResult(TestCaseResult tcr, Composite c) {
-        StringBuilder b = new StringBuilder();
-        if (tcr.isSuccessful()) {
-            b.append("PASS: " + tcr.getName());
-        } else {
-            b.append("FAIL: " + tcr.getName());
-            b.append("\n");
-            b.append(tcr.getMessage());
-        }
-
-        TestResultComposite comp = new TestResultComposite(c, SWT.SMOOTH);
-
-        // int height = comp.getText().getSize().y;
-        int height = 100;
+        System.out.println("adding components");
+        TestResultComposite comp = new TestResultComposite(c, SWT.SMOOTH, tcr);
+        int height = comp.getColorBar().getSize().y;
         scrolledComposite.setMinHeight(scrolledComposite.getMinHeight() + height);
-        comp.setTestResultMessage(b.toString());
         comp.setBounds(0, heightOffset, scrolledComposite.getClientArea().width, height);
         heightOffset += height;
+    }
 
-        if (tcr.isSuccessful()) {
-            Color pass = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
-
-            comp.getColorBar().setBackground(pass);
-            comp.getText().setForeground(pass);
-            comp.getText().setFont(new Font(Display.getCurrent(), "Arial", 12, SWT.BOLD));
-            return;
-        }
-        Color fail = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-
-        comp.getColorBar().setBackground(fail);
-        comp.getText().setForeground(fail);
-        comp.getText().setFont(new Font(Display.getCurrent(), "Arial", 12, SWT.BOLD));
+    public void enlargeTestStack(TestResultComposite comp) {
+        int height = comp.getColorBar().getSize().y;
+        comp.setBounds(0, comp.getLocation().y, scrolledComposite.getClientArea().width, height);
+        Control[] changedComp = new Control[1];
+        changedComp[0] = comp;
+        scrolledComposite.changed(changedComp);
     }
 
     @Override
