@@ -20,7 +20,7 @@ public class TestResultComposite extends Composite {
     private Label testResultName;
     private Button showMoreBtn;
     private Label testResultMessage;
-    private final Color PASS = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+    private final Color PASS = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
 
     private final Color FAIL = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 
@@ -110,13 +110,14 @@ public class TestResultComposite extends Composite {
             b.append("\n");
             i++;
         }
+        moreDetails.setBackground(BACKGROUND);
         moreDetails.setText(b.toString());
-        moreDetails.setBounds(10, testResultMessage.getSize().y, testResultMessage.getSize().x,
-                gc.stringExtent(moreDetails.getText()).y * i - 5);
+        moreDetails.setBounds(10, testResultMessage.getSize().y + 5, testResultMessage.getSize().x,
+                gc.stringExtent(moreDetails.getText()).y * i);
 
-        colorBar.setBounds(0, 0, 5, colorBarHeight + moreDetails.getSize().y);
+        colorBar.setBounds(0, 0, 5, moreDetails.getSize().y);
         if (this.getParent().getParent().getParent() instanceof TestRunnerComposite) {
-            ((TestRunnerComposite) this.getParent().getParent().getParent()).enlargeTestStack(this);
+            ((TestRunnerComposite) this.getParent().getParent().getParent()).enlargeTestStack(this, tcr);
         } else {
             System.out.println(this.getParent().getParent().getParent());
         }
