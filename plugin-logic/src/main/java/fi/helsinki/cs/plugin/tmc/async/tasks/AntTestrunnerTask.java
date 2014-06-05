@@ -28,8 +28,6 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     private TestRunResult result;
     private Process process;
 
-    private boolean isRunning;
-
     public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit) {
         this.rootPath = rootPath;
         this.resultFilePath = rootPath + "/results.txt";
@@ -42,8 +40,6 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         classpath.add(rootPath + "/lib/testrunner/*");
         classpath.add(rootPath + "/build/classes/");
         classpath.add(rootPath + "/build/test/classes/");
-
-        this.isRunning = true;
     }
 
     public TestRunResult get() {
@@ -54,10 +50,6 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     public int start(TaskFeedback progress) {
         buildTestRunnerArgs();
 
-        if (!isRunning) {
-            return BackgroundTask.RETURN_FAILURE;
-        }
-
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.redirectError(Redirect.INHERIT);
 
@@ -65,19 +57,17 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
             process = pb.start();
             process.waitFor();
 
-            if (!isRunning) {
-                return BackgroundTask.RETURN_FAILURE;
-            }
-
             File resultFile = new File(resultFilePath);
             result = new TestResultParser().parseTestResults(resultFile);
             resultFile.delete();
 
             return BackgroundTask.RETURN_SUCCESS;
         } catch (IOException e) {
+            Core.getErrorHandler().raise("Failed to parse test results.");
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InterruptedException e) {
+            Core.getErrorHandler().raise("Failed to run tests");
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -86,10 +76,6 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
     @Override
     public void stop() {
-        this.isRunning = false;
-        if (process != null) {
-            process.destroy();
-        }
     }
 
     @Override
@@ -167,11 +153,12 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
         }
+        Core.getErrorHandler().raise("Testrunner failure: failed to find test methods.");
+        return null;
+
     }
 }

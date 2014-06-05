@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
@@ -16,11 +17,8 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
     private Project project;
     private TestRunResult results;
 
-    private boolean isRunning;
-
     public MavenTestrunnerTask(Project project) {
         this.project = project;
-        this.isRunning = true;
     }
 
     public TestRunResult get() {
@@ -32,7 +30,8 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
         List<String> goals = new ArrayList<String>();
         goals.add("test-compile");
 
-        if (runMaven(goals, project) != 0 || !isRunning) {
+        if (runMaven(goals, project) != 0) {
+            Core.getErrorHandler().raise("Unable to compile project.");
             return BackgroundTask.RETURN_FAILURE;
         }
 
@@ -40,7 +39,9 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
 
         goals.clear();
         goals.add("fi.helsinki.cs.tmc:tmc-maven-plugin:1.6:test");
-        if (runMaven(goals, project) != 0 || !isRunning) {
+
+        if (runMaven(goals, project) != 0) {
+            Core.getErrorHandler().raise("Unable to run tests.");
             return BackgroundTask.RETURN_FAILURE;
         }
 
@@ -48,6 +49,7 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
             this.results = new TestResultParser().parseTestResults(resultFile);
             resultFile.delete();
         } catch (IOException e) {
+            Core.getErrorHandler().raise("Unable to parse testresults.");
             return BackgroundTask.RETURN_FAILURE;
         }
 
@@ -58,7 +60,6 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
 
     @Override
     public void stop() {
-        this.isRunning = false;
     }
 
     @Override
