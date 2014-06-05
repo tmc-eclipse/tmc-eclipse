@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
@@ -30,6 +31,7 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
         goals.add("test-compile");
 
         if (runMaven(goals, project) != 0) {
+            Core.getErrorHandler().raise("Unable to compile project.");
             return 1;
         }
 
@@ -38,6 +40,7 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
         goals.clear();
         goals.add("fi.helsinki.cs.tmc:tmc-maven-plugin:1.6:test");
         if (runMaven(goals, project) != 0) {
+            Core.getErrorHandler().raise("Unable to run tests.");
             return 1;
         }
 
@@ -47,6 +50,7 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            Core.getErrorHandler().raise("Unable to parse testresults.");
             return 1;
         }
         

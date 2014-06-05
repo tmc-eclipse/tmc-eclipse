@@ -62,9 +62,11 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
             return BackgroundTask.RETURN_SUCCESS;
         } catch (IOException e) {
+            Core.getErrorHandler().raise("Failed to parse test results.");
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InterruptedException e) {
+            Core.getErrorHandler().raise("Failed to run tests");
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -152,11 +154,12 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
         }
+        Core.getErrorHandler().raise("Testrunner failure: failed to find test methods.");
+        return null;
+
     }
 }

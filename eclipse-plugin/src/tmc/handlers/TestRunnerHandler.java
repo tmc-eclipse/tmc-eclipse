@@ -45,9 +45,15 @@ public class TestRunnerHandler extends AbstractHandler {
         }
 
         String projectRoot = getProjectRootPath();
+        if (projectRoot == null) {
+            Core.getErrorHandler().raise("Unable to run tests: No file open in workspace.");
+            return null;
+        }
+
         Project project = Core.getProjectDAO().getProjectByFile(projectRoot);
 
         if (project == null) {
+            Core.getErrorHandler().raise("Unable to run tests: Selected project is not a TMC project.");
             return null;
         }
 
@@ -109,7 +115,7 @@ public class TestRunnerHandler extends AbstractHandler {
         try {
             antBuild(projectRoot);
         } catch (Exception e) {
-            System.out.println("Failed building");
+            Core.getErrorHandler().raise("Unable to run tests: Error when building project.");
             e.printStackTrace();
             return;
 
@@ -122,15 +128,19 @@ public class TestRunnerHandler extends AbstractHandler {
     }
 
     private String getProjectRootPath() {
-        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-        IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
-        String projectRoot = input.getFile().getProject().getRawLocation().makeAbsolute().toString();
+        try {
+            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
+            String projectRoot = input.getFile().getProject().getRawLocation().makeAbsolute().toString();
+            return projectRoot;
+        } catch (NullPointerException e) {
+            return null;
+        }
 
-        return projectRoot;
     }
 
-    private void antBuild(String root) throws Exception {
+    private void antBuild(String root) throws CoreException {
         IProgressMonitor monitor = new NullProgressMonitor();
         AntRunner runner = new AntRunner();
         runner.setBuildFileLocation(root + "/build.xml");

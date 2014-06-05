@@ -14,7 +14,7 @@
             id="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand">
       </command>
       <command
-    	    name="Upload_Test"
+    	    name="Submit to server"
     	    categoryID="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
     	    id="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand">
       </command>
