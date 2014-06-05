@@ -73,7 +73,9 @@ public class TestRunnerHandler extends AbstractHandler {
     }
 
     private void runTestsforMavenProject(Project project) {
-        saveOpenFiles();
+        if (!saveOpenFiles()) {
+            return;
+        }
 
         TestrunnerTask testrun = new MavenTestrunnerTask(project) {
 
@@ -102,12 +104,14 @@ public class TestRunnerHandler extends AbstractHandler {
         Core.getTaskRunner().runTask(testrun, listener);
     }
 
-    private void saveOpenFiles() {
-        PlatformUI.getWorkbench().saveAllEditors(true);
+    private boolean saveOpenFiles() {
+        return PlatformUI.getWorkbench().saveAllEditors(true);
     }
 
     private void runTestsForAntProject() {
-        saveOpenFiles();
+        if (!saveOpenFiles()) {
+            return;
+        }
 
         String projectRoot = getProjectRootPath();
         String javaExecutable = System.getProperty("java.home") + "/bin/java";

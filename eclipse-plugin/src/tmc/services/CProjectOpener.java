@@ -1,7 +1,6 @@
 package tmc.services;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.cdt.core.CCorePlugin;
@@ -16,8 +15,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
-
 import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 
 @SuppressWarnings("restriction")

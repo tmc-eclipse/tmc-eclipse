@@ -92,18 +92,46 @@
             </command>
          </menu>
       </menuContribution>
+      
       <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
          <toolbar
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
-                  commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
-                  icon="icons/sample.gif"
-                  tooltip="TMC settings"
-                  id="fi.helsinki.cs.plugins.eclipse.toolbars.settingsCommand">
+                  commandId="org.eclipse.debug.ui.commands.RunLast"
+                  icon="icons/run24.png"
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.runProject"
+                  tooltip="Run Project">
             </command>
          </toolbar>
       </menuContribution>
+      
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
+                  icon="icons/test24.png"
+                  tooltip="Test Project"
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.runTests">
+            </command>
+         </toolbar>
+      </menuContribution>
+      
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
+                  icon="icons/submit24.png"
+                  tooltip="Submit Project"
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.submitProject">
+            </command>
+         </toolbar>
+      </menuContribution>
+      
    </extension>
    
    <extension point="org.eclipse.ui.views">
