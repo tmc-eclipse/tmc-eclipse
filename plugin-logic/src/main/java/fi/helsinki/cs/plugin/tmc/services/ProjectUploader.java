@@ -2,7 +2,6 @@ package fi.helsinki.cs.plugin.tmc.services;
 
 import java.io.IOException;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
@@ -27,14 +26,19 @@ public class ProjectUploader {
         this.server = server;
         data = null;
         project = null;
+
     }
 
-    public void zipProjects(String projectPath) throws IOException {
-        project = Core.getProjectDAO().getProjectByFile(projectPath);
-        if (project == null) {
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
-            throw new RuntimeException("Not a TMC project! ");
+    public void zipProjects() throws IOException {
+
+        if (project == null) {
+            throw new RuntimeException("Not a TMC project!");
         }
+
         RecursiveZipper zipper = new RecursiveZipper(new FileIO(project.getRootPath()), project.getZippingDecider());
 
         data = zipper.zipProjectSources();
@@ -54,28 +58,30 @@ public class ProjectUploader {
         result = server.getSubmissionResult(response.submissionUrl);
 
         // basically we try to stop the thread being completely unresponsive
-        // while sleeping
-        // (cancellation for example)
+        // while sleeping so that cancellation goes through
 
         while (result.getStatus() == SubmissionResult.Status.PROCESSING) {
-            for (int i = 0; i < LOOP_COUNT; ++i) {
-
-                if (stopStatus.mustStop()) {
-                    return;
-                }
-
-                try {
-                    Thread.sleep(SLEEP_DURATION);
-                } catch (InterruptedException e) {
-                }
+            if (!waitForServer(stopStatus)) {
+                result = null;
+                return;
             }
 
             result = server.getSubmissionResult(response.submissionUrl);
         }
+    }
 
-        if (stopStatus.mustStop()) {
-            return;
+    private boolean waitForServer(StopStatus stopStatus) {
+        for (int i = 0; i < LOOP_COUNT; ++i) {
+            if (stopStatus.mustStop()) {
+                return false;
+            }
+
+            try {
+                Thread.sleep(SLEEP_DURATION);
+            } catch (InterruptedException e) {
+            }
         }
+        return true;
     }
 
     public SubmissionResult getResult() {

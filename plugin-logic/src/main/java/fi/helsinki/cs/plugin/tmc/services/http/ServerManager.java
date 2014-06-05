@@ -107,7 +107,6 @@ public class ServerManager {
 
     public SubmissionResult getSubmissionResult(URI resultURI) {
         String json = getString(resultURI.toString());
-        System.out.println("Submission result json: " + json);
         return (new SubmissionResultParser()).parseFromJson(json);
     }
 
