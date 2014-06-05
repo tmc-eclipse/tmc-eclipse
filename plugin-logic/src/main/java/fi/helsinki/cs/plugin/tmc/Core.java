@@ -35,6 +35,8 @@ public final class Core {
 
         this.server = factory.getServerManager();
         this.updater = factory.getUpdater();
+
+        this.errorHandler = new DummyErrorHandler();
     }
 
     public static void setErrorHandler(TMCErrorHandler errorHandler) {
