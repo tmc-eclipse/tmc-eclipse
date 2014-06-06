@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileIO implements IO {
-
     private File file;
 
     public FileIO(String file) {
