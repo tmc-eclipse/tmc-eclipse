@@ -7,7 +7,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,9 +16,8 @@ import java.util.logging.Logger;
 import com.google.common.collect.Iterables;
 
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.async.tasks.PeriodicTask;
+import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
 
 /**
@@ -33,7 +33,7 @@ public class EventSendBuffer implements EventReceiver {
     public static final int DEFAULT_AUTOSEND_THREHSOLD = DEFAULT_MAX_EVENTS / 2;
     public static final int DEFAULT_AUTOSEND_COOLDOWN = 30 * 1000;
 
-    private Settings settings;
+    private ScheduledExecutorService scheduler;
     private Random random = new Random();
     // private ServerAccess serverAccess;
     // private Courses courses;
@@ -48,6 +48,7 @@ public class EventSendBuffer implements EventReceiver {
 
     public EventSendBuffer(EventStore store) {
         this.eventStore = store;
+        scheduler = Executors.newScheduledThreadPool(5);
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
 
         try {
@@ -120,7 +121,7 @@ public class EventSendBuffer implements EventReceiver {
 
     @Override
     public void receiveEvent(LoggableEvent event) {
-        if (!settings.isSpywareEnabled()) {
+        if (!Core.getSettings().isSpywareEnabled()) {
             return;
         }
 
@@ -168,7 +169,7 @@ public class EventSendBuffer implements EventReceiver {
 
     }
 
-    private PeriodicTask sendingTask = new PeriodicTask(new TimerTask() { //
+    private SingletonTask sendingTask = new SingletonTask(new Runnable() { //
                 // Sending too many at once may go over the server's POST size
                 // limit.
                 private static final int MAX_EVENTS_PER_SEND = 500;
@@ -255,9 +256,9 @@ public class EventSendBuffer implements EventReceiver {
                     }
                 }
 
-            });
+            }, scheduler);
 
-    private PeriodicTask savingTask = new PeriodicTask(new TimerTask() {
+    private SingletonTask savingTask = new SingletonTask(new Runnable() {
 
         @Override
         public void run() {
@@ -271,6 +272,6 @@ public class EventSendBuffer implements EventReceiver {
                 log.log(Level.WARNING, "Failed to save events", ex);
             }
         }
-    });
+    }, scheduler);
 
 }
