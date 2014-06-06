@@ -94,7 +94,7 @@
       </menuContribution>
       
       <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=run">
          <toolbar
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
