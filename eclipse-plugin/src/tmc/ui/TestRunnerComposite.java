@@ -126,6 +126,7 @@ public class TestRunnerComposite extends Composite {
         scrolledComposite.setSize(this.getParent().getSize().x - 20, this.getParent().getSize().y - 80);
         scrolledComposite.redraw();
         this.update();
+        System.out.println("saatanan idiootti");
 
     }
 
@@ -193,7 +194,6 @@ public class TestRunnerComposite extends Composite {
         int j = 0;
 
         while (!comp.equals(c[j])) {
-            System.out.println(j);
             newHeightOffset += c[j].getSize().y;
             j++;
         }

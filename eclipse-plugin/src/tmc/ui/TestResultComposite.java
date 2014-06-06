@@ -1,6 +1,8 @@
 package tmc.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -11,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
@@ -102,11 +105,15 @@ public class TestResultComposite extends Composite {
     }
 
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
-        Label moreDetails = new Label(this, SWT.SMOOTH);
+        final Link moreDetails = new Link(this, SWT.NONE);
         int i = 0;
         StringBuilder b = new StringBuilder();
         for (StackTraceElement st : tcr.getException().stackTrace) {
-            b.append(st.toString());
+            if (st.isNativeMethod()) {
+                b.append(st.toString());
+            } else {
+                b.append("<a>" + st.toString() + "</a>");
+            }
             b.append("\n");
             i++;
         }
@@ -114,6 +121,25 @@ public class TestResultComposite extends Composite {
         moreDetails.setText(b.toString());
         moreDetails.setBounds(10, testResultMessage.getSize().y + 5, testResultMessage.getSize().x,
                 gc.stringExtent(moreDetails.getText()).y * i);
+        moreDetails.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseDown(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                String[] links = moreDetails.getText().split("<a>");
+            }
+
+        });
 
         colorBar.setBounds(0, 0, 5, moreDetails.getSize().y);
         if (this.getParent().getParent().getParent() instanceof TestRunnerComposite) {

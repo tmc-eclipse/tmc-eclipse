@@ -21,10 +21,10 @@ public class TestRunnerView extends ViewPart {
     }
 
     public void setFocus() {
+
     }
 
     public void createPartControl(Composite parent) {
-
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginWidth = 0;
         gridLayout.numColumns = 1;
