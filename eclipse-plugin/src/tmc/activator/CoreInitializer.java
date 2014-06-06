@@ -9,6 +9,7 @@ import org.osgi.framework.BundleContext;
 
 import tmc.handlers.EclipseErrorHandler;
 import tmc.tasks.EclipseTaskRunner;
+import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 
 public class CoreInitializer extends AbstractUIPlugin implements IStartup {
@@ -16,12 +17,16 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
     public static final String PLUGIN_ID = "TestMyCode Eclipse plugin"; //$NON-NLS-1$
     private static CoreInitializer instance;
 
+    private WorkbenchHelper workbenchHelper;
+
     public CoreInitializer() {
     }
 
     public void start(BundleContext context) throws Exception {
         super.start(context);
         instance = this;
+
+        this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
     }
 
     public void stop(BundleContext context) throws Exception {
@@ -49,6 +54,10 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
             }
         });
 
+    }
+
+    public WorkbenchHelper getWorkbenchHelper() {
+        return workbenchHelper;
     }
 
 }

@@ -15,13 +15,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import tmc.activator.CoreInitializer;
 import tmc.ui.EclipseIdeUIInvoker;
+import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.AntTestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.MavenTestrunnerTask;
@@ -33,7 +33,15 @@ public class TestRunnerHandler extends AbstractHandler {
 
     private Shell shell;
 
+    private WorkbenchHelper helper;
+
+    public TestRunnerHandler() {
+        this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        helper.initialize();
+    }
+
     public Object execute(ExecutionEvent event) throws ExecutionException {
+        helper.updateActiveView();
 
         shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
         try {
@@ -132,16 +140,12 @@ public class TestRunnerHandler extends AbstractHandler {
     }
 
     private String getProjectRootPath() {
-        try {
-            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getActiveEditor();
-            IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
-            String projectRoot = input.getFile().getProject().getRawLocation().makeAbsolute().toString();
-            return projectRoot;
-        } catch (NullPointerException e) {
-            return null;
+        Project project = helper.getActiveProject();
+        if (project == null) {
+            return "";
+        } else {
+            return project.getRootPath();
         }
-
     }
 
     private void antBuild(String root) throws CoreException {

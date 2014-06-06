@@ -13,15 +13,21 @@ import org.eclipse.ui.part.ViewPart;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerView extends ViewPart {
+
     TestRunnerComposite comp = null;
     ScrolledComposite master = null;
+    private Composite parent;
 
     public TestRunnerView() {
         super();
     }
 
     public void setFocus() {
-
+        // Prevent this view from consuming all selection events
+        // by assigning focus to the parent composite
+        if (parent != null) {
+            parent.setFocus();
+        }
     }
 
     public void createPartControl(Composite parent) {
@@ -45,6 +51,8 @@ public class TestRunnerView extends ViewPart {
                 comp.resize();
             }
         });
+
+        this.parent = parent;
     }
 
     public void addSubmissionResult(List<TestCaseResult> tcr) {

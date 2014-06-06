@@ -2,14 +2,10 @@ package tmc.tasks;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PlatformUI;
-
+import tmc.activator.CoreInitializer;
 import tmc.services.GenericProjectOpener;
 import tmc.ui.EclipseIdeUIInvoker;
+import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.FeedbackSubmissionTask;
@@ -17,6 +13,7 @@ import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.UploadTaskListener;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
@@ -24,19 +21,14 @@ import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 public final class TaskStarter {
 
     public static void startExerciseUploadTask(EclipseIdeUIInvoker invoker) {
-
         ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
 
-        final IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-        if (activeEditor == null) {
-            return;
-        }
-        IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
-        IFile file = input.getFile();
-        IProject activeProject = file.getProject();
+        WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        helper.initialize();
 
-        UploaderTask task = new UploaderTask(uploader, activeProject.getRawLocation().toString() + "/");
+        Project project = helper.getActiveProject();
+
+        UploaderTask task = new UploaderTask(uploader, project.getRootPath() + "/");
         Core.getTaskRunner().runTask(task, new UploadTaskListener(task, invoker));
     }
 

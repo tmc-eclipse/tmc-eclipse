@@ -1,4 +1,5 @@
-aaa.java
-bbb.xml
-asdasd
-xdxd/
+extra_student_files: 
+- "aaa.java"
+- "bbb.xml"
+- "asdasd"
+- "xdxd/"
