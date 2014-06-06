@@ -22,7 +22,6 @@ public abstract class AbstractUnzippingDecider implements UnzippingDecider {
         for (String s : doNotUnzip) {
             s = project.getRootPath() + "/" + s;
             if (filePath.startsWith(s) && (filePath.equals(s) || filePath.charAt(s.length()) == '/')) {
-                System.out.println("-false");
                 return false;
             }
         }
