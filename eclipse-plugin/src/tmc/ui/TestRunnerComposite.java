@@ -177,36 +177,43 @@ public class TestRunnerComposite extends Composite {
     }
 
     public void enlargeTestStack(TestResultComposite comp, TestCaseResult tcr) {
+
         Composite composite = new Composite(scrolledComposite, SWT.BORDER);
         composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
         composite.setSize(scrolledComposite.getSize());
+
         int height = comp.getColorBar().getSize().y;
+
         comp.setBounds(0, comp.getLocation().y, scrolledComposite.getClientArea().width, height);
+
         Control[] c = ((Composite) scrolledComposite.getChildren()[0]).getChildren();
+
         boolean found = false;
         int newHeightOffset = 0;
         int j = 0;
-        System.out.println(j);
+
         while (!comp.equals(c[j])) {
             System.out.println(j);
             newHeightOffset += c[j].getSize().y;
             j++;
         }
+
         newHeightOffset += comp.getSize().y;
         for (int i = 0; i < c.length; i++) {
-            System.out.println(i);
+
             c[i].setParent(composite);
             if (comp.equals(c[i])) {
-                System.out.println("a");
                 found = true;
             }
             if (found && comp != c[i]) {
                 c[i].setBounds(0, newHeightOffset, scrolledComposite.getClientArea().width, c[i].getSize().y);
                 newHeightOffset += c[i].getSize().y;
             }
-        }
-        scrolledComposite.setContent(composite);
 
+        }
+        scrolledComposite.setMinHeight(newHeightOffset);
+        scrolledComposite.setContent(composite);
+        scrolledComposite.getChildren()[0].dispose();
     }
 
     @Override
