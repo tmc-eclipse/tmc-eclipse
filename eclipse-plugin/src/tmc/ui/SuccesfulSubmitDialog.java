@@ -82,7 +82,13 @@ public class SuccesfulSubmitDialog extends Dialog {
     }
 
     public List<FeedbackAnswer> getFeedbackAnswers() {
-        return answers;
+        List<FeedbackAnswer> answered = new ArrayList<FeedbackAnswer>();
+        for (FeedbackAnswer answer : answers) {
+            if (!answer.getAnswer().isEmpty()) {
+                answered.add(answer);
+            }
+        }
+        return answered;
     }
 
     /**
@@ -147,7 +153,7 @@ public class SuccesfulSubmitDialog extends Dialog {
         closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                TaskStarter.startFeedbackSubmissionTask(answers, feedbackUrl);
+                TaskStarter.startFeedbackSubmissionTask(getFeedbackAnswers(), feedbackUrl);
                 shell.close();
             }
 
