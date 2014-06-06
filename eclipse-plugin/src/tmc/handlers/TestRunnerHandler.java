@@ -17,10 +17,17 @@ import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import tmc.activator.CoreInitializer;
+import tmc.handlers.listeners.SelectionListener;
 import tmc.ui.EclipseIdeUIInvoker;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.AntTestrunnerTask;
@@ -33,7 +40,35 @@ public class TestRunnerHandler extends AbstractHandler {
 
     private Shell shell;
 
+    private SelectionListener selectionListener;
+    private IWorkbenchPart focusedPart;
+
+    public TestRunnerHandler() {
+        this.selectionListener = new SelectionListener(Core.getProjectDAO());
+        setupSelectionListener(this.selectionListener);
+    }
+
+    private void setupSelectionListener(SelectionListener listener) {
+        IWorkbench workbench = CoreInitializer.getDefault().getWorkbench();
+        if (workbench == null) {
+            return;
+        }
+
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        if (workbenchWindow == null) {
+            return;
+        }
+
+        ISelectionService selectionService = workbenchWindow.getSelectionService();
+        if (selectionService == null) {
+            return;
+        }
+
+        selectionService.addSelectionListener(listener);
+    }
+
     public Object execute(ExecutionEvent event) throws ExecutionException {
+        this.focusedPart = getActivePart();
 
         shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
         try {
@@ -70,6 +105,30 @@ public class TestRunnerHandler extends AbstractHandler {
             break;
         }
         return null;
+    }
+
+    private IWorkbenchPart getActivePart() {
+        IWorkbench workbench = CoreInitializer.getDefault().getWorkbench();
+        if (workbench == null) {
+            return null;
+        }
+
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        if (workbenchWindow == null) {
+            return null;
+        }
+
+        IWorkbenchPage activePage = workbenchWindow.getActivePage();
+        if (activePage == null) {
+            return null;
+        }
+
+        IWorkbenchPart activePart = activePage.getActivePart();
+        if (activePart == null) {
+            return null;
+        }
+
+        return activePart;
     }
 
     private void runTestsforMavenProject(Project project) {
@@ -132,6 +191,28 @@ public class TestRunnerHandler extends AbstractHandler {
     }
 
     private String getProjectRootPath() {
+        if (focusedPart != null) {
+            String className = focusedPart.getClass().getName();
+
+            if (className.equals("org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor")) {
+                return getProjectPathFromEditor();
+            } else {
+                Project currentProject = selectionListener.getSelectedProject();
+                if (currentProject != null) {
+                    return currentProject.getRootPath();
+                }
+            }
+        }
+
+        String path = getProjectPathFromEditor();
+        if (path == null) {
+            return "";
+        } else {
+            return path;
+        }
+    }
+
+    private String getProjectPathFromEditor() {
         try {
             IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
@@ -141,7 +222,6 @@ public class TestRunnerHandler extends AbstractHandler {
         } catch (NullPointerException e) {
             return null;
         }
-
     }
 
     private void antBuild(String root) throws CoreException {
