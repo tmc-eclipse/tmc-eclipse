@@ -9,7 +9,6 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
-import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
@@ -61,7 +60,7 @@ public class SnapshotTaker {
     }
 
     private void startSnapshotThread(final String metadata) {
-        if (!Settings.getDefaultSettings().isSpywareEnabled()) {
+        if (!Core.getSettings().isSpywareEnabled()) {
             return;
         }
 

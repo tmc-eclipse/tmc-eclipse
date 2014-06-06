@@ -1,17 +1,25 @@
 package fi.helsinki.cs.plugin.tmc.services.http;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
@@ -21,6 +29,9 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
+import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
+import fi.helsinki.cs.plugin.tmc.spyware.utility.ByteArrayGsonSerializer;
+import fi.helsinki.cs.plugin.tmc.spyware.utility.ExceptionUtils;
 import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
 
 public class ServerManager {
@@ -78,7 +89,7 @@ public class ServerManager {
         Map<String, String> params = new LinkedHashMap<String, String>();
         params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
         params.put("client_nanotime", "" + System.nanoTime());
-        params.put("error_msg_locale", Settings.getDefaultSettings().getErrorMsgLocale().toString());
+        params.put("error_msg_locale", Core.getSettings().getErrorMsgLocale().toString());
 
         String response = "";
         try {
@@ -130,7 +141,42 @@ public class ServerManager {
         } catch (Exception e) {
             throw new RuntimeException("An error occured while submitting feedback: " + e.getMessage());
         }
+    }
 
+    public void sendEventLogs(String url, List<LoggableEvent> events) {
+
+        String fullUrl = connectionBuilder.addApiCallQueryParameters(url);
+
+        fullUrl = UriUtils.withQueryParam(fullUrl, "username", Core.getSettings().getUsername());
+        fullUrl = UriUtils.withQueryParam(fullUrl, "password", Core.getSettings().getPassword());
+
+        byte[] data;
+        try {
+            data = eventListToPostBody(events);
+        } catch (IOException e) {
+            throw ExceptionUtils.toRuntimeException(e);
+        }
+
+        try {
+            connectionBuilder.createConnection().rawPostForText(fullUrl, data);
+        } catch (Exception e) {
+            // die silently, no need to bother user
+        }
+    }
+
+    private byte[] eventListToPostBody(List<LoggableEvent> events) throws IOException {
+        ByteArrayOutputStream bufferBos = new ByteArrayOutputStream();
+        GZIPOutputStream gzos = new GZIPOutputStream(bufferBos);
+        OutputStreamWriter bufferWriter = new OutputStreamWriter(gzos, Charset.forName("UTF-8"));
+
+        Gson gson = new GsonBuilder().registerTypeAdapter(byte[].class, new ByteArrayGsonSerializer()).create();
+
+        gson.toJson(events, new TypeToken<List<LoggableEvent>>() {
+        }.getType(), bufferWriter);
+        bufferWriter.close();
+        gzos.close();
+
+        return bufferBos.toByteArray();
     }
 
     private byte[] getBytes(String url) {

@@ -7,6 +7,7 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.SpywarePluginLayer;
+import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
 
 public final class ServiceFactory {
 
@@ -27,7 +28,7 @@ public final class ServiceFactory {
 
         this.updater = new Updater(server, courseDAO, projectDAO);
 
-        this.spyware = new SpywarePluginLayer();
+        this.spyware = new SpywarePluginLayer(new ActiveThreadSet());
     }
 
     public Settings getSettings() {

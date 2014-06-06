@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.spyware;
 
 import java.io.Closeable;
 
+import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventDeduplicater;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventReceiver;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventSendBuffer;
@@ -13,11 +14,10 @@ public class SpywarePluginLayer implements Closeable {
     private ActiveThreadSet activeThreads;
     private EventReceiver receiver;
 
-    public SpywarePluginLayer() {
-        // todo - refactor
+    public SpywarePluginLayer(ActiveThreadSet activeThreads) {
 
-        activeThreads = new ActiveThreadSet();
-        receiver = new EventDeduplicater(new EventSendBuffer(new EventStore()));
+        this.activeThreads = activeThreads;
+        receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("sikrit.tmp"))));
     }
 
     public void takeSnapshot(SnapshotInfo info) {

@@ -2,13 +2,21 @@ package fi.helsinki.cs.plugin.tmc.spyware.services;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.collect.Iterables;
+
+import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.async.tasks.PeriodicTask;
+import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
 
@@ -38,11 +46,8 @@ public class EventSendBuffer implements EventReceiver {
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private Cooldown autosendCooldown;
 
-    public EventSendBuffer(/* ServerAccess serverAccess, Courses courses, */EventStore eventStore) {
-
-        // this.serverAccess = serverAccess;
-        // this.courses = courses;
-        this.eventStore = eventStore;
+    public EventSendBuffer(EventStore store) {
+        this.eventStore = store;
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
 
         try {
@@ -55,16 +60,16 @@ public class EventSendBuffer implements EventReceiver {
             log.log(Level.WARNING, "Failed to read events from event store", ex);
         }
 
-        // this.sendingTask.setInterval(DEFAULT_SEND_INTERVAL);
-        // this.savingTask.setInterval(DEFAULT_SAVE_INTERVAL);
+        this.sendingTask.setInterval(DEFAULT_SEND_INTERVAL);
+        this.savingTask.setInterval(DEFAULT_SAVE_INTERVAL);
     }
 
     public void setSendingInterval(long interval) {
-        // sendingTask.setInterval(interval);
+        sendingTask.setInterval(interval);
     }
 
     public void setSavingInterval(long interval) {
-        // savingTask.setInterval(interval);
+        savingTask.setInterval(interval);
     }
 
     public void setMaxEvents(int newMaxEvents) {
@@ -101,16 +106,16 @@ public class EventSendBuffer implements EventReceiver {
     }
 
     public void sendNow() {
-        // sendingTask.start();
+        sendingTask.start();
     }
 
     public void saveNow(long timeout) throws TimeoutException, InterruptedException {
-        // savingTask.start();
-        // savingTask.waitUntilFinished(timeout);
+        savingTask.start();
+        savingTask.waitUntilFinished(timeout);
     }
 
     public void waitUntilCurrentSendingFinished(long timeout) throws TimeoutException, InterruptedException {
-        // sendingTask.waitUntilFinished(timeout);
+        sendingTask.waitUntilFinished(timeout);
     }
 
     @Override
@@ -145,99 +150,127 @@ public class EventSendBuffer implements EventReceiver {
     @Override
     public void close() {
         long delayPerWait = 2000;
-        /*
-         * try { sendingTask.unsetInterval(); savingTask.unsetInterval();
-         * 
-         * savingTask.waitUntilFinished(delayPerWait); savingTask.start();
-         * savingTask.waitUntilFinished(delayPerWait);
-         * 
-         * sendingTask.waitUntilFinished(delayPerWait);
-         * 
-         * } catch (TimeoutException ex) { log.log(Level.WARNING,
-         * "Time out when closing EventSendBuffer", ex); } catch
-         * (InterruptedException ex) { log.log(Level.WARNING,
-         * "Closing EventSendBuffer interrupted", ex); }
-         */
+
+        try {
+            sendingTask.unsetInterval();
+            savingTask.unsetInterval();
+
+            savingTask.waitUntilFinished(delayPerWait);
+            savingTask.start();
+            savingTask.waitUntilFinished(delayPerWait);
+            sendingTask.waitUntilFinished(delayPerWait);
+
+        } catch (TimeoutException ex) {
+            log.log(Level.WARNING, "Time out when closing EventSendBuffer", ex);
+        } catch (InterruptedException ex) {
+            log.log(Level.WARNING, "Closing EventSendBuffer interrupted", ex);
+        }
+
     }
 
-    /*
-     * private SingletonTask sendingTask = new SingletonTask(new Runnable() { //
-     * Sending too many at once may go over the server's POST size limit.
-     * private static final int MAX_EVENTS_PER_SEND = 500;
-     * 
-     * @Override public void run() { boolean shouldSendMore;
-     * 
-     * do { ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
-     * if (eventsToSend.isEmpty()) { return; }
-     * 
-     * synchronized (sendQueue) { shouldSendMore = sendQueue.size() >
-     * eventsToSend.size(); }
-     * 
-     * String url = pickDestinationUrl(); if (url == null) { return; }
-     * 
-     * log.log(Level.INFO, "Sending {0} events to {1}", new Object[] {
-     * eventsToSend.size(), url });
-     * 
-     * doSend(eventsToSend, url); } while (shouldSendMore); }
-     * 
-     * private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
-     * synchronized (sendQueue) { ArrayList<LoggableEvent> eventsToSend = new
-     * ArrayList<LoggableEvent>(sendQueue.size());
-     * 
-     * Iterator<LoggableEvent> i = sendQueue.iterator(); while (i.hasNext() &&
-     * eventsToSend.size() < MAX_EVENTS_PER_SEND) { eventsToSend.add(i.next());
-     * }
-     * 
-     * eventsToRemoveAfterSend = eventsToSend.size();
-     * 
-     * return eventsToSend; } }
-     * 
-     * private String pickDestinationUrl() { Course course =
-     * courses.getCurrentCourse(); if (course == null) { log.log(Level.FINE,
-     * "Not sending events because no course selected"); return null; }
-     * 
-     * List<String> urls = course.getSpywareUrls(); if (urls == null ||
-     * urls.isEmpty()) { log.log(Level.INFO,
-     * "Not sending events because no URL provided by server"); return null; }
-     * 
-     * String url = urls.get(random.nextInt(urls.size()));
-     * 
-     * return url; }
-     * 
-     * private void doSend(final ArrayList<LoggableEvent> eventsToSend, final
-     * String url) { CancellableCallable<Object> task =
-     * serverAccess.getSendEventLogJob(url, eventsToSend); Future<Object> future
-     * = BgTask.start("Sending stats", task);
-     * 
-     * try { future.get(); } catch (InterruptedException ex) {
-     * future.cancel(true); } catch (ExecutionException ex) {
-     * log.log(Level.INFO, "Sending failed", ex); return; }
-     * 
-     * log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] {
-     * eventsToSend.size(), url });
-     * 
-     * removeSentEventsFromQueue();
-     * 
-     * // If saving fails now (or is already running and fails later) // then we
-     * may end up sending duplicate events later. // This will hopefully be very
-     * rare. savingTask.start(); }
-     * 
-     * private void removeSentEventsFromQueue() { synchronized (sendQueue) {
-     * assert(eventsToRemoveAfterSend <= sendQueue.size()); while
-     * (eventsToRemoveAfterSend > 0) { sendQueue.pop();
-     * eventsToRemoveAfterSend--; } } }
-     * 
-     * }, TmcRequestProcessor.instance);
-     */
+    private PeriodicTask sendingTask = new PeriodicTask(new TimerTask() { //
+                // Sending too many at once may go over the server's POST size
+                // limit.
+                private static final int MAX_EVENTS_PER_SEND = 500;
 
-    /*
-     * private SingletonTask savingTask = new SingletonTask(new Runnable() {
-     * 
-     * @Override public void run() { try { LoggableEvent[] eventsToSave;
-     * synchronized (sendQueue) { eventsToSave = Iterables.toArray(sendQueue,
-     * LoggableEvent.class); } eventStore.save(eventsToSave); } catch
-     * (IOException ex) { log.log(Level.WARNING, "Failed to save events", ex); }
-     * } }, TmcRequestProcessor.instance);
-     */
+                @Override
+                public void run() {
+                    boolean shouldSendMore;
+
+                    do {
+                        ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
+                        if (eventsToSend.isEmpty()) {
+                            return;
+                        }
+
+                        synchronized (sendQueue) {
+                            shouldSendMore = sendQueue.size() > eventsToSend.size();
+                        }
+
+                        String url = pickDestinationUrl();
+                        if (url == null) {
+                            return;
+                        }
+
+                        log.log(Level.INFO, "Sending {0} events to {1}", new Object[] {eventsToSend.size(), url});
+
+                        doSend(eventsToSend, url);
+                    } while (shouldSendMore);
+                }
+
+                private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
+                    synchronized (sendQueue) {
+                        ArrayList<LoggableEvent> eventsToSend = new ArrayList<LoggableEvent>(sendQueue.size());
+
+                        Iterator<LoggableEvent> i = sendQueue.iterator();
+                        while (i.hasNext() && eventsToSend.size() < MAX_EVENTS_PER_SEND) {
+                            eventsToSend.add(i.next());
+                        }
+
+                        eventsToRemoveAfterSend = eventsToSend.size();
+
+                        return eventsToSend;
+                    }
+                }
+
+                private String pickDestinationUrl() {
+                    Course course = Core.getCourseDAO().getCurrentCourse();
+                    if (course == null) {
+                        log.log(Level.FINE, "Not sending events because no course selected");
+                        return null;
+                    }
+
+                    List<String> urls = course.getSpywareUrls();
+                    if (urls == null || urls.isEmpty()) {
+                        log.log(Level.INFO, "Not sending events because no URL provided by server");
+                        return null;
+                    }
+
+                    String url = urls.get(random.nextInt(urls.size()));
+
+                    return url;
+                }
+
+                private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
+
+                    Core.getServerManager().sendEventLogs(url, eventsToSend);
+                    log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] {eventsToSend.size(), url});
+                    removeSentEventsFromQueue();
+
+                    // If saving fails now (or is already running and fails
+                    // later) // then we
+                    // may end up sending duplicate events later. // This will
+                    // hopefully be very
+                    // rare.
+                    savingTask.start();
+                }
+
+                private void removeSentEventsFromQueue() {
+                    synchronized (sendQueue) {
+                        assert (eventsToRemoveAfterSend <= sendQueue.size());
+                        while (eventsToRemoveAfterSend > 0) {
+                            sendQueue.pop();
+                            eventsToRemoveAfterSend--;
+                        }
+                    }
+                }
+
+            });
+
+    private PeriodicTask savingTask = new PeriodicTask(new TimerTask() {
+
+        @Override
+        public void run() {
+            try {
+                LoggableEvent[] eventsToSave;
+                synchronized (sendQueue) {
+                    eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
+                }
+                eventStore.save(eventsToSave);
+            } catch (IOException ex) {
+                log.log(Level.WARNING, "Failed to save events", ex);
+            }
+        }
+    });
 
 }
