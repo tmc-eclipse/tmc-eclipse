@@ -12,7 +12,7 @@ import org.osgi.framework.BundleContext;
 
 import tmc.handlers.EclipseErrorHandler;
 import tmc.spyware.TestListener;
-import tmc.spyware.TestResourceListener;
+import tmc.spyware.ResourceEventListener;
 import tmc.spyware.TestSaveParticipant;
 import tmc.tasks.EclipseTaskRunner;
 import fi.helsinki.cs.plugin.tmc.Core;
@@ -27,7 +27,7 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
     public void start(BundleContext context) throws Exception {
         super.start(context);
 		ResourcesPlugin.getWorkspace().addSaveParticipant("tmc-eclipse", new TestSaveParticipant());
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(new TestResourceListener(), 
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(), 
 				IResourceChangeEvent.POST_CHANGE);
         instance = this;
     }

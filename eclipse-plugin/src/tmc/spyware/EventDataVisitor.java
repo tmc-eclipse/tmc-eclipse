@@ -4,7 +4,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.runtime.IPath;
 
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 
@@ -12,145 +11,133 @@ import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
  * Event data is organized as a tree. EventDataVisitor is called by eclipse whenever it visits a tree node
  * */
 class EventDataVisitor implements IResourceDeltaVisitor {
-	private String projectName = "";
-	
-	private String oldFilePath = ""; // used in case of renaming
-	private String currentFilePath = "";
-	
-	private ChangeType type = ChangeType.NONE;
-	private boolean isBuildEvent = false;
+    private String projectName = "";
 
-	int visitedLeafs_DEBUGCODEPLEASEREMOVE = 0;
+    private String oldFilePath = ""; // used in case of renaming
+    private String currentFilePath = "";
 
-	
-	public String getProjectName() {
-		return projectName;
-	}
+    private ChangeType type = ChangeType.NONE;
+    private boolean isBuildEvent = false;
 
-	public String getOldFilePath() {
-		return oldFilePath;
-	}
+    public String getProjectName() {
+        return projectName;
+    }
 
-	public String getFilePath() {
-		return currentFilePath;
-	}
+    public String getOldFilePath() {
+        return oldFilePath;
+    }
 
-	public ChangeType getType() {
-		return type;
-	}
+    public String getFilePath() {
+        return currentFilePath;
+    }
 
-	public boolean isBuildEvent() {
-		return isBuildEvent;
-	}
+    public ChangeType getType() {
+        return type;
+    }
 
-	public boolean visit(IResourceDelta delta) {
+    public boolean isBuildEvent() {
+        return isBuildEvent;
+    }
 
-		// if this is not a leaf, do nothing
-		if (delta.getAffectedChildren().length != 0) {
-			return true;
-		}
+    public boolean visit(IResourceDelta delta) {
 
-		++visitedLeafs_DEBUGCODEPLEASEREMOVE;
-		IResource res = delta.getResource();
+        // if this is not a leaf, do nothing
+        if (delta.getAffectedChildren().length != 0) {
+            return true;
+        }
 
-		getChangeType(delta);
+        IResource res = delta.getResource();
 
-		if (isCompiledFile(res.getFileExtension())) {
-			isBuildEvent = true;
-		}
+        getChangeType(delta);
 
-		
-		
-			
-		if (visitedLeafs_DEBUGCODEPLEASEREMOVE > 2 && !isBuildEvent) {
-			System.out.println("Assumption failure");
-			System.out.println("Old file: " + oldFilePath);
-			System.out.println("Current file: " + currentFilePath);
-			System.out.println("New file: " + res.getFullPath());
+        if (isCompiledFile(res.getFileExtension())) {
+            isBuildEvent = true;
+        }
 
-		}
+        if (res.getFullPath().segmentCount() > 1 && projectName.equals("")) {
+            projectName = res.getFullPath().segment(0);
+        }
 
-		if (res.getFullPath().segmentCount() > 1 && projectName.equals("")) {
-			projectName = res.getFullPath().segment(0);
-		}
+        if (currentFilePath.equals("")) {
+            currentFilePath = res.getFullPath().toString();
+        }
 
-		oldFilePath = currentFilePath;
-		currentFilePath = res.getFullPath().toString();
+        return true; // visit the children; ultimately we care about the leaf
+                     // node that caused the change
+    }
 
-		return true; // visit the children; ultimately we care about the leaf
-						// node that caused the change
-	}
+    private void getChangeType(IResourceDelta delta) {
+        boolean isFolder = delta.getResource() instanceof IFolder;
 
-	private void getChangeType(IResourceDelta delta) {
-		boolean isFolder = delta.getResource() instanceof IFolder;
-		
-		switch (delta.getKind()) {
-		case IResourceDelta.ADDED:
-			handleAddition(isFolder);
-			break;
-		case IResourceDelta.REMOVED:
-			handleRemove(isFolder);
-			break;
-		case IResourceDelta.CHANGED:
-			if (isFolder) {
-				type = ChangeType.FOLDER_CHANGE;
-			} else {
-				type = ChangeType.FILE_CHANGE;
-			}
-			break;
-		}
-	}
+        switch (delta.getKind()) {
+        case IResourceDelta.ADDED:
+            handleAddition(isFolder, delta.getResource());
+            break;
+        case IResourceDelta.REMOVED:
+            handleRemove(isFolder, delta.getResource());
+            break;
+        case IResourceDelta.CHANGED:
+            if (isFolder) {
+                type = ChangeType.FOLDER_CHANGE;
+            } else {
+                type = ChangeType.FILE_CHANGE;
+            }
+            break;
+        }
+    }
 
+    private void handleAddition(boolean isFolder, IResource resource) {
 
-	private void handleAddition(boolean isFolder) {
-		
-		// delete + add event is rename
-		if (type == ChangeType.FOLDER_DELETE || type == ChangeType.FILE_DELETE) {
-			handleRename(isFolder);
-			return;
-		}
-		
-		if (isFolder) {
-			type = ChangeType.FOLDER_CREATE;
-		} else {
-			type = ChangeType.FILE_CREATE;
-		}
-	}
-	
-	private void handleRemove(boolean isFolder) {
-		
-		// delete + add event is rename
-		if (type == ChangeType.FOLDER_CREATE || type == ChangeType.FILE_CREATE) {
-			handleRename(isFolder);
-			return;
-		}
-		
-		if (isFolder) {
-			type = ChangeType.FOLDER_DELETE;
-		} else {
-			type = ChangeType.FILE_DELETE;
-		}
-	}
+        // delete + add event is rename
+        if (type == ChangeType.FOLDER_DELETE || type == ChangeType.FILE_DELETE) {
+            oldFilePath = currentFilePath;
+            currentFilePath = resource.getFullPath().toString();
 
-	
-	private void handleRename(boolean isFolder) {
-		if (isFolder) {
-			type = ChangeType.FOLDER_RENAME;			
-		} else {		 
-			type = ChangeType.FILE_RENAME;
-		}
-	}
-	
+            handleRename(isFolder);
+            return;
+        }
 
-	private boolean isCompiledFile(String extension) {
-		if (extension == null) {
-			return false;
-		}
-		
-		if (extension.contains("class")) {
-			return true;
-		}
+        if (isFolder) {
+            type = ChangeType.FOLDER_CREATE;
+        } else {
+            type = ChangeType.FILE_CREATE;
+        }
+    }
 
-		return false;
-	}
+    private void handleRemove(boolean isFolder, IResource resource) {
+
+        // delete + add event is rename
+        if (type == ChangeType.FOLDER_CREATE || type == ChangeType.FILE_CREATE) {
+
+            oldFilePath = resource.getFullPath().toString();
+            handleRename(isFolder);
+            return;
+        }
+
+        if (isFolder) {
+            type = ChangeType.FOLDER_DELETE;
+        } else {
+            type = ChangeType.FILE_DELETE;
+        }
+    }
+
+    private void handleRename(boolean isFolder) {
+        if (isFolder) {
+            type = ChangeType.FOLDER_RENAME;
+        } else {
+            type = ChangeType.FILE_RENAME;
+        }
+    }
+
+    private boolean isCompiledFile(String extension) {
+        if (extension == null) {
+            return false;
+        }
+
+        if (extension.contains("class")) {
+            return true;
+        }
+
+        return false;
+    }
 }
