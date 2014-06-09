@@ -2,7 +2,6 @@ package fi.helsinki.cs.plugin.tmc.services;
 
 import java.util.List;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
@@ -57,25 +56,20 @@ public class Updater {
 
     public void updateExercises(Course course) {
         if (course == null) {
-            Core.getErrorHandler().raise("Remember to select your course from TMC -> Settings");
-            return;
+            throw new UserVisibleException("Remember to select your course from TMC -> Settings");
         }
 
-        try {
-            List<Exercise> oldExercises = course.getExercises();
-            List<Exercise> newExercises = server.getExercises(course.getId() + "");
+        List<Exercise> oldExercises = course.getExercises();
+        List<Exercise> newExercises = server.getExercises(course.getId() + "");
 
-            for (Exercise newExercise : newExercises) {
-                Exercise oldExercise = findEqualExercise(oldExercises, newExercise);
-                if (oldExercise != null) {
-                    updateExercise(oldExercise, newExercise);
-                }
+        for (Exercise newExercise : newExercises) {
+            Exercise oldExercise = findEqualExercise(oldExercises, newExercise);
+            if (oldExercise != null) {
+                updateExercise(oldExercise, newExercise);
             }
-
-            course.setExercises(newExercises);
-        } catch (UserVisibleException uve) {
-            Core.getErrorHandler().handleException(uve);
         }
+
+        course.setExercises(newExercises);
     }
 
     private void updateExercise(Exercise oldExercise, Exercise newExercise) {
