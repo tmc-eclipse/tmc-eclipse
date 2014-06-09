@@ -26,6 +26,8 @@ public class ExerciseSelectorDialog extends Dialog {
     private boolean buttonSelectsAll;
     private Button btnSelectAll;
 
+    private Button btnDownload;
+
     /**
      * Create the dialog.
      * 
@@ -97,7 +99,7 @@ public class ExerciseSelectorDialog extends Dialog {
         btnClose.setBounds(447, 236, 62, 29);
         btnClose.setText("Close");
 
-        Button btnDownload = new Button(shell, SWT.NONE);
+        btnDownload = new Button(shell, SWT.NONE);
         btnDownload.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -172,9 +174,11 @@ public class ExerciseSelectorDialog extends Dialog {
         if (isAnySelected()) {
             buttonSelectsAll = false;
             btnSelectAll.setText("Unselect all");
+            btnDownload.setEnabled(true);
         } else {
             buttonSelectsAll = true;
             btnSelectAll.setText("Select all");
+            btnDownload.setEnabled(false);
         }
     }
 
