@@ -22,21 +22,17 @@ public class Updater {
     }
 
     public void updateCourses() {
-        try {
-            List<Course> oldCourses = courseDAO.getCourses();
-            List<Course> newCourses = server.getCourses();
+        List<Course> oldCourses = courseDAO.getCourses();
+        List<Course> newCourses = server.getCourses();
 
-            for (Course newCourse : newCourses) {
-                Course oldCourse = findEqualCourse(oldCourses, newCourse);
-                if (oldCourse != null) {
-                    updateCourse(oldCourse, newCourse);
-                }
+        for (Course newCourse : newCourses) {
+            Course oldCourse = findEqualCourse(oldCourses, newCourse);
+            if (oldCourse != null) {
+                updateCourse(oldCourse, newCourse);
             }
-
-            courseDAO.setCourses(newCourses);
-        } catch (UserVisibleException uve) {
-            Core.getErrorHandler().handleException(uve);
         }
+
+        courseDAO.setCourses(newCourses);
     }
 
     private void updateCourse(Course oldCourse, Course newCourse) {

@@ -22,6 +22,7 @@ import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
 import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
@@ -148,11 +149,25 @@ public class ServerManager {
         String json;
         try {
             json = connectionBuilder.createConnection().getForText(url);
+        } catch (FailedHttpResponseException fhre) {
+            if (fhre.getStatusCode() == 403) {
+                throw new UserVisibleException("Authentication failed - check your username and password.");
+            }
+            if (fhre.getStatusCode() == 404) {
+                throw new UserVisibleException("Could not connect to server - check your TMC server address.");
+            }
+            if (fhre.getStatusCode() == 500) {
+                throw new UserVisibleException(
+                        "An error occurred while trying to refresh courses. Please try again later.");
+            }
+            json = "";
+        } catch (IllegalStateException ise) {
+            throw new UserVisibleException("Could not connect to server - check your TMC server address.");
         } catch (Exception e) {
-            // TODO: Better errorhandling?
             e.printStackTrace();
             json = "";
         }
+
         return json;
     }
 

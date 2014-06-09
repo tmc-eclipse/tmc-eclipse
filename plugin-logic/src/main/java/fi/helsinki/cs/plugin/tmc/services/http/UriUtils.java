@@ -37,6 +37,7 @@ final class UriUtils {
             return new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), newQuery,
                     uri.getFragment());
         } catch (URISyntaxException ex) {
+            System.out.println("got URISyntaxEception " + ex.getMessage());
             throw new IllegalArgumentException(ex);
         }
     }

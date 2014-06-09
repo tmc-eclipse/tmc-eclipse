@@ -20,6 +20,7 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.DomainUtil;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class SettingsDialog extends Dialog {
 
@@ -36,6 +37,7 @@ public class SettingsDialog extends Dialog {
     private Button btnCheckFor;
     private Button btnCheckThat;
     private Button btnSendSnapshots;
+    private Button btnOk;
     private Combo localeList;
     private Combo combo;
 
@@ -122,7 +124,14 @@ public class SettingsDialog extends Dialog {
                 settings.setServerBaseUrl(serverAddress.getText());
                 settings.setCurrentCourseName(combo.getText());
 
-                Core.getUpdater().updateCourses();
+                try {
+                    Core.getUpdater().updateCourses();
+                    lblErrorText.setText("");
+                    btnOk.setEnabled(true);
+                } catch (UserVisibleException uve) {
+                    lblErrorText.setText(uve.getMessage());
+                    btnOk.setEnabled(false);
+                }
 
                 combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO().getCourses()));
                 combo.select(indexOfCurrentCourse());
@@ -147,7 +156,7 @@ public class SettingsDialog extends Dialog {
             }
         });
 
-        Button btnOk = new Button(shell, SWT.NONE);
+        btnOk = new Button(shell, SWT.NONE);
         btnOk.setText("OK");
 
         btnOk.setBounds(349, 410, 91, 29);
