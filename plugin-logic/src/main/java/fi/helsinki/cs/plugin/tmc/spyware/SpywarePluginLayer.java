@@ -17,7 +17,7 @@ public class SpywarePluginLayer implements Closeable {
         // todo - refactor
 
         activeThreads = new ActiveThreadSet();
-        receiver = new EventDeduplicater(new EventSendBuffer(new EventStore()));
+        //receiver = new EventDeduplicater(new EventSendBuffer(new EventStore()));
     }
 
     public void takeSnapshot(SnapshotInfo info) {
