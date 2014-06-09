@@ -13,8 +13,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.collect.Iterables;
-
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
@@ -176,27 +174,30 @@ public class EventSendBuffer implements EventReceiver {
 
                 @Override
                 public void run() {
-                    boolean shouldSendMore;
-
-                    do {
-                        ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
-                        if (eventsToSend.isEmpty()) {
-                            return;
-                        }
-
-                        synchronized (sendQueue) {
-                            shouldSendMore = sendQueue.size() > eventsToSend.size();
-                        }
-
-                        String url = pickDestinationUrl();
-                        if (url == null) {
-                            return;
-                        }
-
-                        log.log(Level.INFO, "Sending {0} events to {1}", new Object[] {eventsToSend.size(), url});
-
-                        doSend(eventsToSend, url);
-                    } while (shouldSendMore);
+                    System.out.println("Sending task...");
+                    // boolean shouldSendMore;
+                    //
+                    // do {
+                    // ArrayList<LoggableEvent> eventsToSend =
+                    // copyEventsToSendFromQueue();
+                    // if (eventsToSend.isEmpty()) {
+                    // return;
+                    // }
+                    //
+                    // synchronized (sendQueue) {
+                    // shouldSendMore = sendQueue.size() > eventsToSend.size();
+                    // }
+                    //
+                    // String url = pickDestinationUrl();
+                    // if (url == null) {
+                    // return;
+                    // }
+                    //
+                    // log.log(Level.INFO, "Sending {0} events to {1}", new
+                    // Object[] {eventsToSend.size(), url});
+                    //
+                    // doSend(eventsToSend, url);
+                    // } while (shouldSendMore);
                 }
 
                 private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
@@ -262,15 +263,14 @@ public class EventSendBuffer implements EventReceiver {
 
         @Override
         public void run() {
-            try {
-                LoggableEvent[] eventsToSave;
-                synchronized (sendQueue) {
-                    eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
-                }
-                eventStore.save(eventsToSave);
-            } catch (IOException ex) {
-                log.log(Level.WARNING, "Failed to save events", ex);
-            }
+            /*
+             * try { LoggableEvent[] eventsToSave; synchronized (sendQueue) {
+             * eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
+             * } eventStore.save(eventsToSave); } catch (IOException ex) {
+             * log.log(Level.WARNING, "Failed to save events", ex); }
+             */
+            System.out.println("Saving task...");
+
         }
     }, scheduler);
 
