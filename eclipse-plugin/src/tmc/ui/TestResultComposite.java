@@ -1,8 +1,6 @@
 package tmc.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -30,6 +28,8 @@ public class TestResultComposite extends Composite {
     private final Color BACKGROUND = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 
     private int colorBarHeight;
+
+    private int heightOffset;
 
     /**
      * Create the composite.
@@ -105,43 +105,23 @@ public class TestResultComposite extends Composite {
     }
 
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
-        final Link moreDetails = new Link(this, SWT.NONE);
-        int i = 0;
-        StringBuilder b = new StringBuilder();
+        Composite moreDetails = new Composite(this, SWT.SMOOTH);
+        heightOffset = 0;
         for (StackTraceElement st : tcr.getException().stackTrace) {
             if (st.isNativeMethod()) {
-                b.append(st.toString());
+                addMoreDetailsLink(moreDetails, st.toString(), st);
             } else {
-                b.append("<a>" + st.toString() + "</a>");
+                addMoreDetailsLink(moreDetails, "<a href=\"\">" + st.toString() + "</a>", st);
+                // addMoreDetailsLink(moreDetails,
+                // "This is a link to <a href=\"http://www.google.com\">Google</a>");
             }
-            b.append("\n");
-            i++;
         }
         moreDetails.setBackground(BACKGROUND);
-        moreDetails.setText(b.toString());
-        moreDetails.setBounds(10, testResultMessage.getSize().y + 5, testResultMessage.getSize().x,
-                gc.stringExtent(moreDetails.getText()).y * i);
-        moreDetails.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseDoubleClick(MouseEvent e) {
-                // TODO Auto-generated method stub
+        moreDetails.setLocation(testResultMessage.getSize().x, heightOffset);
+        moreDetails.setBounds(10, testResultMessage.getSize().y + 5, testResultMessage.getSize().x, heightOffset);
 
-            }
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseUp(MouseEvent e) {
-                String[] links = moreDetails.getText().split("<a>");
-            }
-
-        });
-
-        colorBar.setBounds(0, 0, 5, moreDetails.getSize().y);
+        colorBar.setBounds(0, 0, 5, testResultMessage.getSize().y + testResultName.getSize().y
+                + moreDetails.getSize().y);
         if (this.getParent().getParent().getParent() instanceof TestRunnerComposite) {
             ((TestRunnerComposite) this.getParent().getParent().getParent()).enlargeTestStack(this, tcr);
         } else {
@@ -151,6 +131,33 @@ public class TestResultComposite extends Composite {
         if (showMoreBtn != null) {
             showMoreBtn.dispose();
         }
+    }
+
+    public void addMoreDetailsLink(Composite parent, String text, StackTraceElement st) {
+        Link moreDetailslink = new Link(parent, SWT.NONE);
+        moreDetailslink.setText(text);
+        moreDetailslink.setBackground(BACKGROUND);
+        moreDetailslink.setLocation(testResultMessage.getSize().x, heightOffset);
+        moreDetailslink.setBounds(0, heightOffset, testResultMessage.getSize().x, testResultMessage.getSize().y);
+        final String path = "";
+        moreDetailslink.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                System.out.println("asd");
+                // Open default external browser
+                // IFileStore fileStore = EFS.getLocalFileSystem().getStore(new
+                // File(path).toURI());
+                // IWorkbenchPage page =
+                // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                // try {
+                // IDE.openEditorOnFileStore(page, fileStore);
+                // } catch (PartInitException e1) {
+                // // TODO Auto-generated catch block
+                // e1.printStackTrace();
+                // }
+            }
+        });
+        heightOffset += testResultMessage.getSize().y;
     }
 
     @Override
