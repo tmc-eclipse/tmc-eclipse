@@ -231,6 +231,7 @@ public class SettingsDialog extends Dialog {
 
     private void addFieldData() {
         lblErrorText.setText("");
+        btnSavePassword.setSelection(settings.isSavePassword());
         userNameText.setText(settings.getUsername());
         passWordText.setText(settings.getPassword());
         serverAddress.setText(settings.getServerBaseUrl());
@@ -250,6 +251,8 @@ public class SettingsDialog extends Dialog {
         settings.setCheckingForUnopenedAtStartup(btnCheckThat.getSelection());
         settings.setIsSpywareEnabled(btnSendSnapshots.getSelection());
         settings.setErrorMsgLocale(localeList.getSelectionIndex());
+        settings.setSavePassword(btnSavePassword.getSelection());
+
         settings.save();
     }
 }
