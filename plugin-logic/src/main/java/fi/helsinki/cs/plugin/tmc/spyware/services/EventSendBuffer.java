@@ -13,6 +13,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.collect.Iterables;
+
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
@@ -31,6 +33,9 @@ public class EventSendBuffer implements EventReceiver {
     public static final int DEFAULT_AUTOSEND_THREHSOLD = DEFAULT_MAX_EVENTS / 2;
     public static final int DEFAULT_AUTOSEND_COOLDOWN = 30 * 1000;
 
+    private SingletonTask sendingTask;
+    private SingletonTask savingTask;
+
     private ScheduledExecutorService scheduler;
     private Random random = new Random();
     // private ServerAccess serverAccess;
@@ -46,8 +51,9 @@ public class EventSendBuffer implements EventReceiver {
 
     public EventSendBuffer(EventStore store) {
         this.eventStore = store;
-        scheduler = Executors.newScheduledThreadPool(5);
+        scheduler = Executors.newScheduledThreadPool(2);
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
+        initializeTasks();
 
         try {
             List<LoggableEvent> initialEvents = Arrays.asList(eventStore.load());
@@ -61,6 +67,125 @@ public class EventSendBuffer implements EventReceiver {
 
         this.sendingTask.setInterval(DEFAULT_SEND_INTERVAL);
         this.savingTask.setInterval(DEFAULT_SAVE_INTERVAL);
+    }
+
+    private final void initializeTasks() {
+        savingTask = new SingletonTask(new Runnable() {
+
+            @Override
+            public void run() {
+
+                try {
+                    LoggableEvent[] eventsToSave;
+                    synchronized (sendQueue) {
+                        eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
+                    }
+                    eventStore.save(eventsToSave);
+                } catch (IOException ex) {
+                    log.log(Level.WARNING, "Failed to save events", ex);
+                }
+
+                System.out.println("Saving task...");
+
+            }
+        }, scheduler);
+
+        sendingTask = new SingletonTask(new Runnable() { //
+                    // Sending too many at once may go over the server's POST
+                    // size
+                    // limit.
+                    private static final int MAX_EVENTS_PER_SEND = 500;
+
+                    @Override
+                    public void run() {
+                        System.out.println("Sending task...");
+                        // boolean shouldSendMore;
+                        //
+                        // do {
+                        // ArrayList<LoggableEvent> eventsToSend =
+                        // copyEventsToSendFromQueue();
+                        // if (eventsToSend.isEmpty()) {
+                        // return;
+                        // }
+                        //
+                        // synchronized (sendQueue) {
+                        // shouldSendMore = sendQueue.size() >
+                        // eventsToSend.size();
+                        // }
+                        //
+                        // String url = pickDestinationUrl();
+                        // if (url == null) {
+                        // return;
+                        // }
+                        //
+                        // log.log(Level.INFO, "Sending {0} events to {1}", new
+                        // Object[] {eventsToSend.size(), url});
+                        //
+                        // doSend(eventsToSend, url);
+                        // } while (shouldSendMore);
+                    }
+
+                    private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
+                        synchronized (sendQueue) {
+                            ArrayList<LoggableEvent> eventsToSend = new ArrayList<LoggableEvent>(sendQueue.size());
+
+                            Iterator<LoggableEvent> i = sendQueue.iterator();
+                            while (i.hasNext() && eventsToSend.size() < MAX_EVENTS_PER_SEND) {
+                                eventsToSend.add(i.next());
+                            }
+
+                            eventsToRemoveAfterSend = eventsToSend.size();
+
+                            return eventsToSend;
+                        }
+                    }
+
+                    private String pickDestinationUrl() {
+                        Course course = Core.getCourseDAO().getCurrentCourse();
+                        if (course == null) {
+                            log.log(Level.FINE, "Not sending events because no course selected");
+                            return null;
+                        }
+
+                        List<String> urls = course.getSpywareUrls();
+                        if (urls == null || urls.isEmpty()) {
+                            log.log(Level.INFO, "Not sending events because no URL provided by server");
+                            return null;
+                        }
+
+                        String url = urls.get(random.nextInt(urls.size()));
+
+                        return url;
+                    }
+
+                    private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
+
+                        Core.getServerManager().sendEventLogs(url, eventsToSend);
+                        log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] {eventsToSend.size(),
+                                url});
+                        removeSentEventsFromQueue();
+
+                        // If saving fails now (or is already running and fails
+                        // later) // then we
+                        // may end up sending duplicate events later. // This
+                        // will
+                        // hopefully be very
+                        // rare.
+                        savingTask.start();
+                    }
+
+                    private void removeSentEventsFromQueue() {
+                        synchronized (sendQueue) {
+                            assert (eventsToRemoveAfterSend <= sendQueue.size());
+                            while (eventsToRemoveAfterSend > 0) {
+                                sendQueue.pop();
+                                eventsToRemoveAfterSend--;
+                            }
+                        }
+                    }
+
+                }, scheduler);
+
     }
 
     public void setSendingInterval(long interval) {
@@ -166,112 +291,5 @@ public class EventSendBuffer implements EventReceiver {
         }
 
     }
-
-    private SingletonTask sendingTask = new SingletonTask(new Runnable() { //
-                // Sending too many at once may go over the server's POST size
-                // limit.
-                private static final int MAX_EVENTS_PER_SEND = 500;
-
-                @Override
-                public void run() {
-                    System.out.println("Sending task...");
-                    // boolean shouldSendMore;
-                    //
-                    // do {
-                    // ArrayList<LoggableEvent> eventsToSend =
-                    // copyEventsToSendFromQueue();
-                    // if (eventsToSend.isEmpty()) {
-                    // return;
-                    // }
-                    //
-                    // synchronized (sendQueue) {
-                    // shouldSendMore = sendQueue.size() > eventsToSend.size();
-                    // }
-                    //
-                    // String url = pickDestinationUrl();
-                    // if (url == null) {
-                    // return;
-                    // }
-                    //
-                    // log.log(Level.INFO, "Sending {0} events to {1}", new
-                    // Object[] {eventsToSend.size(), url});
-                    //
-                    // doSend(eventsToSend, url);
-                    // } while (shouldSendMore);
-                }
-
-                private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
-                    synchronized (sendQueue) {
-                        ArrayList<LoggableEvent> eventsToSend = new ArrayList<LoggableEvent>(sendQueue.size());
-
-                        Iterator<LoggableEvent> i = sendQueue.iterator();
-                        while (i.hasNext() && eventsToSend.size() < MAX_EVENTS_PER_SEND) {
-                            eventsToSend.add(i.next());
-                        }
-
-                        eventsToRemoveAfterSend = eventsToSend.size();
-
-                        return eventsToSend;
-                    }
-                }
-
-                private String pickDestinationUrl() {
-                    Course course = Core.getCourseDAO().getCurrentCourse();
-                    if (course == null) {
-                        log.log(Level.FINE, "Not sending events because no course selected");
-                        return null;
-                    }
-
-                    List<String> urls = course.getSpywareUrls();
-                    if (urls == null || urls.isEmpty()) {
-                        log.log(Level.INFO, "Not sending events because no URL provided by server");
-                        return null;
-                    }
-
-                    String url = urls.get(random.nextInt(urls.size()));
-
-                    return url;
-                }
-
-                private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
-
-                    Core.getServerManager().sendEventLogs(url, eventsToSend);
-                    log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] {eventsToSend.size(), url});
-                    removeSentEventsFromQueue();
-
-                    // If saving fails now (or is already running and fails
-                    // later) // then we
-                    // may end up sending duplicate events later. // This will
-                    // hopefully be very
-                    // rare.
-                    savingTask.start();
-                }
-
-                private void removeSentEventsFromQueue() {
-                    synchronized (sendQueue) {
-                        assert (eventsToRemoveAfterSend <= sendQueue.size());
-                        while (eventsToRemoveAfterSend > 0) {
-                            sendQueue.pop();
-                            eventsToRemoveAfterSend--;
-                        }
-                    }
-                }
-
-            }, scheduler);
-
-    private SingletonTask savingTask = new SingletonTask(new Runnable() {
-
-        @Override
-        public void run() {
-            /*
-             * try { LoggableEvent[] eventsToSave; synchronized (sendQueue) {
-             * eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
-             * } eventStore.save(eventsToSave); } catch (IOException ex) {
-             * log.log(Level.WARNING, "Failed to save events", ex); }
-             */
-            System.out.println("Saving task...");
-
-        }
-    }, scheduler);
 
 }

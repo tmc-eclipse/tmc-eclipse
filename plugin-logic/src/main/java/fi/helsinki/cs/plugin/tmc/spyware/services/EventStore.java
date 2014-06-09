@@ -34,6 +34,9 @@ public class EventStore {
     public LoggableEvent[] load() throws IOException {
         StringWriter writer = new StringWriter();
         Reader reader = configFile.getReader();
+        if (reader == null) {
+            return new LoggableEvent[0];
+        }
         IOUtils.copy(reader, writer);
 
         LoggableEvent[] result = getGson().fromJson(writer.toString(), LoggableEvent[].class);

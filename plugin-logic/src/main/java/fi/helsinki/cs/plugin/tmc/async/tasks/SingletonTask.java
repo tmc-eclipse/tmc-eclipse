@@ -23,6 +23,7 @@ public class SingletonTask {
 
     public synchronized void setInterval(long delay) {
         unsetInterval();
+
         autostartTask = scheduler.scheduleWithFixedDelay(autostartRunnable, delay, delay, TimeUnit.MILLISECONDS);
     }
 
