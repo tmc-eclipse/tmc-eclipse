@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
@@ -39,7 +40,8 @@ public class SuccesfulSubmitDialog extends Dialog {
     protected Object result;
     protected Shell shell;
 
-    private int pointsAwarded;
+    private List<String> pointsAwarded;
+    private String feedbackUrl;
     private String modelSolutionUrl;
 
     private List<FeedbackQuestion> questions;
@@ -51,20 +53,24 @@ public class SuccesfulSubmitDialog extends Dialog {
      * @param parent
      * @param style
      */
-    public SuccesfulSubmitDialog(Shell parent) {
+    public SuccesfulSubmitDialog(Shell parent, String title) {
         super(parent, SWT.SHEET);
 
         questions = new ArrayList<FeedbackQuestion>();
         answers = new ArrayList<FeedbackAnswer>();
 
-        pointsAwarded = 0;
+        pointsAwarded = new ArrayList<String>();
         modelSolutionUrl = "";
 
-        setText("Server results");
+        setText(title);
     }
 
-    public void setPointsAwarded(int pointsAwarded) {
+    public void setPointsAwarded(List<String> pointsAwarded) {
         this.pointsAwarded = pointsAwarded;
+    }
+
+    public void SetFeedbackUrl(String url) {
+        this.feedbackUrl = url;
     }
 
     public void setModelSolutionUrl(String modelSolutionUrl) {
@@ -76,7 +82,13 @@ public class SuccesfulSubmitDialog extends Dialog {
     }
 
     public List<FeedbackAnswer> getFeedbackAnswers() {
-        return answers;
+        List<FeedbackAnswer> answered = new ArrayList<FeedbackAnswer>();
+        for (FeedbackAnswer answer : answers) {
+            if (!answer.getAnswer().isEmpty()) {
+                answered.add(answer);
+            }
+        }
+        return answered;
     }
 
     /**
@@ -112,12 +124,12 @@ public class SuccesfulSubmitDialog extends Dialog {
         testStatusLabel.setBounds(53, 10, 301, 37);
 
         Label imageLabel = new Label(shell, SWT.NONE);
-        imageLabel.setImage(ResourceManager.getPluginImage("eclipse-plugin", "resources/smile.gif"));
+        imageLabel.setImage(ResourceManager.getPluginImage("eclipse-plugin", "icons/smile.gif"));
         imageLabel.setBounds(10, 0, 37, 47);
 
         Label pointsAwardedLabel = new Label(shell, SWT.NONE);
         pointsAwardedLabel.setBounds(10, 53, 344, 17);
-        pointsAwardedLabel.setText("Points permanently awarded: " + pointsAwarded + ".");
+        pointsAwardedLabel.setText(getPointsAwardedMessage());
 
         Button viewModelSolutionButton = new Button(shell, SWT.NONE);
         viewModelSolutionButton.setBounds(10, 76, 163, 29);
@@ -141,11 +153,24 @@ public class SuccesfulSubmitDialog extends Dialog {
         closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                TaskStarter.startFeedbackSubmissionTask(getFeedbackAnswers(), feedbackUrl);
                 shell.close();
             }
+
         });
         closeButton.setBounds(290, 10 + heightOffset, 64, 29);
 
+    }
+
+    private String getPointsAwardedMessage() {
+        StringBuilder b = new StringBuilder();
+        b.append("Points permanently awarded:");
+        for (String point : pointsAwarded) {
+            b.append(" " + point);
+        }
+
+        b.append(".");
+        return b.toString();
     }
 
     private void openUrl(String modelSolutionUrl) {
@@ -273,5 +298,9 @@ public class SuccesfulSubmitDialog extends Dialog {
                 answer.setAnswer(value);
             }
         }
+    }
+
+    public void setFeedbackQuestions(List<FeedbackQuestion> feedbackQuestions) {
+        questions = feedbackQuestions;
     }
 }

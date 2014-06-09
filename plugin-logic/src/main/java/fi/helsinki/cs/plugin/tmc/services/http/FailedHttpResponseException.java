@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 
-public class FailedHttpResponseException extends Exception {
+public class FailedHttpResponseException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     private final int statusCode;
     private final HttpEntity entity;

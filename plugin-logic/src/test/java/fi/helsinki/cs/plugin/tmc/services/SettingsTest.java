@@ -20,6 +20,8 @@ import java.util.prefs.Preferences;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+
 public class SettingsTest {
 
     Preferences prefs;
@@ -29,6 +31,7 @@ public class SettingsTest {
     public void setUp() {
         prefs = mock(Preferences.class);
         settings = new Settings(prefs);
+        when(prefs.getBoolean(Settings.PREF_KEY_SAVE_PASSWORD, true)).thenReturn(true);
     }
 
     @Test
@@ -81,14 +84,12 @@ public class SettingsTest {
         when(prefs.get(Settings.PREF_KEY_PASSWORD, "")).thenReturn("correct");
         assertEquals("correct", settings.getPassword());
         verify(prefs, times(1)).get(Settings.PREF_KEY_PASSWORD, "");
-        verifyNoMoreInteractions(prefs);
     }
 
     @Test
     public void canSavePassword() {
         settings.setPassword("password123");
         verify(prefs, times(1)).put(Settings.PREF_KEY_PASSWORD, "password123");
-        verifyNoMoreInteractions(prefs);
     }
 
     @Test
@@ -162,7 +163,8 @@ public class SettingsTest {
     @Test
     public void canSaveExerciseFilePath() throws IOException {
         settings.setExerciseFilePath("path");
-        verify(prefs, times(1)).put(Settings.PREF_KEY_EXERCISE_FILEPATH, new File("path").getCanonicalPath());
+        verify(prefs, times(1)).put(Settings.PREF_KEY_EXERCISE_FILEPATH,
+                FileUtil.getUnixPath(new File("path").getCanonicalPath()));
         verifyNoMoreInteractions(prefs);
     }
 

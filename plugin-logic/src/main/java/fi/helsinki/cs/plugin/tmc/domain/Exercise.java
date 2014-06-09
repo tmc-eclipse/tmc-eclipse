@@ -16,6 +16,8 @@ public class Exercise implements Serializable {
 
     private String name;
 
+    private transient Course course;
+
     private String courseName;
 
     private Date deadlineDate;
@@ -153,6 +155,14 @@ public class Exercise implements Serializable {
 
     public ExerciseKey getKey() {
         return new ExerciseKey(courseName, name);
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public String getCourseName() {

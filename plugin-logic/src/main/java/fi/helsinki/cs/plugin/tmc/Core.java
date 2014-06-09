@@ -2,10 +2,9 @@ package fi.helsinki.cs.plugin.tmc;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskRunner;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
-import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
-import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
 public final class Core {
@@ -15,24 +14,29 @@ public final class Core {
     private TMCErrorHandler errorHandler;
     private BackgroundTaskRunner taskRunner;
     private Settings settings;
-    private CourseFetcher courseFetcher;
-    private ExerciseFetcher exerciseFetcher;
+    // private CourseFetcher courseFetcher;
+    // private ExerciseFetcher exerciseFetcher;
 
     private CourseDAO courseDAO;
     private ProjectDAO projectDAO;
 
     private ServerManager server;
 
+    private Updater updater;
+
     private Core() {
         ServiceFactory factory = new ServiceFactory();
         this.settings = factory.getSettings();
-        this.courseFetcher = factory.getCourseFetcher();
-        this.exerciseFetcher = factory.getExerciseFetcher();
+        // this.courseFetcher = factory.getCourseFetcher();
+        // this.exerciseFetcher = factory.getExerciseFetcher();
 
         this.courseDAO = factory.getCourseDAO();
         this.projectDAO = factory.getProjectDAO();
 
         this.server = factory.getServerManager();
+        this.updater = factory.getUpdater();
+
+        this.errorHandler = new DummyErrorHandler();
     }
 
     public static void setErrorHandler(TMCErrorHandler errorHandler) {
@@ -55,14 +59,6 @@ public final class Core {
         return Core.getInstance().settings;
     }
 
-    public static CourseFetcher getCourseFetcher() {
-        return Core.getInstance().courseFetcher;
-    }
-
-    public static ExerciseFetcher getExerciseFetcher() {
-        return Core.getInstance().exerciseFetcher;
-    }
-
     public static CourseDAO getCourseDAO() {
         return Core.getInstance().courseDAO;
     }
@@ -73,6 +69,10 @@ public final class Core {
 
     public static ServerManager getServerManager() {
         return Core.getInstance().server;
+    }
+
+    public static Updater getUpdater() {
+        return Core.getInstance().updater;
     }
 
     public static Core getInstance() {

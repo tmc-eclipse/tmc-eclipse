@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.services.http;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +14,15 @@ import com.google.gson.JsonParser;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
+import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
@@ -29,8 +33,8 @@ public class ServerManager {
         this.mapper = mapper;
     }
 
-    public ServerManager() {
-        this(new Gson(), new ConnectionBuilder());
+    public ServerManager(Settings settings) {
+        this(new Gson(), new ConnectionBuilder(settings));
     }
 
     public List<Course> getCourses() {
@@ -104,8 +108,30 @@ public class ServerManager {
 
     public SubmissionResult getSubmissionResult(URI resultURI) {
         String json = getString(resultURI.toString());
-        System.out.println("Submission result json: " + json);
         return (new SubmissionResultParser()).parseFromJson(json);
+    }
+
+    public String submitFeedback(String answerUrl, List<FeedbackAnswer> answers) {
+
+        final String submitUrl = connectionBuilder.addApiCallQueryParameters(answerUrl);
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        for (int i = 0; i < answers.size(); ++i) {
+            String keyPrefix = "answers[" + i + "]";
+            FeedbackAnswer answer = answers.get(i);
+            params.put(keyPrefix + "[question_id]", "" + answer.getQuestion().getId());
+            params.put(keyPrefix + "[answer]", answer.getAnswer());
+        }
+
+        try {
+            return connectionBuilder.createConnection().postForText(submitUrl, params);
+        } catch (FailedHttpResponseException e) {
+            return checkForObsoleteClient(e);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occured while submitting feedback: " + e.getMessage());
+        }
+
     }
 
     private byte[] getBytes(String url) {
@@ -123,12 +149,43 @@ public class ServerManager {
         String json;
         try {
             json = connectionBuilder.createConnection().getForText(url);
+        } catch (FailedHttpResponseException fhre) {
+            if (fhre.getStatusCode() == 403) {
+                throw new UserVisibleException("Authentication failed - check your username and password.");
+            }
+            if (fhre.getStatusCode() == 404) {
+                throw new UserVisibleException("Could not connect to server - check your TMC server address.");
+            }
+            if (fhre.getStatusCode() == 500) {
+                throw new UserVisibleException(
+                        "An error occurred while trying to refresh courses. Please try again later.");
+            }
+            json = "";
+        } catch (IllegalStateException ise) {
+            throw new UserVisibleException("Could not connect to server - check your TMC server address.");
         } catch (Exception e) {
-            // TODO: Better errorhandling?
             e.printStackTrace();
             json = "";
         }
+
         return json;
+    }
+
+    private <T> T checkForObsoleteClient(FailedHttpResponseException ex) throws ObsoleteClientException,
+            FailedHttpResponseException {
+        if (ex.getStatusCode() == 404) {
+            boolean obsolete;
+            try {
+                obsolete = new JsonParser().parse(ex.getEntityAsString()).getAsJsonObject().get("obsolete_client")
+                        .getAsBoolean();
+            } catch (Exception ex2) {
+                obsolete = false;
+            }
+            if (obsolete) {
+                throw new ObsoleteClientException();
+            }
+        }
+        throw ex;
     }
 
 }

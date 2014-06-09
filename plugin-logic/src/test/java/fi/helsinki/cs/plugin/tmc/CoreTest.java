@@ -27,18 +27,8 @@ public class CoreTest {
     }
 
     @Test
-    public void courseFetcherNotNullAfterSingletonInitialization() {
-        assertNotNull(core.getCourseFetcher());
-    }
-
-    @Test
     public void coursesNotNullAfterSingletonInitialization() {
         assertNotNull(core.getCourseDAO());
-    }
-
-    @Test
-    public void exerciseFetcherNotNullAfterSingletonInitialization() {
-        assertNotNull(core.getExerciseFetcher());
     }
 
     @Test

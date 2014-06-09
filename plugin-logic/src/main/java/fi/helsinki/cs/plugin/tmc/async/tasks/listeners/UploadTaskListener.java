@@ -17,7 +17,6 @@ public class UploadTaskListener implements BackgroundTaskListener {
 
     @Override
     public void onBegin() {
-        System.out.println("OnBegin");
 
     }
 
@@ -29,19 +28,21 @@ public class UploadTaskListener implements BackgroundTaskListener {
         if (result == null) {
             return;
         }
-
-        uiInvoker.invokeTestResultWindow(result);
+        String exerciseName = task.getProject().getExercise().getName();
+        uiInvoker.invokeTestResultWindow(result.getTestCases());
 
         if (result.allTestCasesSucceeded()) {
-            uiInvoker.invokeAllTestsPassedWindow(result);
+            uiInvoker.invokeAllTestsPassedWindow(result, exerciseName);
+        } else if (result.allTestCasesFailed()) {
+            uiInvoker.invokeAllTestsFailedWindow(result, exerciseName);
+        } else {
+            uiInvoker.invokeSomeTestsFailedWindow(result, exerciseName);
         }
 
     }
 
     @Override
     public void onFailure() {
-        System.out.println("OnFailure");
-
+        // error messages handled by the task; no need to do anything here
     }
-
 }

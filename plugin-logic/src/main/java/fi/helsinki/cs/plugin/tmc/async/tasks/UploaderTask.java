@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc.async.tasks;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 
@@ -13,8 +14,6 @@ public class UploaderTask implements BackgroundTask {
     private TaskFeedback progress;
     private String description = "Uploading exercises";
     private String path;
-
-    SubmissionResult result;
 
     public interface StopStatus {
         boolean mustStop();
@@ -44,12 +43,16 @@ public class UploaderTask implements BackgroundTask {
 
     }
 
-    public int run() {
+    private int run() {
+
         try {
-            uploader.zipProjects(path);
+            uploader.setProject(Core.getProjectDAO().getProjectByFile(path));
+            uploader.zipProjects();
+
             if (!isRunning()) {
                 return BackgroundTask.RETURN_FAILURE;
             }
+
             progress.incrementProgress(1);
 
             uploader.handleSumissionResponse();
@@ -58,29 +61,35 @@ public class UploaderTask implements BackgroundTask {
             }
             progress.incrementProgress(1);
 
-            result = uploader.handleSubmissionResult(new StopStatus() {
+            uploader.handleSubmissionResult(new StopStatus() {
+
                 @Override
                 public boolean mustStop() {
                     return !isRunning();
                 }
             });
 
-            if (result == null) {
+            if (getResult() == null) {
                 return BackgroundTask.RETURN_FAILURE;
             }
 
             progress.incrementProgress(1);
 
         } catch (Exception ex) {
-            Core.getErrorHandler().raise("An error occurred while uploading exercises: " + ex.getMessage());
-            ex.printStackTrace();
+            Core.getErrorHandler().raise("An error occurred while uploading exercises:\n" + ex.getMessage());
+            return BackgroundTask.RETURN_FAILURE;
         }
 
         return BackgroundTask.RETURN_SUCCESS;
+
     }
 
     public SubmissionResult getResult() {
-        return result;
+        return uploader.getResult();
+    }
+
+    public Project getProject() {
+        return uploader.getProject();
     }
 
     @Override

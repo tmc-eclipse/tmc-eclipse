@@ -27,7 +27,11 @@ public class Settings {
     public static final String PREF_ERROR_MSG_LOCALE = "errorMsgLocale";
     public static final String[] AVAILABLE_LOCALES = new String[] {"English", "Finnish"};
     public static final int DEFAULT_LOCALE_NUM = 1;
+    public static final String PREF_KEY_SAVE_PASSWORD = "savePassword";
+
     private Preferences prefs;
+
+    private String temporaryPassword;
 
     /**
      * Returns the user preferences from the default storage for the current
@@ -47,6 +51,7 @@ public class Settings {
 
     public Settings(Preferences prefs) {
         this.prefs = prefs;
+        this.temporaryPassword = "";
     }
 
     public String getExerciseFilePath() {
@@ -82,10 +87,17 @@ public class Settings {
     }
 
     public String getPassword() {
+        if (!isSavePassword()) {
+            return temporaryPassword;
+        }
         return prefs.get(PREF_KEY_PASSWORD, "");
     }
 
     public void setPassword(String password) {
+        if (!isSavePassword()) {
+            this.temporaryPassword = password;
+            return;
+        }
         prefs.put(PREF_KEY_PASSWORD, password);
     }
 
@@ -127,6 +139,14 @@ public class Settings {
 
     public void setIsDetailedSpywareEnabled(boolean value) {
         prefs.putBoolean(PREF_KEY_DETAILED_SPYWARE_ENABLED, value);
+    }
+
+    public boolean isSavePassword() {
+        return prefs.getBoolean(PREF_KEY_SAVE_PASSWORD, true);
+    }
+
+    public void setSavePassword(boolean value) {
+        prefs.putBoolean(PREF_KEY_SAVE_PASSWORD, value);
     }
 
     public int getDefaultLocaleNum() {

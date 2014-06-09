@@ -1,38 +1,46 @@
 package tmc.ui;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Text;
 
-import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestRunnerComposite extends Composite {
 
-    private final int PROGRESS_BAR_MULTIPLIER = 7;
+    private final int PROGRESS_BAR_MULTIPLIER = 3;
 
     private ScrolledComposite scrolledComposite;
     private ProgressBar progressBar;
     private Label lblTestspassed;
-    private Button btnShowAllTests;
-    private Text resultText;
+
+    // private GC gc;
 
     private int howManyTestsPassedPercent;
-    private double howManyTestsPassedCount = 4;
-    private double howManyTestsRan = 8;
+    private double howManyTestsPassedCount = 0;
+    private double howManyTestsRan = 0;
 
-    private SubmissionResult result;
+    private List<TestCaseResult> results;
     private boolean showAllTests = false;
+
+    private int heightOffset = 0;
+    private Composite parent;
+    private int style;
 
     /**
      * Create the composite.
@@ -40,24 +48,53 @@ public class TestRunnerComposite extends Composite {
      * @param parent
      * @param style
      */
-    public TestRunnerComposite(Composite parent, int style) {
+    public TestRunnerComposite(final Composite parent, int style) {
         super(parent, style);
+        this.parent = parent;
+        this.style = style;
+        makeScrolledComposite(parent);
+    }
+
+    private void createTestRunnerComposite(final Composite parent, int style) {
+
+        scrolledComposite.dispose();
+
+        this.setSize(parent.getSize().x, parent.getSize().y);
 
         progressBar = new ProgressBar(this, SWT.SMOOTH);
         progressBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
         progressBar.setMinimum(0);
-        progressBar.setMaximum(700);
+        progressBar.setMaximum(300);
         progressBar.setBounds(19, 33, 300, 30);
 
         progressBar.addPaintListener(new PaintListener() {
             @Override
             public void paintControl(PaintEvent e) {
+
+                System.out.println("--------------------");
+                System.out.println(e);
+                if (e.gc == null) {
+                    System.out.println("was null");
+                    e.gc = new GC(Display.getDefault());
+                }
+
+                Rectangle rectRed = parent.getChildren()[0].getShell().getClientArea();
+                System.out.println(e);
+                e.gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
+                e.gc.fillRectangle(rectRed);
+
+                Rectangle rectGreen = new Rectangle(parent.getShell().getClientArea().x, parent.getShell()
+                        .getClientArea().y, progressBar.getSelection(), parent.getShell().getClientArea().height);
+                e.gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+                e.gc.fillRectangle(rectGreen);
+
                 Point widgetSize = progressBar.getSize();
                 int percentage = progressBar.getSelection() / PROGRESS_BAR_MULTIPLIER;
                 String text = percentage + "%";
                 Point textSize = e.gc.stringExtent(text);
                 e.gc.setForeground(progressBar.getDisplay().getSystemColor(SWT.COLOR_BLACK));
                 e.gc.drawString(text, ((widgetSize.x - textSize.x) / 2), ((widgetSize.y - textSize.y) / 2), true);
+                System.out.println("--------------------");
             }
         });
 
@@ -72,55 +109,61 @@ public class TestRunnerComposite extends Composite {
                 } else {
                     showAllTests = false;
                 }
+                scrolledComposite.dispose();
+                makeScrolledComposite(parent);
                 showTestResults();
             }
         });
 
+        makeScrolledComposite(parent);
+
+    }
+
+    private void makeScrolledComposite(Composite parent) {
         scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-        scrolledComposite.setSize(680, 220);
-        scrolledComposite.setMinSize(680, 220);
-        scrolledComposite.setLocation(10, 69);
+        scrolledComposite.setSize(parent.getSize().x - 20, parent.getSize().y - 80);
+        scrolledComposite.setLocation(10, 70);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
+        scrolledComposite.setMinSize(0, 0);
         scrolledComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-
-        lblTestspassed = new Label(this, SWT.NONE);
-        lblTestspassed.setBounds(19, 10, 183, 17);
-
-        resultText = new Text(scrolledComposite, SWT.SMOOTH | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-
-        updateProgress();
-
     }
 
     public void resize() {
         scrolledComposite.setSize(this.getParent().getSize().x - 20, this.getParent().getSize().y - 80);
         scrolledComposite.redraw();
         this.update();
-
     }
 
     private void updateProgress() {
         howManyTestsPassedPercent = (int) ((howManyTestsPassedCount / howManyTestsRan) * 100);
+        if (lblTestspassed != null) {
+            lblTestspassed.dispose();
+        }
+        lblTestspassed = new Label(this, SWT.NONE);
+        lblTestspassed.setBounds(19, 10, 183, 17);
         lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
+        progressBar.notifyListeners(SWT.Paint, new Event());
     }
 
-    public void addSubmissionResult(SubmissionResult sr) {
-
-        result = sr;
+    public void addSubmissionResult(List<TestCaseResult> tcr) {
+        createTestRunnerComposite(this.parent, this.style);
+        results = tcr;
         showTestResults();
     }
 
     private void showTestResults() {
-        if (result == null) {
+        if (results == null) {
             return;
         }
+        heightOffset = 0;
         howManyTestsPassedCount = 0;
-        howManyTestsRan = result.getTestCases().size();
-
-        StringBuilder b = new StringBuilder();
-        for (TestCaseResult tcr : result.getTestCases()) {
+        howManyTestsRan = results.size();
+        Composite c = new Composite(scrolledComposite, SWT.BORDER);
+        c.setSize(scrolledComposite.getSize());
+        c.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+        for (TestCaseResult tcr : results) {
 
             if (tcr.isSuccessful()) {
                 ++howManyTestsPassedCount;
@@ -130,17 +173,57 @@ public class TestRunnerComposite extends Composite {
                 continue;
             }
 
-            b.append(tcr.getName());
-            b.append("\n");
-            b.append(tcr.getMessage());
-            b.append("\n\n");
+            addTestResult(tcr, c);
+        }
+        scrolledComposite.setContent(c);
+        updateProgress();
+    }
 
+    private void addTestResult(TestCaseResult tcr, Composite c) {
+        TestResultComposite comp = new TestResultComposite(c, SWT.SMOOTH, tcr);
+        int height = comp.getColorBar().getSize().y;
+        scrolledComposite.setMinHeight(scrolledComposite.getMinHeight() + height);
+        comp.setBounds(0, heightOffset, scrolledComposite.getClientArea().width, height);
+        heightOffset += height;
+    }
+
+    public void enlargeTestStack(TestResultComposite comp, TestCaseResult tcr) {
+
+        Composite composite = new Composite(scrolledComposite, SWT.BORDER);
+        composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+        composite.setSize(scrolledComposite.getSize());
+
+        int height = comp.getColorBar().getSize().y;
+
+        comp.setBounds(0, comp.getLocation().y, scrolledComposite.getClientArea().width, height);
+
+        Control[] c = ((Composite) scrolledComposite.getChildren()[0]).getChildren();
+
+        boolean found = false;
+        int newHeightOffset = 0;
+        int j = 0;
+
+        while (!comp.equals(c[j])) {
+            newHeightOffset += c[j].getSize().y;
+            j++;
         }
 
-        resultText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-        resultText.setSize(resultText.getParent().getSize().x, resultText.getParent().getSize().y);
-        resultText.setText(b.toString());
-        updateProgress();
+        newHeightOffset += comp.getSize().y;
+        for (int i = 0; i < c.length; i++) {
+
+            c[i].setParent(composite);
+            if (comp.equals(c[i])) {
+                found = true;
+            }
+            if (found && comp != c[i]) {
+                c[i].setBounds(0, newHeightOffset, scrolledComposite.getClientArea().width, c[i].getSize().y);
+                newHeightOffset += c[i].getSize().y;
+            }
+
+        }
+        scrolledComposite.setMinHeight(newHeightOffset);
+        scrolledComposite.setContent(composite);
+        scrolledComposite.getChildren()[0].dispose();
     }
 
     @Override

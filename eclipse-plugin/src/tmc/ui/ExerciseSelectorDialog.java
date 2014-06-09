@@ -13,11 +13,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
-import tmc.services.GenericProjectOpener;
+import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
+import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
-import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -26,6 +26,8 @@ public class ExerciseSelectorDialog extends Dialog {
     private Table table;
     private boolean buttonSelectsAll;
     private Button btnSelectAll;
+
+    private Button btnDownload;
 
     /**
      * Create the dialog.
@@ -98,7 +100,7 @@ public class ExerciseSelectorDialog extends Dialog {
         btnClose.setBounds(447, 236, 62, 29);
         btnClose.setText("Close");
 
-        Button btnDownload = new Button(shell, SWT.NONE);
+        btnDownload = new Button(shell, SWT.NONE);
         btnDownload.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -109,12 +111,20 @@ public class ExerciseSelectorDialog extends Dialog {
         btnDownload.setBounds(361, 236, 80, 29);
         btnDownload.setText("Download");
 
-        Core.getExerciseFetcher().updateExercisesForCurrentCourse();
-        for (Exercise ex : Core.getExerciseFetcher().getExercisesForCurrentCourse()) {
-            addTableItem(ex.getName());
-        }
+        try {
+            Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+            Core.getUpdater().updateExercises(currentCourse);
 
-        updateSelectAllButtonState();
+            if (currentCourse != null) {
+                for (Exercise e : currentCourse.getDownloadableExercises()) {
+                    addTableItem(e.getName());
+                }
+            }
+
+            updateSelectAllButtonState();
+        } catch (UserVisibleException uve) {
+
+        }
 
     }
 
@@ -137,11 +147,19 @@ public class ExerciseSelectorDialog extends Dialog {
         final ArrayList<Exercise> list = new ArrayList<Exercise>();
         for (int i = 0; i < table.getItemCount(); i++) {
             if (table.getItem(i).getChecked()) {
-                list.add(Core.getExerciseFetcher().getExerciseByName(table.getItem(i).getText()));
+                String exerciseName = table.getItem(i).getText();
+                Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+
+                if (currentCourse != null) {
+                    for (Exercise e : currentCourse.getExercises()) {
+                        if (e.getName().equals(exerciseName)) {
+                            list.add(e);
+                        }
+                    }
+                }
             }
         }
-        ProjectDownloader downloader = new ProjectDownloader(Core.getServerManager());
-        Core.getTaskRunner().runTask(new DownloaderTask(downloader, new GenericProjectOpener(), list));
+        TaskStarter.startExerciseDownloadTask(list);
     }
 
     private void selectUnselectAction() {
@@ -161,9 +179,11 @@ public class ExerciseSelectorDialog extends Dialog {
         if (isAnySelected()) {
             buttonSelectsAll = false;
             btnSelectAll.setText("Unselect all");
+            btnDownload.setEnabled(true);
         } else {
             buttonSelectsAll = true;
             btnSelectAll.setText("Select all");
+            btnDownload.setEnabled(false);
         }
     }
 

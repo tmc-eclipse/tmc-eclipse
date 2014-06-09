@@ -1,44 +1,29 @@
 package fi.helsinki.cs.plugin.tmc;
 
-import fi.helsinki.cs.plugin.tmc.domain.Course;
-import fi.helsinki.cs.plugin.tmc.domain.Project;
-import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
-import fi.helsinki.cs.plugin.tmc.services.CourseFetcher;
-import fi.helsinki.cs.plugin.tmc.services.ExerciseFetcher;
+import fi.helsinki.cs.plugin.tmc.services.DAOManager;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
-import fi.helsinki.cs.plugin.tmc.storage.CourseStorage;
-import fi.helsinki.cs.plugin.tmc.storage.DataSource;
-import fi.helsinki.cs.plugin.tmc.storage.ProjectStorage;
 
 public final class ServiceFactory {
-
-    public static final String LOCAL_COURSES_PATH = "courses.tmp";
-    public static final String LOCAL_PROJECTS_PATH = "projects.tmp";
 
     private Settings settings;
     private CourseDAO courseDAO;
     private ProjectDAO projectDAO;
-    private CourseFetcher courseFetcher;
-    private ExerciseFetcher exerciseFetcher;
     private ServerManager server;
+    private Updater updater;
 
     public ServiceFactory() {
-        this.server = new ServerManager();
         this.settings = Settings.getDefaultSettings();
+        this.server = new ServerManager(settings);
 
-        FileIO coursesFile = new FileIO(LOCAL_COURSES_PATH);
-        DataSource<Course> courseStorage = new CourseStorage(coursesFile);
-        this.courseDAO = new CourseDAO(courseStorage);
+        DAOManager manager = new DAOManager();
+        this.courseDAO = manager.getCourseDAO();
+        this.projectDAO = manager.getProjectDAO();
 
-        FileIO projectsFile = new FileIO(LOCAL_PROJECTS_PATH);
-        DataSource<Project> projectStorage = new ProjectStorage(projectsFile);
-        this.projectDAO = new ProjectDAO(projectStorage);
-
-        this.courseFetcher = new CourseFetcher(server, courseDAO);
-        this.exerciseFetcher = new ExerciseFetcher(server, courseDAO);
+        this.updater = new Updater(server, courseDAO, projectDAO);
     }
 
     public Settings getSettings() {
@@ -53,16 +38,12 @@ public final class ServiceFactory {
         return projectDAO;
     }
 
-    public CourseFetcher getCourseFetcher() {
-        return courseFetcher;
-    }
-
-    public ExerciseFetcher getExerciseFetcher() {
-        return exerciseFetcher;
-    }
-
     public ServerManager getServerManager() {
         return server;
+    }
+
+    public Updater getUpdater() {
+        return updater;
     }
 
 }
