@@ -81,15 +81,11 @@ public class TestRunnerComposite extends Composite {
             @Override
             public void paintControl(PaintEvent e) {
 
-                System.out.println("--------------------");
-                System.out.println(e);
                 if (e.gc == null) {
-                    System.out.println("was null");
                     e.gc = new GC(Display.getDefault());
                 }
 
                 Rectangle rectRed = parent.getChildren()[0].getShell().getClientArea();
-                System.out.println(e);
                 e.gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
                 e.gc.fillRectangle(rectRed);
 
@@ -104,7 +100,6 @@ public class TestRunnerComposite extends Composite {
                 Point textSize = e.gc.stringExtent(text);
                 e.gc.setForeground(progressBar.getDisplay().getSystemColor(SWT.COLOR_BLACK));
                 e.gc.drawString(text, ((widgetSize.x - textSize.x) / 2), ((widgetSize.y - textSize.y) / 2), true);
-                System.out.println("--------------------");
             }
         });
 

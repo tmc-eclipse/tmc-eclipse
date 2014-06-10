@@ -1,5 +1,9 @@
 package tmc.ui;
 
+import java.io.File;
+
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -13,7 +17,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
+import tmc.activator.CoreInitializer;
+import tmc.util.WorkbenchHelper;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestResultComposite extends Composite {
@@ -31,6 +42,9 @@ public class TestResultComposite extends Composite {
 
     private int heightOffset;
 
+    private WorkbenchHelper helper;
+    int howManyRows = 1;
+
     /**
      * Create the composite.
      * 
@@ -39,6 +53,11 @@ public class TestResultComposite extends Composite {
      */
     public TestResultComposite(Composite parent, int style, final TestCaseResult tcr) {
         super(parent, style);
+
+        howManyRows = 1;
+
+        this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
+
         setBackground(BACKGROUND);
 
         final GC gc = new GC(Display.getDefault());
@@ -63,9 +82,10 @@ public class TestResultComposite extends Composite {
             testResultMessage.setBackground(BACKGROUND);
             testResultMessage.setText(tcr.getMessage());
 
+            howManyRows = tcr.getMessage().split("\n").length;
             i = gc.stringExtent(testResultMessage.getText());
 
-            testResultMessage.setBounds(10, testResultName.getSize().y, parent.getSize().x, i.y);
+            testResultMessage.setBounds(10, testResultName.getSize().y, parent.getSize().x, i.y * howManyRows);
 
             showMoreBtn = new Button(this, SWT.SMOOTH);
             showMoreBtn.addSelectionListener(new SelectionAdapter() {
@@ -108,7 +128,7 @@ public class TestResultComposite extends Composite {
         Composite moreDetails = new Composite(this, SWT.SMOOTH);
         heightOffset = 0;
         for (StackTraceElement st : tcr.getException().stackTrace) {
-            if (st.isNativeMethod()) {
+            if (!st.getClassName().toLowerCase().contains("test") || st.getClassName().contains("fi.helsinki.cs.")) {
                 addMoreDetailsLink(moreDetails, st.toString(), st);
             } else {
                 addMoreDetailsLink(moreDetails, "<a href=\"\">" + st.toString() + "</a>", st);
@@ -133,35 +153,66 @@ public class TestResultComposite extends Composite {
         }
     }
 
-    public void addMoreDetailsLink(Composite parent, String text, StackTraceElement st) {
+    public void addMoreDetailsLink(Composite parent, String text, final StackTraceElement st) {
         Link moreDetailslink = new Link(parent, SWT.NONE);
         moreDetailslink.setText(text);
         moreDetailslink.setBackground(BACKGROUND);
-        moreDetailslink.setLocation(testResultMessage.getSize().x, heightOffset);
-        moreDetailslink.setBounds(0, heightOffset, testResultMessage.getSize().x, testResultMessage.getSize().y);
-        final String path = "";
+
+        // PlatformUI.getWorkbench().getActiveWorkbenchWindow().openPage(perspectiveId,
+        // input)
+
+        moreDetailslink.setLocation(testResultName.getSize().x, heightOffset);
+        moreDetailslink.setBounds(0, heightOffset, testResultName.getSize().x, testResultName.getSize().y);
+
+        final StringBuilder path = new StringBuilder();
+
+        path.append(getProjectRootPath() + "/");
+        if (!st.getClassName().contains("test.")) {
+            path.append("test/");
+        }
+        path.append(st.getClassName().replace('.', '/') + ".java");
+
         moreDetailslink.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                System.out.println("asd");
-                // Open default external browser
-                // IFileStore fileStore = EFS.getLocalFileSystem().getStore(new
-                // File(path).toURI());
-                // IWorkbenchPage page =
-                // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                // try {
-                // IDE.openEditorOnFileStore(page, fileStore);
-                // } catch (PartInitException e1) {
-                // // TODO Auto-generated catch block
-                // e1.printStackTrace();
-                // }
+                System.out.println(path.toString());
+                System.out.println(st.getClassName());
+                System.out.println(st.getFileName());
+                System.out.println(st.getMethodName());
+
+                File fileToOpen = new File(path.toString());
+
+                if (fileToOpen.exists() && fileToOpen.isFile()) {
+                    IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
+                    System.out.println(fileStore.toURI().toString());
+                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+
+                    try {
+                        IDE.openEditorOnFileStore(page, fileStore);
+                    } catch (PartInitException e1) {
+                        // Put your exception handler here if you wish to
+                    }
+                } else {
+                    // DO SOMETHING IF THE FILE DOES NOT EXIST
+                }
+
             }
         });
-        heightOffset += testResultMessage.getSize().y;
+        heightOffset += 20;
+    }
+
+    private String getProjectRootPath() {
+        Project project = helper.getActiveProject();
+        if (project == null) {
+            return "";
+        } else {
+            return project.getRootPath();
+        }
     }
 
     @Override
     protected void checkSubclass() {
         // Disable the check that prevents subclassing of SWT components
     }
+
 }

@@ -22,6 +22,10 @@ public class ClassPath {
         }
     }
 
+    public List<String> getSubPaths() {
+        return subPaths;
+    }
+
     public String toString() {
         if (subPaths.isEmpty()) {
             return "";
