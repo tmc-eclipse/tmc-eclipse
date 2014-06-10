@@ -95,12 +95,29 @@ public class Project {
         }
     }
 
+    public void setProjectFiles(List<String> files) {
+        projectFiles = Collections.unmodifiableList(files);
+    }
+
+    public List<String> getProjectFiles() {
+        return projectFiles;
+    }
+
     public void setExtraStudentFiles(List<String> files) {
         extraStudentFiles = Collections.unmodifiableList(files);
     }
 
     public List<String> getExtraStudentFiles() {
         return extraStudentFiles;
+    }
+
+    public boolean existsOnDisk() {
+        for (String file : projectFiles) {
+            if (file.replace(getRootPath(), "").contains("/src/")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
