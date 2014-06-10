@@ -15,7 +15,6 @@ public class SpywarePluginLayer implements Closeable {
     private EventReceiver receiver;
 
     public SpywarePluginLayer(ActiveThreadSet activeThreads) {
-
         this.activeThreads = activeThreads;
         receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("sikrit.tmp"))));
     }
