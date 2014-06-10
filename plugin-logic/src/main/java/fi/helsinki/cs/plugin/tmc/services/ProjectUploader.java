@@ -1,8 +1,10 @@
 package fi.helsinki.cs.plugin.tmc.services;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
+import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
@@ -13,6 +15,8 @@ import fi.helsinki.cs.plugin.tmc.services.http.SubmissionResponse;
 public class ProjectUploader {
 
     private ServerManager server;
+    private boolean asPaste = false;
+    private String pasteMessage;
 
     private static int SLEEP_DURATION = 40;
     private static int LOOP_COUNT = 2000 / SLEEP_DURATION;
@@ -50,7 +54,12 @@ public class ProjectUploader {
             throw new RuntimeException("Internal error: Invalid project or zip data");
         }
 
-        response = server.uploadFile(project.getExercise(), data);
+        if (asPaste) {
+            Map<String, String> extraParams = buildExtraParamsForPaste();
+            response = server.uploadFile(project.getExercise(), data, extraParams);
+        } else {
+            response = server.uploadFile(project.getExercise(), data);
+        }
     }
 
     public void handleSubmissionResult(StopStatus stopStatus) {
@@ -83,6 +92,10 @@ public class ProjectUploader {
         }
         return true;
     }
+    
+    public SubmissionResponse getResponse() {
+        return response;
+    }
 
     public SubmissionResult getResult() {
         return result;
@@ -90,5 +103,19 @@ public class ProjectUploader {
 
     public Project getProject() {
         return project;
+    }
+
+    public void setAsPaste(String pasteMessage) {
+        this.asPaste = true;
+        this.pasteMessage = pasteMessage;
+    }
+
+    private Map<String, String> buildExtraParamsForPaste() {
+        Map<String, String> extraParams = new HashMap<String, String>();
+        extraParams.put("paste", "1");
+        if (!pasteMessage.isEmpty()) {
+            extraParams.put("message_for_paste", pasteMessage);
+        }
+        return extraParams;
     }
 }

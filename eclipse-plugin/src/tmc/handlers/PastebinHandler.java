@@ -6,24 +6,30 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 import tmc.activator.CoreInitializer;
 import tmc.tasks.TaskStarter;
 import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 
-public class UploadHandler extends AbstractHandler {
-WorkbenchHelper helper;
+public class PastebinHandler extends AbstractHandler {
+	WorkbenchHelper helper;
 	
-	public UploadHandler(){
+	public PastebinHandler(){
 		this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
 		this.helper.initialize();
 	}
 
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+    public Object execute(ExecutionEvent event) throws ExecutionException {        
         if (helper.saveOpenFiles()) {
             Shell shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
-            TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
+            Project p = CoreInitializer.getDefault().getWorkbenchHelper().getActiveProject();
+            Exercise e = p.getExercise();
+            String exerciseName = e.getName();
+            new EclipseIdeUIInvoker(shell).invokeSendToPastebinWindow(exerciseName);
         }
         return null;
     }

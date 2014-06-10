@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import tmc.activator.CoreInitializer;
 import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
@@ -90,9 +91,27 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
                 if (dialog.submitExercises()) {
                     TaskStarter.startExerciseUploadTask(invoker);
                 }
-
             }
         });
     }
 
+    @Override
+    public void invokeSendToPastebinWindow(final String exerciseName) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                SendToPastebinDialog dialog = new SendToPastebinDialog(shell, exerciseName);
+                dialog.open();
+            }
+        });
+    }
+
+    @Override
+    public void invokePastebinResultDialog(final String pasteUrl) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                PastebinResultDialog dialog = new PastebinResultDialog(shell, pasteUrl);
+                dialog.open();
+            }
+        });
+    }
 }

@@ -20,7 +20,6 @@ public class TestrunnerListener implements BackgroundTaskListener {
     @Override
     public void onBegin() {
         // TODO: Popout "Running tests"
-        System.out.println("onBegin");
     }
 
     @Override
@@ -45,7 +44,6 @@ public class TestrunnerListener implements BackgroundTaskListener {
 
     @Override
     public void onFailure() {
-        System.out.println("onFailure");
         // TODO: Kill "Running tests"
         // TODO: Popout error
 
