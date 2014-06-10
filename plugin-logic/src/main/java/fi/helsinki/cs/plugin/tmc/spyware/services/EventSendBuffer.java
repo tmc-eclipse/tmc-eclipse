@@ -17,7 +17,6 @@ import com.google.common.collect.Iterables;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
-import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
 
 /**
@@ -27,7 +26,7 @@ import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
 public class EventSendBuffer implements EventReceiver {
     private static final Logger log = Logger.getLogger(EventSendBuffer.class.getName());
 
-    public static final long DEFAULT_SEND_INTERVAL = 3 * 60 * 1000;
+    public static final long DEFAULT_SEND_INTERVAL = 3 * 6 * 1000;
     public static final long DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
     public static final int DEFAULT_MAX_EVENTS = 64 * 1024;
     public static final int DEFAULT_AUTOSEND_THREHSOLD = DEFAULT_MAX_EVENTS / 2;
@@ -84,9 +83,6 @@ public class EventSendBuffer implements EventReceiver {
                 } catch (IOException ex) {
                     log.log(Level.WARNING, "Failed to save events", ex);
                 }
-
-                System.out.println("Saving task...");
-
             }
         }, scheduler);
 
@@ -98,31 +94,27 @@ public class EventSendBuffer implements EventReceiver {
 
                     @Override
                     public void run() {
-                        System.out.println("Sending task...");
-                        // boolean shouldSendMore;
-                        //
-                        // do {
-                        // ArrayList<LoggableEvent> eventsToSend =
-                        // copyEventsToSendFromQueue();
-                        // if (eventsToSend.isEmpty()) {
-                        // return;
-                        // }
-                        //
-                        // synchronized (sendQueue) {
-                        // shouldSendMore = sendQueue.size() >
-                        // eventsToSend.size();
-                        // }
-                        //
-                        // String url = pickDestinationUrl();
-                        // if (url == null) {
-                        // return;
-                        // }
-                        //
-                        // log.log(Level.INFO, "Sending {0} events to {1}", new
-                        // Object[] {eventsToSend.size(), url});
-                        //
-                        // doSend(eventsToSend, url);
-                        // } while (shouldSendMore);
+                        boolean shouldSendMore;
+
+                        do {
+                            ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
+                            if (eventsToSend.isEmpty()) {
+                                return;
+                            }
+
+                            synchronized (sendQueue) {
+                                shouldSendMore = sendQueue.size() > eventsToSend.size();
+                            }
+
+                            String url = pickDestinationUrl();
+                            if (url == null) {
+                                return;
+                            }
+
+                            log.log(Level.INFO, "Sending {0} events to {1}", new Object[] {eventsToSend.size(), url});
+
+                            doSend(eventsToSend, url);
+                        } while (shouldSendMore);
                     }
 
                     private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
@@ -141,28 +133,36 @@ public class EventSendBuffer implements EventReceiver {
                     }
 
                     private String pickDestinationUrl() {
-                        Course course = Core.getCourseDAO().getCurrentCourse();
-                        if (course == null) {
-                            log.log(Level.FINE, "Not sending events because no course selected");
-                            return null;
-                        }
-
-                        List<String> urls = course.getSpywareUrls();
-                        if (urls == null || urls.isEmpty()) {
-                            log.log(Level.INFO, "Not sending events because no URL provided by server");
-                            return null;
-                        }
-
-                        String url = urls.get(random.nextInt(urls.size()));
-
-                        return url;
+                        /*
+                         * Course course =
+                         * Core.getCourseDAO().getCurrentCourse(); if (course ==
+                         * null) { log.log(Level.FINE,
+                         * "Not sending events because no course selected");
+                         * return null; }
+                         * 
+                         * List<String> urls = course.getSpywareUrls(); if (urls
+                         * == null || urls.isEmpty()) { log.log(Level.INFO,
+                         * "Not sending events because no URL provided by server"
+                         * ); return null; }
+                         * 
+                         * String url = urls.get(random.nextInt(urls.size()));
+                         * 
+                         * return url;
+                         */
+                        return "http://127.0.0.1:3101";
                     }
 
                     private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
 
-                        Core.getServerManager().sendEventLogs(url, eventsToSend);
-                        log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] {eventsToSend.size(),
-                                url});
+                        try {
+                            Core.getServerManager().sendEventLogs(url, eventsToSend);
+                            log.log(Level.INFO, "Sent {0} events successfully to {1}",
+                                    new Object[] {eventsToSend.size(), url});
+
+                        } catch (Exception ex) {
+                            log.log(Level.INFO, "Failed to send {0} events to {1}: " + ex.getMessage(), new Object[] {
+                                    eventsToSend.size(), url});
+                        }
                         removeSentEventsFromQueue();
 
                         // If saving fails now (or is already running and fails
@@ -244,7 +244,9 @@ public class EventSendBuffer implements EventReceiver {
 
     @Override
     public void receiveEvent(LoggableEvent event) {
+        System.out.println("EventSendBuffer received an event");
         if (!Core.getSettings().isSpywareEnabled()) {
+            System.out.println("Spyware disabled, bailing out");
             return;
         }
 

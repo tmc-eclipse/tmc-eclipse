@@ -59,7 +59,7 @@ class EventDataVisitor implements IResourceDeltaVisitor {
         }
 
         if (currentFilePath.equals("")) {
-            currentFilePath = res.getFullPath().toString();
+            currentFilePath = res.getLocation().toString();
         }
 
         return true; // visit the children; ultimately we care about the leaf

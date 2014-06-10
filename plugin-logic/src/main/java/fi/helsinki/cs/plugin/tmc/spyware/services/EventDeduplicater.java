@@ -9,9 +9,9 @@ import java.util.Map;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ExceptionUtils;
 
 /**
-* Forwards events to another receiver but discards consecutive events with the same key and data.
-* Only applied to certain event sources.
-*/
+ * Forwards events to another receiver but discards consecutive events with the
+ * same key and data. Only applied to certain event sources.
+ */
 public class EventDeduplicater implements EventReceiver {
     private EventReceiver nextReceiver;
 
@@ -45,5 +45,5 @@ public class EventDeduplicater implements EventReceiver {
     @Override
     public void close() {
     }
-    
+
 }

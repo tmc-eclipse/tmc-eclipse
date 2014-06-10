@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
@@ -64,14 +63,13 @@ public class SnapshotTaker {
             return;
         }
 
-        Project project = Core.getProjectDAO().getProjectByFile(info.getCurrentFilePath());
+        String path = info.getCurrentFilePath();
+        Project project = Core.getProjectDAO().getProjectByFile(path);
 
         // Note: Should *only* log TMC courses.
         if (project == null) {
             return;
         }
-
-        Exercise exercise = project.getExercise();
 
         SnapshotThread thread = new SnapshotThread(receiver, project, metadata);
         threadSet.addThread(thread);

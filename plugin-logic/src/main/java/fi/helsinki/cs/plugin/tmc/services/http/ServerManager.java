@@ -147,8 +147,10 @@ public class ServerManager {
 
         String fullUrl = connectionBuilder.addApiCallQueryParameters(url);
 
-        fullUrl = UriUtils.withQueryParam(fullUrl, "username", Core.getSettings().getUsername());
-        fullUrl = UriUtils.withQueryParam(fullUrl, "password", Core.getSettings().getPassword());
+        Map<String, String> extraHeaders = new LinkedHashMap<String, String>();
+        extraHeaders.put("X-Tmc-Version", "1");
+        extraHeaders.put("X-Tmc-Username", Core.getSettings().getUsername());
+        extraHeaders.put("X-Tmc-Password", Core.getSettings().getPassword());
 
         byte[] data;
         try {
@@ -158,9 +160,9 @@ public class ServerManager {
         }
 
         try {
-            connectionBuilder.createConnection().rawPostForText(fullUrl, data);
+            connectionBuilder.createConnection().postForText(fullUrl, data, extraHeaders);
         } catch (Exception e) {
-            // die silently, no need to bother user
+            throw new RuntimeException("An error occured while submitting snapshot: " + e.getMessage());
         }
     }
 

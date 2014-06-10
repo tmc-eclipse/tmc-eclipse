@@ -35,11 +35,11 @@ public class ResourceEventListener implements IResourceChangeListener {
             return;
         }
 
-        if (!visitor.isBuildEvent()) {
-            Core.getSpyware().takeSnapshot(
-                    new SnapshotInfo(visitor.getProjectName(), visitor.getOldFilePath(), visitor.getFilePath(),
-                            getEditorData(), visitor.getType()));
-        }
+        // if (!visitor.isBuildEvent()) {
+        Core.getSpyware().takeSnapshot(
+                new SnapshotInfo(visitor.getProjectName(), visitor.getOldFilePath(), visitor.getFilePath(),
+                        getEditorData(), visitor.getType()));
+        // }
     }
 
     private String getEditorData() {
