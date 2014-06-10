@@ -19,6 +19,7 @@ class EventDataVisitor implements IResourceDeltaVisitor {
 
     private String oldPath;
     private String currentPath;
+    private String relativeCurrentPath;
 
     public EventDataVisitor() {
         this.done = false;
@@ -58,6 +59,7 @@ class EventDataVisitor implements IResourceDeltaVisitor {
 
     private void changed(IResourceDelta delta) {
         if ((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
+            createPaths(delta);
             type = ChangeType.FILE_CHANGE;
         }
     }
@@ -110,7 +112,7 @@ class EventDataVisitor implements IResourceDeltaVisitor {
 
     private void fileAdded(IResourceDelta delta) {
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-            currentPath = delta.getResource().getLocation().toString();
+            createPaths(delta);
             type = ChangeType.FILE_RENAME;
         } else {
             type = ChangeType.FILE_CREATE;
@@ -120,11 +122,16 @@ class EventDataVisitor implements IResourceDeltaVisitor {
     private void folderAdded(IResourceDelta delta) {
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
             type = ChangeType.FOLDER_RENAME;
-            currentPath = delta.getResource().getLocation().toString();
+            createPaths(delta);
             folderRenamingHandler();
         } else {
             type = ChangeType.FOLDER_CREATE;
         }
+    }
+    
+    private void createPaths(IResourceDelta delta) {
+        currentPath = delta.getResource().getLocation().toString();
+        relativeCurrentPath = delta.getResource().getFullPath().toString();
     }
 
     public String getOldPath() {
@@ -133,5 +140,9 @@ class EventDataVisitor implements IResourceDeltaVisitor {
 
     public String getCurrentPath() {
         return currentPath;
+    }
+    
+    public String getCurrentRelativePath() {
+        return relativeCurrentPath;
     }
 }

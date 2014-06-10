@@ -37,7 +37,7 @@ public class ResourceEventListener implements IResourceChangeListener {
 
         Core.getSpyware().takeSnapshot(
                 new SnapshotInfo(visitor.getProjectName(), visitor.getOldPath(), visitor.getCurrentPath(),
-                        getEditorData(), visitor.getType()));
+                        visitor.getCurrentRelativePath(), visitor.getType()));
     }
 
     private String getEditorData() {
