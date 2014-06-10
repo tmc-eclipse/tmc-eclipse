@@ -5,16 +5,21 @@ public class SnapshotInfo {
     private final String oldFilePath; // empty string unless rename operation,
                                       // then it contains old path
     private final String currentFilePath; // path to file that triggered the
-    private final String relativePath; // operation; in case of rename, the
-                                          // current name
+
+    private final String oldFullFilePath;
+    private final String currentFullFilePath; // operation; in case of rename,
+                                              // the
+    // current name
     private final ChangeType type;
 
-    public SnapshotInfo(String projectName, String oldFilePath, String currentFilePath, String relativePath, ChangeType type) {
+    public SnapshotInfo(String projectName, String oldFilePath, String currentFilePath, String oldFullFilePath,
+            String fullFilePath, ChangeType type) {
         this.projectName = projectName;
         this.oldFilePath = oldFilePath;
         this.currentFilePath = currentFilePath;
         this.type = type;
-        this.relativePath = "";
+        this.oldFullFilePath = oldFullFilePath;
+        this.currentFullFilePath = fullFilePath;
     }
 
     public String getProjectName() {
@@ -24,9 +29,13 @@ public class SnapshotInfo {
     public String getOldFilePath() {
         return oldFilePath;
     }
-    
-    public String getRelativePath(){
-        return relativePath;
+
+    public String getCurrentFullFilePath() {
+        return currentFullFilePath;
+    }
+
+    public String getOldFullFilePath() {
+        return currentFullFilePath;
     }
 
     public String getCurrentFilePath() {

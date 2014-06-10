@@ -44,7 +44,7 @@ public class SnapshotTaker {
         String metadata = JsonMaker.create().add("cause", info.getChangeType().name().toLowerCase())
                 .add("file", info.getCurrentFilePath()).toString();
 
-        startSnapshotThread(metadata);
+        startSnapshotThread(metadata, info.getCurrentFullFilePath());
 
     }
 
@@ -53,16 +53,15 @@ public class SnapshotTaker {
         String metadata = JsonMaker.create().add("cause", info.getChangeType().name().toLowerCase())
                 .add("file", info.getCurrentFilePath()).add("previous_name", info.getOldFilePath()).toString();
 
-        startSnapshotThread(metadata);
+        startSnapshotThread(metadata, info.getOldFullFilePath());
 
     }
 
-    private void startSnapshotThread(final String metadata) {
+    private void startSnapshotThread(final String metadata, String path) {
         if (!Core.getSettings().isSpywareEnabled()) {
             return;
         }
 
-        String path = info.getCurrentFilePath();
         Project project = Core.getProjectDAO().getProjectByFile(path);
 
         // Note: Should *only* log TMC courses.

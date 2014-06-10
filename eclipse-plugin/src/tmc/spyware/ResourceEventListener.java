@@ -3,12 +3,8 @@ package tmc.spyware;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
 
+import tmc.spyware.EventDataVisitor.EventData;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 
@@ -35,36 +31,17 @@ public class ResourceEventListener implements IResourceChangeListener {
             return;
         }
 
-        Core.getSpyware().takeSnapshot(
-                new SnapshotInfo(visitor.getProjectName(), visitor.getOldPath(), visitor.getCurrentPath(),
-                        visitor.getCurrentRelativePath(), visitor.getType()));
-    }
+        for (EventData data : visitor.getEvents()) {
+            System.out.println("visitor.getOldPath(): " + data.oldPath);
+            System.out.println("visitor.getCurrentPath(): " + data.currentPath);
+            System.out.println("visitor.getFullOldPath(): " + data.fullOldPath);
+            System.out.println("visitor.getCurrentFullPath(): " + data.fullCurrentPath);
+            System.out.println("visitor.getType(): " + data.type);
+            Core.getSpyware().takeSnapshot(
+                    new SnapshotInfo(visitor.getProjectName(), data.oldPath, data.currentPath, data.fullOldPath,
+                            data.fullCurrentPath, data.type));
 
-    private String getEditorData() {
-
-        IWorkbenchWindow activeWorkbench = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (activeWorkbench == null) {
-            return "";
         }
-
-        final IEditorPart activeEditor = activeWorkbench.getActivePage().getActiveEditor();
-
-        if (activeEditor == null) {
-            return "";
-        }
-
-        if (!(activeEditor instanceof ITextEditor)) {
-            return "";
-        }
-
-        ITextEditor ite = (ITextEditor) activeEditor;
-
-        IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
-        if (doc == null) {
-            return "";
-        }
-
-        return doc.get();
 
     }
 }

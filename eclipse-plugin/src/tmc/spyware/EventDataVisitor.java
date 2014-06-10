@@ -1,5 +1,8 @@
 package tmc.spyware;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -10,32 +13,39 @@ import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
  * Event data is organized as a tree. EventDataVisitor is called by eclipse whenever it visits a tree node
  * */
 class EventDataVisitor implements IResourceDeltaVisitor {
+    class EventData {
+
+        String oldPath = "";
+        String currentPath = "";
+
+        String fullOldPath = "";
+        String fullCurrentPath = "";
+
+        String movedFromPath = "";
+        String movedToPath = "";
+
+        ChangeType type = ChangeType.NONE;
+    }
+
+    private List<EventData> events;
+
     private boolean done;
-    private boolean renamingFolder;
+    private boolean folderOperation;
 
     private String projectName;
 
-    private ChangeType type;
-
-    private String oldPath;
-    private String currentPath;
-    private String relativeCurrentPath;
-
     public EventDataVisitor() {
-        this.done = false;
-        this.renamingFolder = false;
-        this.type = ChangeType.NONE;
-        this.oldPath = "";
-        this.currentPath = "";
-        this.projectName = "";
+        done = false;
+        folderOperation = false;
+        events = new ArrayList<EventData>();
     }
 
     public String getProjectName() {
         return projectName;
     }
 
-    public ChangeType getType() {
-        return type;
+    public List<EventData> getEvents() {
+        return events;
     }
 
     public boolean visit(IResourceDelta delta) {
@@ -59,8 +69,10 @@ class EventDataVisitor implements IResourceDeltaVisitor {
 
     private void changed(IResourceDelta delta) {
         if ((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
-            createPaths(delta);
-            type = ChangeType.FILE_CHANGE;
+            EventData data = new EventData();
+            createPaths(data, delta);
+            data.type = ChangeType.FILE_CHANGE;
+            events.add(data);
         }
     }
 
@@ -73,37 +85,68 @@ class EventDataVisitor implements IResourceDeltaVisitor {
     }
 
     private void fileRemoved(IResourceDelta delta) {
+        if (folderOperation) {
+            return;
+        }
+
         if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
-            oldPath = delta.getResource().getLocation().toString();
+
+            handleDeleteRenamePortion(delta, ChangeType.FILE_RENAME);
         } else {
-            type = ChangeType.FILE_DELETE;
+
+            EventData data = new EventData();
+            data.type = ChangeType.FILE_DELETE;
+            createPaths(data, delta);
+            events.add(data);
         }
     }
 
     private void folderRemoved(IResourceDelta delta) {
+        folderOperation = true;
+
         if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
-            type = ChangeType.FOLDER_RENAME;
-            oldPath = delta.getResource().getLocation().toString();
-            folderRenamingHandler();
+
+            handleDeleteRenamePortion(delta, ChangeType.FOLDER_RENAME);
         } else {
-            type = ChangeType.FOLDER_DELETE;
-            done = true;
+
+            EventData data = new EventData();
+            data.type = ChangeType.FOLDER_DELETE;
+            createPaths(data, delta);
+            events.add(data);
         }
     }
 
-    private void folderRenamingHandler() {
-        if (!renamingFolder) {
-            renamingFolder = true;
-        } else {
-            done = true;
+    private void handleDeleteRenamePortion(IResourceDelta delta, ChangeType type) {
+
+        EventData data = findDeleteEventPairForRename(delta, type);
+
+        if (data == null) {
+            data = new EventData();
+            data.type = type;
+            data.movedToPath = delta.getMovedToPath().toString();
+            events.add(data);
         }
+
+        createOldPaths(data, delta);
+    }
+
+    private EventData findDeleteEventPairForRename(IResourceDelta delta, ChangeType type) {
+        EventData data = null;
+        // check if this is already in the list
+        for (EventData event : events) {
+            if (delta.getFullPath().toString().equals(event.movedFromPath) && event.type == type) {
+                data = event;
+                break;
+            }
+        }
+        return data;
     }
 
     private void added(IResourceDelta delta) {
         if (delta.getResource() instanceof IFolder) {
             folderAdded(delta);
         } else {
-            if (renamingFolder) {
+            if (folderOperation) {
                 return;
             }
             fileAdded(delta);
@@ -111,38 +154,66 @@ class EventDataVisitor implements IResourceDeltaVisitor {
     }
 
     private void fileAdded(IResourceDelta delta) {
+        if (folderOperation) {
+            return;
+        }
+
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-            createPaths(delta);
-            type = ChangeType.FILE_RENAME;
+            handleAddRenamePortion(delta, ChangeType.FILE_RENAME);
+
         } else {
-            type = ChangeType.FILE_CREATE;
+            EventData data = new EventData();
+
+            data.type = ChangeType.FILE_CREATE;
+            createPaths(data, delta);
+            events.add(data);
         }
     }
 
     private void folderAdded(IResourceDelta delta) {
+        folderOperation = true;
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-            type = ChangeType.FOLDER_RENAME;
-            createPaths(delta);
-            folderRenamingHandler();
+            handleAddRenamePortion(delta, ChangeType.FOLDER_RENAME);
+
         } else {
-            type = ChangeType.FOLDER_CREATE;
+            EventData data = new EventData();
+
+            data.type = ChangeType.FOLDER_CREATE;
+            createPaths(data, delta);
+            events.add(data);
         }
     }
-    
-    private void createPaths(IResourceDelta delta) {
-        currentPath = delta.getResource().getLocation().toString();
-        relativeCurrentPath = delta.getResource().getFullPath().toString();
+
+    private void handleAddRenamePortion(IResourceDelta delta, ChangeType type) {
+        EventData data = findAddEventPairForRename(delta, type);
+        if (data == null) {
+            data = new EventData();
+            data.type = type;
+            data.movedFromPath = delta.getMovedFromPath().toString();
+            events.add(data);
+        }
+        createPaths(data, delta);
     }
 
-    public String getOldPath() {
-        return oldPath;
+    private EventData findAddEventPairForRename(IResourceDelta delta, ChangeType type) {
+        EventData data = null;
+        // check if this is already in the list
+        for (EventData event : events) {
+            if (delta.getFullPath().toString().equals(event.movedToPath) && event.type == type) {
+                data = event;
+                break;
+            }
+        }
+        return data;
     }
 
-    public String getCurrentPath() {
-        return currentPath;
+    private void createPaths(EventData data, IResourceDelta delta) {
+        data.currentPath = delta.getResource().getFullPath().toString();
+        data.fullCurrentPath = delta.getResource().getLocation().toString();
     }
-    
-    public String getCurrentRelativePath() {
-        return relativeCurrentPath;
+
+    private void createOldPaths(EventData data, IResourceDelta delta) {
+        data.oldPath = delta.getResource().getFullPath().toString();
+        data.fullOldPath = delta.getResource().getLocation().toString();
     }
 }
