@@ -122,8 +122,8 @@ public class TestResultComposite extends Composite {
 
         colorBar.setBounds(0, 0, 5, testResultMessage.getSize().y + testResultName.getSize().y
                 + moreDetails.getSize().y);
-        if (this.getParent().getParent().getParent() instanceof TestRunnerComposite) {
-            ((TestRunnerComposite) this.getParent().getParent().getParent()).enlargeTestStack(this, tcr);
+        if (this.getParent().getParent().getParent().getParent() instanceof TestRunnerComposite) {
+            ((TestRunnerComposite) this.getParent().getParent().getParent().getParent()).enlargeTestStack(this, tcr);
         } else {
             System.out.println(this.getParent().getParent().getParent());
         }

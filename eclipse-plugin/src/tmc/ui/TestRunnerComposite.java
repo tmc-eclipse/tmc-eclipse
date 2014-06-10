@@ -108,7 +108,7 @@ public class TestRunnerComposite extends Composite {
             }
         });
 
-        final Button btnShowAllTests = new Button(this, SWT.CHECK);
+        final Button btnShowAllTests = new Button(master, SWT.CHECK);
         btnShowAllTests.setBounds(325, 33, 128, 24);
         btnShowAllTests.setText("Show all tests");
         btnShowAllTests.addSelectionListener(new SelectionAdapter() {
@@ -131,7 +131,7 @@ public class TestRunnerComposite extends Composite {
 
     private void makeScrolledComposite(Composite parent) {
         scrolledComposite = new ScrolledComposite(master, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-        scrolledComposite.setSize(parent.getSize().x - 20, parent.getSize().y - 80);
+        scrolledComposite.setSize(master.getSize().x - 20, master.getSize().y - 80);
         scrolledComposite.setLocation(10, 70);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
@@ -140,7 +140,7 @@ public class TestRunnerComposite extends Composite {
     }
 
     public void resize() {
-        scrolledComposite.setSize(this.getParent().getSize().x - 20, this.getParent().getSize().y - 80);
+        scrolledComposite.setSize(master.getParent().getSize().x - 20, master.getParent().getSize().y - 80);
         scrolledComposite.redraw();
         this.update();
     }
