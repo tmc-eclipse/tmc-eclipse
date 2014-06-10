@@ -142,10 +142,10 @@ public class TestResultComposite extends Composite {
 
         colorBar.setBounds(0, 0, 5, testResultMessage.getSize().y + testResultName.getSize().y
                 + moreDetails.getSize().y);
-        if (this.getParent().getParent().getParent().getParent() instanceof TestRunnerComposite) {
-            ((TestRunnerComposite) this.getParent().getParent().getParent().getParent()).enlargeTestStack(this, tcr);
+        if (getGreatGreatGrandParent() instanceof TestRunnerComposite) {
+            ((TestRunnerComposite) getGreatGreatGrandParent()).enlargeTestStack(this, tcr);
         } else {
-            System.out.println(this.getParent().getParent().getParent());
+            System.out.println("Not the right parent!!!");
         }
 
         if (showMoreBtn != null) {
@@ -208,6 +208,16 @@ public class TestResultComposite extends Composite {
         } else {
             return project.getRootPath();
         }
+    }
+
+    /*
+     * Purpose of this method is to find the TestrunnerComposite so that its
+     * methods can be used. We can't create a new TestrunnerComposite as we
+     * wouldn't do anything with it without drastic changes to current and its
+     * parents.
+     */
+    public Composite getGreatGreatGrandParent() {
+        return this.getParent().getParent().getParent().getParent();
     }
 
     @Override
