@@ -42,6 +42,8 @@ public class TestRunnerComposite extends Composite {
     private Composite parent;
     private int style;
 
+    private Composite master;
+
     /**
      * Create the composite.
      * 
@@ -52,16 +54,24 @@ public class TestRunnerComposite extends Composite {
         super(parent, style);
         this.parent = parent;
         this.style = style;
+        this.setSize(parent.getSize().x, parent.getSize().y);
+        master = new Composite(this, SWT.SMOOTH);
         makeScrolledComposite(parent);
     }
 
     private void createTestRunnerComposite(final Composite parent, int style) {
 
+        if (master != null) {
+            master.dispose();
+        }
+
+        master = new Composite(this, SWT.SMOOTH);
+
         scrolledComposite.dispose();
 
-        this.setSize(parent.getSize().x, parent.getSize().y);
+        master.setSize(parent.getSize().x, parent.getSize().y);
 
-        progressBar = new ProgressBar(this, SWT.SMOOTH);
+        progressBar = new ProgressBar(master, SWT.SMOOTH);
         progressBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
         progressBar.setMinimum(0);
         progressBar.setMaximum(300);
@@ -120,7 +130,7 @@ public class TestRunnerComposite extends Composite {
     }
 
     private void makeScrolledComposite(Composite parent) {
-        scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        scrolledComposite = new ScrolledComposite(master, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         scrolledComposite.setSize(parent.getSize().x - 20, parent.getSize().y - 80);
         scrolledComposite.setLocation(10, 70);
         scrolledComposite.setExpandHorizontal(true);
@@ -140,7 +150,7 @@ public class TestRunnerComposite extends Composite {
         if (lblTestspassed != null) {
             lblTestspassed.dispose();
         }
-        lblTestspassed = new Label(this, SWT.NONE);
+        lblTestspassed = new Label(master, SWT.NONE);
         lblTestspassed.setBounds(19, 10, 183, 17);
         lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
@@ -148,7 +158,7 @@ public class TestRunnerComposite extends Composite {
     }
 
     public void addSubmissionResult(List<TestCaseResult> tcr) {
-        createTestRunnerComposite(this.parent, this.style);
+        createTestRunnerComposite(parent, style);
         results = tcr;
         showTestResults();
     }
