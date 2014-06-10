@@ -33,7 +33,6 @@ public class SnapshotTaker {
         System.out.println("Old path: " + info.getOldFilePath());
         System.out.println("Current path: " + info.getCurrentFilePath());
         System.out.println("Change type: " + info.getChangeType().name().toLowerCase());
-        System.out.println("Content: " + info.getContent());
 
         if (info.getChangeType() == ChangeType.FILE_RENAME || info.getChangeType() == ChangeType.FOLDER_RENAME) {
             handleRename();

@@ -38,6 +38,7 @@ class EventDataVisitor implements IResourceDeltaVisitor {
     public ChangeType getType() {
         return type;
     }
+    
 
     public boolean visit(IResourceDelta delta) {
         projectName = delta.getResource().getFullPath().segment(0);
