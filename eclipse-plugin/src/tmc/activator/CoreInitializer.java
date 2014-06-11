@@ -38,6 +38,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
     }
 
     public void stop(BundleContext context) throws Exception {
+        Core.getProjectDAO().save();
+        
         instance = null;
         super.stop(context);
     }
