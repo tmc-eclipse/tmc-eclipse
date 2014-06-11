@@ -27,10 +27,10 @@ public class DocumentListener implements IDocumentListener {
         IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
 
         IFile file = input.getFile();
-        
+
         Core.getSpyware().documentChange(
-                new DocumentInfo(file.getLocation().toString(), file.getFullPath().toString(), event.getText(), event
-                        .getDocument().get(), event.getOffset(), event.getLength()));
+                new DocumentInfo(file.getLocation().toString(), file.getFullPath().toString(), event.getDocument()
+                        .get(), event.getText(), event.getOffset(), event.getLength()));
 
     }
 }

@@ -20,7 +20,7 @@ public class SpywarePluginLayer implements Closeable {
         this.activeThreads = activeThreads;
         receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("sikrit.tmp"))));
 
-        documentHandler = new DocumentChangeHandler(receiver);
+        documentHandler = new DocumentChangeHandler(receiver, activeThreads);
     }
 
     public void takeSnapshot(SnapshotInfo info) {

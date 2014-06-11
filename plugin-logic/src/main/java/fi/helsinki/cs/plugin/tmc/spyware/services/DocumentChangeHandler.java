@@ -15,6 +15,7 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.spyware.DocumentInfo;
+import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.JsonMaker;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.diff_match_patch;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.diff_match_patch.Patch;
@@ -30,9 +31,11 @@ public class DocumentChangeHandler {
     private static final diff_match_patch PATCH_GENERATOR = new diff_match_patch();
     private EventReceiver receiver;
     private Map<String, String> documentCache;
+    private ActiveThreadSet activeThreads;
 
-    public DocumentChangeHandler(EventReceiver receiver) {
+    public DocumentChangeHandler(EventReceiver receiver, ActiveThreadSet set) {
         this.receiver = receiver;
+        this.activeThreads = set;
         this.documentCache = new HashMap<String, String>();
     }
 
@@ -49,93 +52,126 @@ public class DocumentChangeHandler {
             return;
         }
 
-        createAndSendPatch(info, project);
+        DocumentSendThread thread = new DocumentSendThread(receiver, info, project, documentCache);
+        activeThreads.addThread(thread);
+        thread.setDaemon(true);
+        thread.start();
     }
 
-    private void createAndSendPatch(DocumentInfo info, Project project) {
-        List<Patch> patches;
-        boolean patchContainsFullDocument = !documentCache.containsKey(info.getFullPath());
+    private static class DocumentSendThread extends Thread {
+        private final EventReceiver receiver;
+        private final DocumentInfo info;
+        private final Project project;
+        private Map<String, String> documentCache;
 
-        try {
-            // generatePatches will cache the current version for future
-            // patches; if the document was not in the cache previously, the
-            // patch will
-            // contain the full document content
-            System.out.println("Starting patch generation");
-            patches = generatePatches(info.getFullPath(), info.getEditorText());
-            System.out.println("Ending patch generation");
-        } catch (BadLocationException exp) {
-            log.log(Level.WARNING, "Unable to generate patches from {0}.", info.getRelativePath());
-            return;
+        private DocumentSendThread(EventReceiver receiver, DocumentInfo info, Project project, Map<String, String> cache) {
+            super("Document change thread");
+            this.receiver = receiver;
+            this.info = info;
+            this.project = project;
+            this.documentCache = cache;
         }
 
-        // whitespace is still considered to be text; only truly empty text is
-        // considered to be deletion
-        if (info.getEventText().length() == 0) {
-            sendEvent(project.getExercise(), "text_remove",
-                    generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
-            return;
+        @Override
+        public void run() {
+            createAndSendPatch();
         }
 
-        if (isPasteEvent(info.getRelativePath())) {
-            sendEvent(project.getExercise(), "text_paste",
-                    generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
-        } else {
-            sendEvent(project.getExercise(), "text_insert",
-                    generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+        private void createAndSendPatch() {
+            List<Patch> patches;
+            boolean patchContainsFullDocument = !documentCache.containsKey(info.getFullPath());
+
+            try {
+                // generatePatches will cache the current version for future
+                // patches; if the document was not in the cache previously, the
+                // patch will
+                // contain the full document content
+                patches = generatePatches(info.getFullPath(), info.getEditorText());
+
+            } catch (BadLocationException exp) {
+                log.log(Level.WARNING, "Unable to generate patches from {0}.", info.getRelativePath());
+                return;
+            }
+
+            // whitespace is still considered to be text; only truly empty text
+            // is
+            // considered to be deletion
+            if (info.getEventText().length() == 0) {
+                System.out.println("Text remove");
+                sendEvent(project.getExercise(), "text_remove",
+                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                return;
+            }
+
+            if (isPasteEvent(info.getEventText())) {
+                System.out.println("Text paste");
+                sendEvent(project.getExercise(), "text_paste",
+                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+            } else {
+                System.out.println("Text insert");
+                sendEvent(project.getExercise(), "text_insert",
+                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+            }
+
         }
 
-    }
+        private String generatePatchDescription(String relativePath, List<Patch> patches,
+                boolean patchContainsFullDocument) {
+            return JsonMaker.create().add("file", relativePath).add("patches", PATCH_GENERATOR.patch_toText(patches))
+                    .add("full_document", patchContainsFullDocument).toString();
+        }
 
-    private void sendEvent(Exercise ex, String eventType, String text) {
-        LoggableEvent event = new LoggableEvent(ex, eventType, text.getBytes(Charset.forName("UTF-8")));
-        receiver.receiveEvent(event);
-    }
+        private boolean isPasteEvent(String text) {
+            if (text.length() <= 2 || isWhiteSpace(text)) {
+                // if a short text or whitespace is inserted,
+                // we skip checking for paste
+                return false;
+            }
 
-    private String generatePatchDescription(String relativePath, List<Patch> patches, boolean patchContainsFullDocument) {
-        return JsonMaker.create().add("file", relativePath).add("patches", PATCH_GENERATOR.patch_toText(patches))
-                .add("full_document", patchContainsFullDocument).toString();
-    }
+            try {
+                String clipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
+                        .getData(DataFlavor.stringFlavor);
+                System.out.println("Text:" + text.trim());
+                System.out.println("Clipboard:" + clipboardData);
 
-    private boolean isPasteEvent(String text) {
-        if (text.length() <= 2 || isWhiteSpace(text)) {
-            // if a short text or whitespace is inserted,
-            // we skip checking for paste
+                return text.equals(clipboardData);
+            } catch (Exception exp) {
+            }
+
             return false;
         }
 
-        try {
-            String clipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
-                    .getData(DataFlavor.stringFlavor);
-            return text.equals(clipboardData);
-        } catch (Exception exp) {
-        }
+        private boolean isWhiteSpace(String text) {
+            // If an insert is just whitespace, it's probably an autoindent
 
-        return false;
-    }
-
-    private boolean isWhiteSpace(String text) {
-        // If an insert is just whitespace, it's probably an autoindent
-
-        for (int i = 0; i < text.length(); ++i) {
-            if (!Character.isWhitespace(text.charAt(i))) {
-                return false;
+            for (int i = 0; i < text.length(); ++i) {
+                if (!Character.isWhitespace(text.charAt(i))) {
+                    return false;
+                }
             }
+
+            return true;
         }
 
-        return true;
-    }
+        // currently, if a document is not existing, the patch will
+        // contain the full file
+        private List<Patch> generatePatches(String key, String text) throws BadLocationException {
+            String previous = "";
+            synchronized (documentCache) {
+                if (documentCache.containsKey(key)) {
+                    previous = documentCache.get(key);
+                }
 
-    // currently, if a document is not existing, the patch will
-    // contain the full file
-    private List<Patch> generatePatches(String key, String text) throws BadLocationException {
-        String previous = "";
-        if (documentCache.containsKey(key)) {
-            previous = documentCache.get(key);
+                documentCache.put(key, text);
+            }
+            return PATCH_GENERATOR.patch_make(previous, text);
         }
 
-        documentCache.put(key, text);
+        private void sendEvent(Exercise ex, String eventType, String text) {
+            LoggableEvent event = new LoggableEvent(ex, eventType, text.getBytes(Charset.forName("UTF-8")));
+            receiver.receiveEvent(event);
 
-        return PATCH_GENERATOR.patch_make(previous, text);
+        }
     }
+
 }

@@ -59,7 +59,6 @@ public class SnapshotTaker {
 
     private void startSnapshotThread(final String metadata, String path) {
         if (!Core.getSettings().isSpywareEnabled()) {
-            System.out.println("Spyware not enabled, bailing out");
             return;
         }
 
@@ -67,11 +66,8 @@ public class SnapshotTaker {
 
         // Note: Should *only* log TMC courses.
         if (project == null) {
-            System.out.println("Not a tmc project, bailing out!");
             return;
         }
-
-        System.out.println("Exercise name: " + project.getExercise().getName());
 
         SnapshotThread thread = new SnapshotThread(receiver, project, metadata);
         threadSet.addThread(thread);
