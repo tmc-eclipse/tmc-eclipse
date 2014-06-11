@@ -21,15 +21,12 @@ public abstract class AbstractUnzippingDecider implements UnzippingDecider {
     @Override
     public boolean shouldUnzip(String filePath) {
         for (String s : doNotUnzip) {
-            if (s.charAt(s.length()-1) == '/'){
+            if (s.charAt(s.length() - 1) == '/') {
                 s = s.substring(0, s.length() - 1);
             }
-            System.out.println(s);
+
             s = (project.getRootPath() + "/" + s);
-            System.out.println("Normi " + s);
-            System.out.println("Natiivi " + FileUtil.getNativePath(s));
-            System.out.println("Unix " + FileUtil.getUnixPath(s));
-            
+
             if (filePath.startsWith(s) && (filePath.equals(s) || filePath.charAt(s.length()) == '/')) {
                 return false;
             }

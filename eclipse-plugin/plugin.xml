@@ -80,29 +80,50 @@
                id="fi.helsinki.cs.plugins.eclipse.menus.tmcMenu">
             <command
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
-                  mnemonic="S"
-                  id="fi.helsinki.cs.plugins.eclipse.menus.settingsCommand">
+                  id="fi.helsinki.cs.plugins.eclipse.menus.settingsCommand"
+                  label="Settings"
+                  mnemonic="S">
             </command>
             <command
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
-                  mnemonic="E"
-                  id="fi.helsinki.cs.plugins.eclipse.menus.exercisesCommand">
+                  id="fi.helsinki.cs.plugins.eclipse.menus.exercisesCommand"
+                  label="Download/update exercises"
+                  mnemonic="D">
             </command>
              <command
-                  commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
-                  mnemonic="U"
-                  id="fi.helsinki.cs.plugins.eclipse.menus.uploadCommand">
-            </command>
+                   commandId="eclipse-plugin.command2"
+                   label="Download old completed exercises"
+                   style="push">
+             </command>
+             <command
+                   commandId="eclipse-plugin.command3"
+                   label="Check for new code reviews"
+                   mnemonic="r"
+                   style="push">
+             </command>
+            <command
+                  commandId="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand"
+                  id="fi.helsinki.cs.plugins.eclipse.menus.pastebinCommand"
+                  label="Send code to TMC Pastebin"
+                  mnemonic="P">
+	      	</command>
+             <command
+                   commandId="eclipse-plugin.command1"
+                   label="Request code review"
+                   style="push">
+             </command>
             <command
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
-                  mnemonic="T"
-                  id="fi.helsinki.cs.plugins.eclipse.menus.testRunnerCommand">
+                  id="fi.helsinki.cs.plugins.eclipse.menus.testRunnerCommand"
+                  label="Run tests locally"
+                  mnemonic="t">
             </command>
-            <command
-            	commandId="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand"
-            	mnemonic="P"
-	            id="fi.helsinki.cs.plugins.eclipse.menus.pastebinCommand">
-	      	</command>
+             <command
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
+                   id="fi.helsinki.cs.plugins.eclipse.menus.uploadCommand"
+                   label="Submit"
+                   mnemonic="b">
+            </command>
          </menu>
       </menuContribution>
       
@@ -112,6 +133,7 @@
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
                   commandId="org.eclipse.debug.ui.commands.RunLast"
+                  disabledIcon="icons/run24disabled.png"
                   icon="icons/run24.png"
                   id="fi.helsinki.cs.plugins.eclipse.toolbars.runProject"
                   tooltip="Run Project">
@@ -125,9 +147,10 @@
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
+                  disabledIcon="icons/test24disabled.png"
                   icon="icons/test24.png"
-                  tooltip="Test Project"
-                  id="fi.helsinki.cs.plugins.eclipse.toolbars.runTests">
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.runTests"
+                  tooltip="Test Project">
             </command>
          </toolbar>
       </menuContribution>
@@ -138,9 +161,10 @@
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
                   commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
+                  disabledIcon="icons/submit24disabled.png"
                   icon="icons/submit24.png"
-                  tooltip="Submit Project"
-                  id="fi.helsinki.cs.plugins.eclipse.toolbars.submitProject">
+                  id="fi.helsinki.cs.plugins.eclipse.toolbars.submitProject"
+                  tooltip="Submit Project">
             </command>
          </toolbar>
       </menuContribution>
