@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskRunner;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
+import fi.helsinki.cs.plugin.tmc.services.ProjectEventHandler;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -24,6 +25,8 @@ public final class Core {
 
     private Updater updater;
 
+    private ProjectEventHandler projectEventHandler;
+
     private Core() {
         ServiceFactory factory = new ServiceFactory();
         this.settings = factory.getSettings();
@@ -33,7 +36,7 @@ public final class Core {
         this.updater = factory.getUpdater();
         this.errorHandler = new DummyErrorHandler();
         this.spyware = factory.getSpyware();
-
+        this.projectEventHandler = factory.getProjectEventHandler();
     }
 
     public static void setErrorHandler(TMCErrorHandler errorHandler) {
@@ -74,6 +77,10 @@ public final class Core {
 
     public static SpywarePluginLayer getSpyware() {
         return Core.getInstance().spyware;
+    }
+
+    public static ProjectEventHandler getProjectEventHandler() {
+        return Core.getInstance().projectEventHandler;
     }
 
     public static Core getInstance() {

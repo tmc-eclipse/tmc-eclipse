@@ -15,22 +15,21 @@ public class TempTestDir {
         FileUtils.forceDelete(dir);
         FileUtils.forceMkdir(dir);
     }
-    
+
     public File get() {
         return dir;
     }
-    
+
     public String getPath() {
         return get().getAbsolutePath();
     }
-    
+
     public void destroy() throws IOException {
         try {
             FileUtils.forceDelete(dir);
         } catch (IOException e) {
-            throw new IOException("Failed to delete temporary dir: " +
-                        e.getMessage() +
-                        ". If you're on Windows, ensure your test closes all open file handles.");
+            throw new IOException("Failed to delete temporary dir: " + e.getMessage()
+                    + ". If you're on Windows, ensure your test closes all open file handles.");
         }
     }
 }

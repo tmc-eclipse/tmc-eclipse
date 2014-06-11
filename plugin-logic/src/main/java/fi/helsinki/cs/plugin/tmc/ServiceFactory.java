@@ -3,6 +3,7 @@ package fi.helsinki.cs.plugin.tmc;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.DAOManager;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
+import fi.helsinki.cs.plugin.tmc.services.ProjectEventHandler;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -17,6 +18,7 @@ public final class ServiceFactory {
     private ServerManager server;
     private Updater updater;
     private SpywarePluginLayer spyware;
+    private ProjectEventHandler projectEventHandler;
 
     public ServiceFactory() {
         this.settings = Settings.getDefaultSettings();
@@ -27,8 +29,8 @@ public final class ServiceFactory {
         this.projectDAO = manager.getProjectDAO();
 
         this.updater = new Updater(server, courseDAO, projectDAO);
-
         this.spyware = new SpywarePluginLayer(new ActiveThreadSet());
+        this.projectEventHandler = new ProjectEventHandler(projectDAO);
     }
 
     public Settings getSettings() {
@@ -53,6 +55,10 @@ public final class ServiceFactory {
 
     public SpywarePluginLayer getSpyware() {
         return spyware;
+    }
+
+    public ProjectEventHandler getProjectEventHandler() {
+        return projectEventHandler;
     }
 
 }

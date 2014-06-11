@@ -16,9 +16,9 @@ public interface IdeUIInvoker {
     public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName);
 
     public void invokeSubmitToServerWindow();
-    
+
     public void invokeSendToPastebinWindow(String exerciseName);
-    
+
     public void invokePastebinResultDialog(String pasteUrl);
 
 }

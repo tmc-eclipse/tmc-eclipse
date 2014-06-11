@@ -2,16 +2,15 @@ package fi.helsinki.cs.plugin.tmc.spyware.services;
 
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 
-
 public class LoggableEvent implements TmcEvent {
 
     private String courseName;
     private String exerciseName;
     private String eventType;
     private byte[] data;
-    
+
     private String metadata; // can be null
-    
+
     private long happenedAt; // millis from epoch
     private long systemNanotime;
     private transient String key;
@@ -57,15 +56,15 @@ public class LoggableEvent implements TmcEvent {
     }
 
     /**
-* Optional JSON metadata.
-*/
+     * Optional JSON metadata.
+     */
     public String getMetadata() {
         return metadata;
     }
 
     /**
-* {@code key = course name + "|" + exercise name + "|" + event type}
-*/
+     * {@code key = course name + "|" + exercise name + "|" + event type}
+     */
     public String getKey() {
         return key;
     }
@@ -84,6 +83,8 @@ public class LoggableEvent implements TmcEvent {
 
     @Override
     public String toString() {
-        return "LoggableEvent{" + "courseName=" + courseName + ", exerciseName=" + exerciseName + ", eventType=" + eventType + ", happenedAt=" + happenedAt + ", systemNanotime=" + systemNanotime + ", key=" + key + ", metadata=" + metadata + ", data=" + new String(data) + "}";
+        return "LoggableEvent{" + "courseName=" + courseName + ", exerciseName=" + exerciseName + ", eventType="
+                + eventType + ", happenedAt=" + happenedAt + ", systemNanotime=" + systemNanotime + ", key=" + key
+                + ", metadata=" + metadata + ", data=" + new String(data) + "}";
     }
 }

@@ -27,10 +27,11 @@ public class SnapshotTaker {
     }
 
     public void execute() {
-        System.out.println("Project name: " + info.getProjectName());
-        System.out.println("Old path: " + info.getOldFilePath());
-        System.out.println("Current path: " + info.getCurrentFilePath());
-        System.out.println("Change type: " + info.getChangeType().name().toLowerCase());
+        // System.out.println("Project name: " + info.getProjectName());
+        // System.out.println("Old path: " + info.getOldFilePath());
+        // System.out.println("Current path: " + info.getCurrentFilePath());
+        // System.out.println("Change type: " +
+        // info.getChangeType().name().toLowerCase());
 
         if (info.getChangeType() == ChangeType.FILE_RENAME || info.getChangeType() == ChangeType.FOLDER_RENAME) {
             handleRename();

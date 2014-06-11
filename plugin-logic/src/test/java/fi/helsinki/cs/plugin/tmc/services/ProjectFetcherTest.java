@@ -21,7 +21,7 @@ import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 public class ProjectFetcherTest {
     private ServerManager server;
     private ProjectDownloader fetcher;
-    
+
     @Before
     public void setup() {
         server = mock(ServerManager.class);
@@ -41,7 +41,7 @@ public class ProjectFetcherTest {
         verify(server, times(1)).getExerciseZip("url");
         assertEquals(mockZip, retrievedZip);
     }
-    
+
     @Test
     public void attemptsToDownloadFromAllUrlsWhenFetchingMultipleExercises() {
         Exercise exercise1 = mock(Exercise.class);
@@ -71,6 +71,5 @@ public class ProjectFetcherTest {
         assertTrue(returnedList.contains(mockZip2));
         assertTrue(returnedList.contains(mockZip3));
     }
-    
 
 }

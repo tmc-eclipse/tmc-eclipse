@@ -32,15 +32,20 @@ public class ResourceEventListener implements IResourceChangeListener {
         }
 
         for (EventData data : visitor.getEvents()) {
-            System.out.println("visitor.getOldPath(): " + data.oldPath);
-            System.out.println("visitor.getCurrentPath(): " + data.currentPath);
-            System.out.println("visitor.getFullOldPath(): " + data.fullOldPath);
-            System.out.println("visitor.getCurrentFullPath(): " + data.fullCurrentPath);
-            System.out.println("visitor.getType(): " + data.type);
-            Core.getSpyware().takeSnapshot(
-                    new SnapshotInfo(visitor.getProjectName(), data.oldPath, data.currentPath, data.fullOldPath,
-                            data.fullCurrentPath, data.type));
+            // System.out.println("visitor.getOldPath(): " + data.oldPath);
+            // System.out.println("visitor.getCurrentPath(): " +
+            // data.currentPath);
+            // System.out.println("visitor.getFullOldPath(): " +
+            // data.fullOldPath);
+            // System.out.println("visitor.getCurrentFullPath(): " +
+            // data.fullCurrentPath);
+            // System.out.println("visitor.getType(): " + data.type);
 
+            SnapshotInfo snapshot = new SnapshotInfo(visitor.getProjectName(), data.oldPath, data.currentPath,
+                    data.fullOldPath, data.fullCurrentPath, data.type);
+
+            Core.getSpyware().takeSnapshot(snapshot);
+            Core.getProjectEventHandler().handle(snapshot);
         }
 
     }

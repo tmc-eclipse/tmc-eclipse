@@ -92,16 +92,16 @@ public class WorkbenchHelper {
         return view.getClass().getSimpleName();
     }
 
-    public Project getActiveProject() {        
+    public Project getActiveProject() {
         if (getActiveView().equals(SOURCE_EDITOR)) {
             return getProjectByEditor();
         } else {
             Project project = getProjectBySelection();
-            
+
             if (project == null) {
                 project = getProjectByEditor();
             }
-            
+
             return project;
         }
     }

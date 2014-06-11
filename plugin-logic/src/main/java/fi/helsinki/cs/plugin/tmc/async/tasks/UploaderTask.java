@@ -54,11 +54,11 @@ public class UploaderTask implements BackgroundTask {
 
         try {
             uploader.setProject(Core.getProjectDAO().getProjectByFile(path));
-            
-            if (asPaste){
+
+            if (asPaste) {
                 uploader.setAsPaste(pasteMessage);
             }
-            
+
             uploader.zipProjects();
 
             if (!isRunning()) {

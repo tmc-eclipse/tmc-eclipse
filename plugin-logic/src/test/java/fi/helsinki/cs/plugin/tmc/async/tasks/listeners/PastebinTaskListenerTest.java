@@ -36,12 +36,12 @@ public class PastebinTaskListenerTest {
     public void raiseErrorWithoutUIInvocationIfUrlIsNull() {
         TMCErrorHandler errorhandler = mock(TMCErrorHandler.class);
         Core.setErrorHandler(errorhandler);
-        
+
         when(task.getPasteUrl()).thenReturn(null);
 
         listener.onSuccess();
         verify(errorhandler, times(1)).raise("The server returned no URL for the paste. Please contact TMC support.");
-        
+
         verify(task, times(1)).getPasteUrl();
         verify(invoker, times(0)).invokePastebinResultDialog(any(String.class));
     }
@@ -54,7 +54,7 @@ public class PastebinTaskListenerTest {
         listener.onFailure();
         verify(errorhandler, times(1)).raise("Failed to create the requested pastebin.");
     }
-    
+
     @Test
     public void doNothingOnBegin() {
         listener.onBegin();

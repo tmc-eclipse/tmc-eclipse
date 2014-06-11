@@ -1,5 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +16,10 @@ public class Project {
     private List<String> extraStudentFiles;
     private String rootPath;
 
+    public Project(Exercise exercise) {
+        this(exercise, new ArrayList<String>());
+    }
+    
     public Project(Exercise exercise, List<String> projectFiles) {
         this.exercise = exercise;
         this.projectFiles = projectFiles;
@@ -96,7 +101,7 @@ public class Project {
     }
 
     public void setProjectFiles(List<String> files) {
-        projectFiles = Collections.unmodifiableList(files);
+        projectFiles = files;
     }
 
     public List<String> getProjectFiles() {
@@ -104,7 +109,7 @@ public class Project {
     }
 
     public void setExtraStudentFiles(List<String> files) {
-        extraStudentFiles = Collections.unmodifiableList(files);
+        extraStudentFiles = files;
     }
 
     public List<String> getExtraStudentFiles() {
