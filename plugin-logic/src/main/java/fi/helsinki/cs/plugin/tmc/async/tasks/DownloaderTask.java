@@ -36,14 +36,20 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
     @Override
     public void run(Exercise exercise) {
         try {
-            ZippedProject zip = downloader.downloadExercise(exercise);
+            Project project = projectDao.getProjectByExercise(exercise);
 
-            Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.noSrcOverwrite());
+            ZippedProject zip = downloader.downloadExercise(exercise);
+            Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.createUnzippingDecider(project));
             FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
             List<String> fileList = unzipper.unzipTo(folder);
 
             exercise.setDownloaded(true);
-            projectDao.addProject(new Project(exercise, fileList));
+
+            if (project == null) {
+                project = new Project(exercise, fileList);
+            }
+            projectDao.addProject(project);
+
             opener.open(exercise);
         } catch (IOException exception) {
             Core.getErrorHandler().raise("An error occurred while unzipping the exercises");

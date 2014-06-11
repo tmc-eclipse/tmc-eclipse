@@ -17,6 +17,7 @@ import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class ExerciseSelectorDialog extends Dialog {
 
@@ -25,6 +26,8 @@ public class ExerciseSelectorDialog extends Dialog {
     private Table table;
     private boolean buttonSelectsAll;
     private Button btnSelectAll;
+
+    private Button btnDownload;
 
     /**
      * Create the dialog.
@@ -97,7 +100,7 @@ public class ExerciseSelectorDialog extends Dialog {
         btnClose.setBounds(447, 236, 62, 29);
         btnClose.setText("Close");
 
-        Button btnDownload = new Button(shell, SWT.NONE);
+        btnDownload = new Button(shell, SWT.NONE);
         btnDownload.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -108,16 +111,20 @@ public class ExerciseSelectorDialog extends Dialog {
         btnDownload.setBounds(361, 236, 80, 29);
         btnDownload.setText("Download");
 
-        Course currentCourse = Core.getCourseDAO().getCurrentCourse();
-        Core.getUpdater().updateExercises(currentCourse);
+        try {
+            Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+            Core.getUpdater().updateExercises(currentCourse);
 
-        if (currentCourse != null) {
-            for (Exercise e : currentCourse.getDownloadableExercises()) {
-                addTableItem(e.getName());
+            if (currentCourse != null) {
+                for (Exercise e : currentCourse.getDownloadableExercises()) {
+                    addTableItem(e.getName());
+                }
             }
-        }
 
-        updateSelectAllButtonState();
+            updateSelectAllButtonState();
+        } catch (UserVisibleException uve) {
+
+        }
 
     }
 
@@ -172,9 +179,11 @@ public class ExerciseSelectorDialog extends Dialog {
         if (isAnySelected()) {
             buttonSelectsAll = false;
             btnSelectAll.setText("Unselect all");
+            btnDownload.setEnabled(true);
         } else {
             buttonSelectsAll = true;
             btnSelectAll.setText("Select all");
+            btnDownload.setEnabled(false);
         }
     }
 

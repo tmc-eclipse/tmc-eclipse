@@ -1,5 +1,9 @@
 package tmc.ui;
 
+import java.io.File;
+
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,8 +15,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
+import tmc.activator.CoreInitializer;
+import tmc.util.WorkbenchHelper;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public class TestResultComposite extends Composite {
@@ -20,13 +32,18 @@ public class TestResultComposite extends Composite {
     private Label testResultName;
     private Button showMoreBtn;
     private Label testResultMessage;
-    private final Color PASS = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+    private final Color PASS = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
 
     private final Color FAIL = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 
     private final Color BACKGROUND = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 
     private int colorBarHeight;
+
+    private int heightOffset;
+
+    private WorkbenchHelper helper;
+    int howManyRows = 1;
 
     /**
      * Create the composite.
@@ -36,6 +53,11 @@ public class TestResultComposite extends Composite {
      */
     public TestResultComposite(Composite parent, int style, final TestCaseResult tcr) {
         super(parent, style);
+
+        howManyRows = 1;
+
+        this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
+
         setBackground(BACKGROUND);
 
         final GC gc = new GC(Display.getDefault());
@@ -60,9 +82,10 @@ public class TestResultComposite extends Composite {
             testResultMessage.setBackground(BACKGROUND);
             testResultMessage.setText(tcr.getMessage());
 
+            howManyRows = tcr.getMessage().split("\n").length;
             i = gc.stringExtent(testResultMessage.getText());
 
-            testResultMessage.setBounds(10, testResultName.getSize().y, parent.getSize().x, i.y);
+            testResultMessage.setBounds(10, testResultName.getSize().y, parent.getSize().x, i.y * howManyRows);
 
             showMoreBtn = new Button(this, SWT.SMOOTH);
             showMoreBtn.addSelectionListener(new SelectionAdapter() {
@@ -102,21 +125,25 @@ public class TestResultComposite extends Composite {
     }
 
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
-        Label moreDetails = new Label(this, SWT.SMOOTH);
-        int i = 0;
-        StringBuilder b = new StringBuilder();
+        Composite moreDetails = new Composite(this, SWT.SMOOTH);
+        heightOffset = 0;
         for (StackTraceElement st : tcr.getException().stackTrace) {
-            b.append(st.toString());
-            b.append("\n");
-            i++;
+            if (!st.getClassName().toLowerCase().contains("test") || st.getClassName().contains("fi.helsinki.cs.")) {
+                addMoreDetailsLink(moreDetails, st.toString(), st);
+            } else {
+                addMoreDetailsLink(moreDetails, "<a href=\"\">" + st.toString() + "</a>", st);
+                // addMoreDetailsLink(moreDetails,
+                // "This is a link to <a href=\"http://www.google.com\">Google</a>");
+            }
         }
-        moreDetails.setText(b.toString());
-        moreDetails.setBounds(10, testResultMessage.getSize().y, testResultMessage.getSize().x,
-                gc.stringExtent(moreDetails.getText()).y * i - 5);
+        moreDetails.setBackground(BACKGROUND);
+        moreDetails.setLocation(testResultMessage.getSize().x, heightOffset);
+        moreDetails.setBounds(10, testResultMessage.getSize().y + 5, testResultMessage.getSize().x, heightOffset);
 
-        colorBar.setBounds(0, 0, 5, colorBarHeight + moreDetails.getSize().y);
-        if (this.getParent().getParent().getParent() instanceof TestRunnerComposite) {
-            ((TestRunnerComposite) this.getParent().getParent().getParent()).enlargeTestStack(this);
+        colorBar.setBounds(0, 0, 5, testResultMessage.getSize().y + testResultName.getSize().y
+                + moreDetails.getSize().y);
+        if (this.getParent().getParent().getParent().getParent() instanceof TestRunnerComposite) {
+            ((TestRunnerComposite) this.getParent().getParent().getParent().getParent()).enlargeTestStack(this, tcr);
         } else {
             System.out.println(this.getParent().getParent().getParent());
         }
@@ -126,8 +153,66 @@ public class TestResultComposite extends Composite {
         }
     }
 
+    public void addMoreDetailsLink(Composite parent, String text, final StackTraceElement st) {
+        Link moreDetailslink = new Link(parent, SWT.NONE);
+        moreDetailslink.setText(text);
+        moreDetailslink.setBackground(BACKGROUND);
+
+        // PlatformUI.getWorkbench().getActiveWorkbenchWindow().openPage(perspectiveId,
+        // input)
+
+        moreDetailslink.setLocation(testResultName.getSize().x, heightOffset);
+        moreDetailslink.setBounds(0, heightOffset, testResultName.getSize().x, testResultName.getSize().y);
+
+        final StringBuilder path = new StringBuilder();
+
+        path.append(getProjectRootPath() + "/");
+        if (!st.getClassName().contains("test.")) {
+            path.append("test/");
+        }
+        path.append(st.getClassName().replace('.', '/') + ".java");
+
+        moreDetailslink.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                System.out.println(path.toString());
+                System.out.println(st.getClassName());
+                System.out.println(st.getFileName());
+                System.out.println(st.getMethodName());
+
+                File fileToOpen = new File(path.toString());
+
+                if (fileToOpen.exists() && fileToOpen.isFile()) {
+                    IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
+                    System.out.println(fileStore.toURI().toString());
+                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+
+                    try {
+                        IDE.openEditorOnFileStore(page, fileStore);
+                    } catch (PartInitException e1) {
+                        // Put your exception handler here if you wish to
+                    }
+                } else {
+                    // DO SOMETHING IF THE FILE DOES NOT EXIST
+                }
+
+            }
+        });
+        heightOffset += 20;
+    }
+
+    private String getProjectRootPath() {
+        Project project = helper.getActiveProject();
+        if (project == null) {
+            return "";
+        } else {
+            return project.getRootPath();
+        }
+    }
+
     @Override
     protected void checkSubclass() {
         // Disable the check that prevents subclassing of SWT components
     }
+
 }
