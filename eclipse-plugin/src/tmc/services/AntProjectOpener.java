@@ -24,17 +24,17 @@ public class AntProjectOpener {
 		project.create(description, null);
 		project.open(new NullProgressMonitor());
 
-		try {
-			IProjectDescription desc = project.getDescription();
-			String[] prevNatures = desc.getNatureIds();
-			String[] newNatures = new String[prevNatures.length + 1];
-			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-			newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
-			desc.setNatureIds(newNatures);
-			project.setDescription(desc, new NullProgressMonitor());
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+		// try {
+		// IProjectDescription desc = project.getDescription();
+		// String[] prevNatures = desc.getNatureIds();
+		// String[] newNatures = new String[prevNatures.length + 1];
+		// System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+		// newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
+		// desc.setNatureIds(newNatures);
+		// project.setDescription(desc, new NullProgressMonitor());
+		// } catch (CoreException e) {
+		// e.printStackTrace();
+		// }
 
 	}
 }

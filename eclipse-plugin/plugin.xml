@@ -133,8 +133,8 @@
                id="fi.helsinki.cs.plugins.eclipse.toolbars.TmcSettingsToolbar">
             <command
                   commandId="org.eclipse.debug.ui.commands.RunLast"
-                  disabledIcon="icons/run24disabled.png"
-                  icon="icons/run24.png"
+                  disabledIcon="icons/tesmidisabled.png"
+                  icon="icons/tesmi.png"
                   id="fi.helsinki.cs.plugins.eclipse.toolbars.runProject"
                   tooltip="Run Project">
             </command>
