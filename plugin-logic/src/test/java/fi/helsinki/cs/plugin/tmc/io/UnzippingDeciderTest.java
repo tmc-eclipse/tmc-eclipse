@@ -25,7 +25,7 @@ public class UnzippingDeciderTest {
 
     @Before
     public void setUp() throws Exception {
-        projectPath = new File(".").getCanonicalPath() + "/src/test/java/fi/helsinki/cs/plugin/tmc/io/unzippingdecider";
+        projectPath = FileUtil.getUnixPath(FileUtil.append(new File(".").getCanonicalPath(), "src/test/java/fi/helsinki/cs/plugin/tmc/io/unzippingdecider"));
         project = mock(Project.class);
         when(project.getRootPath()).thenReturn(projectPath);
     }
@@ -41,7 +41,6 @@ public class UnzippingDeciderTest {
         this.decider = new DefaultUnzippingDecider(project);
         assertTrue(decider.shouldUnzip(projectPath + "/lib/Main"));
         assertTrue(decider.shouldUnzip(projectPath + "/src"));
-        assertTrue(!decider.shouldUnzip(projectPath + "/src/Main"));
         assertTrue(decider.shouldUnzip(projectPath + "/src/Test"));
         assertTrue(!decider.shouldUnzip(projectPath + "/src/main/Main"));
         assertTrue(decider.shouldUnzip(projectPath + "/src/main/Test"));

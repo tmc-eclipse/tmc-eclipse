@@ -13,6 +13,7 @@ public class MavenUnzippingDecider extends AbstractUnzippingDecider {
     public boolean shouldUnzip(String filePath) {
         String s = project.getRootPath() + "/src/main";
         if (filePath.startsWith(s) && (filePath.equals(s) || filePath.charAt(s.length()) == '/')) {
+            System.out.println("Mentiin mavenin iffiin");
             return !(new FileIO(filePath).fileExists());
         }
         return super.shouldUnzip(filePath);

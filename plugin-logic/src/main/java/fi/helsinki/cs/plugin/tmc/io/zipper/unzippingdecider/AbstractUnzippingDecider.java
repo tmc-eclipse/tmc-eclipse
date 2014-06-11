@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 
 public abstract class AbstractUnzippingDecider implements UnzippingDecider {
     protected Project project;
@@ -20,7 +21,15 @@ public abstract class AbstractUnzippingDecider implements UnzippingDecider {
     @Override
     public boolean shouldUnzip(String filePath) {
         for (String s : doNotUnzip) {
-            s = project.getRootPath() + "/" + s;
+            if (s.charAt(s.length()-1) == '/'){
+                s = s.substring(0, s.length() - 1);
+            }
+            System.out.println(s);
+            s = (project.getRootPath() + "/" + s);
+            System.out.println("Normi " + s);
+            System.out.println("Natiivi " + FileUtil.getNativePath(s));
+            System.out.println("Unix " + FileUtil.getUnixPath(s));
+            
             if (filePath.startsWith(s) && (filePath.equals(s) || filePath.charAt(s.length()) == '/')) {
                 return false;
             }
