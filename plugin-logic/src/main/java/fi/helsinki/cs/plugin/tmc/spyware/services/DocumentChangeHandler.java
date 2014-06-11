@@ -14,6 +14,7 @@ import javax.swing.text.BadLocationException;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.spyware.DocumentInfo;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.JsonMaker;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.diff_match_patch;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.diff_match_patch.Patch;
@@ -35,58 +36,53 @@ public class DocumentChangeHandler {
         this.documentCache = new HashMap<String, String>();
     }
 
-    public void handleEvent(Object o) {
+    public void handleEvent(DocumentInfo info) {
         if (!Core.getSettings().isSpywareEnabled()) {
             System.out.println("Spyware disabled, bailing out");
+            return;
         }
 
-        String tempPathReplaceWithCorrectOne = "";
-
-        Project project = Core.getProjectDAO().getProjectByFile(tempPathReplaceWithCorrectOne);
+        Project project = Core.getProjectDAO().getProjectByFile(info.getFullPath());
 
         if (project == null) {
             System.out.println("Not a TMC project, bailing out!");
+            return;
         }
 
-        createAndSendPatch(null, project);
+        createAndSendPatch(info, project);
     }
 
-    private void createAndSendPatch(Object o, Project project) {
+    private void createAndSendPatch(DocumentInfo info, Project project) {
         List<Patch> patches;
-
-        String full_path_to_file;
-        String file_contents;
-        String relative_path;
-        boolean patchContainsFullDocument = !documentCache.containsKey(full_path_to_file);
+        boolean patchContainsFullDocument = !documentCache.containsKey(info.getFullPath());
 
         try {
             // generatePatches will cache the current version for future
             // patches; if the document was not in the cache previously, the
             // patch will
             // contain the full document content
-            patches = generatePatches(full_path_to_file, file_contents);
+            System.out.println("Starting patch generation");
+            patches = generatePatches(info.getFullPath(), info.getEditorText());
+            System.out.println("Ending patch generation");
         } catch (BadLocationException exp) {
-            log.log(Level.WARNING, "Unable to generate patches from {0}.", relative_path);
+            log.log(Level.WARNING, "Unable to generate patches from {0}.", info.getRelativePath());
             return;
         }
-        // Remove event is handled here as the getText-method can cause
-        // an error as the document state is the state after the event. As
-        // the offsets are from the actual event, they may reference content
-        // that is no longer in the current document.
-        if (e.getType().equals(EventType.REMOVE)) {
+
+        // whitespace is still considered to be text; only truly empty text is
+        // considered to be deletion
+        if (info.getEventText().length() == 0) {
             sendEvent(project.getExercise(), "text_remove",
-                    generatePatchDescription(relative_path, patches, patchContainsFullDocument));
+                    generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
             return;
         }
 
-        String eventText;
-
-        if (isPasteEvent(eventText)) {
+        if (isPasteEvent(info.getRelativePath())) {
             sendEvent(project.getExercise(), "text_paste",
-                    generatePatchDescription(relative_path, patches, patchContainsFullDocument));
-        } else if (e.getType() == EventType.INSERT) {
+                    generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+        } else {
             sendEvent(project.getExercise(), "text_insert",
-                    generatePatchDescription(relative_path, patches, patchContainsFullDocument));
+                    generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
         }
 
     }
