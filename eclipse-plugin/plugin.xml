@@ -28,6 +28,11 @@
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand">
       </command>
+      <command
+            name="Send to pastebin"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -43,10 +48,13 @@
             commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
             class="tmc.handlers.UploadHandler">
       </handler>
-      
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
             class="tmc.handlers.TestRunnerHandler">
+      </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand"
+            class="tmc.handlers.PastebinHandler">
       </handler>
    </extension>
    <extension 
@@ -90,6 +98,11 @@
                   mnemonic="T"
                   id="fi.helsinki.cs.plugins.eclipse.menus.testRunnerCommand">
             </command>
+            <command
+            	commandId="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand"
+            	mnemonic="P"
+	            id="fi.helsinki.cs.plugins.eclipse.menus.pastebinCommand">
+	      	</command>
          </menu>
       </menuContribution>
       

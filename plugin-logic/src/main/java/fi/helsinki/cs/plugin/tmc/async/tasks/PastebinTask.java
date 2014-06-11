@@ -1,32 +1,29 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks;
 
+import java.net.URI;
+import java.net.URL;
+
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
-import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
+import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 
-public class UploaderTask implements BackgroundTask {
+public class PastebinTask implements BackgroundTask {
 
     private ProjectUploader uploader;
     private String path;
-    private boolean asPaste;
     private String pasteMessage;
 
     private boolean isRunning;
     private TaskFeedback progress;
-    private String description = "Uploading exercises";
+    private String description = "Creating a pastebin";
 
-    public UploaderTask(ProjectUploader uploader, String path) {
-        this(uploader, path, false, "");
-    }
-
-    public UploaderTask(ProjectUploader uploader, String path, boolean asPaste, String pasteMessage) {
+    public PastebinTask(ProjectUploader uploader, String path, String pasteMessage) {
         this.uploader = uploader;
         this.path = path;
-        this.asPaste = asPaste;
         this.pasteMessage = pasteMessage;
 
         isRunning = true;
@@ -44,7 +41,7 @@ public class UploaderTask implements BackgroundTask {
     @Override
     public int start(TaskFeedback p) {
         progress = p;
-        progress.startProgress(description, 3);
+        progress.startProgress(description, 2);
 
         return run();
 
@@ -54,11 +51,7 @@ public class UploaderTask implements BackgroundTask {
 
         try {
             uploader.setProject(Core.getProjectDAO().getProjectByFile(path));
-            
-            if (asPaste){
-                uploader.setAsPaste(pasteMessage);
-            }
-            
+            uploader.setAsPaste(pasteMessage);
             uploader.zipProjects();
 
             if (!isRunning()) {
@@ -69,19 +62,6 @@ public class UploaderTask implements BackgroundTask {
 
             uploader.handleSumissionResponse();
             if (!isRunning()) {
-                return BackgroundTask.RETURN_FAILURE;
-            }
-            progress.incrementProgress(1);
-
-            uploader.handleSubmissionResult(new StopStatus() {
-
-                @Override
-                public boolean mustStop() {
-                    return !isRunning();
-                }
-            });
-
-            if (getResult() == null) {
                 return BackgroundTask.RETURN_FAILURE;
             }
 
@@ -96,8 +76,8 @@ public class UploaderTask implements BackgroundTask {
 
     }
 
-    public SubmissionResult getResult() {
-        return uploader.getResult();
+    public String getPasteUrl() {
+        return uploader.getResponse().pasteUrl.toString();
     }
 
     public Project getProject() {

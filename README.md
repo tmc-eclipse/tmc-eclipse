@@ -5,11 +5,11 @@
 [![Build Status](https://travis-ci.org/tmc-eclipse/tmc-eclipse.svg?branch=master)](https://travis-ci.org/tmc-eclipse/tmc-eclipse)
 [![Coverage Status](https://coveralls.io/repos/tmc-eclipse/tmc-eclipse/badge.png?branch=master)](https://coveralls.io/r/tmc-eclipse/tmc-eclipse?branch=master)
 
+=======
 ####DEV  
 
 [![Build Status](https://travis-ci.org/tmc-eclipse/tmc-eclipse.svg?branch=DEV)](https://travis-ci.org/tmc-eclipse/tmc-eclipse)
 [![Coverage Status](https://coveralls.io/repos/tmc-eclipse/tmc-eclipse/badge.png?branch=DEV)](https://coveralls.io/r/tmc-eclipse/tmc-eclipse?branch=DEV)
-
 
 TMC-Eclipse project is a [University of Helsinki](http://helsinki.fi/university) [Department of Computer Science](http://cs.helsinki.fi) project for porting the [Netbeans](https://netbeans.org/) [TestMyCode plugin](https://github.com/testmycode/tmc-netbeans) to the [Eclipse IDE](http://www.eclipse.org/).
 

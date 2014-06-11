@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
+import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
