@@ -3,7 +3,6 @@ package tmc.activator;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -11,9 +10,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import tmc.handlers.EclipseErrorHandler;
+import tmc.spyware.EditorListener;
 import tmc.spyware.ResourceEventListener;
-import tmc.spyware.TestListener;
-import tmc.spyware.TestSaveParticipant;
 import tmc.tasks.EclipseTaskRunner;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
@@ -29,12 +27,12 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     public void start(BundleContext context) throws Exception {
         super.start(context);
-        ResourcesPlugin.getWorkspace().addSaveParticipant("tmc-eclipse", new TestSaveParticipant());
+        // ResourcesPlugin.getWorkspace().addSaveParticipant("tmc-eclipse", new
+        // TestSaveParticipant());
         ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(),
                 IResourceChangeEvent.POST_CHANGE);
 
         instance = this;
-
         this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
     }
 
@@ -60,13 +58,22 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                 Core.setErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                         .getShell()));
                 Core.setTaskRunner(new EclipseTaskRunner());
-                Display.getCurrent().addFilter(SWT.Modify, new TestListener());
+                // Display.getCurrent().addFilter(SWT.Modify, new
+                // TestListener());
+                // Display.getCurrent().addFilter(SWT.Verify, new
+                // TestListener());
+                // Display.getCurrent().addFilter(SWT., new TestListener());
 
-                // Display.getCurrent().addFilter(SWT.KeyDown, new
-                // TestKeyListener());
+                if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) {
+                    System.out.println("Null wb");
+
+                } else {
+
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                            .addPartListener(new EditorListener());
+                }
             }
         });
-
     }
 
     public WorkbenchHelper getWorkbenchHelper() {
