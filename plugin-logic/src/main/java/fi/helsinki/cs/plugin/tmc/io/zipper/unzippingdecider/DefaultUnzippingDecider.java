@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 
 public class DefaultUnzippingDecider extends AbstractUnzippingDecider {
 
