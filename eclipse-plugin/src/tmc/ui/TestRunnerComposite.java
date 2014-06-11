@@ -86,7 +86,6 @@ public class TestRunnerComposite extends Composite {
                 }
 
                 Rectangle rectRed = parent.getChildren()[0].getShell().getClientArea();
-                System.out.println(e);
                 e.gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
                 e.gc.fillRectangle(rectRed);
 
