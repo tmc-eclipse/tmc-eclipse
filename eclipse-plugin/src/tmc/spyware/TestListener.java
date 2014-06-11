@@ -62,34 +62,4 @@ public class TestListener implements Listener {
 
     }
 
-    /* Test code please ignore */
-    private String getEditorData() {
-
-        final IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-
-        if (activeEditor == null) {
-            return "active editor null";
-        }
-        IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
-
-        IFile file = input.getFile();
-        IProject activeProject = file.getProject();
-        String activeProjectName = activeProject.getName();
-
-        if (!(activeEditor instanceof ITextEditor)) {
-            return "Ei ITextEditor";
-        }
-
-        ITextEditor ite = (ITextEditor) activeEditor;
-
-        IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
-
-        if (doc == null)
-            return "doc null";
-
-        return activeProjectName + "\n" + activeEditor.getTitle() + "\n" + doc.get();
-
-    }
-
 }
