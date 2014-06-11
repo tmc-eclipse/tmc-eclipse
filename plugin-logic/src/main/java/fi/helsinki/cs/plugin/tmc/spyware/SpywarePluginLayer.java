@@ -22,6 +22,11 @@ public class SpywarePluginLayer implements Closeable {
     public void takeSnapshot(SnapshotInfo info) {
         (new SnapshotTaker(info, activeThreads, receiver)).execute();
     }
+    
+    public void documentChange(DocumentInfo info) {
+        
+    }
+    
 
     @Override
     public void close() {
