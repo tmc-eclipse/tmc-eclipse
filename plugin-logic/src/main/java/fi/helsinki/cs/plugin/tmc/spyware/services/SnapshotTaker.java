@@ -20,18 +20,19 @@ public class SnapshotTaker {
 
     private static final Logger log = Logger.getLogger(SnapshotTaker.class.getName());
 
-    public SnapshotTaker(SnapshotInfo info, ActiveThreadSet threadSet, EventReceiver receiver) {
-        this.info = info;
+    public SnapshotTaker(ActiveThreadSet threadSet, EventReceiver receiver) {
+
         this.threadSet = threadSet;
         this.receiver = receiver;
     }
 
-    public void execute() {
-        // System.out.println("Project name: " + info.getProjectName());
-        // System.out.println("Old path: " + info.getOldFilePath());
-        // System.out.println("Current path: " + info.getCurrentFilePath());
-        // System.out.println("Change type: " +
-        // info.getChangeType().name().toLowerCase());
+
+    public void execute(SnapshotInfo info) {
+        this.info = info;
+        System.out.println("Project name: " + info.getProjectName());
+        System.out.println("Old path: " + info.getOldFilePath());
+        System.out.println("Current path: " + info.getCurrentFilePath());
+        System.out.println("Change type: " + info.getChangeType().name().toLowerCase());
 
         if (info.getChangeType() == ChangeType.FILE_RENAME || info.getChangeType() == ChangeType.FOLDER_RENAME) {
             handleRename();
