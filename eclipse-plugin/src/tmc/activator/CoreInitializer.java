@@ -32,6 +32,7 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         ResourcesPlugin.getWorkspace().addSaveParticipant("tmc-eclipse", new TestSaveParticipant());
         ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(),
                 IResourceChangeEvent.POST_CHANGE);
+
         instance = this;
 
         this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
@@ -60,6 +61,9 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                         .getShell()));
                 Core.setTaskRunner(new EclipseTaskRunner());
                 Display.getCurrent().addFilter(SWT.Modify, new TestListener());
+
+                // Display.getCurrent().addFilter(SWT.KeyDown, new
+                // TestKeyListener());
             }
         });
 
