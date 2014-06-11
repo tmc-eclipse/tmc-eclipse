@@ -4,6 +4,7 @@ import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.DAOManager;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
+import fi.helsinki.cs.plugin.tmc.services.ProjectEventHandler;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -23,6 +24,7 @@ public final class ServiceFactory {
     private ServerManager server;
     private Updater updater;
     private SpywarePluginLayer spyware;
+    private ProjectEventHandler projectEventHandler;
 
     public ServiceFactory() {
         this.settings = Settings.getDefaultSettings();
@@ -33,6 +35,7 @@ public final class ServiceFactory {
         this.projectDAO = manager.getProjectDAO();
 
         this.updater = new Updater(server, courseDAO, projectDAO);
+        this.projectEventHandler = new ProjectEventHandler(projectDAO);
 
         EventReceiver receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("sikrit.tmp"))));
         ActiveThreadSet set = new ActiveThreadSet();
@@ -63,6 +66,10 @@ public final class ServiceFactory {
 
     public SpywarePluginLayer getSpyware() {
         return spyware;
+    }
+
+    public ProjectEventHandler getProjectEventHandler() {
+        return projectEventHandler;
     }
 
 }

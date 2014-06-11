@@ -12,12 +12,12 @@ import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 
 public class UploadHandler extends AbstractHandler {
-WorkbenchHelper helper;
-	
-	public UploadHandler(){
-		this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
-		this.helper.initialize();
-	}
+    WorkbenchHelper helper;
+
+    public UploadHandler() {
+        this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        this.helper.initialize();
+    }
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {

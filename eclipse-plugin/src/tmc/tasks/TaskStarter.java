@@ -33,7 +33,7 @@ public final class TaskStarter {
         FeedbackAnswerSubmitter submitter = new FeedbackAnswerSubmitter(Core.getServerManager());
         Core.getTaskRunner().runTask(new FeedbackSubmissionTask(submitter, answers, feedbackUrl));
     }
-    
+
     public static void startExerciseUploadTask(EclipseIdeUIInvoker invoker) {
         ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
         WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();

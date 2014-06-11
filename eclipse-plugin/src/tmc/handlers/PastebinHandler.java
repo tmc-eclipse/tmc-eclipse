@@ -15,15 +15,15 @@ import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 
 public class PastebinHandler extends AbstractHandler {
-	WorkbenchHelper helper;
-	
-	public PastebinHandler(){
-		this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
-		this.helper.initialize();
-	}
+    WorkbenchHelper helper;
+
+    public PastebinHandler() {
+        this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        this.helper.initialize();
+    }
 
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {        
+    public Object execute(ExecutionEvent event) throws ExecutionException {
         if (helper.saveOpenFiles()) {
             Shell shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
             Project p = CoreInitializer.getDefault().getWorkbenchHelper().getActiveProject();

@@ -47,7 +47,7 @@ class RequestExecutor {
         }
 
     }
-    
+
     public RequestExecutor setCredentials(String username, String password) {
         return setCredentials(new UsernamePasswordCredentials(username, password));
     }
@@ -129,15 +129,13 @@ class RequestExecutor {
             httpClientBuilder.setRoutePlanner(routePlanner);
         }
     }
-    
+
     /**
      * For testing
      */
     @Override
-    public String toString(){
-    	return LOG.getName() + "\n" +
-    			request.getMethod() + "\n" +
-    			request.getURI().toString() + "\n" +
-    			credentials.getUserName() + " " + credentials.getPassword();
+    public String toString() {
+        return LOG.getName() + "\n" + request.getMethod() + "\n" + request.getURI().toString() + "\n"
+                + credentials.getUserName() + " " + credentials.getPassword();
     }
 }

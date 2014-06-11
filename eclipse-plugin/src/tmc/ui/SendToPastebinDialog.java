@@ -61,7 +61,7 @@ public class SendToPastebinDialog extends Dialog {
         Label lblNewLabel = new Label(shell, SWT.NONE);
         lblNewLabel.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.BOLD));
         lblNewLabel.setBounds(10, 10, 489, 24);
-        lblNewLabel.setText("Creating Pastebin item for "+exerciseName);
+        lblNewLabel.setText("Creating Pastebin item for " + exerciseName);
 
         Label lblNewLabel_1 = new Label(shell, SWT.NONE);
         lblNewLabel_1.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));

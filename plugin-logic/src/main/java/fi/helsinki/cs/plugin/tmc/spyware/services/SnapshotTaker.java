@@ -26,6 +26,7 @@ public class SnapshotTaker {
         this.receiver = receiver;
     }
 
+
     public void execute(SnapshotInfo info) {
         this.info = info;
         System.out.println("Project name: " + info.getProjectName());
