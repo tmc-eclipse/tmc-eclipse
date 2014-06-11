@@ -147,7 +147,7 @@ public class TestRunnerComposite extends Composite {
         }
         lblTestspassed = new Label(master, SWT.NONE);
         lblTestspassed.setBounds(19, 10, 183, 17);
-        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
+        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount + "/" + (int) howManyTestsRan);
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
         progressBar.notifyListeners(SWT.Paint, new Event());
     }
