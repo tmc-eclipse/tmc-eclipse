@@ -20,7 +20,7 @@ public class ProjectScanner {
             traverse(files, new FileIO(project.getRootPath()));
 
             project.setProjectFiles(files);
-            ;
+            
             project.getExercise().setDownloaded(project.existsOnDisk());
         }
     }
