@@ -35,7 +35,7 @@ public class SnapshotInfo {
     }
 
     public String getOldFullFilePath() {
-        return currentFullFilePath;
+        return oldFullFilePath;
     }
 
     public String getCurrentFilePath() {
