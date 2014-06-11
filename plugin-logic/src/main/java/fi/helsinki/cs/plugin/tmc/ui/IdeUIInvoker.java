@@ -4,7 +4,6 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
-import fi.helsinki.cs.plugin.tmc.services.http.SubmissionResponse;
 
 public interface IdeUIInvoker {
     public void invokeTestResultWindow(List<TestCaseResult> results);
@@ -20,5 +19,9 @@ public interface IdeUIInvoker {
     public void invokeSendToPastebinWindow(String exerciseName);
 
     public void invokePastebinResultDialog(String pasteUrl);
+
+    public void invokeRequestCodeReviewWindow(final String exerciseName);
+
+    public void invokeCodeReviewRequestSuccefullySentWindow();
 
 }

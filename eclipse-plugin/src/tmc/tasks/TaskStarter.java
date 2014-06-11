@@ -7,10 +7,12 @@ import tmc.services.GenericProjectOpener;
 import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.FeedbackSubmissionTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.PastebinTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
+import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.CodeReviewRequestListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.PastebinTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.UploadTaskListener;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
@@ -54,5 +56,16 @@ public final class TaskStarter {
 
         PastebinTask task = new PastebinTask(uploader, project.getRootPath() + "/", pasteMessage);
         Core.getTaskRunner().runTask(task, new PastebinTaskListener(task, invoker));
+    }
+
+    public static void startCodeReviewRequestTask(EclipseIdeUIInvoker invoker, String requestMessage) {
+        ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
+        WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        helper.initialize();
+
+        Project project = helper.getActiveProject();
+
+        CodeReviewRequestTask task = new CodeReviewRequestTask(uploader, project.getRootPath() + "/", requestMessage);
+        Core.getTaskRunner().runTask(task, new CodeReviewRequestListener(task, invoker));
     }
 }

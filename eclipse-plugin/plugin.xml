@@ -15,7 +15,7 @@
       </command>
       <command
     	    name="Submit to server"
-    	    categoryID="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+    	    categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
     	    id="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand">
       </command>
       <command
@@ -32,6 +32,11 @@
             name="Send to pastebin"
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand">
+      </command>
+      <command
+            name="Request code review"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.codeReviewRequestCommand">
       </command>
    </extension>
    <extension
@@ -55,6 +60,10 @@
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand"
             class="tmc.handlers.PastebinHandler">
+      </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.codeReviewRequestCommand"
+            class="tmc.handlers.CodeReviewRequestHandler">
       </handler>
    </extension>
    <extension 
@@ -108,7 +117,8 @@
                   mnemonic="P">
 	      	</command>
              <command
-                   commandId="eclipse-plugin.command1"
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.codeReviewRequestCommand"
+                   id="fi.helsinki.cs.plugins.eclipse.menus.codeReviewRequestCommand"
                    label="Request code review"
                    style="push">
              </command>

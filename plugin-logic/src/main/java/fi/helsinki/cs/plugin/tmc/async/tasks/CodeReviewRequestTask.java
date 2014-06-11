@@ -5,20 +5,20 @@ import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 
-public class PastebinTask implements BackgroundTask {
+public class CodeReviewRequestTask implements BackgroundTask {
 
     private ProjectUploader uploader;
     private String path;
-    private String pasteMessage;
+    private String requestMessage;
 
     private boolean isRunning;
     private TaskFeedback progress;
-    private String description = "Creating a pastebin";
+    private String description = "Creating code review request";
 
-    public PastebinTask(ProjectUploader uploader, String path, String pasteMessage) {
+    public CodeReviewRequestTask(ProjectUploader uploader, String path, String requestMessage) {
         this.uploader = uploader;
         this.path = path;
-        this.pasteMessage = pasteMessage;
+        this.requestMessage = requestMessage;
 
         isRunning = true;
     }
@@ -45,7 +45,7 @@ public class PastebinTask implements BackgroundTask {
 
         try {
             uploader.setProject(Core.getProjectDAO().getProjectByFile(path));
-            uploader.setAsPaste(pasteMessage);
+            uploader.setAsRequest(requestMessage);
             uploader.zipProjects();
 
             if (!isRunning()) {
@@ -62,16 +62,12 @@ public class PastebinTask implements BackgroundTask {
             progress.incrementProgress(1);
 
         } catch (Exception ex) {
-            Core.getErrorHandler().raise("An error occurred while uploading exercises:\n" + ex.getMessage());
+            Core.getErrorHandler().raise("An error occurred while requesting code review:\n" + ex.getMessage());
             return BackgroundTask.RETURN_FAILURE;
         }
 
         return BackgroundTask.RETURN_SUCCESS;
 
-    }
-
-    public String getPasteUrl() {
-        return uploader.getResponse().pasteUrl.toString();
     }
 
     @Override
