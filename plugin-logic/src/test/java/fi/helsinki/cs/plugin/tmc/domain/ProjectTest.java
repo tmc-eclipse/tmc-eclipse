@@ -1,13 +1,15 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.DefaultZippingDecider;
+import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.MavenZippingDecider;
 
 public class ProjectTest {
     private Project project;
@@ -99,6 +101,48 @@ public class ProjectTest {
 
         p = new Project(exercise, new ArrayList<String>());
         assertEquals("", p.getRootPath());
+    }
+    
+    @Test
+    public void getZippingDeciderWhenMavenProjectTest() {
+        projectFiles.add("pom.xml");
+        assertEquals(project.getZippingDecider().getClass(), new MavenZippingDecider(project).getClass());
+    }
+    
+    @Test
+    public void getZippingDeciderWhenAntProjectTest() {
+        projectFiles.add("build.xml");
+        assertEquals(project.getZippingDecider().getClass(), new DefaultZippingDecider(project).getClass());
+    }
+    
+    @Test
+    public void getZippingDeciderWhenCProjectTest() {
+        projectFiles.add("Makefile");
+        assertEquals(project.getZippingDecider().getClass(), new DefaultZippingDecider(project).getClass());
+    }
+    
+    @Test (expected = RuntimeException.class)
+    public void getZippingDeciderWhenThereIsNoProjectTest() {
+        project.setProjectFiles(new ArrayList<String>());
+        project.getZippingDecider();
+    }
+    
+    @Test
+    public void existsOnDiskTest() {
+        projectFiles.add("pom.xml");
+        assertFalse(project.existsOnDisk());
+        projectFiles.add("/src/pom.xml");
+        assertTrue(project.existsOnDisk());
+        project.setProjectFiles(new ArrayList<String>());
+        assertFalse(project.existsOnDisk());
+    }
+    
+    @Test
+    public void constructorTest() {
+        project = new Project(new Exercise("name"));
+        assertEquals(project.getExtraStudentFiles().size(), 0);
+        assertEquals(project.getExercise().getName(), "name");
+        assertEquals(project.getProjectFiles().size(), 0);
     }
 
 }
