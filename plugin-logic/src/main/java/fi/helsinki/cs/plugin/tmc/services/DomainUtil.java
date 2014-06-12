@@ -10,7 +10,7 @@ public class DomainUtil {
 
     public static String[] getCourseNames(List<Course> courses) {
         List<String> courseNames = new ArrayList<String>();
-        for (Course c : Core.getCourseDAO().getCourses()) {
+        for (Course c : courses) {
             courseNames.add(c.getName());
         }
         return courseNames.toArray(new String[0]);
