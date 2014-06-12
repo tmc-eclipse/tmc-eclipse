@@ -137,4 +137,16 @@ public class Course {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Course)) {
+            return false;
+        }
+
+        Course c = (Course) o;
+
+        return this.name.equals(c.name);
+    }
+
 }
