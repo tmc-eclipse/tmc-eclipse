@@ -9,6 +9,7 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.SpywarePluginLayer;
+import fi.helsinki.cs.plugin.tmc.spyware.services.DocumentChangeHandler;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventDeduplicater;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventReceiver;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventSendBuffer;
@@ -40,8 +41,9 @@ public final class ServiceFactory {
         EventReceiver receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("sikrit.tmp"))));
         ActiveThreadSet set = new ActiveThreadSet();
         SnapshotTaker taker = new SnapshotTaker(set, receiver);
+        DocumentChangeHandler handler = new DocumentChangeHandler(receiver, set);
 
-        this.spyware = new SpywarePluginLayer(set, receiver, taker);
+        this.spyware = new SpywarePluginLayer(set, receiver, taker, handler);
     }
 
     public Settings getSettings() {

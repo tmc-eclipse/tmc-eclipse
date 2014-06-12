@@ -26,13 +26,8 @@ public class SnapshotTaker {
         this.receiver = receiver;
     }
 
-
     public void execute(SnapshotInfo info) {
         this.info = info;
-        System.out.println("Project name: " + info.getProjectName());
-        System.out.println("Old path: " + info.getOldFilePath());
-        System.out.println("Current path: " + info.getCurrentFilePath());
-        System.out.println("Change type: " + info.getChangeType().name().toLowerCase());
 
         if (info.getChangeType() == ChangeType.FILE_RENAME || info.getChangeType() == ChangeType.FOLDER_RENAME) {
             handleRename();
