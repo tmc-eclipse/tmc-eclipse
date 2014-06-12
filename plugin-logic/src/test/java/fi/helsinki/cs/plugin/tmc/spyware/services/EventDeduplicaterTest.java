@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.spyware;
+package fi.helsinki.cs.plugin.tmc.spyware.services;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -13,32 +13,34 @@ import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 
 public class SelectionListener implements ISelectionListener {
 
-    private ProjectDAO projectDAO;
-    private Project project;
+	private ProjectDAO projectDAO;
+	private Project project;
 
-    public SelectionListener(ProjectDAO projectDAO) {
-        this.projectDAO = projectDAO;
-    }
+	public SelectionListener(ProjectDAO projectDAO) {
+		this.projectDAO = projectDAO;
+	}
 
-    public Project getSelectedProject() {
-        return project;
-    }
+	public Project getSelectedProject() {
+		return project;
+	}
 
-    @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (selection instanceof TreeSelection) {
-            TreeSelection treeSelection = (TreeSelection) selection;
-            Object element = treeSelection.getFirstElement();
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (selection instanceof TreeSelection) {
+			TreeSelection treeSelection = (TreeSelection) selection;
+			Object element = treeSelection.getFirstElement();
 
-            if (element instanceof IAdaptable) {
-                IAdaptable adaptable = (IAdaptable) element;
-                IResource resource = (IResource) adaptable.getAdapter(IResource.class);
-                if (resource != null) {
-                    IPath path = resource.getLocation();
-                    this.project = projectDAO.getProjectByFile(path.toString());
-                }
-            }
-        }
-    }
+			if (element instanceof IAdaptable) {
+				IAdaptable adaptable = (IAdaptable) element;
+				IResource resource = (IResource) adaptable
+						.getAdapter(IResource.class);
+				if (resource != null) {
+					IPath path = resource.getLocation();
+					this.project = projectDAO.getProjectByFile(path.toString());
+
+				}
+			}
+		}
+	}
 
 }

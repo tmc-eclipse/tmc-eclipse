@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.spyware;
+package fi.helsinki.cs.plugin.tmc.spyware.services;
 
 import java.io.IOException;
 import java.io.InputStream;
