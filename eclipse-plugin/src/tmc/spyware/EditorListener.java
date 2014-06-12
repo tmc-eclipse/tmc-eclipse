@@ -37,8 +37,10 @@ public class EditorListener implements IPartListener {
                 .getActiveEditor();
 
         ITextEditor ite = (ITextEditor) activeEditor;
-        IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
-        addListener(doc);
+        if (activeEditor != null) {
+            IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
+            addListener(doc);
+        }
     }
 
     @Override
