@@ -14,22 +14,23 @@ import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 
 public class UploadHandler extends AbstractHandler {
-	WorkbenchHelper helper;
+    WorkbenchHelper helper;
 
-	public UploadHandler() {
-		this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
-		this.helper.initialize();
+    public UploadHandler() {
+        this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        this.helper.initialize();
 
-	}
+    }
 
-	@Override
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         if (helper.saveOpenFiles()) {
             Shell shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
-            if(helper.getActiveProject().getExercise().hasDeadlinePassed()){
-        		Core.getErrorHandler().
-        	}
-            TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
+            if (helper.getActiveProject().getExercise().hasDeadlinePassed()) {
+                Core.getErrorHandler().handleManualException("The deadline for this exercise has passed.");
+            } else {
+                TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
+            }
         }
         return null;
     }
