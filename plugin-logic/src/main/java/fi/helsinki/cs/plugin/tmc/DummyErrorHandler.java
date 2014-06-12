@@ -12,4 +12,9 @@ public class DummyErrorHandler implements TMCErrorHandler {
         // Do nothing.
     }
 
+    public void handleManualException(String errorMessage) {
+        // Do nothing.
+        
+    }
+
 }

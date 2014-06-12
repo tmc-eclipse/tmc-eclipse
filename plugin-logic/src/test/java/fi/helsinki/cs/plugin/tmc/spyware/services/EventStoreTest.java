@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.plugin.tmc.spyware.MockIO;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventStore;
 import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
 
