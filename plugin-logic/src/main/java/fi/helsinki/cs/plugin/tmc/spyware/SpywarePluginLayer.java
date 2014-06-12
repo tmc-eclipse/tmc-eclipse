@@ -10,7 +10,7 @@ import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
 public class SpywarePluginLayer implements Closeable {
     private ActiveThreadSet activeThreads;
     private EventReceiver receiver;
-    SnapshotTaker taker;
+    private SnapshotTaker taker;
     private DocumentChangeHandler documentHandler;
 
     public SpywarePluginLayer(ActiveThreadSet activeThreads, EventReceiver receiver, SnapshotTaker taker,

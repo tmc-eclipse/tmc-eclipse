@@ -21,7 +21,7 @@ public class SpywarePluginLayerTest {
     @Test
     public void testTakeSnapshot() {
         spl.takeSnapshot(info);
-        verify(spl, times(1)).takeSnapshot(info);
+        verify(info, times(1));
     }
 
     @Test
