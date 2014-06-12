@@ -97,18 +97,15 @@ public class DocumentChangeHandler {
             // is
             // considered to be deletion
             if (info.getEventText().length() == 0) {
-                System.out.println("Text remove");
                 sendEvent(project.getExercise(), "text_remove",
                         generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
                 return;
             }
 
             if (isPasteEvent(info.getEventText())) {
-                System.out.println("Text paste");
                 sendEvent(project.getExercise(), "text_paste",
                         generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
             } else {
-                System.out.println("Text insert");
                 sendEvent(project.getExercise(), "text_insert",
                         generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
             }
@@ -122,7 +119,7 @@ public class DocumentChangeHandler {
         }
 
         private boolean isPasteEvent(String text) {
-            if (text.length() <= 2 || isWhiteSpace(text)) {
+            if (text.trim().length() <= 2 || isWhiteSpace(text)) {
                 // if a short text or whitespace is inserted,
                 // we skip checking for paste
                 return false;
@@ -131,10 +128,10 @@ public class DocumentChangeHandler {
             try {
                 String clipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
                         .getData(DataFlavor.stringFlavor);
-                System.out.println("Text:" + text.trim());
-                System.out.println("Clipboard:" + clipboardData);
 
-                return text.equals(clipboardData);
+                // at least eclipse adds indentation whitespace to the beginning
+                // of the text even if it's pasted, hence the trim
+                return text.trim().equals(clipboardData.trim());
             } catch (Exception exp) {
             }
 

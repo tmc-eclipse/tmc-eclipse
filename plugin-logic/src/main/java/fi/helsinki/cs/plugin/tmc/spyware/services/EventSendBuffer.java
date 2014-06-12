@@ -245,9 +245,10 @@ public class EventSendBuffer implements EventReceiver {
     @Override
     public void receiveEvent(LoggableEvent event) {
         if (!Core.getSettings().isSpywareEnabled()) {
-            System.out.println("Spyware disabled, bailing out");
             return;
         }
+
+        System.out.println("Received " + event.getEventType());
 
         synchronized (sendQueue) {
             if (sendQueue.size() >= maxEvents) {
