@@ -209,12 +209,16 @@ class EventDataVisitor implements IResourceDeltaVisitor {
     }
 
     private void createPaths(EventData data, IResourceDelta delta) {
-        data.currentPath = delta.getResource().getFullPath().toString();
-        data.fullCurrentPath = delta.getResource().getLocation().toString();
+        if (delta.getResource() != null && delta.getResource().getLocation() != null) {
+            data.currentPath = delta.getResource().getFullPath().toString();
+            data.fullCurrentPath = delta.getResource().getLocation().toString();
+        }
     }
 
     private void createOldPaths(EventData data, IResourceDelta delta) {
-        data.oldPath = delta.getResource().getFullPath().toString();
-        data.fullOldPath = delta.getResource().getLocation().toString();
+        if (delta.getResource() != null && delta.getResource().getLocation() != null) {
+            data.oldPath = delta.getResource().getFullPath().toString();
+            data.fullOldPath = delta.getResource().getLocation().toString();
+        }
     }
 }

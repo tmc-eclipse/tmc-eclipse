@@ -1,6 +1,5 @@
 package fi.helsinki.cs.plugin.tmc.spyware.utility;
 
-
 public class Cooldown {
     private long durationMillis;
     private long startTime;

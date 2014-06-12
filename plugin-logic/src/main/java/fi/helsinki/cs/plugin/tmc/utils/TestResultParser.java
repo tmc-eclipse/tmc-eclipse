@@ -37,4 +37,3 @@ public class TestResultParser {
         return new TestRunResult(testCaseResults);
     }
 }
-

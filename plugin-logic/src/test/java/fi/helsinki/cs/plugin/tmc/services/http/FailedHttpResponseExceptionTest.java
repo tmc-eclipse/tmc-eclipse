@@ -51,5 +51,4 @@ public class FailedHttpResponseExceptionTest {
         exception.getEntityAsString();
     }
 
-
 }

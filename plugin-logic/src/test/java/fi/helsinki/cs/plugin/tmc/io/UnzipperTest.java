@@ -23,123 +23,118 @@ import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UNZIP_ALL_THE_THINGS
 import fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider.UnzippingDecider;
 
 public class UnzipperTest {
-	private String path;
+    private String path;
 
-	@Before
-	public void setUp() {
-		this.path = "src/test/java/fi/helsinki/cs/plugin/tmc/io/";
-	}
+    @Before
+    public void setUp() {
+        this.path = "src/test/java/fi/helsinki/cs/plugin/tmc/io/";
+    }
 
-	@Test
-	public void unzipTestZip() throws FileNotFoundException, IOException {
-		File f = new File(path + "testZip.zip");
-		FileInputStream s = new FileInputStream(f);
+    @Test
+    public void unzipTestZip() throws FileNotFoundException, IOException {
+        File f = new File(path + "testZip.zip");
+        FileInputStream s = new FileInputStream(f);
 
-		byte[] b = IOUtils.toByteArray(s);
-		s.close();
+        byte[] b = IOUtils.toByteArray(s);
+        s.close();
 
-		ZippedProject project = new ZippedProject();
-		Unzipper unzipper = new Unzipper(project, new UNZIP_ALL_THE_THINGS());
-		project.setBytes(b);
+        ZippedProject project = new ZippedProject();
+        Unzipper unzipper = new Unzipper(project, new UNZIP_ALL_THE_THINGS());
+        project.setBytes(b);
 
-		unzipper.unzipTo(new FileIO(path));
+        unzipper.unzipTo(new FileIO(path));
 
-		f = new File(path + "testFile.txt");
-		Scanner scanner = null;
-		try {
-			scanner = new Scanner(f);
+        f = new File(path + "testFile.txt");
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(f);
 
-			assertEquals("This is a test. ", scanner.nextLine());
-			assertEquals(false, scanner.hasNextLine());
-		} finally {
-			if (scanner != null) {
-				scanner.close();
-			}
-			f.delete();
-		}
-	}
+            assertEquals("This is a test. ", scanner.nextLine());
+            assertEquals(false, scanner.hasNextLine());
+        } finally {
+            if (scanner != null) {
+                scanner.close();
+            }
+            f.delete();
+        }
+    }
 
-	@Test
-	public void unzippingCanCreateFolders() throws FileNotFoundException,
-			IOException {
-		unZipDirectory("testDirectory.zip");
+    @Test
+    public void unzippingCanCreateFolders() throws FileNotFoundException, IOException {
+        unZipDirectory("testDirectory.zip");
 
-		File f = new File(path + "testDirectory/testFile.txt");
-		Scanner scanner = null;
-		try {
-			assertEquals(true, f.exists());
-			scanner = new Scanner(f);
+        File f = new File(path + "testDirectory/testFile.txt");
+        Scanner scanner = null;
+        try {
+            assertEquals(true, f.exists());
+            scanner = new Scanner(f);
 
-			for (int i = 0; i < 5000; i++) {
-				assertEquals("This is a test. ", scanner.nextLine());
-			}
-			assertEquals(false, scanner.hasNextLine());
-			f = new File(path + "testDirectory/dir");
-			assertEquals(true, f.exists());
-			assertEquals(true, f.isDirectory());
+            for (int i = 0; i < 5000; i++) {
+                assertEquals("This is a test. ", scanner.nextLine());
+            }
+            assertEquals(false, scanner.hasNextLine());
+            f = new File(path + "testDirectory/dir");
+            assertEquals(true, f.exists());
+            assertEquals(true, f.isDirectory());
 
-		} finally {
-			if (scanner != null) {
-				scanner.close();
-			}
-			FileUtils.deleteDirectory(new File(path + "testDirectory/"));
-		}
-	}
+        } finally {
+            if (scanner != null) {
+                scanner.close();
+            }
+            FileUtils.deleteDirectory(new File(path + "testDirectory/"));
+        }
+    }
 
-	@Test
-	public void unzippingAFolderDoesNotOverWriteFilesInExistingFolder()
-			throws FileNotFoundException, IOException {
-		unZipDirectory("testDirectory.zip");
-		unZipDirectory("overWriteTest.zip");
-		try {
-			File f = new File(path + "testDirectory/eclipse");
-			assertEquals(true, f.exists());
-			assertEquals(false, f.isDirectory());
+    @Test
+    public void unzippingAFolderDoesNotOverWriteFilesInExistingFolder() throws FileNotFoundException, IOException {
+        unZipDirectory("testDirectory.zip");
+        unZipDirectory("overWriteTest.zip");
+        try {
+            File f = new File(path + "testDirectory/eclipse");
+            assertEquals(true, f.exists());
+            assertEquals(false, f.isDirectory());
 
-			f = new File(path + "testDirectory/testFile.txt");
-			assertEquals(true, f.exists());
-			assertEquals(false, f.isDirectory());
+            f = new File(path + "testDirectory/testFile.txt");
+            assertEquals(true, f.exists());
+            assertEquals(false, f.isDirectory());
 
-			f = new File(path + "testDirectory/dir");
-			assertEquals(true, f.exists());
-			assertEquals(true, f.isDirectory());
+            f = new File(path + "testDirectory/dir");
+            assertEquals(true, f.exists());
+            assertEquals(true, f.isDirectory());
 
-			f = new File(path + "testDirectory");
-			assertEquals(true, f.exists());
-			assertEquals(true, f.isDirectory());
-		} finally {
-			FileUtils.deleteDirectory(new File(path + "testDirectory/"));
-		}
+            f = new File(path + "testDirectory");
+            assertEquals(true, f.exists());
+            assertEquals(true, f.isDirectory());
+        } finally {
+            FileUtils.deleteDirectory(new File(path + "testDirectory/"));
+        }
 
-	}
+    }
 
-	private void assertFileOk(String file, String content)
-			throws FileNotFoundException {
-		File f = new File(path + file);
-		Scanner scanner = null;
-		try {
-			assertEquals(true, f.exists());
-			assertEquals(false, f.isDirectory());
-			scanner = new Scanner(f);
-			assertEquals(content, scanner.nextLine());
-		} finally {
-			scanner.close();
-		}
-	}
+    private void assertFileOk(String file, String content) throws FileNotFoundException {
+        File f = new File(path + file);
+        Scanner scanner = null;
+        try {
+            assertEquals(true, f.exists());
+            assertEquals(false, f.isDirectory());
+            scanner = new Scanner(f);
+            assertEquals(content, scanner.nextLine());
+        } finally {
+            scanner.close();
+        }
+    }
 
-	private void unZipDirectory(String zip) throws IOException,
-			FileNotFoundException {
-		unZipDirectory(zip, new UNZIP_ALL_THE_THINGS());
-	}
+    private void unZipDirectory(String zip) throws IOException, FileNotFoundException {
+        unZipDirectory(zip, new UNZIP_ALL_THE_THINGS());
+    }
 
-	private void unZipDirectory(String zip, UnzippingDecider decider)
-			throws IOException, FileNotFoundException {
-		File f = new File(path + zip);
-		byte[] b = IOUtils.toByteArray(new FileInputStream(f));
-		ZippedProject project = new ZippedProject();
-		project.setBytes(b);
-		Unzipper unzipper = new Unzipper(project, decider);
-		unzipper.unzipTo(new FileIO(path));
-	}
+    private void unZipDirectory(String zip, UnzippingDecider decider) throws IOException, FileNotFoundException {
+        File f = new File(path + zip);
+        byte[] b = IOUtils.toByteArray(new FileInputStream(f));
+        ZippedProject project = new ZippedProject();
+        project.setBytes(b);
+        Unzipper unzipper = new Unzipper(project, decider);
+        unzipper.unzipTo(new FileIO(path));
+    }
 
 }

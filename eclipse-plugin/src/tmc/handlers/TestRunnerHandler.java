@@ -52,7 +52,7 @@ public class TestRunnerHandler extends AbstractHandler {
 
         }
 
-        String projectRoot = getProjectRootPath();
+        String projectRoot = helper.getActiveProject().getRootPath();
         if (projectRoot == null) {
             Core.getErrorHandler().raise("Unable to run tests: No file open in workspace.");
             return null;
@@ -81,7 +81,7 @@ public class TestRunnerHandler extends AbstractHandler {
     }
 
     private void runTestsforMavenProject(Project project) {
-        if (!saveOpenFiles()) {
+        if (!helper.saveOpenFiles()) {
             return;
         }
 
@@ -112,16 +112,12 @@ public class TestRunnerHandler extends AbstractHandler {
         Core.getTaskRunner().runTask(testrun, listener);
     }
 
-    private boolean saveOpenFiles() {
-        return PlatformUI.getWorkbench().saveAllEditors(true);
-    }
-
     private void runTestsForAntProject() {
-        if (!saveOpenFiles()) {
+        if (!helper.saveOpenFiles()) {
             return;
         }
 
-        String projectRoot = getProjectRootPath();
+        String projectRoot = helper.getActiveProject().getRootPath();
         String javaExecutable = System.getProperty("java.home") + "/bin/java";
 
         try {
@@ -137,15 +133,6 @@ public class TestRunnerHandler extends AbstractHandler {
         TestrunnerTask testrun = new AntTestrunnerTask(projectRoot, projectRoot + "/test", javaExecutable, null);
         TestrunnerListener listener = new TestrunnerListener(testrun, new EclipseIdeUIInvoker(shell));
         Core.getTaskRunner().runTask(testrun, listener);
-    }
-
-    private String getProjectRootPath() {
-        Project project = helper.getActiveProject();
-        if (project == null) {
-            return "";
-        } else {
-            return project.getRootPath();
-        }
     }
 
     private void antBuild(String root) throws CoreException {

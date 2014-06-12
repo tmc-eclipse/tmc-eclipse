@@ -1,5 +1,7 @@
 package tmc.util;
 
+import java.awt.Desktop;
+import java.net.URI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionService;
@@ -11,6 +13,7 @@ import org.eclipse.ui.PlatformUI;
 
 import tmc.activator.CoreInitializer;
 import tmc.handlers.listeners.SelectionListener;
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 
@@ -93,7 +96,13 @@ public class WorkbenchHelper {
         if (getActiveView().equals(SOURCE_EDITOR)) {
             return getProjectByEditor();
         } else {
-            return getProjectBySelection();
+            Project project = getProjectBySelection();
+
+            if (project == null) {
+                project = getProjectByEditor();
+            }
+
+            return project;
         }
     }
 
@@ -113,4 +122,20 @@ public class WorkbenchHelper {
         }
     }
 
+    public boolean saveOpenFiles() {
+        return PlatformUI.getWorkbench().saveAllEditors(true);
+    }
+
+    public void openURL(String url) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URI(url));
+            } catch (Exception e) {
+                Core.getErrorHandler().raise("Unable to open the default browser.");
+            }
+        } else {
+            Core.getErrorHandler().raise("Unable to find a default system browser.");
+        }
+
+    }
 }

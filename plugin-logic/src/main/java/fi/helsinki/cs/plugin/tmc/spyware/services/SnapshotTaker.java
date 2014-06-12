@@ -20,13 +20,15 @@ public class SnapshotTaker {
 
     private static final Logger log = Logger.getLogger(SnapshotTaker.class.getName());
 
-    public SnapshotTaker(SnapshotInfo info, ActiveThreadSet threadSet, EventReceiver receiver) {
-        this.info = info;
+    public SnapshotTaker(ActiveThreadSet threadSet, EventReceiver receiver) {
+
         this.threadSet = threadSet;
         this.receiver = receiver;
     }
 
-    public void execute() {
+
+    public void execute(SnapshotInfo info) {
+        this.info = info;
         System.out.println("Project name: " + info.getProjectName());
         System.out.println("Old path: " + info.getOldFilePath());
         System.out.println("Current path: " + info.getCurrentFilePath());

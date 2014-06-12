@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.async.tasks;
 
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
+import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
@@ -10,19 +11,25 @@ import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 public class UploaderTask implements BackgroundTask {
 
     private ProjectUploader uploader;
+    private String path;
+    private boolean asPaste;
+    private String pasteMessage;
+
     private boolean isRunning;
     private TaskFeedback progress;
     private String description = "Uploading exercises";
-    private String path;
-
-    public interface StopStatus {
-        boolean mustStop();
-    }
 
     public UploaderTask(ProjectUploader uploader, String path) {
+        this(uploader, path, false, "");
+    }
+
+    public UploaderTask(ProjectUploader uploader, String path, boolean asPaste, String pasteMessage) {
         this.uploader = uploader;
-        isRunning = true;
         this.path = path;
+        this.asPaste = asPaste;
+        this.pasteMessage = pasteMessage;
+
+        isRunning = true;
     }
 
     private boolean isRunning() {
@@ -47,6 +54,11 @@ public class UploaderTask implements BackgroundTask {
 
         try {
             uploader.setProject(Core.getProjectDAO().getProjectByFile(path));
+
+            if (asPaste) {
+                uploader.setAsPaste(pasteMessage);
+            }
+
             uploader.zipProjects();
 
             if (!isRunning()) {

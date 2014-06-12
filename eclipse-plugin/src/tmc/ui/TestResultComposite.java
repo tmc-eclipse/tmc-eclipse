@@ -1,9 +1,10 @@
 package tmc.ui;
 
-import java.io.File;
-
-import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,10 +18,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 import tmc.activator.CoreInitializer;
 import tmc.util.WorkbenchHelper;
@@ -32,18 +35,16 @@ public class TestResultComposite extends Composite {
     private Label testResultName;
     private Button showMoreBtn;
     private Label testResultMessage;
+
     private final Color PASS = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
-
     private final Color FAIL = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-
     private final Color BACKGROUND = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 
     private int colorBarHeight;
-
     private int heightOffset;
+    private int howManyRows = 1;
 
     private WorkbenchHelper helper;
-    int howManyRows = 1;
 
     /**
      * Create the composite.
@@ -53,8 +54,6 @@ public class TestResultComposite extends Composite {
      */
     public TestResultComposite(Composite parent, int style, final TestCaseResult tcr) {
         super(parent, style);
-
-        howManyRows = 1;
 
         this.helper = CoreInitializer.getDefault().getWorkbenchHelper();
 
@@ -75,7 +74,9 @@ public class TestResultComposite extends Composite {
         colorBar = new Text(this, SWT.READ_ONLY);
         colorBar.setBounds(0, 0, 5, testResultName.getSize().y);
         colorBar.setBackground(PASS);
+
         if (!tcr.isSuccessful()) {
+
             testResultName.setForeground(FAIL);
 
             testResultMessage = new Label(this, SWT.SMOOTH);
@@ -101,7 +102,6 @@ public class TestResultComposite extends Composite {
             colorBarHeight = testResultName.getSize().y + testResultMessage.getSize().y + showMoreBtn.getSize().y + 20;
 
             colorBar.setBounds(0, 0, 5, colorBarHeight);
-
             colorBar.setBackground(FAIL);
 
         }
@@ -125,27 +125,27 @@ public class TestResultComposite extends Composite {
     }
 
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
+
         Composite moreDetails = new Composite(this, SWT.SMOOTH);
         heightOffset = 0;
+
         for (StackTraceElement st : tcr.getException().stackTrace) {
-            if (!st.getClassName().toLowerCase().contains("test") || st.getClassName().contains("fi.helsinki.cs.")) {
-                addMoreDetailsLink(moreDetails, st.toString(), st);
-            } else {
+            if (st.getClassName().toLowerCase().contains("test.")) {
                 addMoreDetailsLink(moreDetails, "<a href=\"\">" + st.toString() + "</a>", st);
-                // addMoreDetailsLink(moreDetails,
-                // "This is a link to <a href=\"http://www.google.com\">Google</a>");
+            } else {
+                addMoreDetailsLink(moreDetails, st.toString(), st);
             }
         }
+
         moreDetails.setBackground(BACKGROUND);
         moreDetails.setLocation(testResultMessage.getSize().x, heightOffset);
         moreDetails.setBounds(10, testResultMessage.getSize().y + 5, testResultMessage.getSize().x, heightOffset);
 
         colorBar.setBounds(0, 0, 5, testResultMessage.getSize().y + testResultName.getSize().y
                 + moreDetails.getSize().y);
-        if (this.getParent().getParent().getParent().getParent() instanceof TestRunnerComposite) {
-            ((TestRunnerComposite) this.getParent().getParent().getParent().getParent()).enlargeTestStack(this, tcr);
-        } else {
-            System.out.println(this.getParent().getParent().getParent());
+
+        if (getGreatGreatGrandParent() instanceof TestRunnerComposite) {
+            ((TestRunnerComposite) getGreatGreatGrandParent()).enlargeTestStack(this, tcr);
         }
 
         if (showMoreBtn != null) {
@@ -157,10 +157,6 @@ public class TestResultComposite extends Composite {
         Link moreDetailslink = new Link(parent, SWT.NONE);
         moreDetailslink.setText(text);
         moreDetailslink.setBackground(BACKGROUND);
-
-        // PlatformUI.getWorkbench().getActiveWorkbenchWindow().openPage(perspectiveId,
-        // input)
-
         moreDetailslink.setLocation(testResultName.getSize().x, heightOffset);
         moreDetailslink.setBounds(0, heightOffset, testResultName.getSize().x, testResultName.getSize().y);
 
@@ -175,25 +171,32 @@ public class TestResultComposite extends Composite {
         moreDetailslink.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                System.out.println(path.toString());
-                System.out.println(st.getClassName());
-                System.out.println(st.getFileName());
-                System.out.println(st.getMethodName());
 
-                File fileToOpen = new File(path.toString());
+                final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot()
+                        .getFileForLocation(Path.fromOSString(path.toString()));
 
-                if (fileToOpen.exists() && fileToOpen.isFile()) {
-                    IFileStore fileStore = EFS.getLocalFileSystem().getStore(fileToOpen.toURI());
-                    System.out.println(fileStore.toURI().toString());
+                if (inputFile != null) {
                     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                    IEditorPart openEditor = null;
 
                     try {
-                        IDE.openEditorOnFileStore(page, fileStore);
+                        openEditor = IDE.openEditor(page, inputFile);
                     } catch (PartInitException e1) {
-                        // Put your exception handler here if you wish to
+                        e1.printStackTrace();
                     }
-                } else {
-                    // DO SOMETHING IF THE FILE DOES NOT EXIST
+
+                    int line = st.getLineNumber();
+
+                    if (openEditor instanceof ITextEditor) {
+                        ITextEditor textEditor = (ITextEditor) openEditor;
+                        IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+                        try {
+                            textEditor.selectAndReveal(document.getLineOffset(line - 1),
+                                    document.getLineLength(line - 1));
+                        } catch (BadLocationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
                 }
 
             }
@@ -208,6 +211,16 @@ public class TestResultComposite extends Composite {
         } else {
             return project.getRootPath();
         }
+    }
+
+    /*
+     * Purpose of this method is to find the TestrunnerComposite so that its
+     * methods can be used. We can't create a new TestrunnerComposite as we
+     * wouldn't do anything with it without drastic changes to current parent
+     * and its parents.
+     */
+    public Composite getGreatGreatGrandParent() {
+        return this.getParent().getParent().getParent().getParent();
     }
 
     @Override

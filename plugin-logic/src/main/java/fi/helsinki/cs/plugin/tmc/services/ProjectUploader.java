@@ -1,8 +1,9 @@
 package fi.helsinki.cs.plugin.tmc.services;
 
 import java.io.IOException;
+import java.util.HashMap;
 
-import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
+import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
@@ -19,6 +20,8 @@ public class ProjectUploader {
 
     private Project project;
     private byte[] data;
+    private HashMap<String, String> extraParams;
+    
     private SubmissionResponse response;
     private SubmissionResult result;
 
@@ -26,7 +29,7 @@ public class ProjectUploader {
         this.server = server;
         data = null;
         project = null;
-
+        this.extraParams = new HashMap<String, String>();
     }
 
     public void setProject(Project project) {
@@ -50,7 +53,11 @@ public class ProjectUploader {
             throw new RuntimeException("Internal error: Invalid project or zip data");
         }
 
-        response = server.uploadFile(project.getExercise(), data);
+        if (!extraParams.isEmpty()) {
+            response = server.uploadFile(project.getExercise(), data, extraParams);
+        } else {
+            response = server.uploadFile(project.getExercise(), data);
+        }
     }
 
     public void handleSubmissionResult(StopStatus stopStatus) {
@@ -84,11 +91,29 @@ public class ProjectUploader {
         return true;
     }
 
+    public SubmissionResponse getResponse() {
+        return response;
+    }
+
     public SubmissionResult getResult() {
         return result;
     }
 
     public Project getProject() {
         return project;
+    }
+
+    public void setAsPaste(String pasteMessage) {
+        extraParams.put("paste", "1");
+        if (!pasteMessage.isEmpty()) {
+            extraParams.put("message_for_paste", pasteMessage);
+        }
+    }
+    
+    public void setAsRequest(String requestMessage) {
+        extraParams.put("request_review", "1");
+        if (!requestMessage.isEmpty()) {
+            extraParams.put("message_for_reviewer", requestMessage);
+        }
     }
 }
