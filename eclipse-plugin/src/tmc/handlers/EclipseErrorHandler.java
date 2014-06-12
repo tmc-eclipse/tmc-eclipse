@@ -32,7 +32,7 @@ public class EclipseErrorHandler implements TMCErrorHandler {
 		});
 	}
 
-	public void handleManualException(String errorMessage) {
+	public void handleManualException(final String errorMessage) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				MessageDialog dialog = new MessageDialog(parent, "Error", null,
