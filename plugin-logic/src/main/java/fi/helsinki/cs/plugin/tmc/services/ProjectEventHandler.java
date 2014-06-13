@@ -5,7 +5,6 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
-import fi.helsinki.cs.plugin.tmc.io.ProjectScanner;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 

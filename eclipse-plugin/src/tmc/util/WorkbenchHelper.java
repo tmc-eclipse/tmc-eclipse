@@ -2,6 +2,8 @@ package tmc.util;
 
 import java.awt.Desktop;
 import java.net.URI;
+
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionService;
@@ -64,24 +66,25 @@ public class WorkbenchHelper {
         this.view = activePart;
     }
 
-    public boolean setupSelectionListener(SelectionListener listener) {
-        IWorkbench workbench = CoreInitializer.getDefault().getWorkbench();
-        if (workbench == null) {
-            return false;
-        }
+    public boolean setupSelectionListener(final SelectionListener listener) {
 
-        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-        if (workbenchWindow == null) {
-            return false;
-        }
+        Display.getDefault().asyncExec(new Runnable() {
 
-        ISelectionService selectionService = workbenchWindow.getSelectionService();
-        if (selectionService == null) {
-            return false;
-        }
+            @Override
+            public void run() {
+                IWorkbench workbench = CoreInitializer.getDefault().getWorkbench();
 
-        selectionService.addSelectionListener(listener);
+                IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+
+                ISelectionService selectionService = workbenchWindow.getSelectionService();
+
+                selectionService.addSelectionListener(listener);
+
+            }
+        });
+
         return true;
+
     }
 
     public String getActiveView() {
