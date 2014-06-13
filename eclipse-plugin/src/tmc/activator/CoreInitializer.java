@@ -1,7 +1,5 @@
 package tmc.activator;
 
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
@@ -10,8 +8,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import tmc.handlers.EclipseErrorHandler;
-import tmc.spyware.EditorListener;
-import tmc.spyware.ResourceEventListener;
 import tmc.tasks.EclipseTaskRunner;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;

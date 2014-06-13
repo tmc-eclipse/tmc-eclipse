@@ -25,7 +25,7 @@ public class ClassPathTest {
     
     @Test
     public void toStringTest() {
-        assertEquals(classpath.toString(), "classpath1:classpath2:classpath3:subClasspath");
+        assertEquals(classpath.toString(), "classpath1"+System.getProperty("path.separator")+"classpath2"+System.getProperty("path.separator")+"classpath3"+System.getProperty("path.separator")+"subClasspath");
         classpath = new ClassPath("");
         classpath.getSubPaths().remove(0);
         assertEquals(classpath.toString(), "");
