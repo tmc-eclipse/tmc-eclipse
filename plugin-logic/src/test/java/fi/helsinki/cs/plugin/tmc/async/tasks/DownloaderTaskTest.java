@@ -61,13 +61,6 @@ public class DownloaderTaskTest {
     }
 
     @Test
-    public void exerciseIsSetAsDownloaded() {
-
-        task.start(progress);
-        verify(exercises.get(0), times(1)).setDownloaded(true);
-    }
-
-    @Test
     public void exerciseIsDownloaded() {
         task.start(progress);
         verify(downloader, times(1)).downloadExercise(exercises.get(0));
