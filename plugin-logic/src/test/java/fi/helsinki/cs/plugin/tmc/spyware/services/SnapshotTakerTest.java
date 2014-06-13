@@ -1,17 +1,18 @@
 package fi.helsinki.cs.plugin.tmc.spyware.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
@@ -63,6 +64,19 @@ public class SnapshotTakerTest {
     }
 
     @Test
+    public void receiverDoesNotReceiveEventIfProjectIsNull() throws IOException, InterruptedException {
+        ProjectDAO dao = mock(ProjectDAO.class);
+        when(dao.getProjectByFile(any(String.class))).thenReturn(null);
+        this.taker = new SnapshotTaker(new ActiveThreadSet(), receiver, settings, dao);
+
+        taker.execute(new SnapshotInfo("testProject", "", relPath, "", fullPath, ChangeType.FILE_CHANGE));
+
+        Thread.sleep(50);
+
+        assertEquals(event, null);
+    }
+
+    @Test
     public void fileChangeTest() {
         SnapshotInfo info = new SnapshotInfo("testProject", "", relPath, "", fullPath, ChangeType.FILE_CHANGE);
         taker.execute(info);
@@ -81,6 +95,22 @@ public class SnapshotTakerTest {
     public void fileRenameTest() {
         SnapshotInfo info = new SnapshotInfo("testProject", relPath + "a", relPath, fullPath + "a", fullPath,
                 ChangeType.FILE_RENAME);
+        taker.execute(info);
+
+        while (event == null) {
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+            }
+        }
+
+        assertEquals(event.getCourseName(), "course1");
+    }
+    
+    @Test
+    public void folderRenameTest() {
+        SnapshotInfo info = new SnapshotInfo("testProject", relPath + "a", relPath, fullPath + "a", fullPath,
+                ChangeType.FOLDER_RENAME);
         taker.execute(info);
 
         while (event == null) {
