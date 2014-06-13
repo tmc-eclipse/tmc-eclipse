@@ -130,7 +130,7 @@ public class TestResultComposite extends Composite {
         heightOffset = 0;
 
         for (StackTraceElement st : tcr.getException().stackTrace) {
-            if (st.getClassName().toLowerCase().contains("test.")) {
+            if (st.getFileName().toLowerCase().contains("test.")) {
                 addMoreDetailsLink(moreDetails, "<a href=\"\">" + st.toString() + "</a>", st);
             } else {
                 addMoreDetailsLink(moreDetails, st.toString(), st);
