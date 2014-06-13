@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import com.google.common.collect.Iterables;
 
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
+import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
@@ -43,6 +44,7 @@ public class EventSendBuffer implements EventReceiver {
     private final EventStore eventStore;
     private final Settings settings;
     private final ServerManager serverManager;
+    private final CourseDAO courseDAO;
 
     // The following variables must only be accessed with a lock on sendQueue.
     private final ArrayDeque<LoggableEvent> sendQueue = new ArrayDeque<LoggableEvent>();
@@ -51,10 +53,12 @@ public class EventSendBuffer implements EventReceiver {
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private Cooldown autosendCooldown;
 
-    public EventSendBuffer(EventStore store, Settings settings, ServerManager serverManager) {
+    public EventSendBuffer(EventStore store, Settings settings, ServerManager serverManager, CourseDAO courseDAO) {
         this.eventStore = store;
         this.settings = settings;
         this.serverManager = serverManager;
+        this.courseDAO = courseDAO;
+
         scheduler = Executors.newScheduledThreadPool(2);
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
         initializeTasks();
@@ -139,9 +143,8 @@ public class EventSendBuffer implements EventReceiver {
 
                     private String pickDestinationUrl() {
                         /*
-                         * Course course =
-                         * Core.getCourseDAO().getCurrentCourse(); if (course ==
-                         * null) { log.log(Level.FINE,
+                         * Course course = courseDAO.getCurrentCourse(); if
+                         * (course == null) { log.log(Level.FINE,
                          * "Not sending events because no course selected");
                          * return null; }
                          * 

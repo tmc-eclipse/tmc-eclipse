@@ -38,10 +38,11 @@ public final class ServiceFactory {
         this.updater = new Updater(server, courseDAO, projectDAO);
         this.projectEventHandler = new ProjectEventHandler(projectDAO);
 
-        EventReceiver receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("sikrit.tmp"))));
+        EventReceiver receiver = new EventDeduplicater(new EventSendBuffer(new EventStore(new FileIO("events.tmp")),
+                settings, server, courseDAO));
         ActiveThreadSet set = new ActiveThreadSet();
-        SnapshotTaker taker = new SnapshotTaker(set, receiver);
-        DocumentChangeHandler handler = new DocumentChangeHandler(receiver, set);
+        SnapshotTaker taker = new SnapshotTaker(set, receiver, settings, projectDAO);
+        DocumentChangeHandler handler = new DocumentChangeHandler(receiver, set, settings, projectDAO);
 
         this.spyware = new SpywarePluginLayer(set, receiver, taker, handler);
     }
