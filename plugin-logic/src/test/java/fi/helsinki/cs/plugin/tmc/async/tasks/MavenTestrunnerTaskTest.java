@@ -14,13 +14,15 @@ import org.junit.Test;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskListener;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class MavenTestrunnerTaskTest {
 
     class MavenTestrunnerTaskSuccesful extends MavenTestrunnerTask {
 
-        public MavenTestrunnerTaskSuccesful(Project project) {
-            super(project);
+        public MavenTestrunnerTaskSuccesful(Project project, IdeUIInvoker invoker) {
+
+            super(project, invoker);
         }
 
         @Override
@@ -32,8 +34,9 @@ public class MavenTestrunnerTaskTest {
 
     class MavenTestrunnerTaskFailing extends MavenTestrunnerTask {
 
-        public MavenTestrunnerTaskFailing(Project project) {
-            super(project);
+        public MavenTestrunnerTaskFailing(Project project, IdeUIInvoker invoker) {
+
+            super(project, invoker);
         }
 
         @Override
@@ -48,13 +51,17 @@ public class MavenTestrunnerTaskTest {
 
     private MavenTestrunnerTask succesfulRunner;
     private MavenTestrunnerTask failingRunner;
+    private IdeUIInvoker invoker;
 
     @Before
     public void setUp() {
         this.taskRunner = new TestTaskRunner();
         this.project = mock(Project.class);
-        this.succesfulRunner = new MavenTestrunnerTaskSuccesful(project);
-        this.failingRunner = new MavenTestrunnerTaskFailing(project);
+
+        invoker = mock(IdeUIInvoker.class);
+
+        this.succesfulRunner = new MavenTestrunnerTaskSuccesful(project, invoker);
+        this.failingRunner = new MavenTestrunnerTaskFailing(project, invoker);
     }
 
     @Test

@@ -13,10 +13,7 @@ import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.ClassPath;
 import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
-<<<<<<< HEAD
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
-=======
->>>>>>> 267f57c6b413eeac469e8d3defe184c454ab22c8
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
@@ -31,7 +28,7 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     private String resultFilePath;
     private TestRunResult result;
     private Process process;
-    
+
     private Settings settings;
     private IdeUIInvoker invoker;
 
