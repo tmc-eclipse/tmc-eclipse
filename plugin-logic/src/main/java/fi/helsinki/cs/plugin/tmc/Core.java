@@ -9,6 +9,13 @@ import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.SpywarePluginLayer;
 
+/**
+ * This class serves as an interface to the ide plugin. None of these methods
+ * should be called from core as this introduces annoying hidden dependencies
+ * that make unit testing really really painful (trust me, been there, done
+ * that, had to refactor code)
+ * 
+ */
 public final class Core {
 
     private static Core core;

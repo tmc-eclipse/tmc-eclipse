@@ -1,7 +1,11 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks.listeners;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +44,8 @@ public class PastebinTaskListenerTest {
         when(task.getPasteUrl()).thenReturn(null);
 
         listener.onSuccess();
-        verify(errorhandler, times(1)).raise("The server returned no URL for the paste. Please contact TMC support.");
+        verify(invoker, times(1)).raiseVisibleException(
+                "The server returned no URL for the paste. Please contact TMC support.");
 
         verify(task, times(1)).getPasteUrl();
         verify(invoker, times(0)).invokePastebinResultDialog(any(String.class));
@@ -48,11 +53,8 @@ public class PastebinTaskListenerTest {
 
     @Test
     public void raisesAnErrorOnFailure() {
-        TMCErrorHandler errorhandler = mock(TMCErrorHandler.class);
-        Core.setErrorHandler(errorhandler);
-
         listener.onFailure();
-        verify(errorhandler, times(1)).raise("Failed to create the requested pastebin.");
+        verify(invoker, times(1)).raiseVisibleException("Failed to create the requested pastebin.");
     }
 
     @Test

@@ -21,7 +21,9 @@ import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class CodeReviewRequestTaskTest {
     private ProjectUploader uploader;
@@ -33,7 +35,9 @@ public class CodeReviewRequestTaskTest {
     @Before
     public void setUp() throws Exception {
         uploader = mock(ProjectUploader.class);
-        task = new CodeReviewRequestTask(uploader, "path", "requestMessage");
+        ProjectDAO dao = mock(ProjectDAO.class);
+        IdeUIInvoker invoker = mock(IdeUIInvoker.class);
+        task = new CodeReviewRequestTask(uploader, "path", "requestMessage", dao, invoker);
 
         progress = mock(TaskFeedback.class);
 

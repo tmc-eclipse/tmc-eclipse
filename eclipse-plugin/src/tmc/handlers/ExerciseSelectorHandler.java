@@ -31,7 +31,7 @@ public class ExerciseSelectorHandler extends AbstractHandler {
     }
 
     private void updateExercises() {
-        Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+        Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
         Core.getUpdater().updateExercises(currentCourse);
     }
 

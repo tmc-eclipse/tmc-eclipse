@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
@@ -17,13 +18,16 @@ public class SnapshotTaker {
     private SnapshotInfo info;
     private ActiveThreadSet threadSet;
     private EventReceiver receiver;
+    private Settings settings;
+    private ProjectDAO projectDAO;
 
     private static final Logger log = Logger.getLogger(SnapshotTaker.class.getName());
 
-    public SnapshotTaker(ActiveThreadSet threadSet, EventReceiver receiver) {
-
+    public SnapshotTaker(ActiveThreadSet threadSet, EventReceiver receiver, Settings settings, ProjectDAO projectDAO) {
         this.threadSet = threadSet;
         this.receiver = receiver;
+        this.settings = settings;
+        this.projectDAO = projectDAO;
     }
 
     public void execute(SnapshotInfo info) {
@@ -55,11 +59,11 @@ public class SnapshotTaker {
     }
 
     private void startSnapshotThread(final String metadata, String path) {
-        if (!Core.getSettings().isSpywareEnabled()) {
+        if (!settings.isSpywareEnabled()) {
             return;
         }
 
-        Project project = Core.getProjectDAO().getProjectByFile(path);
+        Project project = projectDAO.getProjectByFile(path);
 
         // Note: Should *only* log TMC courses.
         if (project == null) {
