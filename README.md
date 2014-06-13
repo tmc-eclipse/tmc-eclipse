@@ -60,9 +60,20 @@ See the instructions for using the Netbeans version.
 
 ##Credits
 ### TMC-Eclipse team:
+
+#### Developers
+
 * Juhani Heliö ([jphelio](https://github.com/jphelio))
 * Ville-Pekka Hämäläinen ([veepee](https://github.com/veepee))
 * Nikke Kostiainen ([nkostiai](https://github.com/nkostiai))
 * Erkka Kääriä ([valtis](https://github.com/valtis))
 * Leo Leppänen ([ljleppan](https://github.com/ljleppan/))
 * Joel Nummelin ([numppa](https://github.com/numppa))
+
+#### Instructor
+
+* Jarmo Isotalo ([jamox](https://github.com/jamox))
+
+#### Client
+
+* Arto Vihavainen ([avihavai](https://github.com/avihavai))

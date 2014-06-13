@@ -19,11 +19,10 @@ public class ResourceEventListener implements IResourceChangeListener {
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
 
-        if(event.getType() == IResourceChangeEvent.PRE_DELETE) {
-            // Hook project deletion
+        if (event.getType() == IResourceChangeEvent.PRE_DELETE) {
             return;
         }
-        
+
         if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
             return;
         }
