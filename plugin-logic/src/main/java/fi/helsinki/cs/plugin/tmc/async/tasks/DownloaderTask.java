@@ -6,6 +6,7 @@ import java.util.List;
 import fi.helsinki.cs.plugin.tmc.async.SimpleBackgroundTask;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.FileUtil;
@@ -72,12 +73,14 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
             List<String> fileList = unzipper.unzipTo(folder);
 
-            exercise.setDownloaded(true);
-
             if (project == null) {
                 project = new Project(exercise, fileList);
+                projectDao.addProject(project);
+            } else {
+                project.setProjectFiles(fileList);
             }
-            projectDao.addProject(project);
+
+            project.setStatus(ProjectStatus.DOWNLOADED);
 
             opener.open(exercise);
         } catch (IOException exception) {

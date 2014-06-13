@@ -1,7 +1,12 @@
 package tmc.spyware;
 
+import java.lang.reflect.Field;
+
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
 import tmc.spyware.EventDataVisitor.EventData;
@@ -20,6 +25,10 @@ public class ResourceEventListener implements IResourceChangeListener {
     public void resourceChanged(IResourceChangeEvent event) {
 
         if (event.getType() == IResourceChangeEvent.PRE_DELETE) {
+            if (event.getResource() != null && event.getResource().getLocation() != null) {
+                String path = event.getResource().getLocation().toString();
+                Core.getProjectEventHandler().handleDeletion(path);
+            }
             return;
         }
 
@@ -41,7 +50,7 @@ public class ResourceEventListener implements IResourceChangeListener {
                     data.fullOldPath, data.fullCurrentPath, data.type);
 
             Core.getSpyware().takeSnapshot(snapshot);
-            Core.getProjectEventHandler().handle(snapshot);
+            Core.getProjectEventHandler().handleSnapshot(snapshot);
         }
 
     }

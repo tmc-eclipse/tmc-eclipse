@@ -74,6 +74,7 @@ public class DAOManager {
             Exercise exercise = project.getExercise();
             Course course = courseDAO.getCourseByName(exercise.getCourseName());
             exercise.setCourse(course);
+            exercise.setProject(project);
 
             if (!exercisesMap.containsKey(course)) {
                 exercisesMap.put(course, new ArrayList<Exercise>());

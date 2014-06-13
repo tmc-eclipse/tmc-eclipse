@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 
 public class ProjectScanner {
@@ -14,14 +15,26 @@ public class ProjectScanner {
         this.projectDAO = projectDAO;
     }
 
+    public void updateProject(Project project) {
+        if (project.getStatus() == ProjectStatus.DELETED) {
+            return;
+        }
+
+        List<String> files = new ArrayList<String>();
+        traverse(files, new FileIO(project.getRootPath()));
+
+        project.setProjectFiles(files);
+
+        if (project.existsOnDisk()) {
+            project.setStatus(ProjectStatus.DOWNLOADED);
+        } else {
+            project.setStatus(ProjectStatus.NOT_DOWNLOADED);
+        }
+    }
+
     public void updateProjects() {
         for (Project project : projectDAO.getProjects()) {
-            List<String> files = new ArrayList<String>();
-            traverse(files, new FileIO(project.getRootPath()));
-
-            project.setProjectFiles(files);
-            
-            project.getExercise().setDownloaded(project.existsOnDisk());
+            updateProject(project);
         }
     }
 
