@@ -9,6 +9,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import tmc.tasks.TaskStarter;
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
@@ -81,14 +82,12 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     private void invokeMessageBox(final String messageStr, final String title, final int type) {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                MessageDialog dialog = new MessageDialog(shell, title, null, messageStr, type,
-                        new String[] {"OK"}, 0);
+                MessageDialog dialog = new MessageDialog(shell, title, null, messageStr, type, new String[] {"OK"}, 0);
                 dialog.open();
 
             }
         });
     }
-
 
     @Override
     public void invokeSubmitToServerWindow() {
@@ -142,5 +141,10 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
                 invokeSuccessMessageBox(msg, title);
             }
         });
+    }
+
+    @Override
+    public void raiseVisibleException(String message) {
+        Core.getErrorHandler().raise(message);
     }
 }

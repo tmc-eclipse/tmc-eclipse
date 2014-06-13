@@ -1,10 +1,13 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -15,11 +18,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
-import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
-import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 import fi.helsinki.cs.plugin.tmc.services.http.SubmissionResponse;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class PastebinTaskTest {
     private ProjectUploader uploader;
@@ -30,7 +33,11 @@ public class PastebinTaskTest {
     public void setup() {
         uploader = mock(ProjectUploader.class);
         progress = mock(TaskFeedback.class);
-        task = new PastebinTask(uploader, "path", "pastemessage");
+
+        ProjectDAO dao = mock(ProjectDAO.class);
+        IdeUIInvoker invoker = mock(IdeUIInvoker.class);
+
+        task = new PastebinTask(uploader, "path", "pastemessage", dao, invoker);
     }
 
     @Test

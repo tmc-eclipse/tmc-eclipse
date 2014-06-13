@@ -52,15 +52,11 @@ class RequestBuilder {
         return downloadToText(createExecutor(makePostRequest(url, params)));
     }
 
-    public String postForText(String url, byte[] data) throws Exception {
-        return downloadToText(createExecutor(makeRawPostRequest(url, data)));
-    }
-
     public String rawPostForText(String url, byte[] data) throws Exception {
         return downloadToText(createExecutor(makeRawPostRequest(url, data)));
     }
 
-    public String postForText(String url, byte[] data, Map<String, String> extraHeaders) throws Exception {
+    public String rawPostForText(String url, byte[] data, Map<String, String> extraHeaders) throws Exception {
         return downloadToText(createExecutor(makeRawPostRequest(url, data, extraHeaders)));
     }
 

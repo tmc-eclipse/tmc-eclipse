@@ -11,9 +11,10 @@ import java.util.logging.Logger;
 
 import javax.swing.text.BadLocationException;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.spyware.DocumentInfo;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.JsonMaker;
@@ -29,23 +30,27 @@ public class DocumentChangeHandler {
 
     private static final Logger log = Logger.getLogger(DocumentChangeHandler.class.getName());
     private static final diff_match_patch PATCH_GENERATOR = new diff_match_patch();
-    private EventReceiver receiver;
-    private Map<String, String> documentCache;
-    private ActiveThreadSet activeThreads;
+    private final EventReceiver receiver;
+    private final Map<String, String> documentCache;
+    private final ActiveThreadSet activeThreads;
+    private final Settings settings;
+    private final ProjectDAO projectDAO;
 
-    public DocumentChangeHandler(EventReceiver receiver, ActiveThreadSet set) {
+    public DocumentChangeHandler(EventReceiver receiver, ActiveThreadSet set, Settings settings, ProjectDAO projectDAO) {
         this.receiver = receiver;
         this.activeThreads = set;
         this.documentCache = new HashMap<String, String>();
+        this.settings = settings;
+        this.projectDAO = projectDAO;
     }
 
     public void handleEvent(DocumentInfo info) {
-        if (!Core.getSettings().isSpywareEnabled()) {
+        if (!settings.isSpywareEnabled()) {
             System.out.println("Spyware disabled, bailing out");
             return;
         }
 
-        Project project = Core.getProjectDAO().getProjectByFile(info.getFullPath());
+        Project project = projectDAO.getProjectByFile(info.getFullPath());
 
         if (project == null) {
             System.out.println("Not a TMC project, bailing out!");
@@ -96,18 +101,17 @@ public class DocumentChangeHandler {
             // whitespace is still considered to be text; only truly empty text
             // is
             // considered to be deletion
+            String text = generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument);
+
             if (info.getEventText().length() == 0) {
-                sendEvent(project.getExercise(), "text_remove",
-                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                sendEvent(project.getExercise(), "text_remove", text);
                 return;
             }
 
             if (isPasteEvent(info.getEventText())) {
-                sendEvent(project.getExercise(), "text_paste",
-                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                sendEvent(project.getExercise(), "text_paste", text);
             } else {
-                sendEvent(project.getExercise(), "text_insert",
-                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                sendEvent(project.getExercise(), "text_insert", text);
             }
 
         }

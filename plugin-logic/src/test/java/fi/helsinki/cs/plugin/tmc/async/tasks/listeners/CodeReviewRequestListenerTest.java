@@ -8,8 +8,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
@@ -33,11 +31,8 @@ public class CodeReviewRequestListenerTest {
 
     @Test
     public void raisesAnErrorOnFailure() {
-        TMCErrorHandler errorhandler = mock(TMCErrorHandler.class);
-        Core.setErrorHandler(errorhandler);
-
         listener.onFailure();
-        verify(errorhandler, times(1)).raise("Failed to create the code review request.");
+        verify(invoker, times(1)).raiseVisibleException("Failed to create the code review request.");
     }
 
     @Test
