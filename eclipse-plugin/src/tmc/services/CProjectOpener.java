@@ -15,6 +15,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+
+import tmc.util.TMCProjectNature;
 import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 
 @SuppressWarnings("restriction")
@@ -37,6 +39,12 @@ public class CProjectOpener {
         IProjectDescription description = workspace.newProjectDescription(projectName);
 
         description.setLocationURI(new File(FileUtil.getNativePath(projectPath)).toURI());
+
+        String[] prevNatures = description.getNatureIds();
+        String[] newNatures = new String[prevNatures.length + 1];
+        System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+        newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
+        description.setNatureIds(newNatures);
 
         project = CCorePlugin.getDefault().createCProject(description, project, new NullProgressMonitor(), projectName);
 

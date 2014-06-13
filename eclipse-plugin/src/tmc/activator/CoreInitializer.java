@@ -97,25 +97,26 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
                 if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) {
 
-                } else {
+                    if (!(PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)) {
 
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                            .addPartListener(new EditorListener());
-                }
-                try {
-                    Core.getUpdater().updateCourses();
-                } catch (UserVisibleException uve) {
-                    LoginDialog ld = new LoginDialog(new Shell(), SWT.SHEET);
-                    ld.open();
-                }
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                                .addPartListener(new EditorListener());
+                    }
+                    try {
+                        Core.getUpdater().updateCourses();
+                    } catch (UserVisibleException uve) {
+                        LoginDialog ld = new LoginDialog(new Shell(), SWT.SHEET);
+                        ld.open();
+                    }
 
-                Course course = getCurrentCourse();
+                    Course course = getCurrentCourse();
 
-                if (course != null) {
-                    Core.getUpdater().updateExercises(course);
-                    if (!course.getDownloadableExercises().isEmpty()) {
-                        ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
-                        esd.open();
+                    if (course != null) {
+                        Core.getUpdater().updateExercises(course);
+                        if (!course.getDownloadableExercises().isEmpty()) {
+                            ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
+                            esd.open();
+                        }
                     }
                 }
             }
