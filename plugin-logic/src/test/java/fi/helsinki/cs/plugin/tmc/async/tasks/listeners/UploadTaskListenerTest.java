@@ -95,7 +95,7 @@ public class UploadTaskListenerTest {
         verify(invoker, times(1)).invokeAllTestsFailedWindow(Mockito.any(SubmissionResult.class), Mockito.anyString());
         verify(invoker, times(0)).invokeSomeTestsFailedWindow(Mockito.any(SubmissionResult.class), Mockito.anyString());
     }
-    
+
     @Test
     public void correctMethodsCalledIfSomeTestCasesFail() {
         SubmissionResult result = mock(SubmissionResult.class);

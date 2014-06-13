@@ -24,12 +24,16 @@ public class ProjectDAO {
         return projects;
     }
 
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
     public void addProject(Project project) {
         if (projects.contains(project)) {
             projects.remove(project);
         }
         projects.add(project);
-        dataSource.save(projects);
+        save();
     }
 
     public Project getProjectByFile(String filePath) {
@@ -48,6 +52,10 @@ public class ProjectDAO {
             }
         }
         return null;
+    }
+
+    public void save() {
+        dataSource.save(projects);
     }
 
 }

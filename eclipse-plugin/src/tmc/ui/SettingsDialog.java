@@ -109,7 +109,7 @@ public class SettingsDialog extends Dialog {
             courseNames.add(c.getName());
         }
 
-        combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO().getCourses()));
+        combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO()));
         combo.select(indexOfCurrentCourse());
 
         Button btnRefreshCourses = new Button(shell, SWT.NONE);
@@ -133,7 +133,7 @@ public class SettingsDialog extends Dialog {
                     btnOk.setEnabled(false);
                 }
 
-                combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO().getCourses()));
+                combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO()));
                 combo.select(indexOfCurrentCourse());
                 combo.setEnabled(true);
             }
@@ -228,9 +228,9 @@ public class SettingsDialog extends Dialog {
 
     private int indexOfCurrentCourse() {
         int index = 0;
-        for (String name : DomainUtil.getCourseNames(Core.getCourseDAO().getCourses())) {
+        for (String name : DomainUtil.getCourseNames(Core.getCourseDAO())) {
             if (settings.getCurrentCourseName().equals(
-                    DomainUtil.getCourseNames(Core.getCourseDAO().getCourses())[index])) {
+                    DomainUtil.getCourseNames(Core.getCourseDAO())[index])) {
                 return index;
             }
             index++;

@@ -37,7 +37,7 @@ public class ExerciseSelectorDialog extends Dialog {
      */
     public ExerciseSelectorDialog(Shell parent, int style) {
         super(parent, style);
-        setText("SWT Dialog");
+        setText("Exercises to download/update");
     }
 
     /**
@@ -112,7 +112,7 @@ public class ExerciseSelectorDialog extends Dialog {
         btnDownload.setText("Download");
 
         try {
-            Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+            Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
             Core.getUpdater().updateExercises(currentCourse);
 
             if (currentCourse != null) {
@@ -148,7 +148,7 @@ public class ExerciseSelectorDialog extends Dialog {
         for (int i = 0; i < table.getItemCount(); i++) {
             if (table.getItem(i).getChecked()) {
                 String exerciseName = table.getItem(i).getText();
-                Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+                Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
 
                 if (currentCourse != null) {
                     for (Exercise e : currentCourse.getExercises()) {
@@ -159,7 +159,7 @@ public class ExerciseSelectorDialog extends Dialog {
                 }
             }
         }
-        TaskStarter.startExerciseDownloadTask(list);
+        TaskStarter.startExerciseDownloadTask(list, new EclipseIdeUIInvoker(shell));
     }
 
     private void selectUnselectAction() {

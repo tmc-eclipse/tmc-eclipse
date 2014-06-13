@@ -12,24 +12,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.services.FeedbackAnswerSubmitter;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class FeedbackSubmissionTaskTest {
     private FeedbackAnswerSubmitter submitter;
     private FeedbackSubmissionTask task;
     private List<FeedbackAnswer> answers;
     private String url;
+    private IdeUIInvoker invoker;
 
     @Before
     public void setup() {
         submitter = mock(FeedbackAnswerSubmitter.class);
         url = "mockUrl";
         answers = new ArrayList<FeedbackAnswer>();
-        task = new FeedbackSubmissionTask(submitter, answers, url);
+
+        invoker = mock(IdeUIInvoker.class);
+        task = new FeedbackSubmissionTask(submitter, answers, url, invoker);
     }
 
     @Test
@@ -48,11 +50,9 @@ public class FeedbackSubmissionTaskTest {
     public void feedbackAnswerSubmitterCallsErrorHandlerAndReturnsFalseOnException() {
         Mockito.doThrow(new RuntimeException("Error message here")).when(submitter).submitFeedback(answers, url);
 
-        TMCErrorHandler handler = mock(TMCErrorHandler.class);
-        Core.setErrorHandler(handler);
-
         assertEquals(BackgroundTask.RETURN_FAILURE, task.start(null));
-        verify(handler, times(1)).raise("An error occured while submitting feedback:\nError message here");
+        verify(invoker, times(1)).raiseVisibleException(
+                "An error occured while submitting feedback:\nError message here");
     }
 
 }

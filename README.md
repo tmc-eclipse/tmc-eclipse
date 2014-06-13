@@ -1,8 +1,22 @@
 #TMC-Eclipse project
+<<<<<<< HEAD
+=======
+
+####Master  
+>>>>>>> DEV
 
 [![Build Status](https://travis-ci.org/tmc-eclipse/tmc-eclipse.svg?branch=master)](https://travis-ci.org/tmc-eclipse/tmc-eclipse)
 [![Coverage Status](https://coveralls.io/repos/tmc-eclipse/tmc-eclipse/badge.png?branch=master)](https://coveralls.io/r/tmc-eclipse/tmc-eclipse?branch=master)
 
+<<<<<<< HEAD
+=======
+=======
+####DEV  
+
+[![Build Status](https://travis-ci.org/tmc-eclipse/tmc-eclipse.svg?branch=DEV)](https://travis-ci.org/tmc-eclipse/tmc-eclipse)
+[![Coverage Status](https://coveralls.io/repos/tmc-eclipse/tmc-eclipse/badge.png?branch=DEV)](https://coveralls.io/r/tmc-eclipse/tmc-eclipse?branch=DEV)
+
+>>>>>>> DEV
 TMC-Eclipse project is a [University of Helsinki](http://helsinki.fi/university) [Department of Computer Science](http://cs.helsinki.fi) project for porting the [Netbeans](https://netbeans.org/) [TestMyCode plugin](https://github.com/testmycode/tmc-netbeans) to the [Eclipse IDE](http://www.eclipse.org/).
 
 ##Project structure
@@ -25,7 +39,10 @@ To build the project, follow the following process:
 4. Make sure you have the following components installed from the marketplace:
  * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
  * [CDT](https://www.eclipse.org/cdt/) - C and C++ development tools for Eclipse IDE
+<<<<<<< HEAD
  * [PDE](https://www.eclipse.org/pde/) - Plug-in Development Environment for Eclipse IDE
+=======
+>>>>>>> DEV
 5. Restart the IDE if you had to install any of the above components
 6. Import the Eclipse plugin component ("eclipse-plugin") using the "General > Existing Projects into Workspace" settings
 7. Import the plugin core component using the "Maven > Existing Maven Projects" settings
@@ -53,9 +70,26 @@ See the instructions for using the Netbeans version.
 
 ##Credits
 ### TMC-Eclipse team:
+<<<<<<< HEAD
+=======
+
+#### Developers
+
+>>>>>>> DEV
 * Juhani Heliö ([jphelio](https://github.com/jphelio))
 * Ville-Pekka Hämäläinen ([veepee](https://github.com/veepee))
 * Nikke Kostiainen ([nkostiai](https://github.com/nkostiai))
 * Erkka Kääriä ([valtis](https://github.com/valtis))
 * Leo Leppänen ([ljleppan](https://github.com/ljleppan/))
 * Joel Nummelin ([numppa](https://github.com/numppa))
+<<<<<<< HEAD
+=======
+
+#### Instructor
+
+* Jarmo Isotalo ([jamox](https://github.com/jamox))
+
+#### Client
+
+* Arto Vihavainen ([avihavai](https://github.com/avihavai))
+>>>>>>> DEV

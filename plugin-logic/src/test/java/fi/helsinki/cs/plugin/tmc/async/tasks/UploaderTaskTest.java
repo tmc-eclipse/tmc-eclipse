@@ -14,13 +14,13 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
+import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
-import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask.StopStatus;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class UploaderTaskTest {
     private UploaderTask task;
@@ -28,12 +28,18 @@ public class UploaderTaskTest {
     private String path;
     private TaskFeedback progress;
 
+    private ProjectDAO dao;
+    private IdeUIInvoker invoker;
+
     @Before
     public void setUp() {
         path = "mock_path";
         uploader = mock(ProjectUploader.class);
         progress = mock(TaskFeedback.class);
-        task = new UploaderTask(uploader, path);
+
+        dao = mock(ProjectDAO.class);
+        invoker = mock(IdeUIInvoker.class);
+        task = new UploaderTask(uploader, path, dao, invoker);
     }
 
     @Test
@@ -113,11 +119,9 @@ public class UploaderTaskTest {
     public void projectUploaderCallsErrorHandlerAndReturnsFalseOnException() throws IOException {
         Mockito.doThrow(new RuntimeException("Error message here")).when(uploader).zipProjects();
 
-        TMCErrorHandler handler = mock(TMCErrorHandler.class);
-        Core.setErrorHandler(handler);
-
         assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
-        verify(handler, times(1)).raise("An error occurred while uploading exercises:\nError message here");
+        verify(invoker, times(1)).raiseVisibleException(
+                "An error occurred while uploading exercises:\nError message here");
     }
 
 }

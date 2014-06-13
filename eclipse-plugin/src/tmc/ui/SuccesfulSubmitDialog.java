@@ -1,7 +1,5 @@
 package tmc.ui;
 
-import java.awt.Desktop;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +18,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tmc.activator.CoreInitializer;
 import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
@@ -138,7 +137,7 @@ public class SuccesfulSubmitDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (!modelSolutionUrl.isEmpty()) {
-                    openUrl(modelSolutionUrl);
+                    CoreInitializer.getDefault().getWorkbenchHelper().openURL(modelSolutionUrl);
                 } else {
                     Core.getErrorHandler().raise("There is no model solution available for this exercise");
                 }
@@ -153,7 +152,8 @@ public class SuccesfulSubmitDialog extends Dialog {
         closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                TaskStarter.startFeedbackSubmissionTask(getFeedbackAnswers(), feedbackUrl);
+                TaskStarter.startFeedbackSubmissionTask(getFeedbackAnswers(), feedbackUrl, new EclipseIdeUIInvoker(
+                        shell));
                 shell.close();
             }
 
@@ -171,15 +171,6 @@ public class SuccesfulSubmitDialog extends Dialog {
 
         b.append(".");
         return b.toString();
-    }
-
-    private void openUrl(String modelSolutionUrl) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                Desktop.getDesktop().browse(new URI(modelSolutionUrl));
-            } catch (Exception e) {
-            }
-        }
     }
 
     private int createFeedbackForm() {

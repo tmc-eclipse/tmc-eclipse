@@ -1,5 +1,9 @@
 package tmc.util;
 
+import java.awt.Desktop;
+import java.net.URI;
+
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionService;
@@ -11,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 
 import tmc.activator.CoreInitializer;
 import tmc.handlers.listeners.SelectionListener;
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 
@@ -61,24 +66,25 @@ public class WorkbenchHelper {
         this.view = activePart;
     }
 
-    public boolean setupSelectionListener(SelectionListener listener) {
-        IWorkbench workbench = CoreInitializer.getDefault().getWorkbench();
-        if (workbench == null) {
-            return false;
-        }
+    public boolean setupSelectionListener(final SelectionListener listener) {
 
-        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-        if (workbenchWindow == null) {
-            return false;
-        }
+        Display.getDefault().asyncExec(new Runnable() {
 
-        ISelectionService selectionService = workbenchWindow.getSelectionService();
-        if (selectionService == null) {
-            return false;
-        }
+            @Override
+            public void run() {
+                IWorkbench workbench = CoreInitializer.getDefault().getWorkbench();
 
-        selectionService.addSelectionListener(listener);
+                IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+
+                ISelectionService selectionService = workbenchWindow.getSelectionService();
+
+                selectionService.addSelectionListener(listener);
+
+            }
+        });
+
         return true;
+
     }
 
     public String getActiveView() {
@@ -93,7 +99,13 @@ public class WorkbenchHelper {
         if (getActiveView().equals(SOURCE_EDITOR)) {
             return getProjectByEditor();
         } else {
-            return getProjectBySelection();
+            Project project = getProjectBySelection();
+
+            if (project == null) {
+                project = getProjectByEditor();
+            }
+
+            return project;
         }
     }
 
@@ -113,4 +125,20 @@ public class WorkbenchHelper {
         }
     }
 
+    public boolean saveOpenFiles() {
+        return PlatformUI.getWorkbench().saveAllEditors(true);
+    }
+
+    public void openURL(String url) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URI(url));
+            } catch (Exception e) {
+                Core.getErrorHandler().raise("Unable to open the default browser.");
+            }
+        } else {
+            Core.getErrorHandler().raise("Unable to find a default system browser.");
+        }
+
+    }
 }

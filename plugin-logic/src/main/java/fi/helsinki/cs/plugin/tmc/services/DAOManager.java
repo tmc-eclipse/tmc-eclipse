@@ -9,6 +9,7 @@ import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.io.ProjectScanner;
 import fi.helsinki.cs.plugin.tmc.storage.CourseStorage;
 import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 import fi.helsinki.cs.plugin.tmc.storage.ProjectStorage;
@@ -57,6 +58,13 @@ public class DAOManager {
         this.projectDAO = new ProjectDAO(projectStorage);
 
         linkCoursesAndExercises();
+        scanProjectFiles();
+    }
+
+    private void scanProjectFiles() {
+        ProjectScanner projectScanner = new ProjectScanner(projectDAO);
+        projectScanner.updateProjects();
+        projectDAO.save();
     }
 
     private void linkCoursesAndExercises() {
@@ -66,6 +74,7 @@ public class DAOManager {
             Exercise exercise = project.getExercise();
             Course course = courseDAO.getCourseByName(exercise.getCourseName());
             exercise.setCourse(course);
+            exercise.setProject(project);
 
             if (!exercisesMap.containsKey(course)) {
                 exercisesMap.put(course, new ArrayList<Exercise>());

@@ -75,8 +75,7 @@ public class Updater {
     private void updateExercise(Exercise oldExercise, Exercise newExercise) {
         // Update Exercise.course
         newExercise.setCourse(oldExercise.getCourse());
-        // Update Exercise.downloaded
-        newExercise.setDownloaded(oldExercise.isDownloaded());
+        newExercise.setProject(oldExercise.getProject());
 
         // Update Project.exercise
         Project project = projectDAO.getProjectByExercise(oldExercise);

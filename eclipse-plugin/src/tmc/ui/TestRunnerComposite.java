@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -15,7 +17,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 
@@ -40,7 +41,8 @@ public class TestRunnerComposite extends Composite {
 
     private int heightOffset = 0;
     private Composite parent;
-    private int style;
+
+    private Composite master;
 
     /**
      * Create the composite.
@@ -51,17 +53,24 @@ public class TestRunnerComposite extends Composite {
     public TestRunnerComposite(final Composite parent, int style) {
         super(parent, style);
         this.parent = parent;
-        this.style = style;
-        makeScrolledComposite(parent);
+        this.setSize(parent.getSize().x, parent.getSize().y);
+        master = new Composite(this, SWT.SMOOTH);
+        makeScrolledComposite();
     }
 
-    private void createTestRunnerComposite(final Composite parent, int style) {
+    private void createTestRunnerComposite(final Composite parent) {
+
+        if (master != null) {
+            master.dispose();
+        }
+
+        master = new Composite(this, SWT.SMOOTH);
 
         scrolledComposite.dispose();
 
-        this.setSize(parent.getSize().x, parent.getSize().y);
+        master.setSize(parent.getSize().x, parent.getSize().y);
 
-        progressBar = new ProgressBar(this, SWT.SMOOTH);
+        progressBar = new ProgressBar(master, SWT.SMOOTH);
         progressBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
         progressBar.setMinimum(0);
         progressBar.setMaximum(300);
@@ -71,15 +80,11 @@ public class TestRunnerComposite extends Composite {
             @Override
             public void paintControl(PaintEvent e) {
 
-                System.out.println("--------------------");
-                System.out.println(e);
                 if (e.gc == null) {
-                    System.out.println("was null");
                     e.gc = new GC(Display.getDefault());
                 }
 
                 Rectangle rectRed = parent.getChildren()[0].getShell().getClientArea();
-                System.out.println(e);
                 e.gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
                 e.gc.fillRectangle(rectRed);
 
@@ -94,11 +99,10 @@ public class TestRunnerComposite extends Composite {
                 Point textSize = e.gc.stringExtent(text);
                 e.gc.setForeground(progressBar.getDisplay().getSystemColor(SWT.COLOR_BLACK));
                 e.gc.drawString(text, ((widgetSize.x - textSize.x) / 2), ((widgetSize.y - textSize.y) / 2), true);
-                System.out.println("--------------------");
             }
         });
 
-        final Button btnShowAllTests = new Button(this, SWT.CHECK);
+        final Button btnShowAllTests = new Button(master, SWT.CHECK);
         btnShowAllTests.setBounds(325, 33, 128, 24);
         btnShowAllTests.setText("Show all tests");
         btnShowAllTests.addSelectionListener(new SelectionAdapter() {
@@ -110,18 +114,27 @@ public class TestRunnerComposite extends Composite {
                     showAllTests = false;
                 }
                 scrolledComposite.dispose();
-                makeScrolledComposite(parent);
+                makeScrolledComposite();
                 showTestResults();
             }
         });
 
-        makeScrolledComposite(parent);
+        makeScrolledComposite();
+
+        master.addControlListener(new ControlAdapter() {
+            @Override
+            public void controlResized(final ControlEvent e) {
+                scrolledComposite.setSize(master.getSize().x - 20, master.getSize().y - 80);
+                scrolledComposite.redraw();
+                scrolledComposite.update();
+            }
+        });
 
     }
 
-    private void makeScrolledComposite(Composite parent) {
-        scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-        scrolledComposite.setSize(parent.getSize().x - 20, parent.getSize().y - 80);
+    private void makeScrolledComposite() {
+        scrolledComposite = new ScrolledComposite(master, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        scrolledComposite.setSize(this.getSize().x, this.getSize().y);
         scrolledComposite.setLocation(10, 70);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
@@ -130,25 +143,24 @@ public class TestRunnerComposite extends Composite {
     }
 
     public void resize() {
-        scrolledComposite.setSize(this.getParent().getSize().x - 20, this.getParent().getSize().y - 80);
-        scrolledComposite.redraw();
-        this.update();
+        master.setSize(this.getSize().x, this.getSize().y);
     }
 
     private void updateProgress() {
         howManyTestsPassedPercent = (int) ((howManyTestsPassedCount / howManyTestsRan) * 100);
+
         if (lblTestspassed != null) {
             lblTestspassed.dispose();
         }
-        lblTestspassed = new Label(this, SWT.NONE);
-        lblTestspassed.setBounds(19, 10, 183, 17);
-        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount);
+        lblTestspassed = new Label(master, SWT.NONE);
+        lblTestspassed.setBounds(19, 10, 250, 17);
+        lblTestspassed.setText("Tests passed: " + (int) howManyTestsPassedCount + "/" + (int) howManyTestsRan);
+
         progressBar.setSelection(howManyTestsPassedPercent * PROGRESS_BAR_MULTIPLIER);
-        progressBar.notifyListeners(SWT.Paint, new Event());
     }
 
     public void addSubmissionResult(List<TestCaseResult> tcr) {
-        createTestRunnerComposite(this.parent, this.style);
+        createTestRunnerComposite(parent);
         results = tcr;
         showTestResults();
     }

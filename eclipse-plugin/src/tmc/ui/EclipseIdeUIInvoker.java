@@ -9,6 +9,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import tmc.tasks.TaskStarter;
+import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
@@ -59,7 +60,7 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     public void invokeSomeTestsFailedWindow(SubmissionResult result, String exerciseName) {
         String messageStr = "Exercise " + exerciseName + " failed.\n" + "Some tests failed on the server.\nSee Below";
         String title = "Some tests failed on server";
-        invokeMessageBox(messageStr, title);
+        invokeErrorMessageBox(messageStr, title);
 
     }
 
@@ -67,14 +68,21 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName) {
         String messageStr = "Exercise " + exerciseName + " failed.\n" + "All tests failed on the server.\nSee Below";
         String title = "All tests failed on server";
-        invokeMessageBox(messageStr, title);
+        invokeErrorMessageBox(messageStr, title);
     }
 
-    private void invokeMessageBox(final String messageStr, final String title) {
+    private void invokeErrorMessageBox(final String messageStr, final String title) {
+        invokeMessageBox(messageStr, title, MessageDialog.ERROR);
+    }
+
+    private void invokeSuccessMessageBox(final String messageStr, final String title) {
+        invokeMessageBox(messageStr, title, MessageDialog.OK);
+    }
+
+    private void invokeMessageBox(final String messageStr, final String title, final int type) {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                MessageDialog dialog = new MessageDialog(shell, title, null, messageStr, MessageDialog.ERROR,
-                        new String[] {"OK"}, 0);
+                MessageDialog dialog = new MessageDialog(shell, title, null, messageStr, type, new String[] {"OK"}, 0);
                 dialog.open();
 
             }
@@ -90,9 +98,53 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
                 if (dialog.submitExercises()) {
                     TaskStarter.startExerciseUploadTask(invoker);
                 }
-
             }
         });
     }
 
+    @Override
+    public void invokeSendToPastebinWindow(final String exerciseName) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                SendToPastebinDialog dialog = new SendToPastebinDialog(shell, exerciseName);
+                dialog.open();
+            }
+        });
+    }
+
+    @Override
+    public void invokePastebinResultDialog(final String pasteUrl) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                PastebinResultDialog dialog = new PastebinResultDialog(shell, pasteUrl);
+                dialog.open();
+            }
+        });
+    }
+
+    @Override
+    public void invokeRequestCodeReviewWindow(final String exerciseName) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                CodeReviewRequestDialog dialog = new CodeReviewRequestDialog(shell, exerciseName);
+                dialog.open();
+            }
+        });
+    }
+
+    @Override
+    public void invokeCodeReviewRequestSuccefullySentWindow() {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                String msg = "Code submitted for review.\nYou will be notified when an instructor has reviewed your code.";
+                String title = "Code review request succesfully sent.";
+                invokeSuccessMessageBox(msg, title);
+            }
+        });
+    }
+
+    @Override
+    public void raiseVisibleException(String message) {
+        Core.getErrorHandler().raise(message);
+    }
 }

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -28,20 +29,24 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
+import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
 import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
 
 public class ServerManagerTest {
     private ConnectionBuilder connectionBuilder;
     private Gson gson;
     private ServerManager server;
+    private Settings settings;
 
     @Before
     public void setup() {
         connectionBuilder = mock(ConnectionBuilder.class);
         gson = new Gson();
         server = new ServerManager(gson, connectionBuilder);
+        settings = mock(Settings.class);
     }
 
     @Test
@@ -227,11 +232,13 @@ public class ServerManagerTest {
         when(exercise.getReturnUrl()).thenReturn(url);
 
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
-
+        when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
         byte[] data = new byte[5];
 
+        
+        
         try {
-            server.uploadFile(exercise, data);
+            server.uploadFile(exercise, data, settings);
         } catch (Exception e) {
             // method throws due to malformed json; it's ok as it happens after
             // the method calls this test is interested in
@@ -258,7 +265,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{error:error_message}");
 
-        server.uploadFile(exercise, data);
+        server.uploadFile(exercise, data, settings);
     }
 
     @Test(expected = RuntimeException.class)
@@ -276,7 +283,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{foo:bar}");
 
-        server.uploadFile(exercise, data);
+        server.uploadFile(exercise, data, settings);
     }
 
     @Test(expected = RuntimeException.class)
@@ -294,7 +301,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http:/www.asdsads%ad.com.\", paste_url:\"htp:///ww.ab%c\\//.co./\"}");
 
-        server.uploadFile(exercise, data);
+        server.uploadFile(exercise, data, settings);
     }
 
     @Test
@@ -311,8 +318,9 @@ public class ServerManagerTest {
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http://www.submission_url.com\", paste_url:\"http://www.paste_url.com\"}");
-
-        SubmissionResponse r = server.uploadFile(exercise, data);
+        
+        when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
+        SubmissionResponse r = server.uploadFile(exercise, data, settings);
         assertEquals(r.submissionUrl.toString(), "http://www.submission_url.com");
         assertEquals(r.pasteUrl.toString(), "http://www.paste_url.com");
     }
@@ -345,4 +353,63 @@ public class ServerManagerTest {
         return eList;
     }
 
+    @Test
+    public void sendEventLogCallsAddApiCallQueryParameters() {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+
+        String myUrl = "myUrl";
+        server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>(), settings);
+        verify(connectionBuilder, times(1)).addApiCallQueryParameters(myUrl);
+    }
+
+    public void sendEventLogCallsSettingsCorrectly() {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>(), settings);
+        verify(settings, times(1)).getUsername();
+        verify(settings, times(1)).getPassword();
+
+    }
+
+    @Test
+    public void sendEventLogSetsExtraHeadersCorrectly() throws Exception {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+
+        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenAnswer(
+                new Answer() {
+                    @Override
+                    public String answer(InvocationOnMock invocation) {
+                        Object[] args = invocation.getArguments();
+
+                        Map<String, String> paramMap = (HashMap<String, String>) args[2];
+
+                        assertEquals(3, paramMap.keySet().size());
+                        assertEquals(3, paramMap.values().size());
+
+                        assertTrue(paramMap.keySet().contains("X-Tmc-Version"));
+                        assertTrue(paramMap.keySet().contains("X-Tmc-Username"));
+                        assertTrue(paramMap.keySet().contains("X-Tmc-Password"));
+
+                        assertEquals("1", paramMap.get("X-Tmc-Version"));
+                        assertEquals("username", paramMap.get("X-Tmc-Username"));
+                        assertEquals("password", paramMap.get("X-Tmc-Password"));
+
+                        return "";
+                    }
+                });
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void sendEventLogsThrowsRuntimeExceptionWhenPostForTextThrows() throws Exception {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenThrow(
+                new Exception("Error"));
+
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>(), settings);
+    }
 }

@@ -118,7 +118,7 @@ public class Course {
     public List<Exercise> getDownloadableExercises() {
         List<Exercise> downloadableExercises = new ArrayList<Exercise>();
         for (Exercise e : getExercises()) {
-            if (!e.isDownloaded()) {
+            if (e.isDownloadable()) {
                 downloadableExercises.add(e);
             }
         }
@@ -137,4 +137,16 @@ public class Course {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Course)) {
+            return false;
+        }
+
+        Course c = (Course) o;
+
+        return this.name.equals(c.name);
+    }
+
 }

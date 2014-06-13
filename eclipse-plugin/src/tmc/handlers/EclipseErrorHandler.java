@@ -25,7 +25,18 @@ public class EclipseErrorHandler implements TMCErrorHandler {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
                 MessageDialog dialog = new MessageDialog(parent, "Error", null, e.getMessage(), MessageDialog.ERROR,
-                        new String[] {"OK"}, 0);
+                        new String[] { "OK" }, 0);
+                dialog.open();
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void handleManualException(final String errorMessage) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                MessageDialog dialog = new MessageDialog(parent, "Error", null, errorMessage, MessageDialog.ERROR,
+                        new String[] { "OK" }, 0);
                 dialog.open();
             }
         });

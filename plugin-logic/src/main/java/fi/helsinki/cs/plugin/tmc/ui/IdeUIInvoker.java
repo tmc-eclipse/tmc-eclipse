@@ -16,4 +16,14 @@ public interface IdeUIInvoker {
 
     public void invokeSubmitToServerWindow();
 
+    public void invokeSendToPastebinWindow(String exerciseName);
+
+    public void invokePastebinResultDialog(String pasteUrl);
+
+    public void invokeRequestCodeReviewWindow(final String exerciseName);
+
+    public void invokeCodeReviewRequestSuccefullySentWindow();
+
+    public void raiseVisibleException(String message);
+
 }

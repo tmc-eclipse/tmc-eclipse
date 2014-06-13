@@ -4,7 +4,7 @@ import java.util.List;
 
 public enum ProjectType {
 
-    JAVA_ANT("ANT", "build.xml"), JAVA_MAVEN("MAVEN", "pom.xml"), MAKEFILE("C", "Makefile");
+    JAVA_ANT("ANT", "build.xml"), JAVA_MAVEN("MAVEN", "pom.xml"), MAKEFILE("C", "Makefile"), NONE("", "\0");
 
     private final String buildFile;
 
@@ -24,7 +24,7 @@ public enum ProjectType {
                 }
             }
         }
-        return null;
+        return NONE;
     }
 
 }

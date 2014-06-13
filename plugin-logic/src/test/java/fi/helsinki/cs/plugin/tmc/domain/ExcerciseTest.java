@@ -224,12 +224,6 @@ public class ExcerciseTest {
     }
 
     @Test
-    public void testDownloaded() {
-        exercise.setDownloaded(true);
-        assertEquals(true, exercise.isDownloaded());
-    }
-
-    @Test
     public void testAttempted() {
         exercise.setAttempted(true);
         assertEquals(true, exercise.isAttempted());

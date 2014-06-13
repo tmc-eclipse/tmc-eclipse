@@ -1,6 +1,8 @@
 package tmc.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -9,12 +11,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
+
 public class LoginDialog extends Dialog {
 
     protected Object result;
     protected Shell shlTmcLogin;
-    private Text text;
-    private Text text_1;
+    private Text userNameText;
+    private Text passWordText;
+    private Label errorMessage;
 
     /**
      * Create the dialog.
@@ -67,23 +73,63 @@ public class LoginDialog extends Dialog {
         lblPassword.setBounds(10, 90, 70, 17);
         lblPassword.setText("Password");
 
-        text = new Text(shlTmcLogin, SWT.BORDER);
-        text.setBounds(86, 47, 217, 27);
+        errorMessage = new Label(shlTmcLogin, SWT.NONE);
+        errorMessage.setBounds(10, 142, 293, 17);
+        errorMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_LINK_FOREGROUND));
+        errorMessage.setText("");
 
-        text_1 = new Text(shlTmcLogin, SWT.BORDER | SWT.PASSWORD);
-        text_1.setBounds(86, 80, 217, 27);
+        userNameText = new Text(shlTmcLogin, SWT.BORDER);
+        userNameText.setBounds(86, 47, 217, 27);
+        userNameText.setText("");
 
-        Button btnSavePassword = new Button(shlTmcLogin, SWT.CHECK);
+        passWordText = new Text(shlTmcLogin, SWT.BORDER | SWT.PASSWORD);
+        passWordText.setBounds(86, 80, 217, 27);
+        passWordText.setText("");
+
+        final Button btnSavePassword = new Button(shlTmcLogin, SWT.CHECK);
         btnSavePassword.setBounds(167, 113, 136, 24);
         btnSavePassword.setText("Save password");
 
         Button btnLogIn = new Button(shlTmcLogin, SWT.NONE);
-        btnLogIn.setBounds(144, 160, 63, 29);
+        btnLogIn.setBounds(143, 176, 63, 29);
         btnLogIn.setText("Log in");
+        btnLogIn.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Core.getSettings().setUsername(userNameText.getText());
+                Core.getSettings().setPassword(passWordText.getText());
+                Core.getSettings().setSavePassword(btnSavePassword.getSelection());
+                boolean success = true;
+                try {
+                    Core.getUpdater().updateCourses();
+                } catch (UserVisibleException uve) {
+                    errorMessage.setText("Authentication failed");
+                    success = false;
+                }
+                if (success) {
+                    close();
+                }
+            }
+        });
 
         Button btnCancel = new Button(shlTmcLogin, SWT.NONE);
-        btnCancel.setBounds(212, 160, 91, 29);
+        btnCancel.setBounds(212, 176, 91, 29);
         btnCancel.setText("Cancel");
+        btnCancel.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                close();
+            }
+        });
 
+        btnSavePassword.setSelection(Core.getSettings().isSavePassword());
+        userNameText.setText(Core.getSettings().getUsername());
+        if (btnSavePassword.getSelection()) {
+            passWordText.setText(Core.getSettings().getPassword());
+        }
+    }
+
+    private void close() {
+        shlTmcLogin.close();
     }
 }

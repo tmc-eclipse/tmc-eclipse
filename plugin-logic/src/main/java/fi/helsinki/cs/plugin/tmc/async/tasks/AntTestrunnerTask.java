@@ -8,11 +8,12 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.ClassPath;
 import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
@@ -28,16 +29,24 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     private TestRunResult result;
     private Process process;
 
-    public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit) {
+    private Settings settings;
+    private IdeUIInvoker invoker;
+
+    public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit,
+            Settings settings, IdeUIInvoker invoker) {
+
         this.rootPath = rootPath;
         this.resultFilePath = rootPath + "/results.txt";
         this.testDirPath = testDir;
         this.javaExecutable = javaExecutable;
         this.memoryLimit = memoryLimit;
+        this.settings = settings;
 
-        this.classpath = new ClassPath(rootPath + "/lib/testrunner/tmc-test-runner.jar");
-        classpath.add(rootPath + "/lib/*");
-        classpath.add(rootPath + "/lib/testrunner/*");
+        this.settings = settings;
+        this.invoker = invoker;
+
+        this.classpath = new ClassPath(rootPath);
+        classpath.addDirAndSubDirs(rootPath + "/lib");
         classpath.add(rootPath + "/build/classes/");
         classpath.add(rootPath + "/build/test/classes/");
     }
@@ -63,11 +72,11 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
             return BackgroundTask.RETURN_SUCCESS;
         } catch (IOException e) {
-            Core.getErrorHandler().raise("Failed to parse test results.");
+            invoker.raiseVisibleException("Failed to parse test results.");
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InterruptedException e) {
-            Core.getErrorHandler().raise("Failed to run tests");
+            invoker.raiseVisibleException("Failed to run tests");
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -103,7 +112,7 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
         args.add("-Dtmc.test_class_dir=" + testDirPath);
         args.add("-Dtmc.results_file=" + resultFilePath);
-        args.add("-Dfi.helsinki.cs.tmc.edutestutils.defaultLocale=" + Core.getSettings().getErrorMsgLocale().toString());
+        args.add("-Dfi.helsinki.cs.tmc.edutestutils.defaultLocale=" + settings.getErrorMsgLocale().toString());
 
         if (endorserLibsExists(rootPath)) {
             args.add("-Djava.endorsed.dirs=" + endorsedLibsPath(rootPath));
@@ -157,7 +166,7 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Core.getErrorHandler().raise("Testrunner failure: failed to find test methods.");
+        invoker.raiseVisibleException("Testrunner failure: failed to find test methods.");
         return null;
 
     }

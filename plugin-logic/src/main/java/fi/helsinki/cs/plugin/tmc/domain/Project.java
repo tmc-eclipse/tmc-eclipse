@@ -1,5 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +15,14 @@ public class Project {
     private List<String> projectFiles;
     private List<String> extraStudentFiles;
     private String rootPath;
+    private ProjectStatus status;
+
+    public Project(Exercise exercise) {
+        this(exercise, new ArrayList<String>());
+        this.status = ProjectStatus.NOT_DOWNLOADED;
+
+        exercise.setProject(this);
+    }
 
     public Project(Exercise exercise, List<String> projectFiles) {
         this.exercise = exercise;
@@ -95,12 +104,37 @@ public class Project {
         }
     }
 
+    public void setProjectFiles(List<String> files) {
+        projectFiles = files;
+    }
+
+    public List<String> getProjectFiles() {
+        return projectFiles;
+    }
+
     public void setExtraStudentFiles(List<String> files) {
-        extraStudentFiles = Collections.unmodifiableList(files);
+        extraStudentFiles = files;
     }
 
     public List<String> getExtraStudentFiles() {
         return extraStudentFiles;
+    }
+
+    public boolean existsOnDisk() {
+        for (String file : projectFiles) {
+            if (file.replace(getRootPath(), "").contains("/src/")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ProjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
     }
 
 }
