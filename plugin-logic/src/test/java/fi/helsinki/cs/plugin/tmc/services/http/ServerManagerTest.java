@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -231,11 +232,13 @@ public class ServerManagerTest {
         when(exercise.getReturnUrl()).thenReturn(url);
 
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
-
+        when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
         byte[] data = new byte[5];
 
+        
+        
         try {
-            server.uploadFile(exercise, data);
+            server.uploadFile(exercise, data, settings);
         } catch (Exception e) {
             // method throws due to malformed json; it's ok as it happens after
             // the method calls this test is interested in
@@ -262,7 +265,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{error:error_message}");
 
-        server.uploadFile(exercise, data);
+        server.uploadFile(exercise, data, settings);
     }
 
     @Test(expected = RuntimeException.class)
@@ -280,7 +283,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{foo:bar}");
 
-        server.uploadFile(exercise, data);
+        server.uploadFile(exercise, data, settings);
     }
 
     @Test(expected = RuntimeException.class)
@@ -298,7 +301,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http:/www.asdsads%ad.com.\", paste_url:\"htp:///ww.ab%c\\//.co./\"}");
 
-        server.uploadFile(exercise, data);
+        server.uploadFile(exercise, data, settings);
     }
 
     @Test
@@ -315,8 +318,9 @@ public class ServerManagerTest {
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http://www.submission_url.com\", paste_url:\"http://www.paste_url.com\"}");
-
-        SubmissionResponse r = server.uploadFile(exercise, data);
+        
+        when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
+        SubmissionResponse r = server.uploadFile(exercise, data, settings);
         assertEquals(r.submissionUrl.toString(), "http://www.submission_url.com");
         assertEquals(r.pasteUrl.toString(), "http://www.paste_url.com");
     }

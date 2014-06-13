@@ -112,7 +112,7 @@ public class ExerciseSelectorDialog extends Dialog {
         btnDownload.setText("Download");
 
         try {
-            Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+            Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
             Core.getUpdater().updateExercises(currentCourse);
 
             if (currentCourse != null) {
@@ -148,7 +148,7 @@ public class ExerciseSelectorDialog extends Dialog {
         for (int i = 0; i < table.getItemCount(); i++) {
             if (table.getItem(i).getChecked()) {
                 String exerciseName = table.getItem(i).getText();
-                Course currentCourse = Core.getCourseDAO().getCurrentCourse();
+                Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
 
                 if (currentCourse != null) {
                     for (Exercise e : currentCourse.getExercises()) {

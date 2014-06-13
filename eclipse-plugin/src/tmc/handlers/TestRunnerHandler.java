@@ -130,7 +130,8 @@ public class TestRunnerHandler extends AbstractHandler {
             // TODO: Handle build failure
         }
 
-        TestrunnerTask testrun = new AntTestrunnerTask(projectRoot, projectRoot + "/test", javaExecutable, null);
+        TestrunnerTask testrun = new AntTestrunnerTask(projectRoot, projectRoot + "/test", javaExecutable, null,
+                Core.getSettings());
         TestrunnerListener listener = new TestrunnerListener(testrun, new EclipseIdeUIInvoker(shell));
         Core.getTaskRunner().runTask(testrun, listener);
     }
