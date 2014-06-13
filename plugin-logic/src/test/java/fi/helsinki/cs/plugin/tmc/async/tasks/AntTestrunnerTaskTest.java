@@ -14,7 +14,7 @@ public class AntTestrunnerTaskTest {
 
     @Before
     public void setUp() {
-        this.runner = new AntTestrunnerTask("", "", "", 0);
+        this.runner = new AntTestrunnerTask("", "", "", 0, null);
     }
 
     @Test

@@ -84,17 +84,17 @@ public class ServerManager {
         return zip;
     }
 
-    public SubmissionResponse uploadFile(Exercise exercise, byte[] data) {
-        return uploadFile(exercise, data, null);
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Settings settings) {
+        return uploadFile(exercise, data, null, settings);
     }
 
-    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams) {
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams, Settings settings) {
         String submitUrl = connectionBuilder.addApiCallQueryParameters(exercise.getReturnUrl());
 
         Map<String, String> params = new LinkedHashMap<String, String>();
         params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
         params.put("client_nanotime", "" + System.nanoTime());
-        params.put("error_msg_locale", Core.getSettings().getErrorMsgLocale().toString());
+        params.put("error_msg_locale", settings.getErrorMsgLocale().toString());
 
         if (extraParams != null && !extraParams.isEmpty()) {
             params.putAll(extraParams);

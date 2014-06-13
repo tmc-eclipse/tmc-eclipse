@@ -13,6 +13,7 @@ import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.ClassPath;
 import fi.helsinki.cs.plugin.tmc.domain.TestRunResult;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
@@ -27,13 +28,15 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     private String resultFilePath;
     private TestRunResult result;
     private Process process;
+    private Settings settings;
 
-    public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit) {
+    public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit, Settings settings) {
         this.rootPath = rootPath;
         this.resultFilePath = rootPath + "/results.txt";
         this.testDirPath = testDir;
         this.javaExecutable = javaExecutable;
         this.memoryLimit = memoryLimit;
+        this.settings = settings;
 
         this.classpath = new ClassPath(rootPath + "/lib/testrunner/tmc-test-runner.jar");
         classpath.add(rootPath + "/lib/*");
@@ -103,7 +106,7 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
         args.add("-Dtmc.test_class_dir=" + testDirPath);
         args.add("-Dtmc.results_file=" + resultFilePath);
-        args.add("-Dfi.helsinki.cs.tmc.edutestutils.defaultLocale=" + Core.getSettings().getErrorMsgLocale().toString());
+        args.add("-Dfi.helsinki.cs.tmc.edutestutils.defaultLocale=" + settings.getErrorMsgLocale().toString());
 
         if (endorserLibsExists(rootPath)) {
             args.add("-Djava.endorsed.dirs=" + endorsedLibsPath(rootPath));

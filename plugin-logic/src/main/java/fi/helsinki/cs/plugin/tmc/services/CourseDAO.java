@@ -39,8 +39,8 @@ public class CourseDAO {
         dataSource.save(courses);
     }
 
-    public Course getCurrentCourse() {
-        return getCourseByName(Core.getSettings().getCurrentCourseName());
+    public Course getCurrentCourse(Settings settings) {
+        return getCourseByName(settings.getCurrentCourseName());
     }
 
     public Course getCourseByName(String name) {
