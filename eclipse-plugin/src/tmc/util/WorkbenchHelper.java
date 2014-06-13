@@ -3,7 +3,6 @@ package tmc.util;
 import java.awt.Desktop;
 import java.net.URI;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -67,7 +66,7 @@ public class WorkbenchHelper {
         this.view = activePart;
     }
 
-    public boolean setupSelectionListener(SelectionListener listener) {
+    public boolean setupSelectionListener(final SelectionListener listener) {
 
         Display.getDefault().asyncExec(new Runnable() {
 
