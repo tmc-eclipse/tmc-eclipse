@@ -60,16 +60,14 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                 Core.setErrorHandler(new EclipseErrorHandler(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                         .getShell()));
                 Core.setTaskRunner(new EclipseTaskRunner());
+
                 // Display.getCurrent().addFilter(SWT.Modify, new
                 // TestListener());
                 // Display.getCurrent().addFilter(SWT.Verify, new
                 // TestListener());
                 // Display.getCurrent().addFilter(SWT., new TestListener());
 
-                if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) {
-                    System.out.println("Null wb");
-
-                } else {
+                if (!(PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)) {
 
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                             .addPartListener(new EditorListener());

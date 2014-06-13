@@ -38,6 +38,10 @@
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.codeReviewRequestCommand">
       </command>
+      <command
+            id="fi.helsinki.cs.plugins.eclipse.commands.submitButtonStateCommand"
+            name="SubmitButtonHandler">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -52,6 +56,14 @@
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
             class="tmc.handlers.UploadHandler">
+         <enabledWhen>
+            <with
+                  variable="fi.helsinki.cs.plugins.eclipse.commands.sourceprovider.active">
+               <equals
+                     value="ENABLED">
+               </equals>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
@@ -64,6 +76,10 @@
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.codeReviewRequestCommand"
             class="tmc.handlers.CodeReviewRequestHandler">
+      </handler>
+      <handler
+            class="tmc.handlers.SubmitButtonStateHandler"
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.submitButtonStateCommand">
       </handler>
    </extension>
    <extension 
@@ -134,6 +150,12 @@
                    label="Submit"
                    mnemonic="b">
             </command>
+             <command
+                   commandId="eclipse-plugin.command2"
+                   id="eclipse-plugin.command2.place"
+                   label="Tesmi"
+                   style="push">
+             </command>
          </menu>
       </menuContribution>
       
@@ -187,6 +209,16 @@
              name="TMC Test Results"
           	 class="tmc.ui.TestRunnerView"/>
 	</extension>
+   <extension
+         point="org.eclipse.ui.services">
+      <sourceProvider
+            provider="tmc.handlers.SubmitCommandState">
+         <variable
+               name="tmc.handlers.CommandState.active"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+   </extension>
 
 	
 </plugin>
