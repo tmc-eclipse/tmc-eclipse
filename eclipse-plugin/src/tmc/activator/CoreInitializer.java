@@ -3,7 +3,9 @@ package tmc.activator;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -13,8 +15,10 @@ import tmc.handlers.EclipseErrorHandler;
 import tmc.spyware.EditorListener;
 import tmc.spyware.ResourceEventListener;
 import tmc.tasks.EclipseTaskRunner;
+import tmc.ui.LoginDialog;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
@@ -30,6 +34,13 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         super.start(context);
         ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(),
                 IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_DELETE);
+
+        try {
+            Core.getUpdater().updateCourses();
+        } catch (UserVisibleException uve) {
+            LoginDialog ld = new LoginDialog(new Shell(), SWT.SHEET);
+            ld.open();
+        }
 
         instance = this;
         this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
