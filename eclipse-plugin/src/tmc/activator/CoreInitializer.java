@@ -29,8 +29,9 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         super.start(context);
         // ResourcesPlugin.getWorkspace().addSaveParticipant("tmc-eclipse", new
         // TestSaveParticipant());
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(),
-                IResourceChangeEvent.POST_CHANGE);
+        // ResourcesPlugin.getWorkspace().addResourceChangeListener(new
+        // ResourceEventListener(),
+        // IResourceChangeEvent.POST_CHANGE);
 
         instance = this;
         this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
@@ -69,8 +70,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
                 if (!(PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)) {
 
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                            .addPartListener(new EditorListener());
+                    // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    // .addPartListener(new EditorListener());
                 }
             }
         });

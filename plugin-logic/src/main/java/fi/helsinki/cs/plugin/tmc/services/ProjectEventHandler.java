@@ -49,9 +49,8 @@ public class ProjectEventHandler {
             break;
 
         }
-        
+
         project.getExercise().setDownloaded(project.existsOnDisk());
-        System.out.println(project.getProjectFiles());
     }
 
     private Project findProject(SnapshotInfo snapshot) {
