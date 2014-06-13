@@ -92,12 +92,21 @@ public class ProjectEventHandler {
     }
 
     private void handleFolderRename(Project project, SnapshotInfo snapshot) {
-        for (String file : getChildren(project, snapshot.getOldFullFilePath())) {
+        if (isProjectRename(snapshot)) {
+            return;
+        }
+
+        List<String> children = getChildren(project, snapshot.getOldFullFilePath());
+        for (String file : children) {
             remove(project, file);
             add(project, file.replace(snapshot.getOldFullFilePath(), snapshot.getCurrentFullFilePath()));
         }
         remove(project, snapshot.getOldFullFilePath());
         add(project, snapshot.getCurrentFullFilePath());
+    }
+
+    private boolean isProjectRename(SnapshotInfo snapshot) {
+        return snapshot.getOldFullFilePath().isEmpty();
     }
 
     private void handleFileRename(Project project, SnapshotInfo snapshot) {
