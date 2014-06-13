@@ -1,12 +1,13 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
+import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public class UploaderTask implements BackgroundTask {
 
@@ -19,15 +20,21 @@ public class UploaderTask implements BackgroundTask {
     private TaskFeedback progress;
     private String description = "Uploading exercises";
 
-    public UploaderTask(ProjectUploader uploader, String path) {
-        this(uploader, path, false, "");
+    private ProjectDAO projectDAO;
+    private IdeUIInvoker invoker;
+
+    public UploaderTask(ProjectUploader uploader, String path, ProjectDAO projectDAO, IdeUIInvoker invoker) {
+        this(uploader, path, false, "", projectDAO, invoker);
     }
 
-    public UploaderTask(ProjectUploader uploader, String path, boolean asPaste, String pasteMessage) {
+    public UploaderTask(ProjectUploader uploader, String path, boolean asPaste, String pasteMessage,
+            ProjectDAO projectDAO, IdeUIInvoker invoker) {
         this.uploader = uploader;
         this.path = path;
         this.asPaste = asPaste;
         this.pasteMessage = pasteMessage;
+        this.projectDAO = projectDAO;
+        this.invoker = invoker;
 
         isRunning = true;
     }
@@ -53,7 +60,7 @@ public class UploaderTask implements BackgroundTask {
     private int run() {
 
         try {
-            uploader.setProject(Core.getProjectDAO().getProjectByFile(path));
+            uploader.setProject(projectDAO.getProjectByFile(path));
 
             if (asPaste) {
                 uploader.setAsPaste(pasteMessage);
@@ -88,7 +95,7 @@ public class UploaderTask implements BackgroundTask {
             progress.incrementProgress(1);
 
         } catch (Exception ex) {
-            Core.getErrorHandler().raise("An error occurred while uploading exercises:\n" + ex.getMessage());
+            invoker.raiseVisibleException("An error occurred while uploading exercises:\n" + ex.getMessage());
             return BackgroundTask.RETURN_FAILURE;
         }
 

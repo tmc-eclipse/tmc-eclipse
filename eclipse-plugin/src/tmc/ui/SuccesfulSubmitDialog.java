@@ -1,7 +1,5 @@
 package tmc.ui;
 
-import java.awt.Desktop;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +152,8 @@ public class SuccesfulSubmitDialog extends Dialog {
         closeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                TaskStarter.startFeedbackSubmissionTask(getFeedbackAnswers(), feedbackUrl);
+                TaskStarter.startFeedbackSubmissionTask(getFeedbackAnswers(), feedbackUrl, new EclipseIdeUIInvoker(
+                        shell));
                 shell.close();
             }
 

@@ -24,4 +24,6 @@ public interface IdeUIInvoker {
 
     public void invokeCodeReviewRequestSuccefullySentWindow();
 
+    public void raiseVisibleException(String message);
+
 }

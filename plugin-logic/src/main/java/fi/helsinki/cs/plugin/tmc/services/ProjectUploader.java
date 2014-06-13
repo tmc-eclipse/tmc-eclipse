@@ -24,8 +24,10 @@ public class ProjectUploader {
     
     private SubmissionResponse response;
     private SubmissionResult result;
+    private Settings settings;
 
-    public ProjectUploader(ServerManager server) {
+    public ProjectUploader(ServerManager server, Settings settings) {
+        this.settings = settings;
         this.server = server;
         data = null;
         project = null;
@@ -54,9 +56,9 @@ public class ProjectUploader {
         }
 
         if (!extraParams.isEmpty()) {
-            response = server.uploadFile(project.getExercise(), data, extraParams);
+            response = server.uploadFile(project.getExercise(), data, extraParams, settings);
         } else {
-            response = server.uploadFile(project.getExercise(), data);
+            response = server.uploadFile(project.getExercise(), data, settings);
         }
     }
 
