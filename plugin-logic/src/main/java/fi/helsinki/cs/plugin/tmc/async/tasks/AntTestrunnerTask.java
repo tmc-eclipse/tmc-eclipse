@@ -35,9 +35,8 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         this.javaExecutable = javaExecutable;
         this.memoryLimit = memoryLimit;
 
-        this.classpath = new ClassPath(rootPath + "/lib/testrunner/tmc-test-runner.jar");
-        classpath.add(rootPath + "/lib/*");
-        classpath.add(rootPath + "/lib/testrunner/*");
+        this.classpath = new ClassPath(rootPath);
+        classpath.addDirAndSubDirs(rootPath + "/lib");
         classpath.add(rootPath + "/build/classes/");
         classpath.add(rootPath + "/build/test/classes/");
     }
