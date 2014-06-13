@@ -169,7 +169,7 @@ public class ServerManager {
         }
 
         try {
-            connectionBuilder.createConnection().postForText(fullUrl, data, extraHeaders);
+            connectionBuilder.createConnection().rawPostForText(fullUrl, data, extraHeaders);
         } catch (Exception e) {
             throw new RuntimeException("An error occured while submitting snapshot: " + e.getMessage());
         }

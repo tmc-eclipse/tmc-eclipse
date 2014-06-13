@@ -96,18 +96,17 @@ public class DocumentChangeHandler {
             // whitespace is still considered to be text; only truly empty text
             // is
             // considered to be deletion
+            String text = generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument);
+
             if (info.getEventText().length() == 0) {
-                sendEvent(project.getExercise(), "text_remove",
-                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                sendEvent(project.getExercise(), "text_remove", text);
                 return;
             }
 
             if (isPasteEvent(info.getEventText())) {
-                sendEvent(project.getExercise(), "text_paste",
-                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                sendEvent(project.getExercise(), "text_paste", text);
             } else {
-                sendEvent(project.getExercise(), "text_insert",
-                        generatePatchDescription(info.getRelativePath(), patches, patchContainsFullDocument));
+                sendEvent(project.getExercise(), "text_insert", text);
             }
 
         }

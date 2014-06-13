@@ -28,8 +28,10 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
+import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
 import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
 
 public class ServerManagerTest {
@@ -345,4 +347,64 @@ public class ServerManagerTest {
         return eList;
     }
 
+    @Test
+    public void sendEventLogCallsAddApiCallQueryParameters() {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+
+        String myUrl = "myUrl";
+        server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>());
+        verify(connectionBuilder, times(1)).addApiCallQueryParameters(myUrl);
+    }
+
+    public void sendEventLogCallsSettingsCorrectly() {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+        Settings settings = mock(Settings.class);
+
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>());
+        verify(settings, times(1)).getUsername();
+        verify(settings, times(1)).getPassword();
+
+    }
+
+    @Test
+    public void sendEventLogSetsExtraHeadersCorrectly() throws Exception {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+
+        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenAnswer(
+                new Answer() {
+                    @Override
+                    public String answer(InvocationOnMock invocation) {
+                        Object[] args = invocation.getArguments();
+
+                        Map<String, String> paramMap = (HashMap<String, String>) args[2];
+
+                        assertEquals(3, paramMap.keySet().size());
+                        assertEquals(3, paramMap.values().size());
+
+                        assertTrue(paramMap.keySet().contains("X-Tmc-Version"));
+                        assertTrue(paramMap.keySet().contains("X-Tmc-Username"));
+                        assertTrue(paramMap.keySet().contains("X-Tmc-Password"));
+
+                        assertEquals("1", paramMap.get("X-Tmc-Version"));
+                        assertEquals("username", paramMap.get("X-Tmc-Username"));
+                        assertEquals("password", paramMap.get("X-Tmc-Password"));
+
+                        return "";
+                    }
+                });
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void sendEventLogsThrowsRuntimeExceptionWhenPostForTextThrows() throws Exception {
+        RequestBuilder rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
+        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenThrow(
+                new Exception("Error"));
+
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>());
+    }
 }
