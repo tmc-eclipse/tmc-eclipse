@@ -159,7 +159,7 @@ public class ExerciseSelectorDialog extends Dialog {
                 }
             }
         }
-        TaskStarter.startExerciseDownloadTask(list);
+        TaskStarter.startExerciseDownloadTask(list, new EclipseIdeUIInvoker(shell));
     }
 
     private void selectUnselectAction() {
