@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.io.ProjectScanner;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 import static org.mockito.Mockito.*;
@@ -39,7 +40,7 @@ public class ProjectEventHandlerTest {
         SnapshotInfo snapshot = new SnapshotInfo("project", "", "", "testCourse/testExercise1/nonExistingFile", "",
                 ChangeType.FILE_RENAME);
 
-        handler.handle(snapshot);
+        handler.handleSnapshot(snapshot);
 
         verify(projectDAO, times(1)).getProjectByFile("testCourse/testExercise1/nonExistingFile");
         verify(projectDAO, times(1)).getProjects();

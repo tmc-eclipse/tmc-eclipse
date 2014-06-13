@@ -1,6 +1,7 @@
 package fi.helsinki.cs.plugin.tmc;
 
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
+import fi.helsinki.cs.plugin.tmc.io.ProjectScanner;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.DAOManager;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;

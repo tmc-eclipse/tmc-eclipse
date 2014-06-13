@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
+import fi.helsinki.cs.plugin.tmc.io.ProjectScanner;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 
@@ -15,7 +17,17 @@ public class ProjectEventHandler {
         this.projectDAO = projectDAO;
     }
 
-    public void handle(SnapshotInfo snapshot) {
+    public void handleDeletion(String projectPath) {
+        Project project = projectDAO.getProjectByFile(projectPath);
+        if (project == null) {
+            return;
+        }
+
+        project.setProjectFiles(new ArrayList<String>());
+        project.setStatus(ProjectStatus.DELETED);
+    }
+
+    public void handleSnapshot(SnapshotInfo snapshot) {
         Project project = findProject(snapshot);
 
         if (project == null) {
@@ -50,7 +62,11 @@ public class ProjectEventHandler {
 
         }
 
-        project.getExercise().setDownloaded(project.existsOnDisk());
+        if (project.existsOnDisk()) {
+            project.setStatus(ProjectStatus.DOWNLOADED);
+        } else {
+            project.setStatus(ProjectStatus.NOT_DOWNLOADED);
+        }
     }
 
     private Project findProject(SnapshotInfo snapshot) {
