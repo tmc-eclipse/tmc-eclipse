@@ -1,6 +1,5 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks.listeners;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
@@ -28,6 +27,7 @@ public class CodeReviewRequestListener implements BackgroundTaskListener {
 
     @Override
     public void onFailure() {
-        Core.getErrorHandler().raise("Failed to create the code review request.");
+        uiInvoker.raiseVisibleException("Failed to create the code review request.");
+
     }
 }
