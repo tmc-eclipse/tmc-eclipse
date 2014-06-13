@@ -18,6 +18,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import com.google.common.base.Charsets;
+
 class RequestBuilder {
     private UsernamePasswordCredentials credentials = null;
 
@@ -120,7 +122,7 @@ class RequestBuilder {
         builder.setCharset(Charset.forName("UTF-8"));
 
         for (Map.Entry<String, String> e : params.entrySet()) {
-            builder.addTextBody(e.getKey(), e.getValue());
+            builder.addTextBody(e.getKey(), e.getValue(), ContentType.TEXT_PLAIN.withCharset(Charsets.UTF_8));
         }
 
         builder.addBinaryBody(fileField, data, ContentType.APPLICATION_OCTET_STREAM, "file");
