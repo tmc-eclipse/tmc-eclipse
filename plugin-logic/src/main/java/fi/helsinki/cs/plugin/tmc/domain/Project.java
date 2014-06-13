@@ -15,11 +15,15 @@ public class Project {
     private List<String> projectFiles;
     private List<String> extraStudentFiles;
     private String rootPath;
+    private ProjectStatus status;
 
     public Project(Exercise exercise) {
         this(exercise, new ArrayList<String>());
+        this.status = ProjectStatus.NOT_DOWNLOADED;
+
+        exercise.setProject(this);
     }
-    
+
     public Project(Exercise exercise, List<String> projectFiles) {
         this.exercise = exercise;
         this.projectFiles = projectFiles;
@@ -123,6 +127,14 @@ public class Project {
             }
         }
         return false;
+    }
+
+    public ProjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
     }
 
 }

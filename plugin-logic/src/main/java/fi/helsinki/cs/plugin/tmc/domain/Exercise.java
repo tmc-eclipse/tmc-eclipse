@@ -51,13 +51,14 @@ public class Exercise implements Serializable {
     private boolean returnable;
     @SerializedName("requires_review")
     private boolean requiresReview;
-    private boolean downloaded;
     private boolean attempted;
     private boolean completed;
     private boolean reviewed;
     @SerializedName("all_review_points_given")
     private boolean allReviewPointsGiven;
     private String checksum;
+
+    private transient Project project;
 
     @SerializedName("memory_limit")
     private Integer memoryLimit;
@@ -234,14 +235,6 @@ public class Exercise implements Serializable {
         this.requiresReview = requiresReview;
     }
 
-    public boolean isDownloaded() {
-        return downloaded;
-    }
-
-    public void setDownloaded(boolean downloaded) {
-        this.downloaded = downloaded;
-    }
-
     public boolean isAttempted() {
         return attempted;
     }
@@ -315,6 +308,18 @@ public class Exercise implements Serializable {
     @Override
     public int hashCode() {
         return courseName.hashCode() + 7 * name.hashCode();
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public boolean isDownloadable() {
+        return (hasDeadlinePassed() == false) && (project == null || project.getStatus() != ProjectStatus.DOWNLOADED);
     }
 
 }
