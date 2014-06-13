@@ -9,7 +9,7 @@ import org.eclipse.ui.services.ISourceProviderService;
 import tmc.activator.CoreInitializer;
 import tmc.util.WorkbenchHelper;
 
-public class SubmitButtonStateHandler extends AbstractHandler {
+public class SubmitCommandStateHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -20,10 +20,9 @@ public class SubmitButtonStateHandler extends AbstractHandler {
 
         WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
         helper.initialize();
-
-        System.out.println(commandStateService + "  " + helper + " " + helper.getActiveProject());
-
-        commandStateService.setState(!helper.getActiveProject().getExercise().hasDeadlinePassed());
+        if (helper.getActiveProject() != null) {
+            commandStateService.setState(!helper.getActiveProject().getExercise().hasDeadlinePassed());
+        }
         return null;
     }
 

@@ -3,6 +3,7 @@ package tmc.util;
 import java.awt.Desktop;
 import java.net.URI;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -37,7 +38,6 @@ public class WorkbenchHelper {
     public void initialize() {
         if (!isListenerSetUp) {
             if (setupSelectionListener(selectionListener)) {
-                System.out.println("Toimii");
                 isListenerSetUp = true;
             }
         }
@@ -103,7 +103,6 @@ public class WorkbenchHelper {
             Project project = getProjectBySelection();
 
             if (project == null) {
-                System.out.println("Project on null");
                 project = getProjectByEditor();
             }
 

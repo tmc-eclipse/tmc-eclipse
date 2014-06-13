@@ -41,7 +41,6 @@ public class SelectionListener implements ISelectionListener {
                 IResource resource = (IResource) adaptable.getAdapter(IResource.class);
                 if (resource != null) {
                     IPath path = resource.getLocation();
-                    System.out.println(path.toString());
                     this.project = projectDAO.getProjectByFile(path.toString());
                     updateSubmitButton();
                 }

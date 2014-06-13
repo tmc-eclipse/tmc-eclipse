@@ -78,7 +78,7 @@
             class="tmc.handlers.CodeReviewRequestHandler">
       </handler>
       <handler
-            class="tmc.handlers.SubmitButtonStateHandler"
+            class="tmc.handlers.SubmitCommandStateHandler"
             commandId="fi.helsinki.cs.plugins.eclipse.commands.submitButtonStateCommand">
       </handler>
    </extension>
@@ -150,12 +150,6 @@
                    label="Submit"
                    mnemonic="b">
             </command>
-             <command
-                   commandId="eclipse-plugin.command2"
-                   id="eclipse-plugin.command2.place"
-                   label="Tesmi"
-                   style="push">
-             </command>
          </menu>
       </menuContribution>
       
@@ -218,6 +212,24 @@
                priorityLevel="workbench">
          </variable>
       </sourceProvider>
+   </extension>
+   <extension
+         id="fi.helsinki.cs.plugins.eclipse.projectNatureImages"
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/black-project-dot.png"
+            id="fi.helsinki.cs.plugins.eclipse.projectNatureImages.incompleteProject"
+            natureId="eclipse-plugin.TMCProjectNature">
+      </image>
+   </extension>
+   <extension
+         id="TMCProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tmc.util.TMCProjectNature">
+         </run>
+      </runtime>
    </extension>
 
 	

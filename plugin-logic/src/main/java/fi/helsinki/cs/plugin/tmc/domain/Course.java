@@ -118,9 +118,9 @@ public class Course {
     public List<Exercise> getDownloadableExercises() {
         List<Exercise> downloadableExercises = new ArrayList<Exercise>();
         for (Exercise e : getExercises()) {
-            //TODO: Change back when done.
-            // if (!e.isDownloaded() && !e.hasDeadlinePassed()) {
-            if (!e.isDownloaded()) {
+
+            if (!e.isDownloaded() && !e.hasDeadlinePassed()) {
+
                 downloadableExercises.add(e);
             }
         }
