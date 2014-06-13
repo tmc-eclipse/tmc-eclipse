@@ -37,7 +37,7 @@ public class ExerciseSelectorDialog extends Dialog {
      */
     public ExerciseSelectorDialog(Shell parent, int style) {
         super(parent, style);
-        setText("SWT Dialog");
+        setText("Exercises to download/update");
     }
 
     /**

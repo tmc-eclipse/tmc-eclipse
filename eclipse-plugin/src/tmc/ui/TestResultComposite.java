@@ -173,7 +173,9 @@ public class TestResultComposite extends Composite {
             public void widgetSelected(SelectionEvent e) {
 
                 final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot()
-                        .getFileForLocation(Path.fromOSString(path.toString()));
+                        .getFileForLocation(Path.fromOSString(path.toString().trim()));
+
+                System.out.println(path.toString().trim() + "   |||   " + Path.fromOSString(path.toString().trim()));
 
                 if (inputFile != null) {
                     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -198,6 +200,7 @@ public class TestResultComposite extends Composite {
                         }
                     }
                 }
+                System.out.println(inputFile);
 
             }
         });
