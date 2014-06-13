@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
-import fi.helsinki.cs.plugin.tmc.domain.ProjectType;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
@@ -76,17 +75,6 @@ public class DownloaderTaskTest {
     public void projectIsAddedBackToProjectDao() {
         task.start(progress);
         verify(projectDao, times(1)).addProject(Mockito.any(Project.class));
-    }
-
-    @Test
-    public void sameProjectIsAddedBackToProjectDaoIfProjectExisted() {
-        Project project = mock(Project.class);
-        when(project.getProjectType()).thenReturn(ProjectType.JAVA_ANT);
-        when(project.getRootPath()).thenReturn("foo/bar");
-        when(projectDao.getProjectByExercise(exercises.get(0))).thenReturn(project);
-
-        task.start(progress);
-        verify(projectDao, times(1)).addProject(project);
     }
 
     @Test
