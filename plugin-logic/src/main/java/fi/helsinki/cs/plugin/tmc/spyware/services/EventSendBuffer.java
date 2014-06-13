@@ -15,8 +15,9 @@ import java.util.logging.Logger;
 
 import com.google.common.collect.Iterables;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
+import fi.helsinki.cs.plugin.tmc.services.Settings;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
 
 /**
@@ -35,11 +36,13 @@ public class EventSendBuffer implements EventReceiver {
     private SingletonTask sendingTask;
     private SingletonTask savingTask;
 
-    private ScheduledExecutorService scheduler;
-    private Random random = new Random();
+    private final ScheduledExecutorService scheduler;
+    private final Random random = new Random();
     // private ServerAccess serverAccess;
     // private Courses courses;
-    private EventStore eventStore;
+    private final EventStore eventStore;
+    private final Settings settings;
+    private final ServerManager serverManager;
 
     // The following variables must only be accessed with a lock on sendQueue.
     private final ArrayDeque<LoggableEvent> sendQueue = new ArrayDeque<LoggableEvent>();
@@ -48,8 +51,10 @@ public class EventSendBuffer implements EventReceiver {
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private Cooldown autosendCooldown;
 
-    public EventSendBuffer(EventStore store) {
+    public EventSendBuffer(EventStore store, Settings settings, ServerManager serverManager) {
         this.eventStore = store;
+        this.settings = settings;
+        this.serverManager = serverManager;
         scheduler = Executors.newScheduledThreadPool(2);
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
         initializeTasks();
@@ -155,7 +160,7 @@ public class EventSendBuffer implements EventReceiver {
                     private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
 
                         try {
-                            Core.getServerManager().sendEventLogs(url, eventsToSend);
+                            serverManager.sendEventLogs(url, eventsToSend, settings);
                             log.log(Level.INFO, "Sent {0} events successfully to {1}",
                                     new Object[] {eventsToSend.size(), url});
 
@@ -244,7 +249,7 @@ public class EventSendBuffer implements EventReceiver {
 
     @Override
     public void receiveEvent(LoggableEvent event) {
-        if (!Core.getSettings().isSpywareEnabled()) {
+        if (!settings.isSpywareEnabled()) {
             return;
         }
 

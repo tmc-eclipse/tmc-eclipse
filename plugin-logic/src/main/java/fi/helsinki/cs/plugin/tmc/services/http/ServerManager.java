@@ -152,14 +152,14 @@ public class ServerManager {
         }
     }
 
-    public void sendEventLogs(String url, List<LoggableEvent> events) {
+    public void sendEventLogs(String url, List<LoggableEvent> events, Settings settings) {
 
         String fullUrl = connectionBuilder.addApiCallQueryParameters(url);
 
         Map<String, String> extraHeaders = new LinkedHashMap<String, String>();
         extraHeaders.put("X-Tmc-Version", "1");
-        extraHeaders.put("X-Tmc-Username", Core.getSettings().getUsername());
-        extraHeaders.put("X-Tmc-Password", Core.getSettings().getPassword());
+        extraHeaders.put("X-Tmc-Username", settings.getUsername());
+        extraHeaders.put("X-Tmc-Password", settings.getPassword());
 
         byte[] data;
         try {

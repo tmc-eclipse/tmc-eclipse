@@ -38,12 +38,14 @@ public class ServerManagerTest {
     private ConnectionBuilder connectionBuilder;
     private Gson gson;
     private ServerManager server;
+    private Settings settings;
 
     @Before
     public void setup() {
         connectionBuilder = mock(ConnectionBuilder.class);
         gson = new Gson();
         server = new ServerManager(gson, connectionBuilder);
+        settings = mock(Settings.class);
     }
 
     @Test
@@ -353,16 +355,15 @@ public class ServerManagerTest {
         when(connectionBuilder.createConnection()).thenReturn(rb);
 
         String myUrl = "myUrl";
-        server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>());
+        server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>(), settings);
         verify(connectionBuilder, times(1)).addApiCallQueryParameters(myUrl);
     }
 
     public void sendEventLogCallsSettingsCorrectly() {
         RequestBuilder rb = mock(RequestBuilder.class);
         when(connectionBuilder.createConnection()).thenReturn(rb);
-        Settings settings = mock(Settings.class);
 
-        server.sendEventLogs("url", new ArrayList<LoggableEvent>());
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>(), settings);
         verify(settings, times(1)).getUsername();
         verify(settings, times(1)).getPassword();
 
@@ -405,6 +406,6 @@ public class ServerManagerTest {
         when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenThrow(
                 new Exception("Error"));
 
-        server.sendEventLogs("url", new ArrayList<LoggableEvent>());
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>(), settings);
     }
 }
