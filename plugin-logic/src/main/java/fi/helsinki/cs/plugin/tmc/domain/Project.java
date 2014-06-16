@@ -19,9 +19,6 @@ public class Project {
 
     public Project(Exercise exercise) {
         this(exercise, new ArrayList<String>());
-        this.status = ProjectStatus.NOT_DOWNLOADED;
-
-        exercise.setProject(this);
     }
 
     public Project(Exercise exercise, List<String> projectFiles) {
@@ -29,6 +26,8 @@ public class Project {
         this.projectFiles = projectFiles;
         this.extraStudentFiles = Collections.emptyList();
         this.rootPath = buildRootPath();
+        this.status = ProjectStatus.NOT_DOWNLOADED;
+        exercise.setProject(this);
     }
 
     public Exercise getExercise() {
