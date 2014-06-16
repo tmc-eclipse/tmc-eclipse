@@ -53,6 +53,7 @@ Installing the plugin consists of the following steps:
 3. Make sure you have the following components installed from the marketplace:
  * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
  * [CDT](https://www.eclipse.org/cdt/) - C and C++ development tools for Eclipse IDE
+ * [PDE](https://www.eclipse.org/pde/) - Plug-in Development Environment for Eclipse IDE
 4. Restart the IDE if you had to install any of the above components
 
 ###Using the plugin
