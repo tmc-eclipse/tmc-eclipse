@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import com.google.common.io.Files;
 
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+
 public class ClassPathTest {
     private ClassPath classpath;
     File root;
@@ -21,7 +23,7 @@ public class ClassPathTest {
         File deepSubDir = new File(root.getAbsolutePath() + "/sub/subsub/subsubsub");
         deepSubDir.mkdirs();
 
-        classpath = new ClassPath(root.getAbsolutePath().toString() + "/*");
+        classpath = new ClassPath(FileUtil.getUnixPath(root.getAbsolutePath().toString() + "/*"));
     }
 
     @Test
@@ -43,21 +45,21 @@ public class ClassPathTest {
 
     @Test
     public void addDirAndSubDirsAddsAllSubDirs() {
-        classpath.addDirAndSubDirs(root.getAbsolutePath().toString() + "/sub/");
-        String rootPath = root.getAbsolutePath();
+        classpath.addDirAndSubDirs(FileUtil.getUnixPath(root.getAbsolutePath().toString()) + "/sub/");
+        String rootPath = FileUtil.getUnixPath(root.getAbsolutePath());
         assertTrue(classpath.getSubPaths().contains(rootPath + "/sub/*"));
         assertTrue(classpath.getSubPaths().contains(rootPath + "/sub/subsub/*"));
         assertTrue(classpath.getSubPaths().contains(rootPath + "/sub/subsub/subsubsub/*"));
     }
-    
+
     @Test
     public void providingFileToAddDirAndSubDirsUsesThatFilesParentDirectoryInstead() throws IOException {
-        String rootPath = root.getAbsolutePath();
+        String rootPath = FileUtil.getUnixPath(root.getAbsolutePath());
         File tmpFile = new File(rootPath + "/sub/foo.txt");
         tmpFile.createNewFile();
 
         classpath.addDirAndSubDirs(rootPath + "/sub/foo.txt");
-
+        
         assertTrue(classpath.getSubPaths().contains(rootPath + "/sub/*"));
         assertTrue(classpath.getSubPaths().contains(rootPath + "/sub/subsub/*"));
         assertTrue(classpath.getSubPaths().contains(rootPath + "/sub/subsub/subsubsub/*"));
@@ -72,11 +74,12 @@ public class ClassPathTest {
 
     @Test
     public void toStringReturnsCorrectlyAppendsFilesToString() {
-        String rootPath = root.getAbsolutePath();
+        String rootPath = FileUtil.getUnixPath(root.getAbsolutePath());
 
-        classpath.addDirAndSubDirs(root.getAbsolutePath().toString() + "/sub/");
-        String expected = rootPath + "/*:" + rootPath + "/sub/*:" + rootPath + "/sub/subsub/*:" + rootPath
-                + "/sub/subsub/subsubsub/*";
+        classpath.addDirAndSubDirs(FileUtil.getUnixPath(root.getAbsolutePath().toString()) + "/sub/");
+        String expected = rootPath + "/*" + System.getProperty("path.separator") + rootPath + "/sub/*"
+                + System.getProperty("path.separator") + rootPath + "/sub/subsub/*"
+                + System.getProperty("path.separator") + rootPath + "/sub/subsub/subsubsub/*";
         assertEquals(expected, classpath.toString());
     }
 }

@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
@@ -35,7 +36,7 @@ public class SnapshotTakerTest {
     @Before
     public void setUp() throws Exception {
         relPath = "src/test/java/fi/helsinki/cs/plugin/tmc/spyware/services/testProject/aaa.txt";
-        fullPath = new File(relPath).getCanonicalPath();
+        fullPath = FileUtil.getUnixPath(new File(relPath).getCanonicalPath());
         createReceiver();
         createSource();
 
