@@ -42,6 +42,10 @@ public class TestRunnerHandler extends AbstractHandler {
 
         }
 
+        if (helper.getActiveProject() == null) {
+            return null;
+        }
+
         String projectRoot = helper.getActiveProject().getRootPath();
         if (projectRoot == null) {
             Core.getErrorHandler().raise("Unable to run tests: No file open in workspace.");

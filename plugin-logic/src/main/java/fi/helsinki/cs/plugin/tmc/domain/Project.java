@@ -27,6 +27,7 @@ public class Project {
         this.extraStudentFiles = Collections.emptyList();
         this.rootPath = buildRootPath();
         this.status = ProjectStatus.NOT_DOWNLOADED;
+
         exercise.setProject(this);
     }
 
@@ -74,9 +75,6 @@ public class Project {
 
     @Override
     public int hashCode() {
-        if (exercise == null) {
-            return 0;
-        }
 
         return exercise.hashCode();
     }
