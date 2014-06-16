@@ -107,6 +107,7 @@ public class DocumentChangeHandlerTest {
         assertEquals(event.getCourseName(), "courseName1");
     }
 
+    @Ignore
     @Test
     public void textPasteEvent() {
         StringSelection s = new StringSelection("aaa");
