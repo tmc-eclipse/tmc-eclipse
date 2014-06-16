@@ -26,25 +26,32 @@ public class EventStore {
     public void save(LoggableEvent[] events) throws IOException {
         String text = getGson().toJson(events);
         Writer writer = configFile.getWriter();
-        writer.write(text);
-        writer.close();
-
+        try {
+            writer.write(text);
+        } finally {
+            writer.close();
+        }
     }
 
     public LoggableEvent[] load() throws IOException {
         StringWriter writer = new StringWriter();
         Reader reader = configFile.getReader();
-        if (reader == null) {
-            return new LoggableEvent[0];
-        }
-        IOUtils.copy(reader, writer);
+        LoggableEvent[] result = new LoggableEvent[0];
 
-        LoggableEvent[] result = getGson().fromJson(writer.toString(), LoggableEvent[].class);
-        writer.close();
-        reader.close();
-        if (result == null) {
-            result = new LoggableEvent[0];
+        if (reader == null) {
+            return result;
         }
+        try {
+            IOUtils.copy(reader, writer);
+            result = getGson().fromJson(writer.toString(), LoggableEvent[].class);
+            if (result == null) {
+                return new LoggableEvent[0];
+            }
+        } finally {
+            writer.close();
+            reader.close();
+        }
+
         return result;
     }
 
@@ -53,6 +60,11 @@ public class EventStore {
     }
 
     public void clear() throws IOException {
-        configFile.getWriter().write("");
+        Writer writer = configFile.getWriter();
+        try {
+            writer.write("");
+        } finally {
+            writer.close();
+        }
     }
 }
