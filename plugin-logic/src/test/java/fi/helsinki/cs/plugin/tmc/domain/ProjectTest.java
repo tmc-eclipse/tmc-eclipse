@@ -142,7 +142,7 @@ public class ProjectTest {
         project = new Project(new Exercise("name"));
         assertEquals(project.getExtraStudentFiles().size(), 0);
         assertEquals(project.getExercise().getName(), "name");
-        assertEquals(project.getProjectFiles().size(), 0);
+        assertEquals(project.getReadOnlyProjectFiles().size(), 0);
     }
 
 }

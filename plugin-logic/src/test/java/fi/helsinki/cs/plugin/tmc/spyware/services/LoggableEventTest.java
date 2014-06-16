@@ -25,7 +25,9 @@ public class LoggableEventTest {
     public void testGetters() {
         assertEquals(le1.getData(), le2.getData());
         assertEquals(le2.getMetadata(), "b");
-        assertEquals(le2.getHappenedAt(), System.currentTimeMillis());
+
+        // assertEquals(le2.getHappenedAt(), System.currentTimeMillis());
+
         // assertEquals(le2.toString(), "LoggableEvent{" + "courseName=" +
         // courseName + ", exerciseName=" + exerciseName + ", eventType=" +
         // eventType + ", happenedAt=" + happenedAt + ", systemNanotime=" +
