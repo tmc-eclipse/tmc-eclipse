@@ -214,22 +214,26 @@
       </sourceProvider>
    </extension>
    <extension
-         id="fi.helsinki.cs.plugins.eclipse.projectNatureImages"
-         point="org.eclipse.ui.ide.projectNatureImages">
-      <image
-            icon="icons/black-project-dot.png"
-            id="fi.helsinki.cs.plugins.eclipse.projectNatureImages.incompleteProject"
-            natureId="eclipse-plugin.TMCProjectNature">
-      </image>
-   </extension>
-   <extension
-         id="TMCProjectNature"
+         id="tmcNature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
                class="tmc.util.TMCProjectNature">
          </run>
       </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/green-project-dot.png"
+            id="eclipse-plugin.tmcNature.greenDot"
+            natureId="eclipse-plugin.tmcNature">
+      </image>
+      <image
+            icon="icons/black-project-dot.png"
+            id="eclipse-plugin.tmcNature.blackDot"
+            natureId="eclipse-plugin.tmcNature">
+      </image>
    </extension>
 
 	

@@ -41,6 +41,7 @@ public class GenericProjectOpener implements ProjectOpener {
                 break;
 
             }
+
         } catch (Exception exception) {
             errorHandler.handleException(exception);
         }
