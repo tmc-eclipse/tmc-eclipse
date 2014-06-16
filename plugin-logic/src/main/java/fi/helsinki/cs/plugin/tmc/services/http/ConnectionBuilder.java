@@ -30,13 +30,4 @@ class ConnectionBuilder {
     public RequestBuilder createConnection() {
         return new RequestBuilder().setCredentials(settings.getUsername(), settings.getPassword());
     }
-
-    public boolean hasEnoughSettings() { // kovakoodattu!
-        return true;
-    }
-
-    public boolean needsOnlyPassword() { // kovakoodattu!
-        return false;
-    }
-
 }
