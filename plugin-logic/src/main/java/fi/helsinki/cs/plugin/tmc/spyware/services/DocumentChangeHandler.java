@@ -46,14 +46,12 @@ public class DocumentChangeHandler {
 
     public void handleEvent(DocumentInfo info) {
         if (!settings.isSpywareEnabled()) {
-            System.out.println("Spyware disabled, bailing out");
             return;
         }
 
         Project project = projectDAO.getProjectByFile(info.getFullPath());
 
         if (project == null) {
-            System.out.println("Not a TMC project, bailing out!");
             return;
         }
 
