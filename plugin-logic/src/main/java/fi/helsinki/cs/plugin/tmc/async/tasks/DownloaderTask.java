@@ -69,6 +69,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             Project project = projectDao.getProjectByExercise(exercise);
 
             ZippedProject zip = downloader.downloadExercise(exercise);
+            exercise.setHasBeenUpdated();
             Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.createUnzippingDecider(project));
             FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
             List<String> fileList = unzipper.unzipTo(folder);

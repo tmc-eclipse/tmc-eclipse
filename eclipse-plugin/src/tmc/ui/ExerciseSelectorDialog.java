@@ -113,6 +113,11 @@ public class ExerciseSelectorDialog extends Dialog {
 
         try {
             Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
+
+            for (Exercise e : currentCourse.getExercises()) {
+                e.setOldChecksum(e.getChecksum());
+            }
+
             Core.getUpdater().updateExercises(currentCourse);
 
             if (currentCourse != null) {
@@ -123,7 +128,6 @@ public class ExerciseSelectorDialog extends Dialog {
 
             updateSelectAllButtonState();
         } catch (UserVisibleException uve) {
-
         }
 
     }
