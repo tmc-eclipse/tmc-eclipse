@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
@@ -31,7 +32,7 @@ public class DocumentChangeHandlerTest {
     private ProjectDAO dao;
     private DataSource<Project> source;
     private LoggableEvent event;
-    
+
     private String relPath;
     private String fullPath;
 
@@ -39,7 +40,7 @@ public class DocumentChangeHandlerTest {
     public void setUp() throws Exception {
         relPath = "src/test/java/fi/helsinki/cs/plugin/tmc/spyware/services/testProject/aaa.txt";
         fullPath = new File(relPath).getCanonicalPath();
-        
+
         this.settings = mock(Settings.class);
         this.event = null;
 
@@ -60,7 +61,7 @@ public class DocumentChangeHandlerTest {
 
         when(settings.isSpywareEnabled()).thenReturn(true);
     }
-    
+
     @Test
     public void receiverDoesNotReceiveEventIfSpywareIsDisabled() throws IOException, InterruptedException {
         when(settings.isSpywareEnabled()).thenReturn(false);
@@ -80,17 +81,16 @@ public class DocumentChangeHandlerTest {
 
         handler.handleEvent(new DocumentInfo(fullPath, relPath, "", "", 0, 3));
 
-
         Thread.sleep(50);
 
         assertEquals(event, null);
     }
-    
+
     @Test
     public void textRemoveEvent() {
         DocumentInfo info = new DocumentInfo(fullPath, relPath, "", "", 0, 3);
         handler.handleEvent(info);
-        
+
         int i = 0;
         while (event == null) {
             if (i > 400) {
@@ -106,14 +106,14 @@ public class DocumentChangeHandlerTest {
         assertEquals(event.getEventType(), "text_remove");
         assertEquals(event.getCourseName(), "courseName1");
     }
-    
+
     @Test
     public void textPasteEvent() {
         StringSelection s = new StringSelection("aaa");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
         DocumentInfo info = new DocumentInfo(fullPath, relPath, "", "aaa", 0, 3);
         handler.handleEvent(info);
-        
+
         int i = 0;
         while (event == null) {
             if (i > 400) {
@@ -126,17 +126,19 @@ public class DocumentChangeHandlerTest {
                 e.printStackTrace();
             }
         }
-        
+
         assertEquals(event.getEventType(), "text_paste");
     }
-    
+
+    // does not run on travis due to missing X11 terminal
+    @Ignore
     @Test
     public void textPasteEventWithSomeWhitespaces() {
         StringSelection s = new StringSelection("  aa  a ");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
         DocumentInfo info = new DocumentInfo(fullPath, relPath, "", "  aa  a ", 0, 3);
         handler.handleEvent(info);
-        
+
         int i = 0;
         while (event == null) {
             if (i > 400) {
@@ -149,15 +151,15 @@ public class DocumentChangeHandlerTest {
                 e.printStackTrace();
             }
         }
-        
+
         assertEquals(event.getEventType(), "text_paste");
     }
-    
+
     @Test
     public void textInsertEvent() {
         DocumentInfo info = new DocumentInfo(fullPath, relPath, "", "aa", 0, 3);
         handler.handleEvent(info);
-        
+
         int i = 0;
         while (event == null) {
             if (i > 400) {
@@ -172,12 +174,12 @@ public class DocumentChangeHandlerTest {
         }
         assertEquals(event.getEventType(), "text_insert");
     }
-    
+
     @Test
     public void textInsertEventWithThreeWhitespaces() {
         DocumentInfo info = new DocumentInfo(fullPath, relPath, "", "    ", 0, 3);
         handler.handleEvent(info);
-        
+
         int i = 0;
         while (event == null) {
             if (i > 400) {
@@ -192,12 +194,12 @@ public class DocumentChangeHandlerTest {
         }
         assertEquals(event.getEventType(), "text_insert");
     }
-    
+
     @Test
     public void textInsertEventWithOneWhitespace() {
         DocumentInfo info = new DocumentInfo(fullPath, relPath, "", " ", 0, 3);
         handler.handleEvent(info);
-        
+
         int i = 0;
         while (event == null) {
             if (i > 400) {
@@ -212,7 +214,6 @@ public class DocumentChangeHandlerTest {
         }
         assertEquals(event.getEventType(), "text_insert");
     }
-    
 
     private void createReceiver() {
         this.receiver = new EventReceiver() {
