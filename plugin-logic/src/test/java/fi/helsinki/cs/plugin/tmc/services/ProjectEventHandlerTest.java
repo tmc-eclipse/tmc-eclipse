@@ -45,7 +45,7 @@ public class ProjectEventHandlerTest {
         verify(projectDAO, times(1)).getProjectByFile("testCourse/testExercise1/nonExistingFile");
         verify(projectDAO, times(1)).getProjects();
 
-        verify(project, never()).getProjectFiles();
+        verify(project, never()).getReadOnlyProjectFiles();
         verify(project, never()).setProjectFiles(any(List.class));
     }
 

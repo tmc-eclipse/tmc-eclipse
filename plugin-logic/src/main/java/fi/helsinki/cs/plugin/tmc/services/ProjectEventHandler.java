@@ -129,25 +129,17 @@ public class ProjectEventHandler {
     }
 
     private void add(Project project, String path) {
-        List<String> files = project.getProjectFiles();
-        files.add(path);
-        project.setProjectFiles(files);
+        project.addProjectFile(path);
     }
 
     private void remove(Project project, String path) {
-        List<String> files = project.getProjectFiles();
-        for (int i = 0; i < files.size(); i++) {
-            if (files.get(i).equals(path)) {
-                files.remove(i);
-                return;
-            }
-        }
-        project.setProjectFiles(files);
+        project.removeProjectFile(path);
     }
 
     private List<String> getChildren(Project project, String path) {
         List<String> files = new ArrayList<String>();
-        for (String file : project.getProjectFiles()) {
+        List<String> projectFiles = project.getReadOnlyProjectFiles();
+        for (String file : projectFiles) {
             if (file.startsWith(path + "/")) {
                 files.add(file);
             }

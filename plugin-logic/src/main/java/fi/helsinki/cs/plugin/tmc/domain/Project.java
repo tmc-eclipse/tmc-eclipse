@@ -44,7 +44,12 @@ public class Project {
     }
 
     public ProjectType getProjectType() {
-        return ProjectType.findProjectType(projectFiles);
+        ProjectType type;
+        synchronized (projectFiles) {
+            List<String> files = new ArrayList<String>(projectFiles);
+            type = ProjectType.findProjectType(files);
+        }
+        return type;
     }
 
     public boolean containsFile(String file) {
@@ -82,10 +87,11 @@ public class Project {
         if (type == null) {
             return "";
         }
-
-        for (String file : projectFiles) {
-            if (file.contains(type.getBuildFile())) {
-                return FileUtil.getUnixPath(file.replace(type.getBuildFile(), ""));
+        synchronized (projectFiles) {
+            for (String file : projectFiles) {
+                if (file.contains(type.getBuildFile())) {
+                    return FileUtil.getUnixPath(file.replace(type.getBuildFile(), ""));
+                }
             }
         }
         return "";
@@ -105,11 +111,25 @@ public class Project {
     }
 
     public void setProjectFiles(List<String> files) {
-        projectFiles = files;
+        synchronized (projectFiles) {
+            projectFiles = files;
+        }
     }
 
-    public List<String> getProjectFiles() {
-        return projectFiles;
+    public List<String> getReadOnlyProjectFiles() {
+        return Collections.unmodifiableList(projectFiles);
+    }
+
+    public void addProjectFile(String file) {
+        synchronized (projectFiles) {
+            projectFiles.add(file);
+        }
+    }
+
+    public void removeProjectFile(String path) {
+        synchronized (projectFiles) {
+            projectFiles.remove(path);
+        }
     }
 
     public void setExtraStudentFiles(List<String> files) {
@@ -121,9 +141,12 @@ public class Project {
     }
 
     public boolean existsOnDisk() {
-        for (String file : projectFiles) {
-            if (file.replace(getRootPath(), "").contains("/src/")) {
-                return true;
+        synchronized (projectFiles) {
+
+            for (String file : projectFiles) {
+                if (file.replace(getRootPath(), "").contains("/src/")) {
+                    return true;
+                }
             }
         }
         return false;
