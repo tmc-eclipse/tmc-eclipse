@@ -75,6 +75,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
             if (project == null) {
                 project = new Project(exercise, fileList);
+                exercise.setProject(project);
                 projectDao.addProject(project);
             } else {
                 project.setProjectFiles(fileList);
