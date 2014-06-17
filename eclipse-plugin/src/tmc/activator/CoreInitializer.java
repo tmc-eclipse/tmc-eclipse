@@ -81,9 +81,18 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     ld.open();
                 }
 
-                ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
-                esd.open();
-
+                // First checks if the shell of the display is null and then if
+                // it is creates a new exercisedialog with new shell
+                // This can happen if the user after ide has opened clicks away
+                // from ide thus changing the focus out of ide.
+                if (Display.getDefault().getActiveShell() != null) {
+                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(Display.getDefault().getActiveShell(),
+                            SWT.SHEET);
+                    esd.open();
+                } else {
+                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
+                    esd.open();
+                }
             }
         });
     }

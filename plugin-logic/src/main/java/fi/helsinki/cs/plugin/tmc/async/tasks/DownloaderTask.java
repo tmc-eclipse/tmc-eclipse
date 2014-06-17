@@ -84,11 +84,9 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
             if (!exercise.isUpdated()) {
                 opener.open(exercise);
-            } else {
-                // TODO: opener.refresh();
             }
 
-            exercise.setHasBeenUpdated();
+            exercise.resetUpdateStatus();
         } catch (IOException exception) {
             invoker.raiseVisibleException("An error occurred while unzipping the exercises");
         }
