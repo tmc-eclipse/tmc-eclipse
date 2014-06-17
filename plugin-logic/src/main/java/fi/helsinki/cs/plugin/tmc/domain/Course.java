@@ -117,7 +117,6 @@ public class Course {
 
     public List<Exercise> getDownloadableExercises() {
         List<Exercise> downloadableExercises = new ArrayList<Exercise>();
-        System.out.println(getExercises());
         for (Exercise e : getExercises()) {
             if (e.isDownloadable() || e.isUpdated()) {
                 downloadableExercises.add(e);
