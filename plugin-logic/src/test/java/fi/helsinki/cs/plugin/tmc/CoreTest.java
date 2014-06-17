@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskRunner;
+
 public class CoreTest {
     private Core core;
     private MockServiceFactory factory;
@@ -37,12 +39,44 @@ public class CoreTest {
 
     @Test
     public void settingsCorrectAfterSingletonInitialization() {
-        assertEquals(factory.getSettings(), core.getSettings());
+        assertEquals(factory.getSettings(), Core.getSettings());
     }
 
     @Test
-    public void coursesCorrectAfterSingletonInitialization() {
-        assertEquals(factory.getCourseDAO(), core.getCourseDAO());
+    public void courseDAOCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getCourseDAO(), Core.getCourseDAO());
+    }
+
+    @Test
+    public void canSetTaskRunner() {
+        BackgroundTaskRunner runner = mock(BackgroundTaskRunner.class);
+        Core.setTaskRunner(runner);
+        assertEquals(runner, Core.getTaskRunner());
+    }
+
+    @Test
+    public void projectDAOCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getProjectDAO(), Core.getProjectDAO());
+    }
+
+    @Test
+    public void serverManagerCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getServerManager(), Core.getServerManager());
+    }
+
+    @Test
+    public void updaterCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getUpdater(), Core.getUpdater());
+    }
+
+    @Test
+    public void spywareCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getSpyware(), Core.getSpyware());
+    }
+
+    @Test
+    public void projectEventHandlerCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getProjectEventHandler(), Core.getProjectEventHandler());
     }
 
     @Test
