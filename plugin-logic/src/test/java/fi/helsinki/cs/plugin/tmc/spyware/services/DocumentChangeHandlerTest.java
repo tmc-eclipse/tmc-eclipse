@@ -109,7 +109,7 @@ public class DocumentChangeHandlerTest {
 
     @Test
     public void textPasteEvent() {
-        if (System.getenv("TRAVIS").equals("true")) {
+        if ("true".equals(System.getenv("TRAVIS"))) {
             return;
         }
         
@@ -136,7 +136,7 @@ public class DocumentChangeHandlerTest {
 
     @Test
     public void textPasteEventWithSomeWhitespaces() {
-        if (System.getenv("TRAVIS").equals("true")) {
+        if ("true".equals(System.getenv("TRAVIS"))) {
             return;
         }
         
