@@ -6,6 +6,13 @@ import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
+/**
+ * Background task for sending project to pastebin. It is closely related to
+ * uploading task as the only real difference is single parameter in the http
+ * request (potentially merge to single task? Constructor parameter list would
+ * be nasty though)
+ * 
+ */
 public class PastebinTask implements BackgroundTask {
 
     private ProjectUploader uploader;
@@ -69,7 +76,7 @@ public class PastebinTask implements BackgroundTask {
             progress.incrementProgress(1);
 
         } catch (Exception ex) {
-            invoker.raiseVisibleException("An error occurred while uploading exercises:\n" + ex.getMessage());
+            invoker.raiseVisibleException("An error occurred while uploading exercise to pastebin:\n" + ex.getMessage());
             return BackgroundTask.RETURN_FAILURE;
         }
 

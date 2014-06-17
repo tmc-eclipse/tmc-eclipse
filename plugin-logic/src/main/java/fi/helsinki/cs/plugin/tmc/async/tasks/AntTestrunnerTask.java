@@ -16,6 +16,10 @@ import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
+/**
+ * Background task for Ant test runner. Hope you like class path magic.
+ * 
+ */
 public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
     private List<String> args;

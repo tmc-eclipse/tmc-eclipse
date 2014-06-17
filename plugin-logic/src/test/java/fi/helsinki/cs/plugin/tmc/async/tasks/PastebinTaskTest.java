@@ -19,6 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 import fi.helsinki.cs.plugin.tmc.services.http.SubmissionResponse;
@@ -28,16 +29,20 @@ public class PastebinTaskTest {
     private ProjectUploader uploader;
     private TaskFeedback progress;
     private PastebinTask task;
+    private IdeUIInvoker invoker;
+    private ProjectDAO dao;
+    private String path;
 
     @Before
     public void setup() {
         uploader = mock(ProjectUploader.class);
         progress = mock(TaskFeedback.class);
+        when(progress.isCancelRequested()).thenReturn(false);
 
-        ProjectDAO dao = mock(ProjectDAO.class);
-        IdeUIInvoker invoker = mock(IdeUIInvoker.class);
-
-        task = new PastebinTask(uploader, "path", "pastemessage", dao, invoker);
+        dao = mock(ProjectDAO.class);
+        path = "path";
+        invoker = mock(IdeUIInvoker.class);
+        task = new PastebinTask(uploader, path, "pastemessage", dao, invoker);
     }
 
     @Test
@@ -47,7 +52,6 @@ public class PastebinTaskTest {
 
     @Test
     public void taskReturnsSuccessAfterProperInitializationOfAllComponents() throws IOException {
-        when(progress.isCancelRequested()).thenReturn(false);
 
         assertEquals(BackgroundTask.RETURN_SUCCESS, task.start(progress));
 
@@ -67,8 +71,15 @@ public class PastebinTaskTest {
     }
 
     @Test
+    public void projectIsSetToUploader() {
+        Project project = mock(Project.class);
+        when(dao.getProjectByFile(path)).thenReturn(project);
+        task.start(progress);
+        verify(uploader, times(1)).setProject(project);
+    }
+
+    @Test
     public void taskReturnsFailureIfCancelIsRequestedAtSecondCheckpoint() throws IOException {
-        when(progress.isCancelRequested()).thenReturn(false);
 
         Mockito.doAnswer(new Answer() {
             @Override
@@ -85,9 +96,18 @@ public class PastebinTaskTest {
 
     @Test
     public void taskReturnsFailureIfAnExceptionIsThrown() throws IOException {
-        when(progress.isCancelRequested()).thenReturn(false);
+
         doThrow(new IOException()).when(uploader).zipProjects();
         assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+    }
+
+    @Test
+    public void invokerIsCalledIfAnExceptionIsThrown() throws IOException {
+
+        doThrow(new IOException("Foobar")).when(uploader).zipProjects();
+        task.start(progress);
+        verify(invoker, times(1)).raiseVisibleException(
+                "An error occurred while uploading exercise to pastebin:\nFoobar");
     }
 
     @Test
@@ -97,4 +117,5 @@ public class PastebinTaskTest {
 
         assertEquals("paste", task.getPasteUrl());
     }
+
 }

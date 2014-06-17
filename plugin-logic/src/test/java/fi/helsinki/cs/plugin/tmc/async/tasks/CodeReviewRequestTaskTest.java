@@ -16,8 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
@@ -29,7 +27,6 @@ public class CodeReviewRequestTaskTest {
     private ProjectUploader uploader;
     private TaskFeedback progress;
 
-    private TMCErrorHandler errorhandler;
     private CodeReviewRequestTask task;
 
     @Before
@@ -41,8 +38,6 @@ public class CodeReviewRequestTaskTest {
 
         progress = mock(TaskFeedback.class);
 
-        errorhandler = mock(TMCErrorHandler.class);
-        Core.setErrorHandler(errorhandler);
     }
 
     @Test
@@ -67,6 +62,13 @@ public class CodeReviewRequestTaskTest {
 
         assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
 
+        verify(progress, times(0)).incrementProgress(1);
+    }
+
+    @Test
+    public void taskReturnsFailureIfStoppedAtFirstCheckpoint() throws IOException {
+        task.stop();
+        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
         verify(progress, times(0)).incrementProgress(1);
     }
 
