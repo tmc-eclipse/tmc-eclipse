@@ -136,8 +136,8 @@ public class DocumentChangeHandlerTest {
 
     @Test
     public void textPasteEventWithSomeWhitespaces() {
-        System.out.println(System.getProperty("os.name"));
-        if (System.getProperty("os.name").equals("Travis")) {
+        System.out.println(System.getenv("TRAVIS"));
+        if (System.getenv("TRAVIS").equals("true")) {
             return;
         }
         
