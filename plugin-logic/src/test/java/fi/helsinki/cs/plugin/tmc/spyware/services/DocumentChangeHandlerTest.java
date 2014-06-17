@@ -109,7 +109,7 @@ public class DocumentChangeHandlerTest {
 
     @Test
     public void textPasteEvent() {
-        if (System.getProperty("os.name").equals("Travis")) {
+        if (System.getenv("TRAVIS").equals("true")) {
             return;
         }
         
