@@ -16,6 +16,13 @@ import fi.helsinki.cs.plugin.tmc.spyware.services.EventStore;
 import fi.helsinki.cs.plugin.tmc.spyware.services.SnapshotTaker;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
 
+/**
+ * Default implementation of ServiceFactory interface. Creates the various
+ * objects that Core uses.
+ * 
+ * @author ekaaria
+ * 
+ */
 public final class ServiceFactoryImpl implements ServiceFactory {
 
     private Settings settings;

@@ -1,5 +1,9 @@
 package fi.helsinki.cs.plugin.tmc.async;
 
+/**
+ * Interface for the IDE specific background tasks
+ * 
+ */
 public interface BackgroundTask {
 
     public static final int RETURN_SUCCESS = 0;

@@ -1,5 +1,11 @@
 package fi.helsinki.cs.plugin.tmc;
 
+/**
+ * Interface to service factory that handles the creation of various objects for the Core. 
+ * Makes unit testing easier as it's possible to provide mock implementations of this and 
+ * avoid unnecessary dependencies to, for example, file system
+ *
+ */
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectEventHandler;
