@@ -170,6 +170,7 @@ public class SettingsDialog extends Dialog {
                     settings.setCurrentCourseName(combo.getText());
                     saveSettings();
                     shell.close();
+                    showExDownloaderDialog();
                 }
             }
         });
@@ -236,6 +237,11 @@ public class SettingsDialog extends Dialog {
             index++;
         }
         return 0;
+    }
+
+    private void showExDownloaderDialog() {
+        ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
+        esd.open();
     }
 
     private void addFieldData() {

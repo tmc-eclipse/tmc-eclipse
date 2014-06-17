@@ -56,6 +56,10 @@ public class Exercise implements Serializable {
     private boolean reviewed;
     @SerializedName("all_review_points_given")
     private boolean allReviewPointsGiven;
+
+    private String oldChecksum;
+    private boolean updated;
+
     private String checksum;
 
     private transient Project project;
@@ -275,6 +279,14 @@ public class Exercise implements Serializable {
         this.checksum = checksum;
     }
 
+    public void setOldChecksum(String oldChecksum) {
+        this.oldChecksum = oldChecksum;
+    }
+
+    public String getOldChecksum() {
+        return oldChecksum;
+    }
+
     public Integer getMemoryLimit() {
         return memoryLimit;
     }
@@ -316,6 +328,23 @@ public class Exercise implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public void setHasBeenUpdated() {
+        updated = false;
+    }
+
+    public boolean isUpdated() {
+        System.out.println("old: " + oldChecksum + " new: " + checksum + "  " + updated);
+        if (!updated) {
+            if (oldChecksum == null || oldChecksum.equals(checksum)) {
+                return updated;
+            } else {
+                updated = true;
+                System.out.println(updated);
+            }
+        }
+        return updated;
     }
 
     public boolean isDownloadable() {

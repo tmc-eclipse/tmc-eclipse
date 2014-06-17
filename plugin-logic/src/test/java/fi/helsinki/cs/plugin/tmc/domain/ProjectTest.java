@@ -1,6 +1,8 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +22,15 @@ public class ProjectTest {
     public void setUp() throws Exception {
         projectFiles = new ArrayList<String>();
 
-        this.project = new Project(null, projectFiles);
         this.exercise = new Exercise("testName", "testCourse");
+        this.project = new Project(exercise, projectFiles);
     }
 
     @Test
     public void testHashCode() {
-        assertEquals(null, project.getExercise());
-        assertEquals(0, project.hashCode());
+
         project.setExercise(exercise);
-        assertTrue(project.hashCode() != 0);
+        assertEquals(exercise.hashCode(), project.hashCode());
     }
 
     @Test
@@ -70,18 +71,21 @@ public class ProjectTest {
 
     @Test
     public void testEquals() {
-        Project p = new Project(exercise, projectFiles);
-        assertTrue(!p.equals(project));
-        assertTrue(!project.equals(p));
 
-        project.setExercise(exercise);
+        Exercise exercise2 = new Exercise("testname2", "testcourse");
+        Project p = new Project(exercise2, projectFiles);
+
+        assertFalse(p.equals(project));
+        assertFalse(project.equals(p));
+
+        p.setExercise(exercise);
         assertTrue(p.equals(project));
 
         p.setExercise(new Exercise());
-        assertTrue(!p.equals(project));
+        assertFalse(p.equals(project));
 
-        assertTrue(!project.equals("asdasd"));
-        assertTrue(!project.equals(null));
+        assertFalse(project.equals("asdasd"));
+        assertFalse(project.equals(null));
     }
 
     @Test
@@ -102,31 +106,31 @@ public class ProjectTest {
         p = new Project(exercise, new ArrayList<String>());
         assertEquals("", p.getRootPath());
     }
-    
+
     @Test
     public void getZippingDeciderWhenMavenProjectTest() {
         projectFiles.add("pom.xml");
         assertEquals(project.getZippingDecider().getClass(), new MavenZippingDecider(project).getClass());
     }
-    
+
     @Test
     public void getZippingDeciderWhenAntProjectTest() {
         projectFiles.add("build.xml");
         assertEquals(project.getZippingDecider().getClass(), new DefaultZippingDecider(project).getClass());
     }
-    
+
     @Test
     public void getZippingDeciderWhenCProjectTest() {
         projectFiles.add("Makefile");
         assertEquals(project.getZippingDecider().getClass(), new DefaultZippingDecider(project).getClass());
     }
-    
-    @Test (expected = RuntimeException.class)
+
+    @Test(expected = RuntimeException.class)
     public void getZippingDeciderWhenThereIsNoProjectTest() {
         project.setProjectFiles(new ArrayList<String>());
         project.getZippingDecider();
     }
-    
+
     @Test
     public void existsOnDiskTest() {
         projectFiles.add("pom.xml");
@@ -136,7 +140,7 @@ public class ProjectTest {
         project.setProjectFiles(new ArrayList<String>());
         assertFalse(project.existsOnDisk());
     }
-    
+
     @Test
     public void constructorTest() {
         project = new Project(new Exercise("name"));

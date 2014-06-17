@@ -1,18 +1,26 @@
 package fi.helsinki.cs.plugin.tmc.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
-import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
-import fi.helsinki.cs.plugin.tmc.io.ProjectScanner;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
-import static org.mockito.Mockito.*;
 
 public class ProjectEventHandlerTest {
 
@@ -58,9 +66,22 @@ public class ProjectEventHandlerTest {
 
     @Test
     public void testHandleDeletionWithValidProject() {
-        handler.handleDeletion("testCourse/testExercise1");
-        assert (project.getStatus() == ProjectStatus.DELETED);
-        assert (project.getReadOnlyProjectFiles().size() == 0);
+
+        Mockito.doAnswer(new Answer() {
+
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                List<String> param = (List<String>) invocation.getArguments()[0];
+                assertEquals(0, param.size());
+                return null;
+            }
+
+        }).when(project).setProjectFiles(Mockito.anyListOf(String.class));
+        String filePath = "testCourse/testExercise1";
+        when(projectDAO.getProjectByFile(filePath)).thenReturn(project);
+        handler.handleDeletion(filePath);
+        verify(project, times(1)).setStatus(ProjectStatus.DELETED);
+
     }
 
     @Test

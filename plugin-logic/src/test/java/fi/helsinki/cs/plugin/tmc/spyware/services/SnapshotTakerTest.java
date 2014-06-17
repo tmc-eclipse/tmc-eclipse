@@ -1,6 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.spyware.services;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -82,7 +82,12 @@ public class SnapshotTakerTest {
         SnapshotInfo info = new SnapshotInfo("testProject", "", relPath, "", fullPath, ChangeType.FILE_CHANGE);
         taker.execute(info);
 
+        int i = 0;
         while (event == null) {
+            if (i > 400) {
+                fail("LoggableEvent is null after waiting over 2000ms");
+            }
+            i++;
             try {
                 Thread.sleep(5);
             } catch (InterruptedException e) {
@@ -98,7 +103,12 @@ public class SnapshotTakerTest {
                 ChangeType.FILE_RENAME);
         taker.execute(info);
 
+        int i = 0;
         while (event == null) {
+            if (i > 400) {
+                fail("LoggableEvent is null after waiting over 2000ms");
+            }
+            i++;
             try {
                 Thread.sleep(5);
             } catch (InterruptedException e) {
@@ -114,7 +124,12 @@ public class SnapshotTakerTest {
                 ChangeType.FOLDER_RENAME);
         taker.execute(info);
 
+        int i = 0;
         while (event == null) {
+            if (i > 400) {
+                fail("LoggableEvent is null after waiting over 2000ms");
+            }
+            i++;
             try {
                 Thread.sleep(5);
             } catch (InterruptedException e) {
