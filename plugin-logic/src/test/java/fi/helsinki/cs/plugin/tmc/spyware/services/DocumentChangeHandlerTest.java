@@ -134,9 +134,9 @@ public class DocumentChangeHandlerTest {
         assertEquals(event.getEventType(), "text_paste");
     }
 
-    // does not run on travis due to missing X11 terminal
     @Test
     public void textPasteEventWithSomeWhitespaces() {
+        System.out.println(System.getProperty("os.name"));
         if (System.getProperty("os.name").equals("Travis")) {
             return;
         }
