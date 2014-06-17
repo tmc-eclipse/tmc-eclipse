@@ -2,21 +2,15 @@ package fi.helsinki.cs.plugin.tmc.spyware.services;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.collect.Iterables;
-
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
-import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -36,11 +30,10 @@ public class EventSendBuffer implements EventReceiver {
     public static final int DEFAULT_AUTOSEND_THREHSOLD = DEFAULT_MAX_EVENTS / 2;
     public static final int DEFAULT_AUTOSEND_COOLDOWN = 30 * 1000;
 
-    private SingletonTask sendingTask;
+    private SingletonTask sendingSingletonTask;
     private SingletonTask savingTask;
 
     private final ScheduledExecutorService scheduler;
-    private final Random random = new Random();
     // private ServerAccess serverAccess;
     // private Courses courses;
     private final EventStore eventStore;
@@ -50,10 +43,10 @@ public class EventSendBuffer implements EventReceiver {
 
     // The following variables must only be accessed with a lock on sendQueue.
     private final ArrayDeque<LoggableEvent> sendQueue = new ArrayDeque<LoggableEvent>();
-    private int eventsToRemoveAfterSend = 0;
     private int maxEvents = DEFAULT_MAX_EVENTS;
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private Cooldown autosendCooldown;
+    private SendingTask sendingTask;
 
     public EventSendBuffer(EventStore store, Settings settings, ServerManager serverManager, CourseDAO courseDAO) {
         this.eventStore = store;
@@ -75,133 +68,20 @@ public class EventSendBuffer implements EventReceiver {
             log.log(Level.WARNING, "Failed to read events from event store", ex);
         }
 
-        this.sendingTask.setInterval(DEFAULT_SEND_INTERVAL);
+        this.sendingSingletonTask.setInterval(DEFAULT_SEND_INTERVAL);
         this.savingTask.setInterval(DEFAULT_SAVE_INTERVAL);
     }
 
     private final void initializeTasks() {
-        savingTask = new SingletonTask(new Runnable() {
+        savingTask = new SingletonTask(new SavingTask(sendQueue, eventStore), scheduler);
 
-            @Override
-            public void run() {
-
-                try {
-                    LoggableEvent[] eventsToSave;
-                    synchronized (sendQueue) {
-                        eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
-                    }
-                    eventStore.save(eventsToSave);
-                } catch (IOException ex) {
-                    log.log(Level.WARNING, "Failed to save events", ex);
-                }
-            }
-        }, scheduler);
-
-        sendingTask = new SingletonTask(new Runnable() { //
-                    // Sending too many at once may go over the server's POST
-                    // size
-                    // limit.
-                    private static final int MAX_EVENTS_PER_SEND = 500;
-
-                    @Override
-                    public void run() {
-                        boolean shouldSendMore;
-
-                        do {
-                            ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
-                            if (eventsToSend.isEmpty()) {
-                                return;
-                            }
-
-                            synchronized (sendQueue) {
-                                shouldSendMore = sendQueue.size() > eventsToSend.size();
-                            }
-
-                            String url = pickDestinationUrl();
-                            if (url == null) {
-                                return;
-                            }
-
-                            log.log(Level.INFO, "Sending {0} events to {1}", new Object[] {eventsToSend.size(), url});
-
-                            doSend(eventsToSend, url);
-                        } while (shouldSendMore);
-                    }
-
-                    private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
-                        synchronized (sendQueue) {
-                            ArrayList<LoggableEvent> eventsToSend = new ArrayList<LoggableEvent>(sendQueue.size());
-
-                            Iterator<LoggableEvent> i = sendQueue.iterator();
-                            while (i.hasNext() && eventsToSend.size() < MAX_EVENTS_PER_SEND) {
-                                eventsToSend.add(i.next());
-                            }
-
-                            eventsToRemoveAfterSend = eventsToSend.size();
-
-                            return eventsToSend;
-                        }
-                    }
-
-                    private String pickDestinationUrl() {
-
-                        Course course = courseDAO.getCurrentCourse(settings);
-                        if (course == null) {
-                            log.log(Level.FINE, "Not sending events because no course selected");
-                            return null;
-                        }
-
-                        List<String> urls = course.getSpywareUrls();
-                        if (urls == null || urls.isEmpty()) {
-                            log.log(Level.INFO, "Not sending events because no URL provided by server");
-                            return null;
-                        }
-
-                        String url = urls.get(random.nextInt(urls.size()));
-
-                        return url;
-
-                        // url for localhost debugging, assuming spyware server
-                        // runs at port 3101
-                        // return "http://127.0.0.1:3101";
-                    }
-
-                    private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
-
-                        try {
-                            serverManager.sendEventLogs(url, eventsToSend, settings);
-                            log.log(Level.INFO, "Sent {0} events successfully to {1}",
-                                    new Object[] {eventsToSend.size(), url});
-
-                        } catch (Exception ex) {
-                            log.log(Level.INFO, "Failed to send {0} events to {1}: " + ex.getMessage(), new Object[] {
-                                    eventsToSend.size(), url});
-                            return;
-                        }
-                        removeSentEventsFromQueue();
-
-                        // If saving fails now (or is already running and fails
-                        // later) then we may end up sending duplicate events
-                        // later. This will hopefully be very rare.
-                        savingTask.start();
-                    }
-
-                    private void removeSentEventsFromQueue() {
-                        synchronized (sendQueue) {
-                            assert (eventsToRemoveAfterSend <= sendQueue.size());
-                            while (eventsToRemoveAfterSend > 0) {
-                                sendQueue.pop();
-                                eventsToRemoveAfterSend--;
-                            }
-                        }
-                    }
-
-                }, scheduler);
+        this.sendingTask = new SendingTask(sendQueue, serverManager, courseDAO, settings, savingTask);
+        sendingSingletonTask = new SingletonTask(sendingTask, scheduler);
 
     }
 
     public void setSendingInterval(long interval) {
-        sendingTask.setInterval(interval);
+        sendingSingletonTask.setInterval(interval);
     }
 
     public void setSavingInterval(long interval) {
@@ -219,7 +99,7 @@ public class EventSendBuffer implements EventReceiver {
                 for (int i = 0; i < diff; ++i) {
                     sendQueue.pop();
                 }
-                eventsToRemoveAfterSend -= diff;
+                sendingTask.setEventsToRemoveAfterSend(sendingTask.getEventsToRemoveAfterSend() -diff);
             }
 
             maxEvents = newMaxEvents;
@@ -242,7 +122,7 @@ public class EventSendBuffer implements EventReceiver {
     }
 
     public void sendNow() {
-        sendingTask.start();
+        sendingSingletonTask.start();
     }
 
     public void saveNow(long timeout) throws TimeoutException, InterruptedException {
@@ -251,7 +131,7 @@ public class EventSendBuffer implements EventReceiver {
     }
 
     public void waitUntilCurrentSendingFinished(long timeout) throws TimeoutException, InterruptedException {
-        sendingTask.waitUntilFinished(timeout);
+        sendingSingletonTask.waitUntilFinished(timeout);
     }
 
     @Override
@@ -263,7 +143,7 @@ public class EventSendBuffer implements EventReceiver {
         synchronized (sendQueue) {
             if (sendQueue.size() >= maxEvents) {
                 sendQueue.pop();
-                eventsToRemoveAfterSend--;
+                sendingTask.setEventsToRemoveAfterSend(sendingTask.getEventsToRemoveAfterSend() - 1);
             }
             sendQueue.add(event);
 
@@ -288,13 +168,13 @@ public class EventSendBuffer implements EventReceiver {
         long delayPerWait = 2000;
 
         try {
-            sendingTask.unsetInterval();
+            sendingSingletonTask.unsetInterval();
             savingTask.unsetInterval();
 
             savingTask.waitUntilFinished(delayPerWait);
             savingTask.start();
             savingTask.waitUntilFinished(delayPerWait);
-            sendingTask.waitUntilFinished(delayPerWait);
+            sendingSingletonTask.waitUntilFinished(delayPerWait);
 
         } catch (TimeoutException ex) {
             log.log(Level.WARNING, "Time out when closing EventSendBuffer", ex);
