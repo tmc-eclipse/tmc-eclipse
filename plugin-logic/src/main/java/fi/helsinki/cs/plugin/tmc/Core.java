@@ -34,8 +34,7 @@ public final class Core {
 
     private ProjectEventHandler projectEventHandler;
 
-    private Core() {
-        ServiceFactory factory = new ServiceFactory();
+    private Core(ServiceFactory factory) {
         this.settings = factory.getSettings();
         this.courseDAO = factory.getCourseDAO();
         this.projectDAO = factory.getProjectDAO();
@@ -91,8 +90,12 @@ public final class Core {
     }
 
     public static Core getInstance() {
+        return getInstance(new ServiceFactoryImpl());
+    }
+
+    public static Core getInstance(ServiceFactory factory) {
         if (core == null) {
-            core = new Core();
+            core = new Core(factory);
         }
         return core;
     }

@@ -8,7 +8,7 @@ public class ServiceFactoryTest {
 
     @Test
     public void constructorInitialisesEverythingCorrectly() {
-        ServiceFactory serviceFactory = new ServiceFactory();
+        ServiceFactory serviceFactory = new ServiceFactoryImpl();
         assertNotNull(serviceFactory.getSettings());
         assertNotNull(serviceFactory.getCourseDAO());
         assertNotNull(serviceFactory.getProjectDAO());
