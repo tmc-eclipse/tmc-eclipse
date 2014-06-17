@@ -235,6 +235,23 @@
             natureId="eclipse-plugin.tmcNature">
       </image>
    </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            icon="icons/redicon.png"
+            id="eclipse-plugin.projectNotCompleted"
+            label="project_not_completed"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="false">
+         <enablement>
+            <objectState
+                  name="eclipse-plugin.objectState1"
+                  value="eclipse-plugin.objectState1">
+            </objectState>
+         </enablement>
+      </decorator>
+   </extension>
 
 	
 </plugin>
