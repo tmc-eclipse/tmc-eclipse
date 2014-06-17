@@ -330,18 +330,24 @@ public class Exercise implements Serializable {
         this.project = project;
     }
 
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
     public void setHasBeenUpdated() {
         updated = false;
     }
 
+    public boolean getUpdated() {
+        return updated;
+    }
+
     public boolean isUpdated() {
-        System.out.println("old: " + oldChecksum + " new: " + checksum + "  " + updated);
         if (!updated) {
             if (oldChecksum == null || oldChecksum.equals(checksum)) {
                 return updated;
             } else {
                 updated = true;
-                System.out.println(updated);
             }
         }
         return updated;
