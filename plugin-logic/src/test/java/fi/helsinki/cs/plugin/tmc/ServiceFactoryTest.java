@@ -12,6 +12,10 @@ public class ServiceFactoryTest {
         assertNotNull(serviceFactory.getSettings());
         assertNotNull(serviceFactory.getCourseDAO());
         assertNotNull(serviceFactory.getProjectDAO());
+        assertNotNull(serviceFactory.getProjectEventHandler());
+        assertNotNull(serviceFactory.getServerManager());
+        assertNotNull(serviceFactory.getSpyware());
+        assertNotNull(serviceFactory.getUpdater());
     }
 
 }
