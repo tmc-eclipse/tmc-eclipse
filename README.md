@@ -33,6 +33,7 @@ To build the project, follow the following process:
 4. Make sure you have the following components installed from the marketplace:
  * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
  * [CDT](https://www.eclipse.org/cdt/) - C and C++ development tools for Eclipse IDE
+ * [PDE](https://www.eclipse.org/pde/) - Plug-in Development Environment for Eclipse IDE
 5. Restart the IDE if you had to install any of the above components
 6. Import the Eclipse plugin component ("eclipse-plugin") using the "General > Existing Projects into Workspace" settings
 7. Import the plugin core component using the "Maven > Existing Maven Projects" settings
