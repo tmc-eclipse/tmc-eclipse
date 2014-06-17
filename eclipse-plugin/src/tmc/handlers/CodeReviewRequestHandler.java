@@ -21,7 +21,7 @@ public class CodeReviewRequestHandler extends AbstractHandler {
     }
 
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {        
+    public Object execute(ExecutionEvent event) throws ExecutionException {
         if (helper.saveOpenFiles()) {
             Shell shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
             Project p = CoreInitializer.getDefault().getWorkbenchHelper().getActiveProject();

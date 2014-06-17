@@ -1,5 +1,9 @@
 package tmc.activator;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -14,6 +18,7 @@ import org.osgi.framework.BundleContext;
 import tmc.handlers.EclipseErrorHandler;
 import tmc.spyware.EditorListener;
 import tmc.spyware.ResourceEventListener;
+import tmc.tasks.CheckForCodeReviewsOnBackgroundTask;
 import tmc.tasks.EclipseTaskRunner;
 import tmc.ui.ExerciseSelectorDialog;
 import tmc.ui.LoginDialog;
@@ -43,6 +48,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         instance = this;
 
         this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
+
+        startRecurringTasks();
     }
 
     public void stop(BundleContext context) throws Exception {
@@ -101,4 +108,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         return workbenchHelper;
     }
 
+    private void startRecurringTasks() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(new CheckForCodeReviewsOnBackgroundTask(), 5, 5, TimeUnit.SECONDS);
+    }
 }

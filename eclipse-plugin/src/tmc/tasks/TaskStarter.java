@@ -19,20 +19,28 @@ import fi.helsinki.cs.plugin.tmc.async.tasks.AntTestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.FeedbackSubmissionTask;
+import fi.helsinki.cs.plugin.tmc.async.tasks.FetchCodeReviewsTask;
+import fi.helsinki.cs.plugin.tmc.async.tasks.MarkReviewAsReadTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.MavenTestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.PastebinTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.TestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.CodeReviewRequestListener;
+import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.FetchCodeReviewsTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.PastebinTaskListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.TestrunnerListener;
 import fi.helsinki.cs.plugin.tmc.async.tasks.listeners.UploadTaskListener;
+import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.Review;
 import fi.helsinki.cs.plugin.tmc.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
+import fi.helsinki.cs.plugin.tmc.services.ReviewDAO;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
+import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
 public final class TaskStarter {
 
@@ -119,5 +127,22 @@ public final class TaskStarter {
                 Core.getSettings(), invoker);
         TestrunnerListener listener = new TestrunnerListener(testrun, invoker);
         Core.getTaskRunner().runTask(testrun, listener);
+    }
+
+    public static void startFetchCodeReviewsTask(IdeUIInvoker invoker) {
+        Course course = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
+
+        ServerManager server = Core.getServerManager();
+        ReviewDAO reviewDAO = Core.getReviewDAO();
+        FetchCodeReviewsTask task = new FetchCodeReviewsTask(course, server, reviewDAO);
+        FetchCodeReviewsTaskListener listener = new FetchCodeReviewsTaskListener(task, invoker, reviewDAO);
+
+        Core.getTaskRunner().runTask(task, listener);
+    }
+
+    public static void startMarkCodereviewAsReadTask(Review review) {
+        ServerManager server = Core.getServerManager();
+        MarkReviewAsReadTask task = new MarkReviewAsReadTask(server, review);
+        Core.getTaskRunner().runTask(task);
     }
 }

@@ -24,6 +24,11 @@
             id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
       </command>
       <command
+            name="Check for code reviews"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand">
+      </command>
+      <command
             name="Run Tests"
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand">
@@ -121,7 +126,7 @@
                    style="push">
              </command>
              <command
-                   commandId="eclipse-plugin.command3"
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand"
                    label="Check for new code reviews"
                    mnemonic="r"
                    style="push">
