@@ -29,7 +29,7 @@ public class CProjectOpener {
         projectName = name;
     }
 
-    public void importAndOpen() throws URISyntaxException, OperationCanceledException, CoreException {
+    public IProject importAndOpen() throws URISyntaxException, OperationCanceledException, CoreException {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IWorkspaceRoot root = workspace.getRoot();
 
@@ -39,25 +39,16 @@ public class CProjectOpener {
         IProjectDescription description = workspace.newProjectDescription(projectName);
 
         description.setLocationURI(new File(FileUtil.getNativePath(projectPath)).toURI());
+        if (!project.exists()) {
+            project = CCorePlugin.getDefault().createCProject(description, project, new NullProgressMonitor(),
+                    projectName);
 
-        project = CCorePlugin.getDefault().createCProject(description, project, new NullProgressMonitor(), projectName);
+            MakeProjectNature.addNature(project, new NullProgressMonitor());
 
-        MakeProjectNature.addNature(project, new NullProgressMonitor());
+            MakeProjectNature.addToBuildSpec(project, "CBuilder", new NullProgressMonitor());
 
-        MakeProjectNature.addToBuildSpec(project, "CBuilder", new NullProgressMonitor());
-
-        project.open(new NullProgressMonitor());
-
-        description = project.getDescription();
-        String[] prevNatures = description.getNatureIds();
-        String[] newNatures = new String[prevNatures.length + 1];
-        System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-        newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
-        String temp = newNatures[newNatures.length - 1];
-        newNatures[newNatures.length - 1] = newNatures[0];
-        newNatures[0] = temp;
-        description.setNatureIds(newNatures);
-        project.setDescription(description, new NullProgressMonitor());
-
+            project.open(new NullProgressMonitor());
+        }
+        return project;
     }
 }

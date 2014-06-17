@@ -2,6 +2,7 @@ package fi.helsinki.cs.plugin.tmc.ui;
 
 import java.util.List;
 
+import fi.helsinki.cs.plugin.tmc.domain.Review;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
@@ -26,4 +27,5 @@ public interface IdeUIInvoker {
 
     public void raiseVisibleException(String message);
 
+    public void invokeCodeReviewDialog(Review review);
 }

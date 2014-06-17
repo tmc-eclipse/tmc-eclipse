@@ -1,6 +1,8 @@
 package tmc.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -9,11 +11,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tmc.activator.CoreInitializer;
+import tmc.tasks.TaskStarter;
+import fi.helsinki.cs.plugin.tmc.domain.Review;
+
 public class ReceivedCodeReviewDialog extends Dialog {
 
     protected Object result;
-    protected Shell shlCodeReview;
-    private Text txtHyio;
+    protected Shell shell;
+    private Text reviewBody;
+    private Review review;
 
     /**
      * Create the dialog.
@@ -21,9 +28,10 @@ public class ReceivedCodeReviewDialog extends Dialog {
      * @param parent
      * @param style
      */
-    public ReceivedCodeReviewDialog(Shell parent, int style) {
-        super(parent, style);
+    public ReceivedCodeReviewDialog(Shell parent, Review review) {
+        super(parent, SWT.SHEET);
         setText("SWT Dialog");
+        this.review = review;
     }
 
     /**
@@ -33,10 +41,10 @@ public class ReceivedCodeReviewDialog extends Dialog {
      */
     public Object open() {
         createContents();
-        shlCodeReview.open();
-        shlCodeReview.layout();
+        shell.open();
+        shell.layout();
         Display display = getParent().getDisplay();
-        while (!shlCodeReview.isDisposed()) {
+        while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
                 display.sleep();
             }
@@ -48,40 +56,55 @@ public class ReceivedCodeReviewDialog extends Dialog {
      * Create contents of the dialog.
      */
     private void createContents() {
-        shlCodeReview = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-        shlCodeReview.setSize(450, 475);
-        shlCodeReview.setText("Code review");
-        shlCodeReview.setLayout(null);
+        shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+        shell.setSize(450, 475);
+        shell.setText("Code review");
+        shell.setLayout(null);
 
-        Label lblCodeReview = new Label(shlCodeReview, SWT.NONE);
+        Label lblCodeReview = new Label(shell, SWT.NONE);
         lblCodeReview.setBounds(10, 10, 424, 23);
         lblCodeReview.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.BOLD));
-        lblCodeReview.setText("Code review - viikko1-002.HeiMaailma");
+        lblCodeReview.setText("Code review - " + review.getExerciseName());
 
-        Label lblNewLabel = new Label(shlCodeReview, SWT.NONE);
+        Label lblNewLabel = new Label(shell, SWT.NONE);
         lblNewLabel.setBounds(10, 47, 274, 23);
         lblNewLabel.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        lblNewLabel.setText("Reviewed by tmc-eclipse");
+        lblNewLabel.setText("Reviewed by " + review.getReviewerName());
 
-        Button btnMarkAsRead = new Button(shlCodeReview, SWT.CHECK);
+        final Button btnMarkAsRead = new Button(shell, SWT.CHECK);
         btnMarkAsRead.setBounds(290, 46, 144, 24);
+        btnMarkAsRead.setSelection(true);
         btnMarkAsRead.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
         btnMarkAsRead.setText("Mark as read");
 
-        txtHyio = new Text(shlCodeReview, SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
-        txtHyio.setBounds(10, 76, 424, 280);
-        txtHyio.setText("HYI >:O");
-        txtHyio.setFont(SWTResourceManager.getFont("Tahoma", 10, SWT.NORMAL));
+        reviewBody = new Text(shell, SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
+        reviewBody.setBounds(10, 76, 424, 280);
+        reviewBody.setText(review.getReviewBody());
+        reviewBody.setFont(SWTResourceManager.getFont("Tahoma", 10, SWT.NORMAL));
 
-        Button btnNewButton = new Button(shlCodeReview, SWT.NONE);
-        btnNewButton.setBounds(10, 385, 144, 32);
-        btnNewButton.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnNewButton.setText("Open in browser");
+        Button btnOpenInBrowser = new Button(shell, SWT.NONE);
+        btnOpenInBrowser.setBounds(10, 385, 144, 32);
+        btnOpenInBrowser.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
+        btnOpenInBrowser.setText("Open in browser");
+        btnOpenInBrowser.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                CoreInitializer.getDefault().getWorkbenchHelper().openURL(review.getUrl());
+            }
+        });
 
-        Button btnNewButton_1 = new Button(shlCodeReview, SWT.NONE);
-        btnNewButton_1.setBounds(360, 385, 74, 32);
-        btnNewButton_1.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnNewButton_1.setText("Ok");
-
+        Button btnOK = new Button(shell, SWT.NONE);
+        btnOK.setBounds(360, 385, 74, 32);
+        btnOK.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
+        btnOK.setText("Ok");
+        btnOK.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (btnMarkAsRead.getSelection()) {
+                    TaskStarter.startMarkCodereviewAsReadTask(review);
+                }
+                shell.close();
+            }
+        });
     }
 }

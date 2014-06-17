@@ -33,24 +33,12 @@ public class MavenProjectOpener {
         pomFile = new File(pathToPom);
     }
 
-    public void importAndOpen() throws CoreException, IOException {
+    public IProject importAndOpen() throws CoreException, IOException {
         pomFile.getParentFile().getCanonicalPath();
 
         IProject project = importProject();
 
-        if (project != null) {
-            project.open(monitor);
-            IProjectDescription description = project.getDescription();
-            String[] prevNatures = description.getNatureIds();
-            String[] newNatures = new String[prevNatures.length + 1];
-            System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-            newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
-            String temp = newNatures[newNatures.length - 1];
-            newNatures[newNatures.length - 1] = newNatures[0];
-            newNatures[0] = temp;
-            description.setNatureIds(newNatures);
-            project.setDescription(description, new NullProgressMonitor());
-        }
+        return project;
     }
 
     public IProject importProject() throws CoreException, IOException {

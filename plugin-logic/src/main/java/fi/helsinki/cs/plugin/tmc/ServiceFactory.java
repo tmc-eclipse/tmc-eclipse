@@ -9,6 +9,7 @@ package fi.helsinki.cs.plugin.tmc;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectEventHandler;
+import fi.helsinki.cs.plugin.tmc.services.ReviewDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -21,6 +22,8 @@ public interface ServiceFactory {
     public CourseDAO getCourseDAO();
 
     public ProjectDAO getProjectDAO();
+
+    public ReviewDAO getReviewDAO();
 
     public ServerManager getServerManager();
 

@@ -34,17 +34,12 @@ public class CoreTest {
 
     @Test
     public void getInstanceReturnSameObjectOnFurtherCalls() {
-        assertEquals(core, Core.getInstance());
+        assertEquals(core, Core.getInstance(factory));
     }
 
     @Test
     public void settingsCorrectAfterSingletonInitialization() {
         assertEquals(factory.getSettings(), Core.getSettings());
-    }
-
-    @Test
-    public void courseDAOCorrectAfterSingletonInitialization() {
-        assertEquals(factory.getCourseDAO(), Core.getCourseDAO());
     }
 
     @Test
@@ -55,8 +50,18 @@ public class CoreTest {
     }
 
     @Test
+    public void courseDAOCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getCourseDAO(), Core.getCourseDAO());
+    }
+
+    @Test
     public void projectDAOCorrectAfterSingletonInitialization() {
         assertEquals(factory.getProjectDAO(), Core.getProjectDAO());
+    }
+
+    @Test
+    public void reviewDAOCorrectAfterSingletonInitialization() {
+        assertEquals(factory.getReviewDAO(), Core.getReviewDAO());
     }
 
     @Test

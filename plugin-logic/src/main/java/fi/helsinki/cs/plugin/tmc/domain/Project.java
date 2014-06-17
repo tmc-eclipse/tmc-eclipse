@@ -110,6 +110,7 @@ public class Project {
     public void setProjectFiles(List<String> files) {
         synchronized (projectFiles) {
             projectFiles = files;
+            this.rootPath = buildRootPath();
         }
     }
 

@@ -4,6 +4,7 @@ import fi.helsinki.cs.plugin.tmc.async.BackgroundTaskRunner;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectEventHandler;
+import fi.helsinki.cs.plugin.tmc.services.ReviewDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.Updater;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -27,6 +28,7 @@ public final class Core {
 
     private CourseDAO courseDAO;
     private ProjectDAO projectDAO;
+    private ReviewDAO reviewDAO;
 
     private ServerManager server;
 
@@ -38,6 +40,7 @@ public final class Core {
         this.settings = factory.getSettings();
         this.courseDAO = factory.getCourseDAO();
         this.projectDAO = factory.getProjectDAO();
+        this.reviewDAO = factory.getReviewDAO();
         this.server = factory.getServerManager();
         this.updater = factory.getUpdater();
         this.errorHandler = new DummyErrorHandler();
@@ -73,6 +76,10 @@ public final class Core {
         return Core.getInstance().projectDAO;
     }
 
+    public static ReviewDAO getReviewDAO() {
+        return Core.getInstance().reviewDAO;
+    }
+
     public static ServerManager getServerManager() {
         return Core.getInstance().server;
     }
@@ -90,7 +97,10 @@ public final class Core {
     }
 
     public static Core getInstance() {
-        return getInstance(new ServiceFactoryImpl());
+        if (core == null) {
+            return getInstance(new ServiceFactoryImpl());
+        }
+        return core;
     }
 
     public static Core getInstance(ServiceFactory factory) {

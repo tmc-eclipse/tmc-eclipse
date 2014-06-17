@@ -10,6 +10,7 @@ import org.eclipse.ui.PlatformUI;
 
 import tmc.tasks.TaskStarter;
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.domain.Review;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
@@ -146,5 +147,14 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     @Override
     public void raiseVisibleException(String message) {
         Core.getErrorHandler().raise(message);
+    }
+
+    public void invokeCodeReviewDialog(final Review review) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                ReceivedCodeReviewDialog dialog = new ReceivedCodeReviewDialog(shell, review);
+                dialog.open();
+            }
+        });
     }
 }

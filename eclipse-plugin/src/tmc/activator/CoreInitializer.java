@@ -1,5 +1,9 @@
 package tmc.activator;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -14,6 +18,7 @@ import org.osgi.framework.BundleContext;
 import tmc.handlers.EclipseErrorHandler;
 import tmc.spyware.EditorListener;
 import tmc.spyware.ResourceEventListener;
+import tmc.tasks.CheckForCodeReviewsOnBackgroundTask;
 import tmc.tasks.EclipseTaskRunner;
 import tmc.ui.ExerciseSelectorDialog;
 import tmc.ui.LoginDialog;
@@ -43,6 +48,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         instance = this;
 
         this.workbenchHelper = new WorkbenchHelper(Core.getProjectDAO());
+
+        startRecurringTasks();
     }
 
     public void stop(BundleContext context) throws Exception {
@@ -81,9 +88,18 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     ld.open();
                 }
 
-                ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
-                esd.open();
-
+                // First checks if the shell of the display is null and then if
+                // it is creates a new exercisedialog with new shell
+                // This can happen if the user after ide has opened clicks away
+                // from ide thus changing the focus out of ide.
+                if (Display.getDefault().getActiveShell() != null) {
+                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(Display.getDefault().getActiveShell(),
+                            SWT.SHEET);
+                    esd.open();
+                } else {
+                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
+                    esd.open();
+                }
             }
         });
     }
@@ -92,4 +108,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         return workbenchHelper;
     }
 
+    private void startRecurringTasks() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(new CheckForCodeReviewsOnBackgroundTask(), 5, 5, TimeUnit.SECONDS);
+    }
 }

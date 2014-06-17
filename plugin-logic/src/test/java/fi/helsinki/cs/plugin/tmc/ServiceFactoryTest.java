@@ -16,6 +16,7 @@ public class ServiceFactoryTest {
         assertNotNull(serviceFactory.getServerManager());
         assertNotNull(serviceFactory.getSpyware());
         assertNotNull(serviceFactory.getUpdater());
+        assertNotNull(serviceFactory.getReviewDAO());
     }
 
 }

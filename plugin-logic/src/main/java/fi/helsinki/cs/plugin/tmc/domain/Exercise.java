@@ -330,16 +330,14 @@ public class Exercise implements Serializable {
         this.project = project;
     }
 
-    public void setUpdated(boolean updated) {
-        this.updated = updated;
-    }
-
-    public void setHasBeenUpdated() {
+    // sets that the exercise has been updated locally and resets the flag for
+    // new updates
+    public void resetUpdateStatus() {
         updated = false;
     }
 
-    public boolean getUpdated() {
-        return updated;
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
     }
 
     public boolean isUpdated() {

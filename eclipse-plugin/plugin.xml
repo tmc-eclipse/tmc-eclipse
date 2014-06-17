@@ -24,6 +24,11 @@
             id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
       </command>
       <command
+            name="Check for code reviews"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand">
+      </command>
+      <command
             name="Run Tests"
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand">
@@ -121,7 +126,7 @@
                    style="push">
              </command>
              <command
-                   commandId="eclipse-plugin.command3"
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand"
                    label="Check for new code reviews"
                    mnemonic="r"
                    style="push">
@@ -234,6 +239,23 @@
             id="eclipse-plugin.tmcNature.blackDot"
             natureId="eclipse-plugin.tmcNature">
       </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            icon="icons/redicon.png"
+            id="eclipse-plugin.projectNotCompleted"
+            label="project_not_completed"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="false">
+         <enablement>
+            <objectState
+                  name="eclipse-plugin.objectState1"
+                  value="eclipse-plugin.objectState1">
+            </objectState>
+         </enablement>
+      </decorator>
    </extension>
 
 	

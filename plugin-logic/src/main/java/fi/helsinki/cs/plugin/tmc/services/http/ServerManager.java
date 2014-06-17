@@ -23,11 +23,13 @@ import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
+import fi.helsinki.cs.plugin.tmc.domain.Review;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ExerciseList;
+import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.ReviewList;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.SubmissionResultParser;
 import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ByteArrayGsonSerializer;
@@ -172,6 +174,38 @@ public class ServerManager {
             connectionBuilder.createConnection().rawPostForText(fullUrl, data, extraHeaders);
         } catch (Exception e) {
             throw new RuntimeException("An error occured while submitting snapshot: " + e.getMessage());
+        }
+    }
+
+    public List<Review> downloadReviews(Course course) {
+        String fullUrl = connectionBuilder.addApiCallQueryParameters(course.getReviewsUrl());
+        try {
+            String json = connectionBuilder.createConnection().getForText(fullUrl);
+            Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create();
+            ReviewList reviews = g.fromJson(json, new TypeToken<ReviewList>() {
+            }.getType());
+            return Arrays.asList(reviews.reviews);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean markReviewAsRead(Review review) {
+        String fullUrl = connectionBuilder.addApiCallQueryParameters(review.getUpdateUrl() + ".json");
+        Map<String, String> extraParams = new HashMap<String, String>();
+        extraParams.put("_method", "put");
+        extraParams.put("mark_as_read", "1");
+
+        try {
+            connectionBuilder.createConnection().postForText(fullUrl, extraParams);
+            return true;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
         }
     }
 
