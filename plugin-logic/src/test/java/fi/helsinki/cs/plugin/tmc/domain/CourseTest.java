@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -102,4 +103,68 @@ public class CourseTest {
         assertEquals("CourseName", course.toString());
     }
 
+    @Test
+    public void getDownloadableExercisesDownloadsAll() {
+        Exercise ex1 = new Exercise();
+        Exercise ex2 = new Exercise();
+        Exercise ex3 = new Exercise();
+
+        List<Exercise> exList = new ArrayList<>();
+
+        exList.add(ex1);
+        exList.add(ex2);
+        exList.add(ex3);
+
+        course.setExercises(exList);
+
+        assertEquals(course.getDownloadableExercises().size(), 3);
+    }
+
+    @Test
+    public void getDownloadableExercisesDownloadsOnlyDownloadable() {
+        Exercise ex1 = new Exercise();
+        Exercise ex2 = new Exercise();
+        Exercise ex3 = new Exercise();
+
+        Date d = new Date();
+
+        d.setTime(0);
+
+        ex1.setDeadline(d);
+
+        List<Exercise> exList = new ArrayList<>();
+
+        exList.add(ex1);
+        exList.add(ex2);
+        exList.add(ex3);
+
+        course.setExercises(exList);
+
+        assertEquals(course.getDownloadableExercises().size(), 2);
+    }
+
+    @Test
+    public void getDownloadableExercisesDownloadsOnlyDownloadableAndUpdated() {
+        Exercise ex1 = new Exercise();
+        Exercise ex2 = new Exercise();
+        Exercise ex3 = new Exercise();
+
+        Date d = new Date();
+
+        d.setTime(0);
+
+        ex1.setDeadline(d);
+        ex2.setDeadline(d);
+        ex2.setUpdated(true);
+
+        List<Exercise> exList = new ArrayList<>();
+
+        exList.add(ex1);
+        exList.add(ex2);
+        exList.add(ex3);
+
+        course.setExercises(exList);
+
+        assertEquals(course.getDownloadableExercises().size(), 2);
+    }
 }
