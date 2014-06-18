@@ -50,6 +50,10 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
             return BackgroundTask.RETURN_FAILURE;
         }
 
+        if (progress.isCancelRequested()) {
+            return RETURN_FAILURE;
+        }
+
         File resultFile = new File(project.getRootPath() + "/target/test_output.txt");
 
         goals.clear();

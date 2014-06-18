@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fi.helsinki.cs.plugin.tmc.domain.InvalidProjectTypeException;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
@@ -98,8 +99,13 @@ public class SnapshotTaker {
             // that modify the project. For now we just accept that. Not sure if
             // the File Object API would allow some sort of global locking of
             // the project.
-
-            RecursiveZipper zipper = new RecursiveZipper(new FileIO(project.getRootPath()), project.getZippingDecider());
+            RecursiveZipper zipper;
+            try {
+                zipper = new RecursiveZipper(new FileIO(project.getRootPath()), project.getZippingDecider());
+            } catch (InvalidProjectTypeException e) {
+                // this exception is thrown when file list is empty
+                return;
+            }
             try {
                 byte[] data = zipper.zipProjectSources();
                 LoggableEvent event = new LoggableEvent(project.getExercise(), "code_snapshot", data, metadata);

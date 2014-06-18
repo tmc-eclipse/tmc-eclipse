@@ -103,13 +103,14 @@ public class Project {
         case MAKEFILE:
             return new DefaultZippingDecider(this);
         default:
-            throw new RuntimeException("Invalid project type");
+            throw new InvalidProjectTypeException("Invalid project type");
         }
     }
 
     public void setProjectFiles(List<String> files) {
         synchronized (projectFiles) {
             projectFiles = files;
+            this.rootPath = buildRootPath();
         }
     }
 

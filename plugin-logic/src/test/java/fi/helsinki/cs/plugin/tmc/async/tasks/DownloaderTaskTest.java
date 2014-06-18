@@ -83,4 +83,10 @@ public class DownloaderTaskTest {
         verify(opener, times(1)).open(exercises.get(0));
     }
 
+    @Test
+    public void exerciseIsSetAsUpdated() {
+        task.start(progress);
+        verify(exercises.get(0), times(1)).resetUpdateStatus();
+    }
+
 }

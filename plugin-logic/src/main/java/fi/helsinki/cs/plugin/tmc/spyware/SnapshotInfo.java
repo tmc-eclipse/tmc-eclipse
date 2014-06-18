@@ -46,4 +46,19 @@ public class SnapshotInfo {
         return type;
     }
 
+    public boolean pathsAreEmpty() {
+        return isEmpty(oldFilePath) && isEmpty(oldFullFilePath) && isEmpty(currentFilePath)
+                && isEmpty(currentFullFilePath);
+    }
+
+    private boolean isEmpty(String path) {
+        return path == null || path.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "\tProjectname: " + projectName + "\n\tOld file path: " + oldFilePath + "\n\tCurrent file path: "
+                + currentFilePath + "\n\tFull old path: " + oldFullFilePath + "\n\tFull current path: "
+                + currentFullFilePath + "\n\tType: " + type;
+    }
 }

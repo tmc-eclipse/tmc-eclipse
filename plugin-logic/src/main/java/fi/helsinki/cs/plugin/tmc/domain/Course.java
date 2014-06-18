@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Purpose of this class is to store course information. This differs from
+ * project for example in that course knows its exercises and so on.
+ */
+
 public class Course {
 
     private int id;

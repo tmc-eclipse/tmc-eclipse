@@ -175,8 +175,6 @@ public class TestResultComposite extends Composite {
                 final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot()
                         .getFileForLocation(Path.fromOSString(path.toString().trim()));
 
-                System.out.println(path.toString().trim() + "   |||   " + Path.fromOSString(path.toString().trim()));
-
                 if (inputFile != null) {
                     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                     IEditorPart openEditor = null;
@@ -200,7 +198,6 @@ public class TestResultComposite extends Composite {
                         }
                     }
                 }
-                System.out.println(inputFile);
 
             }
         });

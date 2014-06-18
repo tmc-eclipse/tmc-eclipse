@@ -283,4 +283,21 @@ public class ExcerciseTest {
         assertNull(exercise.getDeadline());
 
     }
+
+    @Test
+    public void isUpdatedReturnsTrueWithDifferentChecksums() {
+        exercise.setChecksum("a");
+        exercise.setOldChecksum("b");
+        assertTrue(exercise.isUpdated());
+        exercise.setOldChecksum("a");
+        assertTrue(exercise.isUpdated());
+    }
+
+    @Test
+    public void isUpdatedReturnsFalseWithSameChecksums() {
+        exercise.setChecksum("a");
+        exercise.setOldChecksum("a");
+        assertFalse(exercise.isUpdated());
+    }
+
 }

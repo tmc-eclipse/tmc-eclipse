@@ -24,6 +24,7 @@ public class DAOManager {
 
     private CourseDAO courseDAO;
     private ProjectDAO projectDAO;
+    private ReviewDAO reviewDAO;
 
     public DAOManager() {
         this(new FileIO(DEFAULT_COURSES_PATH), new FileIO(DEFAULT_PROJECTS_PATH));
@@ -50,12 +51,22 @@ public class DAOManager {
         return projectDAO;
     }
 
+    public ReviewDAO getReviewDAO() {
+        if (this.reviewDAO == null) {
+            initialize();
+        }
+
+        return reviewDAO;
+    }
+
     private void initialize() {
         DataSource<Course> courseStorage = new CourseStorage(coursesPath);
         this.courseDAO = new CourseDAO(courseStorage);
 
         DataSource<Project> projectStorage = new ProjectStorage(projectsPath);
         this.projectDAO = new ProjectDAO(projectStorage);
+
+        this.reviewDAO = new ReviewDAO();
 
         linkCoursesAndExercises();
         scanProjectFiles();
