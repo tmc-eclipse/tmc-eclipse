@@ -33,7 +33,7 @@ public class FetchCodeReviewsTaskListenerTest {
         task = mock(FetchCodeReviewsTask.class);
         invoker = mock(IdeUIInvoker.class);
         reviewDAO = mock(ReviewDAO.class);
-        listener = new FetchCodeReviewsTaskListener(task, invoker, reviewDAO);
+        listener = new FetchCodeReviewsTaskListener(task, invoker, reviewDAO, true);
 
         mocks = new Object[] {task, invoker, reviewDAO};
     }
@@ -51,7 +51,7 @@ public class FetchCodeReviewsTaskListenerTest {
     }
 
     @Test
-    public void onSuccessFetchesAllReviewsFromReviewDAOAndInvokesUIForUnreadAndMarksUnreadAsRead() {
+    public void onSuccessFetchesAndShowAndMarksAsReadAllUnseenReviews() {
         List<Review> reviews = new ArrayList<Review>();
         Review r1 = new Review();
         r1.setMarkedAsRead(false);
@@ -59,18 +59,31 @@ public class FetchCodeReviewsTaskListenerTest {
         Review r2 = new Review();
         r2.setMarkedAsRead(false);
         reviews.add(r2);
-        Review r3 = new Review();
-        r3.setMarkedAsRead(true);
-        reviews.add(r3);
         
-        when(reviewDAO.all()).thenReturn(reviews);
+        when(reviewDAO.unseen()).thenReturn(reviews);
 
         listener.onSuccess();
 
-        verify(reviewDAO, times(1)).all();
+        verify(reviewDAO, times(1)).unseen();
         verify(invoker, times(2)).invokeCodeReviewDialog(any(Review.class));
         verifyNoMoreInteractions(invoker);
         assertTrue(r1.isMarkedAsRead());
         assertTrue(r2.isMarkedAsRead());
+    }
+
+    @Test
+    public void onSuccessRaisesMessageIfNoUnseenMessagesAndShowMessagesIsTrue() {
+        when(reviewDAO.unseen()).thenReturn(new ArrayList<Review>());
+        listener.onSuccess();
+        verify(invoker, times(1)).invokeMessageBox("No new code reviews.");
+        verifyNoMoreInteractions(invoker);
+    }
+
+    @Test
+    public void onSuccessDoesNotRaiseMessageIfNoUnseenMessagesAndShowMessagesIsFalse() {
+        listener = new FetchCodeReviewsTaskListener(task, invoker, reviewDAO, false);
+        when(reviewDAO.unseen()).thenReturn(new ArrayList<Review>());
+        listener.onSuccess();
+        verifyZeroInteractions(invoker);
     }
 }

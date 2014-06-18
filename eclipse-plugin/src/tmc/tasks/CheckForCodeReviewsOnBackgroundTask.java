@@ -53,7 +53,7 @@ public class CheckForCodeReviewsOnBackgroundTask implements Runnable {
                             // because throwing an exception would prevent
                             // future scheduled executions.
                         } else {
-                            TaskStarter.startFetchCodeReviewsTask(new EclipseIdeUIInvoker(shell));
+                        TaskStarter.startFetchCodeReviewsTask(new EclipseIdeUIInvoker(shell), false);
                         }
                     }
                 });

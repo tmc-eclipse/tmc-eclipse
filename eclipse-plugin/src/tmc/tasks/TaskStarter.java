@@ -129,13 +129,20 @@ public final class TaskStarter {
         Core.getTaskRunner().runTask(testrun, listener);
     }
 
-    public static void startFetchCodeReviewsTask(IdeUIInvoker invoker) {
+    public static void startFetchCodeReviewsTask(IdeUIInvoker invoker, boolean showMessages) {
         Course course = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
+        if (course == null) {
+            if (showMessages) {
+                invoker.raiseVisibleException("Unable to check for new code reviews:\n" + "No course set.\n"
+                        + "Please set a course in the TMC | Settings menu.");
+            }
+            return;
+        }
 
         ServerManager server = Core.getServerManager();
         ReviewDAO reviewDAO = Core.getReviewDAO();
         FetchCodeReviewsTask task = new FetchCodeReviewsTask(course, server, reviewDAO);
-        FetchCodeReviewsTaskListener listener = new FetchCodeReviewsTaskListener(task, invoker, reviewDAO);
+        FetchCodeReviewsTaskListener listener = new FetchCodeReviewsTaskListener(task, invoker, reviewDAO, showMessages);
 
         Core.getTaskRunner().runTask(task, listener);
     }

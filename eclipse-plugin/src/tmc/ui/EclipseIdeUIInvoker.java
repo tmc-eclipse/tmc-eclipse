@@ -157,4 +157,10 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
             }
         });
     }
+
+    @Override
+    public void invokeMessageBox(String message) {
+        invokeMessageBox(message, "", MessageDialog.OK);
+
+    }
 }
