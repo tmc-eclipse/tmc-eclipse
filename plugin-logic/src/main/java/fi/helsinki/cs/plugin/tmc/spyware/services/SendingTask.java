@@ -23,23 +23,27 @@ public class SendingTask implements Runnable {
     private CourseDAO courseDAO;
     private Settings settings;
     private Random random;
-    private int eventsToRemoveAfterSend;
+    private SharedInteger eventsToRemoveAfterSend;
     
     private SingletonTask savingTask;
 
     public SendingTask(ArrayDeque<LoggableEvent> sendQueue, ServerManager serverManager, CourseDAO courseDAO,
-            Settings settings, SingletonTask savingTask) {
+            Settings settings, SingletonTask savingTask, SharedInteger eventsToRemoveAfterSend) {
         this.sendQueue = sendQueue;
         this.serverManager = serverManager;
         this.courseDAO = courseDAO;
         this.settings = settings;
         this.savingTask = savingTask;
         this.random = new Random();
-        this.eventsToRemoveAfterSend = 0;
+        this.eventsToRemoveAfterSend = eventsToRemoveAfterSend;
     }
 
     @Override
     public void run() {
+        if (!settings.isSpywareEnabled()) {
+            return;
+        }
+        
         boolean shouldSendMore;
 
         do {
@@ -72,7 +76,7 @@ public class SendingTask implements Runnable {
                 eventsToSend.add(i.next());
             }
 
-            eventsToRemoveAfterSend = eventsToSend.size();
+            eventsToRemoveAfterSend.i = eventsToSend.size();
 
             return eventsToSend;
         }
@@ -122,19 +126,11 @@ public class SendingTask implements Runnable {
 
     private void removeSentEventsFromQueue() {
         synchronized (sendQueue) {
-            assert (eventsToRemoveAfterSend <= sendQueue.size());
-            while (eventsToRemoveAfterSend > 0) {
+            assert (eventsToRemoveAfterSend.i <= sendQueue.size());
+            while (eventsToRemoveAfterSend.i > 0) {
                 sendQueue.pop();
-                eventsToRemoveAfterSend--;
+                eventsToRemoveAfterSend.i--;
             }
         }
-    }
-
-    public int getEventsToRemoveAfterSend() {
-        return eventsToRemoveAfterSend;
-    }
-
-    public void setEventsToRemoveAfterSend(int eventsToRemoveAfterSend) {
-        this.eventsToRemoveAfterSend = eventsToRemoveAfterSend;
     }
 }

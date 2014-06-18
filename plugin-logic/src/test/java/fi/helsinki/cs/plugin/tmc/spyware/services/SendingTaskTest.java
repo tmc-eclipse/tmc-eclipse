@@ -31,6 +31,7 @@ public class SendingTaskTest {
     private Settings settings;
     private SingletonTask savingTask;
     private EventStore eventStore;
+    private SharedInteger eventsToRemoveAfterSend;
 
     @Before
     public void setUp() throws Exception {
@@ -40,12 +41,33 @@ public class SendingTaskTest {
         initializeCourseDAO();
         initializeEventStore();
 
+        this.eventsToRemoveAfterSend = new SharedInteger();
         this.savingTask = new SingletonTask(new SavingTask(sendQueue, eventStore), Executors.newScheduledThreadPool(2));
-        this.task = new SendingTask(sendQueue, serverManager, courseDAO, settings, savingTask);
+        this.task = new SendingTask(sendQueue, serverManager, courseDAO, settings, savingTask, eventsToRemoveAfterSend);
     }
 
     @Test
-    public void runThereIsNoUrlsTest() throws InterruptedException {
+    public void runWhenThereIsNoUrlsTest() throws InterruptedException {
+        task.run();
+
+        Thread.sleep(50);
+
+        assertEquals(sendQueue.size(), 5);
+    }
+    
+    @Test
+    public void runWhenSpywareIsDisabledTest() throws InterruptedException {
+        when(settings.isSpywareEnabled()).thenReturn(false);
+        
+        for (Course c : courseDAO.getCourses()) {
+            List<String> l = new ArrayList<String>();
+            l.add("a");
+            l.add("b");
+            l.add("c");
+            c.setSpywareUrls(l);
+        }
+        
+        
         task.run();
 
         Thread.sleep(50);
@@ -69,7 +91,6 @@ public class SendingTaskTest {
 
         while (sendQueue.size() > 0) {
             if (i > 400) {
-
                 fail("sendQueue is not empty after running over 2000ms");
             }
             i++;
@@ -82,7 +103,7 @@ public class SendingTaskTest {
         verify(serverManager, times(1)).sendEventLogs(any(String.class), anyListOf(LoggableEvent.class),
                 any(Settings.class));
         assertEquals(0, sendQueue.size());
-        assertEquals(0, task.getEventsToRemoveAfterSend());
+        assertEquals(0, eventsToRemoveAfterSend.i);
     }
 
     private void initializeEventStore() {
@@ -108,6 +129,7 @@ public class SendingTaskTest {
 
     private void initializeSettings() {
         this.settings = mock(Settings.class);
+        when(settings.isSpywareEnabled()).thenReturn(true);
     }
 
     private void initializeSendQueue() {

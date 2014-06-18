@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
-import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
@@ -30,33 +29,33 @@ public class EventSendBuffer implements EventReceiver {
     public static final int DEFAULT_AUTOSEND_THREHSOLD = DEFAULT_MAX_EVENTS / 2;
     public static final int DEFAULT_AUTOSEND_COOLDOWN = 30 * 1000;
 
-    private SingletonTask sendingSingletonTask;
     private SingletonTask savingTask;
-
-    private final ScheduledExecutorService scheduler;
+    private SingletonTask sendingTask;
+    
     // private ServerAccess serverAccess;
     // private Courses courses;
     private final EventStore eventStore;
     private final Settings settings;
-    private final ServerManager serverManager;
-    private final CourseDAO courseDAO;
+    
 
     // The following variables must only be accessed with a lock on sendQueue.
-    private final ArrayDeque<LoggableEvent> sendQueue = new ArrayDeque<LoggableEvent>();
+    private ArrayDeque<LoggableEvent> sendQueue;
     private int maxEvents = DEFAULT_MAX_EVENTS;
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private Cooldown autosendCooldown;
-    private SendingTask sendingTask;
+    private SharedInteger eventsToRemoveAfterSend;
 
-    public EventSendBuffer(EventStore store, Settings settings, ServerManager serverManager, CourseDAO courseDAO) {
+    public EventSendBuffer(EventStore store, Settings settings, ArrayDeque<LoggableEvent> sendQueue, SingletonTask sendingTask,
+            SingletonTask savingTask, SharedInteger eventsToRemoveAfterSend) {
         this.eventStore = store;
         this.settings = settings;
-        this.serverManager = serverManager;
-        this.courseDAO = courseDAO;
-
-        scheduler = Executors.newScheduledThreadPool(2);
+        this.sendQueue = sendQueue;
+        this.eventsToRemoveAfterSend = eventsToRemoveAfterSend;
+        
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
-        initializeTasks();
+        
+        this.sendingTask = sendingTask;
+        this.savingTask = savingTask;
 
         try {
             List<LoggableEvent> initialEvents = Arrays.asList(eventStore.load());
@@ -68,70 +67,24 @@ public class EventSendBuffer implements EventReceiver {
             log.log(Level.WARNING, "Failed to read events from event store", ex);
         }
 
-        this.sendingSingletonTask.setInterval(DEFAULT_SEND_INTERVAL);
+        this.sendingTask.setInterval(DEFAULT_SEND_INTERVAL);
         this.savingTask.setInterval(DEFAULT_SAVE_INTERVAL);
     }
 
-    private final void initializeTasks() {
-        savingTask = new SingletonTask(new SavingTask(sendQueue, eventStore), scheduler);
-
-        this.sendingTask = new SendingTask(sendQueue, serverManager, courseDAO, settings, savingTask);
-        sendingSingletonTask = new SingletonTask(sendingTask, scheduler);
-
-    }
-
     public void setSendingInterval(long interval) {
-        sendingSingletonTask.setInterval(interval);
+        sendingTask.setInterval(interval);
     }
 
     public void setSavingInterval(long interval) {
         savingTask.setInterval(interval);
     }
 
-    public void setMaxEvents(int newMaxEvents) {
-        if (newMaxEvents <= 0) {
-            throw new IllegalArgumentException();
-        }
-
-        synchronized (sendQueue) {
-            if (newMaxEvents < maxEvents) {
-                int diff = newMaxEvents - maxEvents;
-                for (int i = 0; i < diff; ++i) {
-                    sendQueue.pop();
-                }
-                sendingTask.setEventsToRemoveAfterSend(sendingTask.getEventsToRemoveAfterSend() -diff);
-            }
-
-            maxEvents = newMaxEvents;
-        }
-    }
-
-    public void setAutosendThreshold(int autosendThreshold) {
-        synchronized (sendQueue) {
-            if (autosendThreshold <= 0) {
-                throw new IllegalArgumentException();
-            }
-            this.autosendThreshold = autosendThreshold;
-
-            maybeAutosend();
-        }
-    }
-
-    public void setAutosendCooldown(long durationMillis) {
-        this.autosendCooldown.setDurationMillis(durationMillis);
-    }
-
-    public void sendNow() {
-        sendingSingletonTask.start();
-    }
-
-    public void saveNow(long timeout) throws TimeoutException, InterruptedException {
-        savingTask.start();
-        savingTask.waitUntilFinished(timeout);
+    private void sendNow() {
+        sendingTask.start();
     }
 
     public void waitUntilCurrentSendingFinished(long timeout) throws TimeoutException, InterruptedException {
-        sendingSingletonTask.waitUntilFinished(timeout);
+        sendingTask.waitUntilFinished(timeout);
     }
 
     @Override
@@ -143,7 +96,7 @@ public class EventSendBuffer implements EventReceiver {
         synchronized (sendQueue) {
             if (sendQueue.size() >= maxEvents) {
                 sendQueue.pop();
-                sendingTask.setEventsToRemoveAfterSend(sendingTask.getEventsToRemoveAfterSend() - 1);
+                eventsToRemoveAfterSend.i--;
             }
             sendQueue.add(event);
 
@@ -168,13 +121,13 @@ public class EventSendBuffer implements EventReceiver {
         long delayPerWait = 2000;
 
         try {
-            sendingSingletonTask.unsetInterval();
+            sendingTask.unsetInterval();
             savingTask.unsetInterval();
 
             savingTask.waitUntilFinished(delayPerWait);
             savingTask.start();
             savingTask.waitUntilFinished(delayPerWait);
-            sendingSingletonTask.waitUntilFinished(delayPerWait);
+            sendingTask.waitUntilFinished(delayPerWait);
 
         } catch (TimeoutException ex) {
             log.log(Level.WARNING, "Time out when closing EventSendBuffer", ex);

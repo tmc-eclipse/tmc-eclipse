@@ -1,5 +1,10 @@
 package fi.helsinki.cs.plugin.tmc;
 
+import java.util.ArrayDeque;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
 import fi.helsinki.cs.plugin.tmc.io.FileIO;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.DAOManager;
@@ -13,6 +18,10 @@ import fi.helsinki.cs.plugin.tmc.spyware.services.DocumentChangeHandler;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventReceiver;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventSendBuffer;
 import fi.helsinki.cs.plugin.tmc.spyware.services.EventStore;
+import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
+import fi.helsinki.cs.plugin.tmc.spyware.services.SavingTask;
+import fi.helsinki.cs.plugin.tmc.spyware.services.SendingTask;
+import fi.helsinki.cs.plugin.tmc.spyware.services.SharedInteger;
 import fi.helsinki.cs.plugin.tmc.spyware.services.SnapshotTaker;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.ActiveThreadSet;
 
@@ -37,8 +46,16 @@ public final class ServiceFactory {
         this.updater = new Updater(server, courseDAO, projectDAO);
         this.projectEventHandler = new ProjectEventHandler(projectDAO);
 
-        EventReceiver receiver = new EventSendBuffer(new EventStore(new FileIO("events.tmp")), settings, server,
-                courseDAO);
+        SharedInteger eventsToRemoveAfterSend = new SharedInteger();
+        ScheduledExecutorService scheduler =  Executors.newScheduledThreadPool(2);
+        ArrayDeque<LoggableEvent> sendQueue = new ArrayDeque<LoggableEvent>();
+        EventStore eventStore =new EventStore(new FileIO("events.tmp"));
+        
+        SingletonTask savingTask = new SingletonTask(new SavingTask(sendQueue, eventStore), scheduler);
+        SingletonTask sendingTask = new SingletonTask(new SendingTask(sendQueue, server, courseDAO, settings, savingTask, eventsToRemoveAfterSend), scheduler);
+        
+        EventSendBuffer receiver = new EventSendBuffer(eventStore, settings, sendQueue, sendingTask, savingTask, eventsToRemoveAfterSend);
+        
         ActiveThreadSet set = new ActiveThreadSet();
         SnapshotTaker taker = new SnapshotTaker(set, receiver, settings, projectDAO);
         DocumentChangeHandler handler = new DocumentChangeHandler(receiver, set, settings, projectDAO);
