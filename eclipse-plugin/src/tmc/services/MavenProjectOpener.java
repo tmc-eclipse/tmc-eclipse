@@ -19,7 +19,7 @@ import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
-import tmc.util.TMCProjectNature;
+import tmc.util.TMCNotReadyProjectNature;
 
 public class MavenProjectOpener {
     private IWorkspace workspace;

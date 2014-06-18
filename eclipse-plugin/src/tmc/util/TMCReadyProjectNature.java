@@ -4,9 +4,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
-public class TMCProjectNature implements IProjectNature {
+public class TMCReadyProjectNature implements IProjectNature {
 
-    public static final String NATURE_ID = "eclipse-plugin.tmcNature";
+    public static final String NATURE_ID = "eclipse-plugin.tmcReadyNature";
 
     private IProject project;
 

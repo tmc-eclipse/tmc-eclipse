@@ -6,11 +6,13 @@ import java.net.URISyntaxException;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
-import tmc.util.TMCProjectNature;
+import tmc.util.IProjectHelper;
+import tmc.util.TMCNotReadyProjectNature;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.tasks.ProjectOpener;
@@ -34,7 +36,11 @@ public class GenericProjectOpener implements ProjectOpener {
 
         Project project = projectDAO.getProjectByExercise(e);
         ProjectType projectType = project.getProjectType();
-        IProject projectObject = null;
+        IProject projectObject = IProjectHelper.getIProjectByPath(project.getRootPath());
+        System.out.println(project.getRootPath());
+        for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            System.out.println("Projekteissa: " + p.getRawLocation());
+        }
 
         try {
             switch (project.getProjectType()) {
@@ -67,7 +73,7 @@ public class GenericProjectOpener implements ProjectOpener {
         String[] prevNatures = description.getNatureIds();
         String[] newNatures = new String[prevNatures.length + 1];
         System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-        newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
+        newNatures[prevNatures.length] = TMCNotReadyProjectNature.NATURE_ID;
         String temp = newNatures[newNatures.length - 1];
         newNatures[newNatures.length - 1] = newNatures[0];
         newNatures[0] = temp;
@@ -101,7 +107,7 @@ public class GenericProjectOpener implements ProjectOpener {
 
     private boolean hasTMCNature(IProject project) throws CoreException {
         for (String s : project.getDescription().getNatureIds()) {
-            if (s.equals(TMCProjectNature.NATURE_ID)) {
+            if (s.equals(TMCNotReadyProjectNature.NATURE_ID)) {
                 return true;
             }
         }

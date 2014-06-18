@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
-import tmc.util.TMCProjectNature;
+import tmc.util.TMCNotReadyProjectNature;
 
 public class AntProjectOpener {
     private String pathToProjectFile;

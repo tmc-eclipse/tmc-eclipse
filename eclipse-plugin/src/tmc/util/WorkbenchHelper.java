@@ -3,6 +3,7 @@ package tmc.util;
 import java.awt.Desktop;
 import java.net.URI;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -111,6 +112,18 @@ public class WorkbenchHelper {
 
     private Project getProjectBySelection() {
         return selectionListener.getSelectedProject();
+    }
+
+    private IProject getIProjectByEditor() {
+        try {
+            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            IFileEditorInput input = (IFileEditorInput) activeEditor.getEditorInput();
+            return input.getFile().getProject();
+
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     private Project getProjectByEditor() {

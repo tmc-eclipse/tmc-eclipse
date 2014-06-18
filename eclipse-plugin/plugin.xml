@@ -214,11 +214,20 @@
       </sourceProvider>
    </extension>
    <extension
-         id="tmcNature"
+         id="tmcNotReadyNature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="tmc.util.TMCProjectNature">
+               class="tmc.util.TMCNotReadyProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         id="tmcReadyNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tmc.util.TMCReadyProjectNature">
          </run>
       </runtime>
    </extension>
@@ -227,12 +236,12 @@
       <image
             icon="icons/green-project-dot.png"
             id="eclipse-plugin.tmcNature.greenDot"
-            natureId="eclipse-plugin.tmcNature">
+            natureId="eclipse-plugin.tmcReadyNature">
       </image>
       <image
             icon="icons/black-project-dot.png"
             id="eclipse-plugin.tmcNature.blackDot"
-            natureId="eclipse-plugin.tmcNature">
+            natureId="eclipse-plugin.tmcNotReadyNature">
       </image>
    </extension>
    <extension
