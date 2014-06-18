@@ -9,12 +9,16 @@ import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
+/**
+ * Background task that handles file upload to server. Used when submitting
+ * files to server for grading
+ * 
+ * 
+ */
 public class UploaderTask implements BackgroundTask {
 
     private ProjectUploader uploader;
     private String path;
-    private boolean asPaste;
-    private String pasteMessage;
 
     private boolean isRunning;
     private TaskFeedback progress;
@@ -24,15 +28,8 @@ public class UploaderTask implements BackgroundTask {
     private IdeUIInvoker invoker;
 
     public UploaderTask(ProjectUploader uploader, String path, ProjectDAO projectDAO, IdeUIInvoker invoker) {
-        this(uploader, path, false, "", projectDAO, invoker);
-    }
-
-    public UploaderTask(ProjectUploader uploader, String path, boolean asPaste, String pasteMessage,
-            ProjectDAO projectDAO, IdeUIInvoker invoker) {
         this.uploader = uploader;
         this.path = path;
-        this.asPaste = asPaste;
-        this.pasteMessage = pasteMessage;
         this.projectDAO = projectDAO;
         this.invoker = invoker;
 
@@ -61,11 +58,6 @@ public class UploaderTask implements BackgroundTask {
 
         try {
             uploader.setProject(projectDAO.getProjectByFile(path));
-
-            if (asPaste) {
-                uploader.setAsPaste(pasteMessage);
-            }
-
             uploader.zipProjects();
 
             if (!isRunning()) {
