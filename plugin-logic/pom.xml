@@ -16,19 +16,12 @@
 
 	<repositories>
 		<repository>
-			<id>local-m2-repo</id>
-			<url>file://${project.basedir}/local-m2-repo</url>
+			<id>testmycode.net</id>
+			<url>http://maven.testmycode.net/nexus/content/repositories/releases/</url>
 		</repository>
 	</repositories>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -43,17 +36,29 @@
 		</dependency>
 
 		<dependency>
-			<groupId>fi.helsinki.cs.tmc</groupId>
-			<artifactId>tmc-junit-runner</artifactId>
-			<version>0.2.5</version>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.0</version>
 			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>fi.helsinki.cs.tmc</groupId>
+			<artifactId>tmc-junit-runner</artifactId>
+			<version>0.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -69,9 +74,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
+			<groupId>org.apache.maven.shared</groupId>
+			<artifactId>maven-invoker</artifactId>
+			<version>2.1.1</version>
 		</dependency>
 
 		<dependency>
@@ -81,29 +86,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>fi.helsinki.cs.tmc</groupId>
-			<artifactId>tmc-junit-runner</artifactId>
-			<version>0.2.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.maven.shared</groupId>
-			<artifactId>maven-invoker</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.13</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
