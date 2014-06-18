@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
+import tmc.util.IProjectHelper;
 import tmc.util.TMCProjectNature;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
@@ -32,31 +33,38 @@ public class GenericProjectOpener implements ProjectOpener {
 
     public void open(Exercise e) {
 
+        System.out.println("OPEN CALLED");
         Project project = projectDAO.getProjectByExercise(e);
         ProjectType projectType = project.getProjectType();
         IProject projectObject = null;
+        if (!IProjectHelper.projectWithThisFilePathExists(project.getRootPath())) {
 
+            try {
+                switch (project.getProjectType()) {
+                case JAVA_ANT:
+                    projectObject = openAntProject(project, projectType);
+                    break;
+                case JAVA_MAVEN:
+                    projectObject = openMavenProject(project, projectType);
+                    break;
+                case MAKEFILE:
+                    projectObject = openCProject(project, projectType);
+                    break;
+                default:
+                    break;
+                }
+
+            } catch (Exception exception) {
+                errorHandler.handleException(exception);
+            }
+        } else {
+            projectObject = IProjectHelper.getProjectWithThisFilePath(project.getRootPath());
+        }
         try {
-            switch (project.getProjectType()) {
-            case JAVA_ANT:
-                projectObject = openAntProject(project, projectType);
-                break;
-            case JAVA_MAVEN:
-                projectObject = openMavenProject(project, projectType);
-                break;
-            case MAKEFILE:
-                projectObject = openCProject(project, projectType);
-                break;
-            default:
-                break;
-            }
-
-            if (projectObject != null && !hasTMCNature(projectObject)) {
-                addTMCProjectNature(projectObject);
-            }
-
-        } catch (Exception exception) {
-            errorHandler.handleException(exception);
+            System.out.println(projectObject.getName());
+            addTMCProjectNature(projectObject);
+        } catch (CoreException e1) {
+            Core.getErrorHandler().handleException(e1);
         }
 
     }
@@ -77,6 +85,10 @@ public class GenericProjectOpener implements ProjectOpener {
         } catch (ResourceException re) {
             // A valid project description already exists, no need to do
             // anything
+        }
+        
+        for(String s: projectObject.getDescription().getNatureIds()){
+            System.out.println(s);
         }
     }
 

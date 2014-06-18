@@ -82,9 +82,9 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
             project.setStatus(ProjectStatus.DOWNLOADED);
 
-            if (!exercise.isUpdated()) {
+            //if (!exercise.isUpdated()) {
                 opener.open(exercise);
-            }
+            //}
 
             exercise.resetUpdateStatus();
         } catch (IOException exception) {
