@@ -42,4 +42,14 @@ public class ReviewDAO {
     public List<Review> all() {
         return reviews;
     }
+
+    public List<Review> unseen() {
+        List<Review> unseen = new ArrayList<Review>();
+        for (Review r : reviews) {
+            if (!r.isMarkedAsRead()) {
+                unseen.add(r);
+            }
+        }
+        return unseen;
+    }
 }

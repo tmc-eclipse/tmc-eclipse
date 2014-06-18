@@ -28,6 +28,34 @@ public class ReviewDAOTest {
     }
 
     @Test
+    public void callingUnseenForNewlyConstructedDaoDoesNotReturnNull() {
+        assertNotNull(dao.unseen());
+    }
+
+    @Test
+    public void unseenReturnsOnlyAllReviewsNotMarkedAsRead() {
+        Review r1 = new Review();
+        r1.setId(1);
+        r1.setMarkedAsRead(false);
+        dao.add(r1);
+
+        Review r2 = new Review();
+        r2.setId(2);
+        r2.setMarkedAsRead(true);
+        dao.add(r2);
+
+        Review r3 = new Review();
+        r3.setId(3);
+        r3.setMarkedAsRead(false);
+        dao.add(r3);
+
+        assertTrue(dao.unseen().contains(r1));
+        assertTrue(dao.unseen().contains(r3));
+        assertFalse(dao.unseen().contains(r2));
+
+    }
+
+    @Test
     public void addingNotCurrentlyPresentReviewAddsItToTheDB() {
         Review r = new Review();
         assertTrue(dao.add(r));

@@ -27,7 +27,6 @@ public class EclipseErrorHandler implements TMCErrorHandler {
                 MessageDialog dialog = new MessageDialog(parent, "Error", null, e.getMessage(), MessageDialog.ERROR,
                         new String[] { "OK" }, 0);
                 dialog.open();
-                e.printStackTrace();
             }
         });
     }
