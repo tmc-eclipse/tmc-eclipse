@@ -1,27 +1,17 @@
 package tmc.tasks;
 
-import java.io.File;
 import java.util.List;
-
-import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionResult;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.embedder.IMaven;
 
 import tmc.activator.CoreInitializer;
 import tmc.services.GenericProjectOpener;
 import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.async.tasks.AntTestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.DownloaderTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.FeedbackSubmissionTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.FetchCodeReviewsTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.MarkReviewAsReadTask;
-import fi.helsinki.cs.plugin.tmc.async.tasks.MavenTestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.PastebinTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.TestrunnerTask;
 import fi.helsinki.cs.plugin.tmc.async.tasks.UploaderTask;
@@ -93,38 +83,16 @@ public final class TaskStarter {
     }
 
     public static void startMavenTestRunnerTask(Project project, EclipseIdeUIInvoker invoker) {
-
-        TestrunnerTask testrun = new MavenTestrunnerTask(project, invoker) {
-
-            @Override
-            public int runMaven(List<String> goals, Project project) {
-                try {
-                    IMaven maven = MavenPlugin.getMaven();
-                    MavenExecutionRequest executionRequest = maven.createExecutionRequest(new NullProgressMonitor())
-                            .setPom(new File(project.getRootPath() + "/pom.xml")).setGoals(goals);
-                    MavenExecutionResult executionResult = maven.execute(executionRequest, new NullProgressMonitor());
-
-                    System.out.println(executionResult.toString());
-
-                    if (executionResult.hasExceptions()) {
-                        return 1;
-                    }
-
-                    return 0;
-                } catch (CoreException e) {
-                    return 1;
-                }
-            }
-        };
-
+        TestrunnerTask testrun = new EclipseMavenTestrunnerTask(project, invoker);
         TestrunnerListener listener = new TestrunnerListener(testrun, invoker);
         Core.getTaskRunner().runTask(testrun, listener);
     }
 
     public static void startAntTestRunnerTask(String projectRoot, String javaExecutable, EclipseIdeUIInvoker invoker) {
 
-        TestrunnerTask testrun = new AntTestrunnerTask(projectRoot, projectRoot + "/test", javaExecutable, null,
+        TestrunnerTask testrun = new EclipseAntTestrunnerTask(projectRoot, projectRoot + "/test", javaExecutable, null,
                 Core.getSettings(), invoker);
+
         TestrunnerListener listener = new TestrunnerListener(testrun, invoker);
         Core.getTaskRunner().runTask(testrun, listener);
     }
