@@ -1,5 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.spyware.services;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -37,9 +38,10 @@ public class EventSendBufferTest {
         when(settings.isSpywareEnabled()).thenReturn(true);
         initializeEventStore();
         initializeSendQueue();
-        this.serverManager = mock(ServerManager.class);
         this.eventsToRemoveAfterSend = new SharedInteger();
-        //this.sendQueue = mock(ArrayDeque.class);
+        
+        this.sendingTask = mock(SendingTask.class);
+        this.savingTask = mock(SavingTask.class);
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
         this.buffer = new EventSendBuffer(store, settings, sendQueue, new SingletonTask(sendingTask, scheduler),
@@ -53,7 +55,30 @@ public class EventSendBufferTest {
 
         buffer.receiveEvent(new LoggableEvent("a", "a", "a", new byte[1], "a"));
         
-        verify(sendQueue, times(0)).add(any(LoggableEvent.class));
+        assertEquals(6, sendQueue.size());
+    }
+    
+    @Test
+    public void receiveEventTest() {
+    	buffer.setSendingInterval(1);
+    	buffer.receiveEvent(new LoggableEvent("a", "a", "a", new byte[1], "a"));
+    	
+    	try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	
+    	assertEquals(7, sendQueue.size());
+    	verify(sendingTask, atLeastOnce()).run();
+    }
+    
+    @Test
+    public void closeTest() {
+    	buffer.setSavingInterval(1);
+    	buffer.close();
+    	
+    	verify(savingTask, times(1)).run();
     }
 
     private void initializeEventStore() throws IOException {
