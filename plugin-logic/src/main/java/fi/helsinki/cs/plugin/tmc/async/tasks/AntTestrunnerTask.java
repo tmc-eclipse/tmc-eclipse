@@ -17,10 +17,13 @@ import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
 
 /**
- * Background task for Ant test runner. Hope you like class path magic.
+ * An abstract background task for buildin and running tmc-junit-runner for an
+ * Ant project.
  * 
+ * Concrete classes must implement the abstract build method that tells the
+ * class how to build and ant project using the argument "compile-test".
  */
-public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
+public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
 
     private List<String> args;
     private ClassPath classpath;
@@ -36,6 +39,23 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
     private Settings settings;
     private IdeUIInvoker invoker;
 
+    /**
+     * @param rootPath
+     *            An absolute path to the root of the project.
+     * @param testDir
+     *            An absolute path to the root of the test directory.
+     * @param javaExecutable
+     *            An absolute path to the java executable that should be used.
+     *            This means that you should be able to say
+     *            "<javaExecutable> --version" in the CLI and it should print
+     *            out the JRE version.
+     * @param memoryLimit
+     *            An optional memory limit in mb.
+     * @param settings
+     *            An instance of the Settings.
+     * @param invoker
+     *            An instance of a class that implements IdeUIInvoker.
+     */
     public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit,
             Settings settings, IdeUIInvoker invoker) {
 
@@ -55,24 +75,39 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         classpath.add(rootPath + "/build/test/classes/");
     }
 
+    public abstract void build(String root) throws Exception;
+
     public TestRunResult get() {
         return this.result;
     }
 
     @Override
     public int start(TaskFeedback progress) {
+        progress.startProgress("Running tests", 4);
+
+        try {
+            build(rootPath);
+        } catch (Exception e) {
+            invoker.raiseVisibleException("Unable to run tests: Error when building project.");
+            return BackgroundTask.RETURN_FAILURE;
+        }
+
+        progress.incrementProgress(1);
         buildTestRunnerArgs();
 
+        progress.incrementProgress(1);
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.redirectError(Redirect.INHERIT);
 
         try {
             process = pb.start();
             process.waitFor();
+            progress.incrementProgress(1);
 
             File resultFile = new File(resultFilePath);
             result = new TestResultParser().parseTestResults(resultFile);
             resultFile.delete();
+            progress.incrementProgress(1);
 
             return BackgroundTask.RETURN_SUCCESS;
         } catch (IOException e) {
@@ -172,6 +207,5 @@ public class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
         }
         invoker.raiseVisibleException("Testrunner failure: failed to find test methods.");
         return null;
-
     }
 }
