@@ -29,12 +29,11 @@ public class UploadHandler extends AbstractHandler {
             Shell shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
 
             if (helper.getActiveProject() == null) {
-                Core.getErrorHandler().handleManualException("No valid exercise selected.");
+                Core.getErrorHandler().handleManualException("Unable to submit exercise:\nNo valid exercise selected.");
             } else {
                 TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
             }
         }
         return null;
     }
-
 }

@@ -1,6 +1,8 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,6 +19,7 @@ import org.mockito.stubbing.Answer;
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
 import fi.helsinki.cs.plugin.tmc.async.StopStatus;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
+import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectUploader;
@@ -27,7 +30,7 @@ public class UploaderTaskTest {
     private ProjectUploader uploader;
     private String path;
     private TaskFeedback progress;
-
+    private Project project;
     private ProjectDAO dao;
     private IdeUIInvoker invoker;
 
@@ -39,6 +42,8 @@ public class UploaderTaskTest {
 
         dao = mock(ProjectDAO.class);
         invoker = mock(IdeUIInvoker.class);
+        project = mock(Project.class);
+        when(dao.getProjectByFile(path)).thenReturn(project);
         task = new UploaderTask(uploader, path, dao, invoker);
     }
 
@@ -73,6 +78,18 @@ public class UploaderTaskTest {
         verify(uploader, times(1)).zipProjects();
         verify(uploader, times(0)).handleSumissionResponse();
         verify(uploader, times(0)).handleSubmissionResult(Mockito.any(StopStatus.class));
+    }
+
+    @Test
+    public void progressBarIsSetOnStart() {
+        task.start(progress);
+        verify(progress, times(1)).startProgress(anyString(), anyInt());
+    }
+
+    @Test
+    public void projectIsSetToUploader() {
+        task.start(progress);
+        verify(uploader, times(1)).setProject(project);
     }
 
     @Test

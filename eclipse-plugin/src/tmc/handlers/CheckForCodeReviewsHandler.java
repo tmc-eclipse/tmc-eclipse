@@ -15,7 +15,7 @@ public class CheckForCodeReviewsHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Shell shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
         EclipseIdeUIInvoker invoker = new EclipseIdeUIInvoker(shell);
-        TaskStarter.startFetchCodeReviewsTask(invoker);
+        TaskStarter.startFetchCodeReviewsTask(invoker, true);
         return null;
     }
 }

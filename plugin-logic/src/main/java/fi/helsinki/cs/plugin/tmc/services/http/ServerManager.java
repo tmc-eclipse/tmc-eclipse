@@ -19,7 +19,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
@@ -37,6 +36,12 @@ import fi.helsinki.cs.plugin.tmc.spyware.utility.ExceptionUtils;
 import fi.helsinki.cs.plugin.tmc.ui.ObsoleteClientException;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
+/**
+ * 
+ * This class serves as the main layer for any http connections. Any class
+ * wishing to send or receive data should use this
+ * 
+ */
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
     private Gson mapper;
@@ -67,7 +72,7 @@ public class ServerManager {
         List<Exercise> exercises = el.getExercises();
 
         // convert date string to Date object. Ugly hack due to some older code
-        // getting deprecated
+        // in original tmc-netbeans getting deprecated
         for (Exercise e : exercises) {
             e.finalizeDeserialization();
         }
@@ -90,7 +95,8 @@ public class ServerManager {
         return uploadFile(exercise, data, null, settings);
     }
 
-    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams, Settings settings) {
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams,
+            Settings settings) {
         String submitUrl = connectionBuilder.addApiCallQueryParameters(exercise.getReturnUrl());
 
         Map<String, String> params = new LinkedHashMap<String, String>();

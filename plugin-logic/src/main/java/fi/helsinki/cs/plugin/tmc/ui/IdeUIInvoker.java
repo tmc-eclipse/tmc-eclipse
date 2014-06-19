@@ -7,25 +7,27 @@ import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
 public interface IdeUIInvoker {
-    public void invokeTestResultWindow(List<TestCaseResult> results);
+    void invokeTestResultWindow(List<TestCaseResult> results);
 
-    public void invokeAllTestsPassedWindow(SubmissionResult result, String exerciseName);
+    void invokeAllTestsPassedWindow(SubmissionResult result, String exerciseName);
 
-    public void invokeSomeTestsFailedWindow(SubmissionResult result, String exerciseName);
+    void invokeSomeTestsFailedWindow(SubmissionResult result, String exerciseName);
 
-    public void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName);
+    void invokeAllTestsFailedWindow(SubmissionResult result, String exerciseName);
 
-    public void invokeSubmitToServerWindow();
+    void invokeSubmitToServerWindow();
 
-    public void invokeSendToPastebinWindow(String exerciseName);
+    void invokeSendToPastebinWindow(String exerciseName);
 
-    public void invokePastebinResultDialog(String pasteUrl);
+    void invokePastebinResultDialog(String pasteUrl);
 
-    public void invokeRequestCodeReviewWindow(final String exerciseName);
+    void invokeRequestCodeReviewWindow(final String exerciseName);
 
-    public void invokeCodeReviewRequestSuccefullySentWindow();
+    void invokeCodeReviewRequestSuccefullySentWindow();
 
-    public void raiseVisibleException(String message);
+    void raiseVisibleException(String message);
 
-    public void invokeCodeReviewDialog(Review review);
+    void invokeCodeReviewDialog(Review review);
+
+    void invokeMessageBox(String string);
 }
