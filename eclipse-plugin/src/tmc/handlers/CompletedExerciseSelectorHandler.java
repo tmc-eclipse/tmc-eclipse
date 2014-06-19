@@ -9,13 +9,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import tmc.ui.ExerciseSelectorDialog;
 
-public class ExerciseSelectorHandler extends AbstractHandler {
+public class CompletedExerciseSelectorHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 
         ExerciseSelectorDialog dialog = new ExerciseSelectorDialog(window.getShell(), SWT.SHEET);
-        dialog.setShowCompleted(false);
+        dialog.setShowCompleted(true);
         dialog.open();
 
         return null;
