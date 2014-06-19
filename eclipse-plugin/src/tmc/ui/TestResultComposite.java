@@ -162,15 +162,22 @@ public class TestResultComposite extends Composite {
 
         final StringBuilder path = new StringBuilder();
 
-        path.append(getProjectRootPath() + "/");
-        if (!st.getClassName().contains("test.")) {
-            path.append("test/");
-        }
-        path.append(st.getClassName().replace('.', '/') + ".java");
+        String className = st.getClassName().replace('.', '/');
+
+        path.append(getProjectTestRootPath(className) + "/");
+        // if (!st.getClassName().contains("test.")) {
+        // path.append("test/");
+        // }
+        //
+        // path.append(className);
 
         moreDetailslink.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+
+                System.out.println(st.getFileName());
+                System.out.println(st.getClassName());
+                System.out.println(path);
 
                 final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot()
                         .getFileForLocation(Path.fromOSString(path.toString().trim()));
@@ -204,12 +211,12 @@ public class TestResultComposite extends Composite {
         heightOffset += 20;
     }
 
-    private String getProjectRootPath() {
+    private String getProjectTestRootPath(String path) {
         Project project = helper.getActiveProject();
         if (project == null) {
             return "";
         } else {
-            return project.getRootPath();
+            return project.getProjectFileByName(path);
         }
     }
 

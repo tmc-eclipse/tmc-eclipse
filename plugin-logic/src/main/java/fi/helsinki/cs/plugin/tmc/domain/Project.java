@@ -118,6 +118,15 @@ public class Project {
         return Collections.unmodifiableList(projectFiles);
     }
 
+    public String getProjectFileByName(String fileName) {
+        for (String s : projectFiles) {
+            if (s.contains(fileName) && !s.contains("/target/")) {
+                return s;
+            }
+        }
+        return "";
+    }
+
     public void addProjectFile(String file) {
         synchronized (projectFiles) {
             projectFiles.add(file);

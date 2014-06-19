@@ -22,6 +22,7 @@ import tmc.tasks.CheckForCodeReviewsOnBackgroundTask;
 import tmc.tasks.EclipseTaskRunner;
 import tmc.ui.ExerciseSelectorDialog;
 import tmc.ui.LoginDialog;
+import tmc.ui.SettingsDialog;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
@@ -69,7 +70,7 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     @Override
     public void earlyStartup() {
-        Display.getDefault().asyncExec(new Runnable() {
+        Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
@@ -81,23 +82,32 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                             .addPartListener(new EditorListener());
                 }
-                try {
-                    Core.getUpdater().updateCourses();
-                } catch (UserVisibleException uve) {
-                    LoginDialog ld = new LoginDialog(new Shell(), SWT.SHEET);
-                    ld.open();
+                Shell shell = null;
+                if (Display.getDefault().getShells().length > 1) {
+                    shell = Display.getDefault().getShells()[1];
+                    if (shell == null && Display.getDefault().getShells().length > 0) {
+                        shell = Display.getDefault().getShells()[0];
+                    }
+                    if (shell == null) {
+                        shell = Display.getDefault().getActiveShell();
+                    }
+                    if (shell == null) {
+                        shell = new Shell();
+                    }
                 }
 
-                // First checks if the shell of the display is null and then if
-                // it is creates a new exercisedialog with new shell
-                // This can happen if the user after ide has opened clicks away
-                // from ide thus changing the focus out of ide.
-                if (Display.getDefault().getActiveShell() != null) {
-                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(Display.getDefault().getActiveShell(),
-                            SWT.SHEET);
-                    esd.open();
-                } else {
-                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
+                if (Core.getSettings().getServerBaseUrl().isEmpty()) {
+                    SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
+                    sd.open();
+                    try {
+                        Core.getUpdater().updateCourses();
+                    } catch (UserVisibleException uve) {
+                        LoginDialog ld = new LoginDialog(shell, SWT.SHEET);
+                        ld.open();
+                    }
+                } else if (!Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises()
+                        .isEmpty()) {
+                    ExerciseSelectorDialog esd = new ExerciseSelectorDialog(shell, SWT.SHEET);
                     esd.open();
                 }
             }
