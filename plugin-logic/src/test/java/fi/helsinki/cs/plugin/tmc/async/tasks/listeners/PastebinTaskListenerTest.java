@@ -10,8 +10,6 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.tasks.PastebinTask;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
@@ -38,9 +36,6 @@ public class PastebinTaskListenerTest {
 
     @Test
     public void raiseErrorWithoutUIInvocationIfUrlIsNull() {
-        TMCErrorHandler errorhandler = mock(TMCErrorHandler.class);
-        Core.setErrorHandler(errorhandler);
-
         when(task.getPasteUrl()).thenReturn(null);
 
         listener.onSuccess();

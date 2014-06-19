@@ -1,5 +1,6 @@
 package fi.helsinki.cs.plugin.tmc.async.tasks;
 
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,6 +16,8 @@ import org.mockito.Mockito;
 import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
+import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
+import fi.helsinki.cs.plugin.tmc.domain.ProjectType;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDownloader;
@@ -72,9 +75,22 @@ public class DownloaderTaskTest {
     }
 
     @Test
-    public void projectIsAddedBackToProjectDao() {
+    public void projectIsAddedToProjectDaoWhenNoProjectExistsFirst() {
         task.start(progress);
         verify(projectDao, times(1)).addProject(Mockito.any(Project.class));
+    }
+
+    @Test
+    public void projectFilesAreSetWhenProjectExists() {
+
+        Project project = mock(Project.class);
+        when(project.getProjectType()).thenReturn(ProjectType.JAVA_ANT);
+        when(project.getRootPath()).thenReturn("foo/bar");
+        when(projectDao.getProjectByExercise(exercises.get(0))).thenReturn(project);
+
+        task.start(progress);
+        verify(project, times(1)).setProjectFiles(anyListOf(String.class));
+
     }
 
     @Test
@@ -87,6 +103,19 @@ public class DownloaderTaskTest {
     public void exerciseIsSetAsUpdated() {
         task.start(progress);
         verify(exercises.get(0), times(1)).resetUpdateStatus();
+    }
+
+    @Test
+    public void projectStatusIsSetAsDownloaded() {
+
+        Project project = mock(Project.class);
+        when(project.getProjectType()).thenReturn(ProjectType.JAVA_ANT);
+        when(project.getRootPath()).thenReturn("foo/bar");
+        when(projectDao.getProjectByExercise(exercises.get(0))).thenReturn(project);
+
+        task.start(progress);
+        verify(project, times(1)).setStatus(ProjectStatus.DOWNLOADED);
+
     }
 
 }
