@@ -53,7 +53,7 @@ public class Project {
     }
 
     public boolean containsFile(String file) {
-        if (file == null) {
+        if (file == null || rootPath.isEmpty()) {
             return false;
         }
         return file.contains(rootPath);
