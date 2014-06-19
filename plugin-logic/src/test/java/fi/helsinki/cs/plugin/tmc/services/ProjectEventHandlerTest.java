@@ -248,7 +248,7 @@ public class ProjectEventHandlerTest {
     private void verifyProjectTypeInteractionWhenFileNotInProject(String path) {
         verify(projectDAO, times(1)).getProjectByFile(path);
         verify(projectDAO, times(1)).getProjects();
-        verify(project, times(1)).getRootPath();
+        verify(project, times(2)).getRootPath();
     }
 
     private void verifyProjectTypeInteractionWhenFileInProject(String file) {

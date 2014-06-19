@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
 
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 
@@ -27,7 +26,7 @@ public class TestRunnerComposite extends Composite {
     private final int PROGRESS_BAR_MULTIPLIER = 3;
 
     private ScrolledComposite scrolledComposite;
-    private ProgressBar progressBar;
+    private TMCProgressBar progressBar;
     private Label lblTestspassed;
 
     // private GC gc;
@@ -70,8 +69,7 @@ public class TestRunnerComposite extends Composite {
 
         master.setSize(parent.getSize().x, parent.getSize().y);
 
-        progressBar = new ProgressBar(master, SWT.SMOOTH);
-        progressBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
+        progressBar = new TMCProgressBar(master);
         progressBar.setMinimum(0);
         progressBar.setMaximum(300);
         progressBar.setBounds(19, 33, 300, 30);

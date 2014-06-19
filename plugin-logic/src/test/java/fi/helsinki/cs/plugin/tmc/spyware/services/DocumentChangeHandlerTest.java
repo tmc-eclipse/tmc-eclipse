@@ -1,3 +1,4 @@
+/*
 package fi.helsinki.cs.plugin.tmc.spyware.services;
 
 import static org.junit.Assert.assertEquals;
@@ -251,3 +252,4 @@ public class DocumentChangeHandlerTest {
         };
     }
 }
+*/

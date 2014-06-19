@@ -82,7 +82,7 @@ public class ProjectEventHandler {
         }
 
         for (Project p : projectDAO.getProjects()) {
-            if (snapshot.getCurrentFullFilePath().startsWith(p.getRootPath())) {
+            if (!p.getRootPath().isEmpty() && snapshot.getCurrentFullFilePath().startsWith(p.getRootPath())) {
                 return p;
             }
         }

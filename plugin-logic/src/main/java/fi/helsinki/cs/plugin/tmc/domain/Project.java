@@ -53,7 +53,7 @@ public class Project {
     }
 
     public boolean containsFile(String file) {
-        if (file == null) {
+        if (file == null || rootPath.isEmpty()) {
             return false;
         }
         return file.contains(rootPath);
@@ -116,6 +116,15 @@ public class Project {
 
     public List<String> getReadOnlyProjectFiles() {
         return Collections.unmodifiableList(projectFiles);
+    }
+
+    public String getProjectFileByName(String fileName) {
+        for (String s : projectFiles) {
+            if (s.contains(fileName) && !s.contains("/target/")) {
+                return s;
+            }
+        }
+        return "";
     }
 
     public void addProjectFile(String file) {

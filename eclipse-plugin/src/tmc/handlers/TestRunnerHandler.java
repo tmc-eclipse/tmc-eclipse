@@ -1,12 +1,9 @@
 package tmc.handlers;
 
-import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -88,25 +85,7 @@ public class TestRunnerHandler extends AbstractHandler {
         }
 
         String projectRoot = helper.getActiveProject().getRootPath();
-        String javaExecutable = System.getProperty("java.home") + "/bin/java";
-
-        try {
-            antBuild(projectRoot);
-        } catch (Exception e) {
-            Core.getErrorHandler().raise("Unable to run tests: Error when building project.");
-            e.printStackTrace();
-            return;
-
-            // TODO: Handle build failure
-        }
+        String javaExecutable = JavaRuntime.getDefaultVMInstall().getInstallLocation() + "/bin/java";
         TaskStarter.startAntTestRunnerTask(projectRoot, javaExecutable, new EclipseIdeUIInvoker(shell));
-    }
-
-    private void antBuild(String root) throws CoreException {
-        IProgressMonitor monitor = new NullProgressMonitor();
-        AntRunner runner = new AntRunner();
-        runner.setBuildFileLocation(root + "/build.xml");
-        runner.setArguments(new String[] {"compile-test"});
-        runner.run(monitor);
     }
 }
