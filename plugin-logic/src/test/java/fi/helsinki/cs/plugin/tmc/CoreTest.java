@@ -16,16 +16,24 @@ public class CoreTest {
     private MockServiceFactory factory;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+            IllegalAccessException {
 
+        // some other test may have set the singleton before running any tests
+        // here
+        unsetSingleton();
         factory = new MockServiceFactory();
         core = Core.getInstance(factory);
     }
 
-    // due to Core being singleton, we need to set its instance variable to null
-    // to ensure every test has fresh copy of it
     @After
     public void tearDown() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+            IllegalAccessException {
+        // ensure that singleton is unset even after running the last test
+        unsetSingleton();
+    }
+
+    private void unsetSingleton() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
             IllegalAccessException {
         Field coreField = Core.class.getDeclaredField("core");
         coreField.setAccessible(true);
