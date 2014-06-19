@@ -17,6 +17,7 @@ import org.mockito.exceptions.base.MockitoException;
 import com.google.common.collect.Iterables;
 
 import fi.helsinki.cs.plugin.tmc.io.IO;
+import fi.helsinki.cs.plugin.tmc.spyware.async.SavingTask;
 
 public class SavingTaskTest {
     private SavingTask task;
@@ -42,15 +43,6 @@ public class SavingTaskTest {
     @Test(expected = MockitoException.class)
     public void runTest() throws IOException {
         task.run();
-
-        for (int i = 0; i < 400; i++) {
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-            }
-        }
-        
-        fail("eventStore.save() is not called after running over 2000ms");
     }
 
 }

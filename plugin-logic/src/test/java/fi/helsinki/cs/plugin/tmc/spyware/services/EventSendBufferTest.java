@@ -18,6 +18,8 @@ import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
+import fi.helsinki.cs.plugin.tmc.spyware.async.SavingTask;
+import fi.helsinki.cs.plugin.tmc.spyware.async.SendingTask;
 import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 
 public class EventSendBufferTest {

@@ -22,6 +22,8 @@ import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
+import fi.helsinki.cs.plugin.tmc.spyware.async.SavingTask;
+import fi.helsinki.cs.plugin.tmc.spyware.async.SendingTask;
 
 public class SendingTaskTest {
     private SendingTask task;
@@ -49,9 +51,6 @@ public class SendingTaskTest {
     @Test
     public void runWhenThereIsNoUrlsTest() throws InterruptedException {
         task.run();
-
-        Thread.sleep(50);
-
         assertEquals(sendQueue.size(), 5);
     }
     
@@ -67,10 +66,7 @@ public class SendingTaskTest {
             c.setSpywareUrls(l);
         }
         
-        
         task.run();
-
-        Thread.sleep(50);
 
         assertEquals(sendQueue.size(), 5);
     }
@@ -86,19 +82,6 @@ public class SendingTaskTest {
         }
 
         task.run();
-
-        int i = 0;
-
-        while (sendQueue.size() > 0) {
-            if (i > 400) {
-                fail("sendQueue is not empty after running over 2000ms");
-            }
-            i++;
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-            }
-        }
 
         verify(serverManager, times(1)).sendEventLogs(any(String.class), anyListOf(LoggableEvent.class),
                 any(Settings.class));
