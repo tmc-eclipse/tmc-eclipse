@@ -5,6 +5,10 @@ import java.util.List;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
+/**
+ * Class used by the feedback submission background task.
+ * 
+ */
 public class FeedbackAnswerSubmitter {
     private ServerManager server;
 

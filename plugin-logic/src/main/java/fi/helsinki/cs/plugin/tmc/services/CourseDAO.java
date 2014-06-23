@@ -2,10 +2,13 @@ package fi.helsinki.cs.plugin.tmc.services;
 
 import java.util.List;
 
-import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 
+/**
+ * Class that handles Course object loading, saving and accessing
+ * 
+ */
 public class CourseDAO {
 
     private DataSource<Course> dataSource;

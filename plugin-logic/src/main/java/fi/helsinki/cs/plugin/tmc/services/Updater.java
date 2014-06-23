@@ -8,6 +8,11 @@ import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
+/**
+ * Class that handles updating necessary data when we update exercise from
+ * server
+ * 
+ */
 public class Updater {
 
     private ServerManager server;
@@ -75,7 +80,7 @@ public class Updater {
     private void updateExercise(Exercise oldExercise, Exercise newExercise) {
         // Update Exercise.course
         newExercise.setOldChecksum(oldExercise.getChecksum());
-        newExercise.setUpdated(oldExercise.isUpdated());
+        newExercise.setUpdated(oldExercise.getUpdated());
         newExercise.setCourse(oldExercise.getCourse());
         newExercise.setProject(oldExercise.getProject());
 

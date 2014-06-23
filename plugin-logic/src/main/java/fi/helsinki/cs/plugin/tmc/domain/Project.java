@@ -9,6 +9,14 @@ import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.DefaultZippingDecider;
 import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.MavenZippingDecider;
 import fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider.ZippingDecider;
 
+/**
+ * 
+ * This class is IDE independent data storage for project data, such as it's
+ * path, status and files. It is similar to Course class, but Course class is
+ * meant to reflect server side information while Project class is supposed to
+ * track local information
+ * 
+ */
 public class Project {
 
     private Exercise exercise;

@@ -10,9 +10,9 @@ import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 
 /**
  * 
- * Handles the rename\save\move etc. events for spyware. Event contains affected
- * files in a tree; root and inner nodes are various directories and leaf nodes
- * contain the affected files
+ * Handles the rename\save\move etc. events for spyware and project database.
+ * Event contains affected files in a tree; root and inner nodes are various
+ * directories and leaf nodes contain the affected files
  */
 public class ResourceEventListener implements IResourceChangeListener {
 

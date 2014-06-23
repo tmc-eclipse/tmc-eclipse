@@ -5,6 +5,7 @@ import java.util.List;
 import tmc.activator.CoreInitializer;
 import tmc.services.GenericProjectOpener;
 import tmc.ui.EclipseIdeUIInvoker;
+import tmc.util.EclipseProjectIconHandler;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.async.tasks.CodeReviewRequestTask;
@@ -32,6 +33,11 @@ import fi.helsinki.cs.plugin.tmc.services.ReviewDAO;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
+/**
+ * 
+ * Class that handles task creation and starting
+ * 
+ */
 public final class TaskStarter {
 
     public static void startExerciseDownloadTask(List<Exercise> exercises, EclipseIdeUIInvoker invoker) {
@@ -50,12 +56,13 @@ public final class TaskStarter {
     public static void startExerciseUploadTask(EclipseIdeUIInvoker invoker) {
         ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
         WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
+        EclipseProjectIconHandler handler = new EclipseProjectIconHandler();
         helper.initialize();
 
         Project project = helper.getActiveProject();
 
         UploaderTask task = new UploaderTask(uploader, project.getRootPath() + "/", Core.getProjectDAO(), invoker);
-        Core.getTaskRunner().runTask(task, new UploadTaskListener(task, invoker));
+        Core.getTaskRunner().runTask(task, new UploadTaskListener(task, invoker, handler));
     }
 
     public static void startPastebinTask(EclipseIdeUIInvoker invoker, String pasteMessage) {

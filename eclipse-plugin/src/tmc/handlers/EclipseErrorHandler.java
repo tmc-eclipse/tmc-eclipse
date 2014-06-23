@@ -7,6 +7,12 @@ import org.eclipse.swt.widgets.Shell;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
+/**
+ * 
+ * Implementation of the TMCErrorHandler interface. Handles showing the error
+ * messages
+ * 
+ */
 public class EclipseErrorHandler implements TMCErrorHandler {
 
     private Shell parent;
@@ -25,7 +31,7 @@ public class EclipseErrorHandler implements TMCErrorHandler {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
                 MessageDialog dialog = new MessageDialog(parent, "Error", null, e.getMessage(), MessageDialog.ERROR,
-                        new String[] { "OK" }, 0);
+                        new String[] {"OK"}, 0);
                 dialog.open();
             }
         });
@@ -35,7 +41,7 @@ public class EclipseErrorHandler implements TMCErrorHandler {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
                 MessageDialog dialog = new MessageDialog(parent, "Error", null, errorMessage, MessageDialog.ERROR,
-                        new String[] { "OK" }, 0);
+                        new String[] {"OK"}, 0);
                 dialog.open();
             }
         });

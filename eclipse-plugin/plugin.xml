@@ -232,11 +232,29 @@
       </sourceProvider>
    </extension>
    <extension
-         id="tmcNature"
+         id="tmcNewNature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="tmc.util.TMCProjectNature">
+               class="tmc.util.TMCNewProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         id="tmcCompletedNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tmc.util.TMCCompletedProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         id="tmcAttemptedNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tmc.util.TMCAttemptedProjectNature">
          </run>
       </runtime>
    </extension>
@@ -245,30 +263,18 @@
       <image
             icon="icons/green-project-dot.png"
             id="eclipse-plugin.tmcNature.greenDot"
-            natureId="eclipse-plugin.tmcNature">
+            natureId="eclipse-plugin.tmcCompletedNature">
       </image>
       <image
             icon="icons/black-project-dot.png"
             id="eclipse-plugin.tmcNature.blackDot"
-            natureId="eclipse-plugin.tmcNature">
+            natureId="eclipse-plugin.tmcNewNature">
       </image>
-   </extension>
-   <extension
-         point="org.eclipse.ui.decorators">
-      <decorator
-            icon="icons/redicon.png"
-            id="eclipse-plugin.projectNotCompleted"
-            label="project_not_completed"
-            lightweight="true"
-            location="BOTTOM_RIGHT"
-            state="false">
-         <enablement>
-            <objectState
-                  name="eclipse-plugin.objectState1"
-                  value="eclipse-plugin.objectState1">
-            </objectState>
-         </enablement>
-      </decorator>
+      <image
+            icon="icons/red-project-dot.png"
+            id="eclipse-plugin.tmcNature.redDot"
+            natureId="eclipse-plugin.tmcAttemptedNature">
+      </image>
    </extension>
 
 	

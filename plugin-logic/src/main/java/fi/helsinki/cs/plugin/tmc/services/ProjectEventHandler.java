@@ -8,6 +8,12 @@ import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
 import fi.helsinki.cs.plugin.tmc.spyware.ChangeType;
 import fi.helsinki.cs.plugin.tmc.spyware.SnapshotInfo;
 
+/**
+ * 
+ * Class that responds to events such as renames, deletes and additions. Ensures
+ * that project database remains consistent.
+ * 
+ */
 public class ProjectEventHandler {
 
     private ProjectDAO projectDAO;

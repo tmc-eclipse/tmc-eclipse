@@ -6,8 +6,9 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Purpose of this class is to store course information. This differs from
- * project for example in that course knows its exercises and so on.
+ * Purpose of this class is to store course information. It is similar to
+ * Project class, but Course class is meant to reflect server side information
+ * while Project class is supposed to track local information
  */
 
 public class Course {

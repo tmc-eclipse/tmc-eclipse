@@ -3,6 +3,8 @@ package fi.helsinki.cs.plugin.tmc.services.http;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -28,6 +30,7 @@ import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackQuestion;
+import fi.helsinki.cs.plugin.tmc.domain.Review;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.jsonhelpers.CourseList;
@@ -40,6 +43,7 @@ public class ServerManagerTest {
     private Gson gson;
     private ServerManager server;
     private Settings settings;
+    private RequestBuilder rb;
 
     @Before
     public void setup() {
@@ -47,6 +51,8 @@ public class ServerManagerTest {
         gson = new Gson();
         settings = mock(Settings.class);
         server = new ServerManager(gson, connectionBuilder, settings);
+        rb = mock(RequestBuilder.class);
+        when(connectionBuilder.createConnection()).thenReturn(rb);
     }
 
     @Test
@@ -54,8 +60,6 @@ public class ServerManagerTest {
         CourseList cl = buildMockCourseList();
         String mockJson = gson.toJson(cl);
 
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         when(rb.getForText(any(String.class))).thenReturn(mockJson);
 
         List<Course> returnedCourses = server.getCourses();
@@ -77,8 +81,6 @@ public class ServerManagerTest {
 
     @Test
     public void getcoursesReturnEmptyListOnFailure() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         when(rb.getForText(any(String.class))).thenReturn("");
 
         assertEquals(0, server.getCourses().size());
@@ -89,8 +91,6 @@ public class ServerManagerTest {
         ExerciseList el = buildMockExerciseList();
         String mockJson = gson.toJson(el);
 
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         when(rb.getForText(any(String.class))).thenReturn(mockJson);
 
         List<Exercise> returned = server.getExercises("11");
@@ -109,8 +109,6 @@ public class ServerManagerTest {
     @Test
     public void getExerciseZipShouldReturnTheByteArrayGottenFromTheHttpRequest() throws Exception {
         byte[] byteArray = {1, 0, 1};
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         when(rb.getForBinary(any(String.class))).thenReturn(byteArray);
 
         ZippedProject returned = server.getExerciseZip("url");
@@ -119,8 +117,6 @@ public class ServerManagerTest {
 
     @Test
     public void getExerciseZipShouldReturnEmptyByteArrayOnFailedRequest() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         when(rb.getForBinary(any(String.class))).thenThrow(new IOException());
 
         assertEquals(0, server.getExerciseZip("url").getBytes().length);
@@ -128,8 +124,6 @@ public class ServerManagerTest {
 
     @Test
     public void submitFeedbackCreatesConnectionAndCallsPostForText() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         String url = "mock_url";
         String apiUrl = "wee";
         when(connectionBuilder.addApiCallQueryParameters(Mockito.anyString())).thenReturn(apiUrl);
@@ -137,7 +131,7 @@ public class ServerManagerTest {
         server.submitFeedback(url, new ArrayList<FeedbackAnswer>());
         verify(connectionBuilder, times(1)).createConnection();
         verify(connectionBuilder, times(1)).addApiCallQueryParameters(url);
-        verify(rb, times(1)).postForText(eq(apiUrl), Mockito.anyMap());
+        verify(rb, times(1)).postForText(eq(apiUrl), anyMap());
     }
 
     @Test
@@ -145,14 +139,11 @@ public class ServerManagerTest {
         List<FeedbackAnswer> answers = new ArrayList<FeedbackAnswer>();
         answers.add(new FeedbackAnswer(new FeedbackQuestion(0, "Question", "text"), "Answer"));
 
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
-
         String url = "mock_url";
         String apiUrl = "wee";
         when(connectionBuilder.addApiCallQueryParameters(Mockito.anyString())).thenReturn(apiUrl);
 
-        when(rb.postForText(Mockito.anyString(), Mockito.anyMap())).thenAnswer(new Answer() {
+        when(rb.postForText(Mockito.anyString(), anyMap())).thenAnswer(new Answer() {
             @Override
             public String answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
@@ -177,55 +168,45 @@ public class ServerManagerTest {
 
     @Test(expected = RuntimeException.class)
     public void submitFeedbackThrowsRuntimeExceptionOnNonHttpException() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
 
-        when(rb.postForText(Mockito.anyString(), Mockito.anyMap())).thenThrow(new Exception("Derp"));
+        when(rb.postForText(Mockito.anyString(), anyMap())).thenThrow(new Exception("Derp"));
         server.submitFeedback("url", new ArrayList<FeedbackAnswer>());
     }
 
     @Test(expected = ObsoleteClientException.class)
     public void submitFeedbackThrowsObsoleteClientExceptionWhenStatusCodeIs404AndIsObsolete() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
 
         FailedHttpResponseException exception = mock(FailedHttpResponseException.class);
         when(exception.getStatusCode()).thenReturn(404);
         when(exception.getEntityAsString()).thenReturn("{obsolete_client:true}");
 
-        when(rb.postForText(Mockito.anyString(), Mockito.anyMap())).thenThrow(exception);
+        when(rb.postForText(Mockito.anyString(), anyMap())).thenThrow(exception);
         server.submitFeedback("url", new ArrayList<FeedbackAnswer>());
     }
 
     @Test(expected = FailedHttpResponseException.class)
     public void submitFeedbackThrowsHttpExceptionWhenStatusCodeIsNot404() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
 
         FailedHttpResponseException exception = mock(FailedHttpResponseException.class);
         when(exception.getStatusCode()).thenReturn(403);
 
-        when(rb.postForText(Mockito.anyString(), Mockito.anyMap())).thenThrow(exception);
+        when(rb.postForText(Mockito.anyString(), anyMap())).thenThrow(exception);
         server.submitFeedback("url", new ArrayList<FeedbackAnswer>());
     }
 
     @Test(expected = FailedHttpResponseException.class)
     public void submitFeedbackThrowsHttpExceptionWhenStatusCodeIs404ButIsNotObsolete() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
 
         FailedHttpResponseException exception = mock(FailedHttpResponseException.class);
         when(exception.getStatusCode()).thenReturn(404);
         when(exception.getEntityAsString()).thenReturn("{obsolete_client:false}");
 
-        when(rb.postForText(Mockito.anyString(), Mockito.anyMap())).thenThrow(exception);
+        when(rb.postForText(Mockito.anyString(), anyMap())).thenThrow(exception);
         server.submitFeedback("url", new ArrayList<FeedbackAnswer>());
     }
 
     @Test
     public void uploadFilesCreatesConnectionAndCallsUploadFileForTextDownload() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         String url = "mock_url";
         String apiUrl = "wee";
         Exercise exercise = mock(Exercise.class);
@@ -235,8 +216,6 @@ public class ServerManagerTest {
         when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
         byte[] data = new byte[5];
 
-        
-        
         try {
             server.uploadFile(exercise, data);
         } catch (Exception e) {
@@ -246,14 +225,12 @@ public class ServerManagerTest {
 
         verify(connectionBuilder, times(1)).createConnection();
         verify(connectionBuilder, times(1)).addApiCallQueryParameters(url);
-        verify(rb, times(1)).uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data));
+        verify(rb, times(1)).uploadFileForTextDownload(eq(apiUrl), anyMap(), eq("submission[file]"), eq(data));
 
     }
 
     @Test(expected = RuntimeException.class)
     public void uploadFilesThrowsIfJsonContainsErrorField() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         String url = "mock_url";
         String apiUrl = "wee";
         byte[] data = new byte[5];
@@ -262,7 +239,7 @@ public class ServerManagerTest {
         when(exercise.getReturnUrl()).thenReturn(url);
 
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
-        when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
+        when(rb.uploadFileForTextDownload(eq(apiUrl), anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{error:error_message}");
 
         server.uploadFile(exercise, data);
@@ -270,8 +247,6 @@ public class ServerManagerTest {
 
     @Test(expected = RuntimeException.class)
     public void uploadFilesThrowsIfJDoesNotContainErrorOrSubmissionUrlFields() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         String url = "mock_url";
         String apiUrl = "wee";
         byte[] data = new byte[5];
@@ -280,7 +255,7 @@ public class ServerManagerTest {
         when(exercise.getReturnUrl()).thenReturn(url);
 
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
-        when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
+        when(rb.uploadFileForTextDownload(eq(apiUrl), anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{foo:bar}");
 
         server.uploadFile(exercise, data);
@@ -288,8 +263,6 @@ public class ServerManagerTest {
 
     @Test(expected = RuntimeException.class)
     public void uploadFilesThrowsIfUrlIsMalformed() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         String url = "mock_url";
         String apiUrl = "wee";
         byte[] data = new byte[5];
@@ -298,7 +271,7 @@ public class ServerManagerTest {
         when(exercise.getReturnUrl()).thenReturn(url);
 
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
-        when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
+        when(rb.uploadFileForTextDownload(eq(apiUrl), anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http:/www.asdsads%ad.com.\", paste_url:\"htp:///ww.ab%c\\//.co./\"}");
 
         server.uploadFile(exercise, data);
@@ -306,8 +279,6 @@ public class ServerManagerTest {
 
     @Test
     public void uploadFilesReturnsCorrectResponse() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
         String url = "mock_url";
         String apiUrl = "wee";
         byte[] data = new byte[5];
@@ -316,9 +287,9 @@ public class ServerManagerTest {
         when(exercise.getReturnUrl()).thenReturn(url);
 
         when(connectionBuilder.addApiCallQueryParameters(url)).thenReturn(apiUrl);
-        when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
+        when(rb.uploadFileForTextDownload(eq(apiUrl), anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http://www.submission_url.com\", paste_url:\"http://www.paste_url.com\"}");
-        
+
         when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
         SubmissionResponse r = server.uploadFile(exercise, data);
         assertEquals(r.submissionUrl.toString(), "http://www.submission_url.com");
@@ -355,17 +326,12 @@ public class ServerManagerTest {
 
     @Test
     public void sendEventLogCallsAddApiCallQueryParameters() {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
-
         String myUrl = "myUrl";
         server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>());
         verify(connectionBuilder, times(1)).addApiCallQueryParameters(myUrl);
     }
 
     public void sendEventLogCallsSettingsCorrectly() {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
 
         server.sendEventLogs("url", new ArrayList<LoggableEvent>());
         verify(settings, times(1)).getUsername();
@@ -375,41 +341,103 @@ public class ServerManagerTest {
 
     @Test
     public void sendEventLogSetsExtraHeadersCorrectly() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
 
-        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenAnswer(
-                new Answer() {
-                    @Override
-                    public String answer(InvocationOnMock invocation) {
-                        Object[] args = invocation.getArguments();
+        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), anyMap())).thenAnswer(new Answer() {
+            @Override
+            public String answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
 
-                        Map<String, String> paramMap = (HashMap<String, String>) args[2];
+                Map<String, String> paramMap = (HashMap<String, String>) args[2];
 
-                        assertEquals(3, paramMap.keySet().size());
-                        assertEquals(3, paramMap.values().size());
+                assertEquals(3, paramMap.keySet().size());
+                assertEquals(3, paramMap.values().size());
 
-                        assertTrue(paramMap.keySet().contains("X-Tmc-Version"));
-                        assertTrue(paramMap.keySet().contains("X-Tmc-Username"));
-                        assertTrue(paramMap.keySet().contains("X-Tmc-Password"));
+                assertTrue(paramMap.keySet().contains("X-Tmc-Version"));
+                assertTrue(paramMap.keySet().contains("X-Tmc-Username"));
+                assertTrue(paramMap.keySet().contains("X-Tmc-Password"));
 
-                        assertEquals("1", paramMap.get("X-Tmc-Version"));
-                        assertEquals("username", paramMap.get("X-Tmc-Username"));
-                        assertEquals("password", paramMap.get("X-Tmc-Password"));
+                assertEquals("1", paramMap.get("X-Tmc-Version"));
+                assertEquals("username", paramMap.get("X-Tmc-Username"));
+                assertEquals("password", paramMap.get("X-Tmc-Password"));
 
-                        return "";
-                    }
-                });
+                return "";
+            }
+        });
 
     }
 
     @Test(expected = RuntimeException.class)
     public void sendEventLogsThrowsRuntimeExceptionWhenPostForTextThrows() throws Exception {
-        RequestBuilder rb = mock(RequestBuilder.class);
-        when(connectionBuilder.createConnection()).thenReturn(rb);
-        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenThrow(
+
+        when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), anyMap())).thenThrow(
                 new Exception("Error"));
 
         server.sendEventLogs("url", new ArrayList<LoggableEvent>());
+    }
+
+    @Test
+    public void markReviewAsReadGetsApiParameters() {
+        Review review = mock(Review.class);
+        when(review.getUpdateUrl()).thenReturn("url");
+        server.markReviewAsRead(review);
+        verify(connectionBuilder, times(1)).addApiCallQueryParameters("url.json");
+    }
+
+    @Test
+    public void markReviewAsReadCreatesConnection() {
+        Review review = mock(Review.class);
+        when(review.getUpdateUrl()).thenReturn("url");
+        server.markReviewAsRead(review);
+        verify(connectionBuilder, times(1)).createConnection();
+    }
+
+    @Test
+    public void markReviewAsReadCatchesExceptionsIfPostForTextThrows() throws Exception {
+        Review review = mock(Review.class);
+        when(review.getUpdateUrl()).thenReturn("url");
+        when(rb.postForText(anyString(), anyMap())).thenThrow(new RuntimeException("Foo"));
+        server.markReviewAsRead(review);
+        verify(rb, times(1)).postForText(anyString(), anyMap());
+    }
+
+    @Test
+    public void markReviewAsReadCallsPostForText() throws Exception {
+        Review review = mock(Review.class);
+        when(review.getUpdateUrl()).thenReturn("url");
+        server.markReviewAsRead(review);
+        verify(rb, times(1)).postForText(anyString(), anyMap());
+    }
+
+    @Test
+    public void downloadReviewsAddsApiParameters() {
+        Course course = mock(Course.class);
+        when(course.getReviewsUrl()).thenReturn("url");
+        server.downloadReviews(course);
+        verify(connectionBuilder, times(1)).addApiCallQueryParameters("url");
+    }
+
+    @Test
+    public void downloadReviewsReadCreatesConnection() {
+        Course course = mock(Course.class);
+        when(course.getReviewsUrl()).thenReturn("url");
+        server.downloadReviews(course);
+        verify(connectionBuilder, times(1)).createConnection();
+    }
+
+    @Test
+    public void downloadReviewsReadCallsGetForText() throws Exception {
+        Course course = mock(Course.class);
+        when(course.getReviewsUrl()).thenReturn("url");
+        server.downloadReviews(course);
+        verify(rb, times(1)).getForText(anyString());
+    }
+
+    @Test
+    public void downloadReviewsDoesCatchesExceptionIfGetForTextThrows() throws Exception {
+        Course course = mock(Course.class);
+        when(course.getReviewsUrl()).thenReturn("url");
+        server.downloadReviews(course);
+        when(rb.getForText(anyString())).thenThrow(new RuntimeException("Foo"));
+        verify(rb, times(1)).getForText(anyString());
     }
 }

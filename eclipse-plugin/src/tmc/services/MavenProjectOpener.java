@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.apache.maven.model.Model;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -19,7 +18,6 @@ import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
-import tmc.util.TMCProjectNature;
 
 public class MavenProjectOpener {
     private IWorkspace workspace;

@@ -13,6 +13,10 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
+/**
+ * UI handler for code review request
+ * 
+ */
 public class CodeReviewRequestHandler extends AbstractHandler {
     WorkbenchHelper helper;
 

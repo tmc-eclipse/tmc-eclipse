@@ -66,6 +66,8 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
     @Override
     public void run(Exercise exercise) {
         try {
+            exercise.resetUpdateStatus();
+
             Project project = projectDao.getProjectByExercise(exercise);
 
             ZippedProject zip = downloader.downloadExercise(exercise);
@@ -82,13 +84,10 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
 
             project.setStatus(ProjectStatus.DOWNLOADED);
 
-            if (!exercise.isUpdated()) {
-                opener.open(exercise);
-            }
-
-            exercise.resetUpdateStatus();
+            opener.open(exercise);
         } catch (IOException exception) {
             invoker.raiseVisibleException("An error occurred while unzipping the exercises");
+            exercise.setUpdated(true);
         }
     }
 }
