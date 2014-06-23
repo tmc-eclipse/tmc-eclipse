@@ -82,11 +82,11 @@ public class ExerciseSelectorDialog extends Dialog {
         });
 
         Label lblSelectExercisesTo = new Label(shell, SWT.NONE);
-        lblSelectExercisesTo.setBounds(10, 10, 469, 17);
+        lblSelectExercisesTo.setBounds(10, 10, 489, 17);
         lblSelectExercisesTo.setText("Exercises to download");
 
         btnSelectAll = new Button(shell, SWT.NONE);
-        btnSelectAll.setBounds(418, 201, 91, 29);
+        btnSelectAll.setBounds(398, 201, 111, 29);
         btnSelectAll.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -101,7 +101,7 @@ public class ExerciseSelectorDialog extends Dialog {
                 shell.close();
             }
         });
-        btnClose.setBounds(447, 236, 62, 29);
+        btnClose.setBounds(427, 236, 82, 29);
         btnClose.setText("Close");
 
         btnDownload = new Button(shell, SWT.NONE);
@@ -112,7 +112,7 @@ public class ExerciseSelectorDialog extends Dialog {
                 shell.close();
             }
         });
-        btnDownload.setBounds(361, 236, 80, 29);
+        btnDownload.setBounds(331, 236, 90, 29);
         btnDownload.setText("Download");
 
         try {

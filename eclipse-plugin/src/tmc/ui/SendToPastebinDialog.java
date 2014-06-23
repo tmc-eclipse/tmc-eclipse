@@ -1,15 +1,15 @@
 package tmc.ui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import tmc.tasks.TaskStarter;
 
@@ -73,7 +73,7 @@ public class SendToPastebinDialog extends Dialog {
 
         Button btnCancel = new Button(shell, SWT.NONE);
         btnCancel.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnCancel.setBounds(431, 221, 68, 29);
+        btnCancel.setBounds(431, 221, 78, 29);
         btnCancel.setText("Cancel");
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -84,7 +84,7 @@ public class SendToPastebinDialog extends Dialog {
 
         Button btnSend = new Button(shell, SWT.NONE);
         btnSend.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnSend.setBounds(348, 221, 68, 29);
+        btnSend.setBounds(348, 221, 78, 29);
         btnSend.setText("Send");
         btnSend.addSelectionListener(new SelectionAdapter() {
             @Override

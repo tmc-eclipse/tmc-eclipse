@@ -83,7 +83,7 @@ public class ReceivedCodeReviewDialog extends Dialog {
         reviewBody.setFont(SWTResourceManager.getFont("Tahoma", 10, SWT.NORMAL));
 
         Button btnOpenInBrowser = new Button(shell, SWT.NONE);
-        btnOpenInBrowser.setBounds(10, 385, 144, 32);
+        btnOpenInBrowser.setBounds(10, 385, 164, 32);
         btnOpenInBrowser.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
         btnOpenInBrowser.setText("Open in browser");
         btnOpenInBrowser.addSelectionListener(new SelectionAdapter() {

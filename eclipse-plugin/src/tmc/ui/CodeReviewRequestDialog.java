@@ -75,7 +75,7 @@ public class CodeReviewRequestDialog extends Dialog {
 
         Button btnCancel = new Button(shell, SWT.NONE);
         btnCancel.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnCancel.setBounds(329, 215, 75, 35);
+        btnCancel.setBounds(329, 215, 85, 35);
         btnCancel.setText("Cancel");
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -86,7 +86,7 @@ public class CodeReviewRequestDialog extends Dialog {
 
         Button btnRequest = new Button(shell, SWT.NONE);
         btnRequest.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnRequest.setBounds(189, 215, 134, 35);
+        btnRequest.setBounds(179, 215, 144, 35);
         btnRequest.setText("Request review");
         btnRequest.addSelectionListener(new SelectionAdapter() {
             @Override

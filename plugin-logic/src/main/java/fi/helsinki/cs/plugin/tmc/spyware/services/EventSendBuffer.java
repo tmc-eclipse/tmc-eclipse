@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
-import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.spyware.utility.Cooldown;
 
 /**
@@ -31,12 +28,9 @@ public class EventSendBuffer implements EventReceiver {
 
     private SingletonTask savingTask;
     private SingletonTask sendingTask;
-    
-    // private ServerAccess serverAccess;
-    // private Courses courses;
+
     private final EventStore eventStore;
     private final Settings settings;
-    
 
     // The following variables must only be accessed with a lock on sendQueue.
     private ArrayDeque<LoggableEvent> sendQueue;
@@ -45,15 +39,15 @@ public class EventSendBuffer implements EventReceiver {
     private Cooldown autosendCooldown;
     private SharedInteger eventsToRemoveAfterSend;
 
-    public EventSendBuffer(EventStore store, Settings settings, ArrayDeque<LoggableEvent> sendQueue, SingletonTask sendingTask,
-            SingletonTask savingTask, SharedInteger eventsToRemoveAfterSend) {
+    public EventSendBuffer(EventStore store, Settings settings, ArrayDeque<LoggableEvent> sendQueue,
+            SingletonTask sendingTask, SingletonTask savingTask, SharedInteger eventsToRemoveAfterSend) {
         this.eventStore = store;
         this.settings = settings;
         this.sendQueue = sendQueue;
         this.eventsToRemoveAfterSend = eventsToRemoveAfterSend;
-        
+
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
-        
+
         this.sendingTask = sendingTask;
         this.savingTask = savingTask;
 

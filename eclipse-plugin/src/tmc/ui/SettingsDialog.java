@@ -75,33 +75,34 @@ public class SettingsDialog extends Dialog {
         lblErrorText.setBounds(10, 10, 430, 17);
 
         Label lblUserName = new Label(shell, SWT.NONE);
-        lblUserName.setBounds(10, 44, 77, 17);
+        lblUserName.setBounds(10, 44, 87, 17);
         lblUserName.setText("Username");
 
         userNameText = new Text(shell, SWT.BORDER);
         userNameText.setBounds(154, 44, 259, 27);
 
         Label lblPassword = new Label(shell, SWT.NONE);
-        lblPassword.setBounds(10, 83, 70, 17);
+        lblPassword.setBounds(10, 83, 80, 17);
         lblPassword.setText("Password");
 
         passWordText = new Text(shell, SWT.BORDER | SWT.PASSWORD);
         passWordText.setBounds(154, 77, 259, 27);
 
         Label lblServerAddress = new Label(shell, SWT.NONE);
+
         lblServerAddress.setText("Server address");
-        lblServerAddress.setBounds(10, 117, 123, 17);
+        lblServerAddress.setBounds(10, 117, 133, 17);
 
         serverAddress = new Text(shell, SWT.BORDER);
         serverAddress.setBounds(154, 110, 386, 27);
 
         btnSavePassword = new Button(shell, SWT.CHECK);
-        btnSavePassword.setBounds(419, 77, 131, 24);
+        btnSavePassword.setBounds(419, 77, 141, 24);
         btnSavePassword.setText("Save Password");
 
         Label lblCurrentCourse = new Label(shell, SWT.NONE);
         lblCurrentCourse.setText("Current course");
-        lblCurrentCourse.setBounds(10, 151, 123, 17);
+        lblCurrentCourse.setBounds(10, 151, 143, 17);
 
         combo = new Combo(shell, SWT.READ_ONLY);
         combo.setBounds(154, 143, 259, 29);
@@ -115,7 +116,7 @@ public class SettingsDialog extends Dialog {
         combo.select(indexOfCurrentCourse());
 
         Button btnRefreshCourses = new Button(shell, SWT.NONE);
-        btnRefreshCourses.setBounds(419, 143, 121, 29);
+        btnRefreshCourses.setBounds(419, 143, 126, 29);
         btnRefreshCourses.setText("Refresh");
         btnRefreshCourses.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -144,10 +145,10 @@ public class SettingsDialog extends Dialog {
 
         Label lblFolder = new Label(shell, SWT.NONE);
         lblFolder.setText("Folder for projects");
-        lblFolder.setBounds(10, 206, 138, 17);
+        lblFolder.setBounds(10, 206, 143, 17);
 
         Button btnCancel = new Button(shell, SWT.NONE);
-        btnCancel.setBounds(449, 410, 91, 29);
+        btnCancel.setBounds(439, 410, 101, 29);
         btnCancel.setText("Cancel");
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -159,7 +160,7 @@ public class SettingsDialog extends Dialog {
         btnOk = new Button(shell, SWT.NONE);
         btnOk.setText("OK");
 
-        btnOk.setBounds(349, 410, 91, 29);
+        btnOk.setBounds(329, 410, 101, 29);
         btnOk.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
