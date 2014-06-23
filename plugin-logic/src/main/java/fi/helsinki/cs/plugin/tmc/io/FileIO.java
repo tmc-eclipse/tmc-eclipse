@@ -15,6 +15,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * Wrapper class for file IO. Allows us to mock file interactions in unit tests
+ * 
+ */
 public class FileIO implements IO {
     private File file;
 
@@ -42,6 +47,9 @@ public class FileIO implements IO {
         return file.exists() && file.isDirectory();
     }
 
+    /**
+     * Important: It is the responsibility of the caller to close this stream!
+     */
     @Override
     public OutputStream getOutputStream() {
         try {
@@ -51,6 +59,9 @@ public class FileIO implements IO {
         }
     }
 
+    /**
+     * Important: It is the responsibility of the caller to close this stream!
+     */
     @Override
     public InputStream getInputStream() {
         try {
@@ -60,6 +71,9 @@ public class FileIO implements IO {
         }
     }
 
+    /**
+     * Important: It is the responsibility of the caller to close this writer!
+     */
     @Override
     public Writer getWriter() {
         try {
@@ -74,6 +88,9 @@ public class FileIO implements IO {
         }
     }
 
+    /**
+     * Important: It is the responsibility of the caller to close this reader!
+     */
     @Override
     public Reader getReader() {
         try {

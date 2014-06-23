@@ -13,6 +13,10 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
+/**
+ * UI handler for paste bin sending window
+ * 
+ */
 public class PastebinHandler extends AbstractHandler {
     WorkbenchHelper helper;
 

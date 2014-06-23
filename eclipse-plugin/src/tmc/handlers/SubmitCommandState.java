@@ -28,7 +28,7 @@ public class SubmitCommandState extends AbstractSourceProvider {
 
     @Override
     public String[] getProvidedSourceNames() {
-        return new String[] { MY_STATE };
+        return new String[] {MY_STATE};
     }
 
     public void setState(boolean b) {

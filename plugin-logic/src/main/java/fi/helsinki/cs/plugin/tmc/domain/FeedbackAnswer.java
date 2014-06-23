@@ -3,6 +3,11 @@ package fi.helsinki.cs.plugin.tmc.domain;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+/**
+ * 
+ * Stores single answer to feedback question
+ * 
+ */
 public class FeedbackAnswer {
     private FeedbackQuestion question;
     private String answer;

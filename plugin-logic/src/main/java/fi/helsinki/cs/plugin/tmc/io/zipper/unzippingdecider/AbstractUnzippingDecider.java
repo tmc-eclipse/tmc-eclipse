@@ -1,14 +1,15 @@
 package fi.helsinki.cs.plugin.tmc.io.zipper.unzippingdecider;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
-import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 
+/**
+ * Abstract base class that provides common functionality for all
+ * unzippingdeciders
+ * 
+ */
 public abstract class AbstractUnzippingDecider implements UnzippingDecider {
     protected Project project;
     private List<String> doNotUnzip;
@@ -18,6 +19,10 @@ public abstract class AbstractUnzippingDecider implements UnzippingDecider {
         this.doNotUnzip = TmcProjectFile.forProject(new File(project.getRootPath())).getExtraStudentFiles();
     }
 
+    /**
+     * Prevents unzipping if file would overwrite file on the extra student file
+     * list
+     */
     @Override
     public boolean shouldUnzip(String filePath) {
         for (String s : doNotUnzip) {

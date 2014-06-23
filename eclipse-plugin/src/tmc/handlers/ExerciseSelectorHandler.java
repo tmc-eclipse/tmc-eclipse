@@ -11,6 +11,11 @@ import tmc.ui.ExerciseSelectorDialog;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 
+/**
+ * UI handler for exercise download selector
+ * 
+ */
+
 public class ExerciseSelectorHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {

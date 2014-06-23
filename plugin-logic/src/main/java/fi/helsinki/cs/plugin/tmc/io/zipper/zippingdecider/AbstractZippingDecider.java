@@ -4,6 +4,10 @@ import java.io.File;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 
+/**
+ * Abstract base class for all zipping deciders.
+ * 
+ */
 public abstract class AbstractZippingDecider implements ZippingDecider {
     protected Project project;
 
@@ -11,6 +15,9 @@ public abstract class AbstractZippingDecider implements ZippingDecider {
         this.project = project;
     }
 
+    /**
+     * Does not include any folders that contain .tmcnosubmit-file
+     */
     @Override
     public boolean shouldZip(String zipPath) {
 

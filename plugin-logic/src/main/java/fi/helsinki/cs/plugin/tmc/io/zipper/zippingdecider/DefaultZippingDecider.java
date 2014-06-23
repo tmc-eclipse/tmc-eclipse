@@ -2,12 +2,19 @@ package fi.helsinki.cs.plugin.tmc.io.zipper.zippingdecider;
 
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 
+/**
+ * Default zipping decider that is used by java ant and C projects
+ * 
+ */
 public class DefaultZippingDecider extends AbstractZippingDecider {
 
     public DefaultZippingDecider(Project project) {
         super(project);
     }
 
+    /**
+     * zips extra student files and content of the src folder
+     */
     @Override
     public boolean shouldZip(String zipPath) {
 

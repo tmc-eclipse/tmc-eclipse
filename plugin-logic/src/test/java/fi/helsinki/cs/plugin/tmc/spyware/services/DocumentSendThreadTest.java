@@ -1,7 +1,11 @@
 package fi.helsinki.cs.plugin.tmc.spyware.services;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -53,55 +57,56 @@ public class DocumentSendThreadTest {
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                LoggableEvent event = (LoggableEvent)invocation.getArguments()[0];
+                LoggableEvent event = (LoggableEvent) invocation.getArguments()[0];
                 assertEquals("text_insert", event.getEventType());
                 return null;
-            } }).when(receiver).receiveEvent(any(LoggableEvent.class));
-            
-        
+            }
+        }).when(receiver).receiveEvent(any(LoggableEvent.class));
+
         thread.run();
         verify(receiver, times(1)).receiveEvent(any(LoggableEvent.class));
     }
-    
+
     @Test
     public void removeEventTest() {
         this.info = new DocumentInfo("", "", "", "", 0, 1);
         this.thread = new DocumentSendThread(receiver, info, project, cache, PATCH_GENERATOR);
-        
+
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                LoggableEvent event = (LoggableEvent)invocation.getArguments()[0];
+                LoggableEvent event = (LoggableEvent) invocation.getArguments()[0];
                 assertEquals("text_remove", event.getEventType());
                 return null;
-            } }).when(receiver).receiveEvent(any(LoggableEvent.class));
-            
-        
+            }
+        }).when(receiver).receiveEvent(any(LoggableEvent.class));
+
         thread.run();
         verify(receiver, times(1)).receiveEvent(any(LoggableEvent.class));
     }
-    
+
     @Test
     public void pasteEventTest() {
+        // travis does not have necessary components to run this test
         if ("true".equals(System.getenv("TRAVIS"))) {
             return;
         }
-        
+
         StringSelection s = new StringSelection("a a");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
-        
+
         this.info = new DocumentInfo("", "", "", "a a", 0, 3);
         this.thread = new DocumentSendThread(receiver, info, project, cache, PATCH_GENERATOR);
-        
+
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                LoggableEvent event = (LoggableEvent)invocation.getArguments()[0];
+                LoggableEvent event = (LoggableEvent) invocation.getArguments()[0];
                 assertEquals("text_paste", event.getEventType());
                 return null;
-            } }).when(receiver).receiveEvent(any(LoggableEvent.class));
-            
-        
+            }
+        }).when(receiver).receiveEvent(any(LoggableEvent.class));
+
         thread.run();
 
         verify(receiver, times(1)).receiveEvent(any(LoggableEvent.class));

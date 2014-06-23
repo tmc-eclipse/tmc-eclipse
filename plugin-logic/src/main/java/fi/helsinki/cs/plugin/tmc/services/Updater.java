@@ -8,6 +8,11 @@ import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
+/**
+ * Class that handles updating necessary data when we update exercise from
+ * server
+ * 
+ */
 public class Updater {
 
     private ServerManager server;
