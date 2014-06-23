@@ -25,6 +25,7 @@ import tmc.ui.LoginDialog;
 import tmc.ui.SettingsDialog;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
+import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
 /**
@@ -97,13 +98,6 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     }
                 }
 
-                boolean settingsWasOpened = false; // checks if the settings
-                                                   // dialog has been opened. it
-                                                   // is needed for a check,
-                                                   // that checks if we have to
-                                                   // open the exercise download
-                                                   // dialog maunally here or
-                                                   // with the settings dialog
                 try {
                     Core.getUpdater().updateCourses();
                 } catch (UserVisibleException uve) {
@@ -113,10 +107,13 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     } else {
                         SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
                         sd.open();
-                        settingsWasOpened = true;
                     }
                 }
-                if (!settingsWasOpened
+
+                Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
+                Core.getUpdater().updateExercises(currentCourse);
+
+                if (Core.getSettings().isLoggedIn()
                         && !Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises()
                                 .isEmpty()) {
                     ExerciseSelectorDialog esd = new ExerciseSelectorDialog(shell, SWT.SHEET);
