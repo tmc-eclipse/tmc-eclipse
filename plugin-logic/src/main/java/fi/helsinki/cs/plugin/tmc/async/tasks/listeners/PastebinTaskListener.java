@@ -16,7 +16,6 @@ public class PastebinTaskListener implements BackgroundTaskListener {
 
     @Override
     public void onBegin() {
-
     }
 
     @Override
@@ -35,5 +34,9 @@ public class PastebinTaskListener implements BackgroundTaskListener {
     @Override
     public void onFailure() {
         uiInvoker.raiseVisibleException("Failed to create the requested pastebin.");
+    }
+
+    @Override
+    public void onInterruption() {
     }
 }

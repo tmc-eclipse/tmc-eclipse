@@ -13,64 +13,44 @@ import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
  * be nasty though)
  * 
  */
-public class PastebinTask implements BackgroundTask {
+public class PastebinTask extends BackgroundTask {
 
     private ProjectUploader uploader;
     private String path;
     private String pasteMessage;
-
-    private boolean isRunning;
-    private TaskFeedback progress;
-    private String description = "Creating a pastebin";
 
     private ProjectDAO projectDAO;
     private IdeUIInvoker invoker;
 
     public PastebinTask(ProjectUploader uploader, String path, String pasteMessage, ProjectDAO projectDAO,
             IdeUIInvoker invoker) {
+        super("Creating a pastebin");
         this.uploader = uploader;
         this.path = path;
         this.pasteMessage = pasteMessage;
 
         this.projectDAO = projectDAO;
         this.invoker = invoker;
-        isRunning = true;
-    }
-
-    private boolean isRunning() {
-        if (!isRunning) {
-            return false;
-        }
-
-        isRunning = !progress.isCancelRequested();
-        return isRunning;
     }
 
     @Override
-    public int start(TaskFeedback p) {
-        progress = p;
-        progress.startProgress(description, 2);
-
-        return run();
-
-    }
-
-    private int run() {
+    public int start(TaskFeedback progress) {
+        progress.startProgress(this.getDescription(), 2);
 
         try {
             uploader.setProject(projectDAO.getProjectByFile(path));
             uploader.setAsPaste(pasteMessage);
             uploader.zipProjects();
 
-            if (!isRunning()) {
-                return BackgroundTask.RETURN_FAILURE;
+            if (shouldStop(progress)) {
+                return BackgroundTask.RETURN_INTERRUPTED;
             }
 
             progress.incrementProgress(1);
 
-            uploader.handleSumissionResponse();
-            if (!isRunning()) {
-                return BackgroundTask.RETURN_FAILURE;
+            uploader.handleSubmissionResponse();
+            if (shouldStop(progress)) {
+                return BackgroundTask.RETURN_INTERRUPTED;
             }
 
             progress.incrementProgress(1);
@@ -87,15 +67,4 @@ public class PastebinTask implements BackgroundTask {
     public String getPasteUrl() {
         return uploader.getResponse().pasteUrl.toString();
     }
-
-    @Override
-    public void stop() {
-        isRunning = false;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
 }

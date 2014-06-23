@@ -15,60 +15,45 @@ import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
  * 
  * 
  */
-public class UploaderTask implements BackgroundTask {
+public class UploaderTask extends BackgroundTask {
 
     private ProjectUploader uploader;
     private String path;
-
-    private boolean isRunning;
-    private TaskFeedback progress;
-    private String description = "Uploading exercises";
 
     private ProjectDAO projectDAO;
     private IdeUIInvoker invoker;
 
     public UploaderTask(ProjectUploader uploader, String path, ProjectDAO projectDAO, IdeUIInvoker invoker) {
+        super("Uploading exercises");
         this.uploader = uploader;
         this.path = path;
         this.projectDAO = projectDAO;
         this.invoker = invoker;
-
-        isRunning = true;
-    }
-
-    private boolean isRunning() {
-        if (!isRunning) {
-            return false;
-        }
-
-        isRunning = !progress.isCancelRequested();
-        return isRunning;
     }
 
     @Override
-    public int start(TaskFeedback p) {
-        progress = p;
-        progress.startProgress(description, 3);
+    public int start(TaskFeedback progress) {
+        progress.startProgress(this.getDescription(), 3);
 
-        return run();
+        return run(progress);
 
     }
 
-    private int run() {
+    private int run(final TaskFeedback progress) {
 
         try {
             uploader.setProject(projectDAO.getProjectByFile(path));
             uploader.zipProjects();
 
-            if (!isRunning()) {
-                return BackgroundTask.RETURN_FAILURE;
+            if (shouldStop(progress)) {
+                return BackgroundTask.RETURN_INTERRUPTED;
             }
 
             progress.incrementProgress(1);
 
-            uploader.handleSumissionResponse();
-            if (!isRunning()) {
-                return BackgroundTask.RETURN_FAILURE;
+            uploader.handleSubmissionResponse();
+            if (shouldStop(progress)) {
+                return BackgroundTask.RETURN_INTERRUPTED;
             }
             progress.incrementProgress(1);
 
@@ -76,7 +61,7 @@ public class UploaderTask implements BackgroundTask {
 
                 @Override
                 public boolean mustStop() {
-                    return !isRunning();
+                    return shouldStop(progress);
                 }
             });
 
@@ -102,15 +87,4 @@ public class UploaderTask implements BackgroundTask {
     public Project getProject() {
         return uploader.getProject();
     }
-
-    @Override
-    public void stop() {
-        isRunning = false;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
 }

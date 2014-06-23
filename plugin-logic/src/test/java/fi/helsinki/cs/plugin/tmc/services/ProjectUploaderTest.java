@@ -44,14 +44,14 @@ public class ProjectUploaderTest {
 
     @Test(expected = RuntimeException.class)
     public void handleSumissionResponseThrowsIfProjectIsNull() throws IOException {
-        uploader.handleSumissionResponse();
+        uploader.handleSubmissionResponse();
     }
 
     @Test(expected = RuntimeException.class)
     public void handleSumissionResponseThrowsIfDataIsNull() throws IOException {
 
         uploader.setProject(mock(Project.class));
-        uploader.handleSumissionResponse();
+        uploader.handleSubmissionResponse();
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ProjectUploaderTest {
         when(server.uploadFile(exercise, data, settings)).thenReturn(response);
 
         uploader.setProject(project);
-        uploader.handleSumissionResponse();
+        uploader.handleSubmissionResponse();
 
         verify(project, times(1)).getExercise();
         verify(server, times(1)).uploadFile(exercise, data, settings);

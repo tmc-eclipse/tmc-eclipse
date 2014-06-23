@@ -35,6 +35,11 @@ public class EclipseTaskRunner implements BackgroundTaskRunner {
                         listener.onFailure();
                     }
                     return Status.CANCEL_STATUS;
+                case BackgroundTask.RETURN_INTERRUPTED:
+                    if (listener != null) {
+                        listener.onInterruption();
+                    }
+                    return Status.CANCEL_STATUS;
                 case BackgroundTask.RETURN_SUCCESS:
                     if (listener != null) {
                         listener.onSuccess();

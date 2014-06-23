@@ -57,23 +57,23 @@ public class CodeReviewRequestTaskTest {
     }
 
     @Test
-    public void taskReturnsFailureIfCancelIsRequestedAtFirstCheckpoint() throws IOException {
+    public void taskReturnsInterruptedIfCancelIsRequestedAtFirstCheckpoint() throws IOException {
         when(progress.isCancelRequested()).thenReturn(true);
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
 
         verify(progress, times(0)).incrementProgress(1);
     }
 
     @Test
-    public void taskReturnsFailureIfStoppedAtFirstCheckpoint() throws IOException {
+    public void taskReturnsInterruptedIfStoppedAtFirstCheckpoint() throws IOException {
         task.stop();
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
         verify(progress, times(0)).incrementProgress(1);
     }
 
     @Test
-    public void taskReturnsFailureIfCancelIsRequestedAtSecondCheckpoint() throws IOException {
+    public void taskReturnsInterruptedIfCancelIsRequestedAtSecondCheckpoint() throws IOException {
         when(progress.isCancelRequested()).thenReturn(false);
 
         Mockito.doAnswer(new Answer() {
@@ -82,9 +82,9 @@ public class CodeReviewRequestTaskTest {
                 when(progress.isCancelRequested()).thenReturn(true);
                 return null;
             }
-        }).when(uploader).handleSumissionResponse();
+        }).when(uploader).handleSubmissionResponse();
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
 
         verify(progress, times(1)).incrementProgress(1);
     }

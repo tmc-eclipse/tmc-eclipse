@@ -49,7 +49,7 @@ public class ProjectUploader {
         data = zipper.zipProjectSources();
     }
 
-    public void handleSumissionResponse() throws IOException {
+    public void handleSubmissionResponse() throws IOException {
 
         if (project == null || data == null) {
             throw new RuntimeException("Internal error: Invalid project or zip data");
