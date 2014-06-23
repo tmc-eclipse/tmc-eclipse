@@ -108,7 +108,7 @@ public class SendingTask implements Runnable {
     private void doSend(final ArrayList<LoggableEvent> eventsToSend, final String url) {
 
         try {
-            serverManager.sendEventLogs(url, eventsToSend, settings);
+            serverManager.sendEventLogs(url, eventsToSend);
             log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] {eventsToSend.size(), url});
 
         } catch (Exception ex) {

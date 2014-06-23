@@ -45,8 +45,8 @@ public class ServerManagerTest {
     public void setup() {
         connectionBuilder = mock(ConnectionBuilder.class);
         gson = new Gson();
-        server = new ServerManager(gson, connectionBuilder);
         settings = mock(Settings.class);
+        server = new ServerManager(gson, connectionBuilder, settings);
     }
 
     @Test
@@ -238,7 +238,7 @@ public class ServerManagerTest {
         
         
         try {
-            server.uploadFile(exercise, data, settings);
+            server.uploadFile(exercise, data);
         } catch (Exception e) {
             // method throws due to malformed json; it's ok as it happens after
             // the method calls this test is interested in
@@ -265,7 +265,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{error:error_message}");
 
-        server.uploadFile(exercise, data, settings);
+        server.uploadFile(exercise, data);
     }
 
     @Test(expected = RuntimeException.class)
@@ -283,7 +283,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{foo:bar}");
 
-        server.uploadFile(exercise, data, settings);
+        server.uploadFile(exercise, data);
     }
 
     @Test(expected = RuntimeException.class)
@@ -301,7 +301,7 @@ public class ServerManagerTest {
         when(rb.uploadFileForTextDownload(eq(apiUrl), Mockito.anyMap(), eq("submission[file]"), eq(data))).thenReturn(
                 "{submission_url:\"http:/www.asdsads%ad.com.\", paste_url:\"htp:///ww.ab%c\\//.co./\"}");
 
-        server.uploadFile(exercise, data, settings);
+        server.uploadFile(exercise, data);
     }
 
     @Test
@@ -320,7 +320,7 @@ public class ServerManagerTest {
                 "{submission_url:\"http://www.submission_url.com\", paste_url:\"http://www.paste_url.com\"}");
         
         when(settings.getErrorMsgLocale()).thenReturn(Locale.ENGLISH);
-        SubmissionResponse r = server.uploadFile(exercise, data, settings);
+        SubmissionResponse r = server.uploadFile(exercise, data);
         assertEquals(r.submissionUrl.toString(), "http://www.submission_url.com");
         assertEquals(r.pasteUrl.toString(), "http://www.paste_url.com");
     }
@@ -359,7 +359,7 @@ public class ServerManagerTest {
         when(connectionBuilder.createConnection()).thenReturn(rb);
 
         String myUrl = "myUrl";
-        server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>(), settings);
+        server.sendEventLogs(myUrl, new ArrayList<LoggableEvent>());
         verify(connectionBuilder, times(1)).addApiCallQueryParameters(myUrl);
     }
 
@@ -367,7 +367,7 @@ public class ServerManagerTest {
         RequestBuilder rb = mock(RequestBuilder.class);
         when(connectionBuilder.createConnection()).thenReturn(rb);
 
-        server.sendEventLogs("url", new ArrayList<LoggableEvent>(), settings);
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>());
         verify(settings, times(1)).getUsername();
         verify(settings, times(1)).getPassword();
 
@@ -410,6 +410,6 @@ public class ServerManagerTest {
         when(rb.rawPostForText(Mockito.anyString(), Mockito.any(byte[].class), Mockito.anyMap())).thenThrow(
                 new Exception("Error"));
 
-        server.sendEventLogs("url", new ArrayList<LoggableEvent>(), settings);
+        server.sendEventLogs("url", new ArrayList<LoggableEvent>());
     }
 }
