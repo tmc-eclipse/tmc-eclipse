@@ -7,6 +7,11 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * This class stores necessary data for single TMC exercise, such as its
+ * deadline, name and various URLs *
+ * 
+ */
 public class Exercise implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -80,11 +85,13 @@ public class Exercise implements Serializable {
     }
 
     /**
-     * This method exists because api used by the original TMC-plugin was
+     * This method exists because the API used by the original TMC-plugin was
      * deprecated. Originally Date's constructor accepted strings that contained
      * date and it parsed them. This functionality has now been split to
-     * SimpleDateFormat class. As such we deserialize the date to separate
-     * string and then call this method to create Date-object from the string
+     * SimpleDateFormat class. As GSON uses reflection when deserializing
+     * objects, we can store the date string but we can't create Date object
+     * from it. Therefore we deserialize the date to separate string and then
+     * call this method to create Date-object from the string
      */
     public void finalizeDeserialization() {
         if (deadlineString == null || deadlineString.equals("")) {

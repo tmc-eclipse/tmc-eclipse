@@ -15,18 +15,21 @@ import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.SubmissionResult;
 import fi.helsinki.cs.plugin.tmc.domain.TestCaseResult;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
+import fi.helsinki.cs.plugin.tmc.utils.ProjectIconHandler;
 
 public class UploadTaskListenerTest {
 
     private UploadTaskListener listener;
     private UploaderTask task;
     private IdeUIInvoker invoker;
+    private ProjectIconHandler handler;
 
     @Before
     public void setUp() {
         invoker = mock(IdeUIInvoker.class);
         task = mock(UploaderTask.class);
-        listener = new UploadTaskListener(task, invoker);
+        handler = mock(ProjectIconHandler.class);
+        listener = new UploadTaskListener(task, invoker, handler);
     }
 
     @Test
@@ -62,7 +65,7 @@ public class UploadTaskListenerTest {
         listener.onSuccess();
 
         verify(task, times(1)).getResult();
-        verify(task, times(1)).getProject();
+        verify(task, times(2)).getProject();
 
         verify(invoker, times(1)).invokeTestResultWindow(Mockito.anyListOf(TestCaseResult.class));
         verify(invoker, times(1)).invokeAllTestsPassedWindow(Mockito.any(SubmissionResult.class), Mockito.anyString());
@@ -88,7 +91,7 @@ public class UploadTaskListenerTest {
         listener.onSuccess();
 
         verify(task, times(1)).getResult();
-        verify(task, times(1)).getProject();
+        verify(task, times(2)).getProject();
 
         verify(invoker, times(1)).invokeTestResultWindow(Mockito.anyListOf(TestCaseResult.class));
         verify(invoker, times(0)).invokeAllTestsPassedWindow(Mockito.any(SubmissionResult.class), Mockito.anyString());
@@ -114,7 +117,7 @@ public class UploadTaskListenerTest {
         listener.onSuccess();
 
         verify(task, times(1)).getResult();
-        verify(task, times(1)).getProject();
+        verify(task, times(2)).getProject();
 
         verify(invoker, times(1)).invokeTestResultWindow(Mockito.anyListOf(TestCaseResult.class));
         verify(invoker, times(0)).invokeAllTestsPassedWindow(Mockito.any(SubmissionResult.class), Mockito.anyString());

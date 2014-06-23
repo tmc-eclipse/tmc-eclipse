@@ -5,6 +5,10 @@ import java.util.List;
 
 import fi.helsinki.cs.plugin.tmc.domain.Course;
 
+/**
+ * Helper class that gets course names from given courses
+ * 
+ */
 public class DomainUtil {
 
     public static String[] getCourseNames(List<Course> courses) {

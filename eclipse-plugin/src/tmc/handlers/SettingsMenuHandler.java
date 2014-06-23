@@ -9,6 +9,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import tmc.ui.SettingsDialog;
 
+/**
+ * 
+ * UI handler for the settings menu window
+ * 
+ */
 public class SettingsMenuHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {

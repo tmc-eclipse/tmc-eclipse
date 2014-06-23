@@ -6,6 +6,12 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 
+/**
+ * 
+ * Class that handles Project object storage, loading and saving
+ * 
+ */
+
 public class ProjectDAO {
 
     private DataSource<Project> dataSource;

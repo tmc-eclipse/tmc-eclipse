@@ -7,6 +7,11 @@ import fi.helsinki.cs.plugin.tmc.domain.Exercise;
 import fi.helsinki.cs.plugin.tmc.domain.ZippedProject;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 
+/**
+ * Class that handles project downloading. Used by the DownloaderTask background
+ * task
+ * 
+ */
 public class ProjectDownloader {
 
     private ServerManager server;

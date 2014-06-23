@@ -3,6 +3,14 @@ package fi.helsinki.cs.plugin.tmc.domain;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class that handles feedback question such as
+ * "How difficult this exercise was". It may be either text or intrange
+ * question; former has textbox for answer, latter has a bar representing range
+ * of ints.
+ * 
+ * 
+ */
 public class FeedbackQuestion {
 
     private static final Pattern intRangeRegex = Pattern.compile("^intrange\\[(-?\\d+)\\.\\.(-?\\d+)\\]$");

@@ -2,6 +2,10 @@ package fi.helsinki.cs.plugin.tmc.domain;
 
 import java.util.List;
 
+/**
+ * Results of a single test run
+ * 
+ */
 public class TestRunResult {
     private final List<TestCaseResult> testCaseResults;
 

@@ -30,7 +30,7 @@ public class EditorListener implements IPartListener {
 
     public EditorListener() {
         // if eclipse disposes the associated IDocument, we want to get rid of
-        // it as well
+        // it as well -> weakhashset
         documentsWithListeners = Collections.newSetFromMap(new WeakHashMap<IDocument, Boolean>());
         listener = new DocumentListener();
         IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()

@@ -11,6 +11,10 @@ import fi.helsinki.cs.plugin.tmc.io.zipper.RecursiveZipper;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.services.http.SubmissionResponse;
 
+/**
+ * Class that handles uploading the exercise to server. Used by the UploaderTask
+ * background task
+ */
 public class ProjectUploader {
 
     private ServerManager server;
@@ -21,7 +25,7 @@ public class ProjectUploader {
     private Project project;
     private byte[] data;
     private HashMap<String, String> extraParams;
-    
+
     private SubmissionResponse response;
     private SubmissionResult result;
 
@@ -77,6 +81,10 @@ public class ProjectUploader {
         }
     }
 
+    /**
+     * Waits for SLEEP_DURATION*LOOP_COUNT milliseconds while checking if task
+     * should stop after every sleep
+     */
     private boolean waitForServer(StopStatus stopStatus) {
         for (int i = 0; i < LOOP_COUNT; ++i) {
             if (stopStatus.mustStop()) {
@@ -109,7 +117,7 @@ public class ProjectUploader {
             extraParams.put("message_for_paste", pasteMessage);
         }
     }
-    
+
     public void setAsRequest(String requestMessage) {
         extraParams.put("request_review", "1");
         if (!requestMessage.isEmpty()) {

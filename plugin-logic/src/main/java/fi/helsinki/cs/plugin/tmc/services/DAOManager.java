@@ -14,6 +14,10 @@ import fi.helsinki.cs.plugin.tmc.storage.CourseStorage;
 import fi.helsinki.cs.plugin.tmc.storage.DataSource;
 import fi.helsinki.cs.plugin.tmc.storage.ProjectStorage;
 
+/**
+ * Class that initializes various daos
+ * 
+ */
 public class DAOManager {
 
     public static final String DEFAULT_COURSES_PATH = "courses.tmp";

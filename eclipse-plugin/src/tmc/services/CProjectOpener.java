@@ -15,8 +15,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-
-import tmc.util.TMCProjectNature;
 import fi.helsinki.cs.plugin.tmc.io.FileUtil;
 
 @SuppressWarnings("restriction")

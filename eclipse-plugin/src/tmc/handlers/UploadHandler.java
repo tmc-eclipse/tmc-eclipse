@@ -10,8 +10,14 @@ import tmc.activator.CoreInitializer;
 import tmc.handlers.listeners.SelectionListener;
 import tmc.tasks.TaskStarter;
 import tmc.ui.EclipseIdeUIInvoker;
+import tmc.util.ProjectNatureHelper;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
+
+/**
+ * UI handler for exercise submission
+ * 
+ */
 
 public class UploadHandler extends AbstractHandler {
     WorkbenchHelper helper;
@@ -33,6 +39,7 @@ public class UploadHandler extends AbstractHandler {
             } else {
                 TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
             }
+            
         }
         return null;
     }
