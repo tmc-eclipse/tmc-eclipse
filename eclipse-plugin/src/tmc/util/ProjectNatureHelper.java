@@ -13,8 +13,7 @@ public class ProjectNatureHelper {
 
     public static void updateTMCProjectNature(Exercise e) {
         IProject project = IProjectHelper.getIProjectWithFilePath(FileUtil.getUnixPath(e.getProject().getRootPath()));
-        System.out.println(project);
-        System.out.println(e.getProject().getRootPath());
+
         if (e.isCompleted()) {
             System.out.println("1");
             setProjectNature(project, TMCCompletedProjectNature.NATURE_ID);
@@ -24,15 +23,6 @@ public class ProjectNatureHelper {
         } else {
             System.out.println("3");
             setProjectNature(project, TMCNewProjectNature.NATURE_ID);
-        }
-        
-        try {
-            for(String s: project.getDescription().getNatureIds()){
-                System.out.println(s);
-            }
-        } catch (CoreException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
         }
 
     }
@@ -53,24 +43,34 @@ public class ProjectNatureHelper {
         try {
             IProjectDescription description = project.getDescription();
             if (isTMCProject(project)) {
-                String[] newNatures = description.getNatureIds();
-                newNatures[0] = NATURE_ID;
-                description.setNatureIds(newNatures);
-                project.setDescription(description, new NullProgressMonitor());
+                updateNature(project, NATURE_ID, description);
             } else {
-                String[] prevNatures = description.getNatureIds();
-                String[] newNatures = new String[prevNatures.length + 1];
-                System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-                newNatures[prevNatures.length] = NATURE_ID;
-                String temp = newNatures[newNatures.length - 1];
-                newNatures[newNatures.length - 1] = newNatures[0];
-                newNatures[0] = temp;
-                description.setNatureIds(newNatures);
-                project.setDescription(description, new NullProgressMonitor());
+                addTMCNature(project, NATURE_ID, description);
             }
         } catch (CoreException e) {
             Core.getErrorHandler().handleException(e);
         }
+    }
+
+    private static void addTMCNature(IProject project, String NATURE_ID, IProjectDescription description)
+            throws CoreException {
+        String[] prevNatures = description.getNatureIds();
+        String[] newNatures = new String[prevNatures.length + 1];
+        System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+        newNatures[prevNatures.length] = NATURE_ID;
+        String temp = newNatures[newNatures.length - 1];
+        newNatures[newNatures.length - 1] = newNatures[0];
+        newNatures[0] = temp;
+        description.setNatureIds(newNatures);
+        project.setDescription(description, new NullProgressMonitor());
+    }
+
+    private static void updateNature(IProject project, String NATURE_ID, IProjectDescription description)
+            throws CoreException {
+        String[] newNatures = description.getNatureIds();
+        newNatures[0] = NATURE_ID;
+        description.setNatureIds(newNatures);
+        project.setDescription(description, new NullProgressMonitor());
     }
 
 }

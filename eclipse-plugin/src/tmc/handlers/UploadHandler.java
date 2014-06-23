@@ -38,7 +38,6 @@ public class UploadHandler extends AbstractHandler {
                 Core.getErrorHandler().handleManualException("Unable to submit exercise:\nNo valid exercise selected.");
             } else {
                 TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
-                ProjectNatureHelper.updateTMCProjectNature(helper.getActiveProject().getExercise());
             }
             
         }
