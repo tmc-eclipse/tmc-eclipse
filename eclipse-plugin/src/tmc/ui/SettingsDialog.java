@@ -159,7 +159,7 @@ public class SettingsDialog extends Dialog {
         btnOk = new Button(shell, SWT.NONE);
         btnOk.setText("OK");
 
-        btnOk.setBounds(339, 410, 101, 29);
+        btnOk.setBounds(329, 410, 101, 29);
         btnOk.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

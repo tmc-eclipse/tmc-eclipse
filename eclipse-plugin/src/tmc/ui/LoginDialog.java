@@ -91,7 +91,7 @@ public class LoginDialog extends Dialog {
         btnSavePassword.setText("Save password");
 
         Button btnLogIn = new Button(shlTmcLogin, SWT.NONE);
-        btnLogIn.setBounds(143, 176, 63, 29);
+        btnLogIn.setBounds(113, 176, 83, 29);
         btnLogIn.setText("Log in");
         btnLogIn.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -113,7 +113,7 @@ public class LoginDialog extends Dialog {
         });
 
         Button btnCancel = new Button(shlTmcLogin, SWT.NONE);
-        btnCancel.setBounds(212, 176, 91, 29);
+        btnCancel.setBounds(202, 176, 101, 29);
         btnCancel.setText("Cancel");
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
