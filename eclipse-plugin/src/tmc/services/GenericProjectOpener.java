@@ -13,7 +13,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
 import tmc.util.IProjectHelper;
-import tmc.util.TMCProjectNature;
+import tmc.util.ProjectNatureHelper;
+import tmc.util.TMCNewProjectNature;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.TMCErrorHandler;
 import fi.helsinki.cs.plugin.tmc.async.tasks.ProjectOpener;
@@ -46,14 +47,12 @@ public class GenericProjectOpener implements ProjectOpener {
                 projectObject = openWithCorrectOpener(project, projectType, projectObject);
 
             }
-
-            if (projectObject != null) {
-                addTMCProjectNature(projectObject);
-            }
+            ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+            System.out.println("Updating nature..");
+            ProjectNatureHelper.updateTMCProjectNature(e);
 
         } catch (Exception e1) {
             Core.getErrorHandler().handleException(e1);
-            e1.printStackTrace();
         }
 
     }
@@ -79,7 +78,7 @@ public class GenericProjectOpener implements ProjectOpener {
     private void addTMCProjectNature(IProject projectObject) throws CoreException {
         ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         IProjectDescription description = projectObject.getDescription();
-        if (!description.hasNature(TMCProjectNature.NATURE_ID)) {
+        if (!description.hasNature(TMCNewProjectNature.NATURE_ID)) {
             setNatures(description);
             try {
                 projectObject.setDescription(description, new NullProgressMonitor());
@@ -93,7 +92,7 @@ public class GenericProjectOpener implements ProjectOpener {
         String[] prevNatures = description.getNatureIds();
         String[] newNatures = new String[prevNatures.length + 1];
         System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-        newNatures[prevNatures.length] = TMCProjectNature.NATURE_ID;
+        newNatures[prevNatures.length] = TMCNewProjectNature.NATURE_ID;
         String temp = newNatures[newNatures.length - 1];
         newNatures[newNatures.length - 1] = newNatures[0];
         newNatures[0] = temp;

@@ -10,6 +10,7 @@ import tmc.activator.CoreInitializer;
 import tmc.handlers.listeners.SelectionListener;
 import tmc.tasks.TaskStarter;
 import tmc.ui.EclipseIdeUIInvoker;
+import tmc.util.ProjectNatureHelper;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 
@@ -32,7 +33,9 @@ public class UploadHandler extends AbstractHandler {
                 Core.getErrorHandler().handleManualException("Unable to submit exercise:\nNo valid exercise selected.");
             } else {
                 TaskStarter.startExerciseUploadTask(new EclipseIdeUIInvoker(shell));
+                ProjectNatureHelper.updateTMCProjectNature(helper.getActiveProject().getExercise());
             }
+            
         }
         return null;
     }
