@@ -40,11 +40,13 @@ public class SettingsDialog extends Dialog {
     private Button btnOk;
     private Combo localeList;
     private Combo combo;
+    private Shell parent;
 
     public SettingsDialog(Shell parent, int style) {
         super(parent, style);
+        this.parent = parent;
         this.settings = Core.getSettings();
-        setText("Settings");
+        setText("TMC Settings");
     }
 
     public Object open() {
@@ -87,7 +89,8 @@ public class SettingsDialog extends Dialog {
         passWordText.setBounds(154, 77, 259, 27);
 
         Label lblServerAddress = new Label(shell, SWT.NONE);
-        lblServerAddress.setText("Server Address");
+
+        lblServerAddress.setText("Server address");
         lblServerAddress.setBounds(10, 117, 133, 17);
 
         serverAddress = new Text(shell, SWT.BORDER);
@@ -246,8 +249,10 @@ public class SettingsDialog extends Dialog {
     }
 
     private void showExDownloaderDialog() {
-        ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
-        esd.open();
+        if (!Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises().isEmpty()) {
+            ExerciseSelectorDialog esd = new ExerciseSelectorDialog(parent, SWT.SHEET);
+            esd.open();
+        }
     }
 
     private void addFieldData() {

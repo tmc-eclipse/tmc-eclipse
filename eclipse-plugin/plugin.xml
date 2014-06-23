@@ -24,6 +24,11 @@
             id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
       </command>
       <command
+            name="Completed exercises"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.completedExercisesCommand">
+      </command>
+      <command
             name="Check for code reviews"
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand">
@@ -57,6 +62,10 @@
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
             class="tmc.handlers.ExerciseSelectorHandler">
+      </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.completedExercisesCommand"
+            class="tmc.handlers.CompletedExerciseSelectorHandler">
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
@@ -125,7 +134,7 @@
                   mnemonic="D">
             </command>
              <command
-                   commandId="eclipse-plugin.command2"
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.completedExercisesCommand"
                    label="Download old completed exercises"
                    style="push">
              </command>

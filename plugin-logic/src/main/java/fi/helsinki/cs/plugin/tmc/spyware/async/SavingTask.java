@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.spyware.services;
+package fi.helsinki.cs.plugin.tmc.spyware.async;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -6,6 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.common.collect.Iterables;
+
+import fi.helsinki.cs.plugin.tmc.spyware.services.EventStore;
+import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
 
 public class SavingTask implements Runnable {
     private ArrayDeque<LoggableEvent> sendQueue;

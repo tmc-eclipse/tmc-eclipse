@@ -96,17 +96,28 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     }
                 }
 
-                if (Core.getSettings().getServerBaseUrl().isEmpty()) {
-                    SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
-                    sd.open();
-                    try {
-                        Core.getUpdater().updateCourses();
-                    } catch (UserVisibleException uve) {
+                boolean settingsWasOpened = false; // checks if the settings
+                                                   // dialog has been opened. it
+                                                   // is needed for a check,
+                                                   // that checks if we have to
+                                                   // open the exercise download
+                                                   // dialog maunally here or
+                                                   // with the settings dialog
+                try {
+                    Core.getUpdater().updateCourses();
+                } catch (UserVisibleException uve) {
+                    if (!Core.getSettings().getServerBaseUrl().isEmpty()) {
                         LoginDialog ld = new LoginDialog(shell, SWT.SHEET);
                         ld.open();
+                    } else {
+                        SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
+                        sd.open();
+                        settingsWasOpened = true;
                     }
-                } else if (!Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises()
-                        .isEmpty()) {
+                }
+                if (!settingsWasOpened
+                        && !Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises()
+                                .isEmpty()) {
                     ExerciseSelectorDialog esd = new ExerciseSelectorDialog(shell, SWT.SHEET);
                     esd.open();
                 }
