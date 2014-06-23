@@ -193,8 +193,6 @@ public class ServerManager {
             }.getType());
             return Arrays.asList(reviews.reviews);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
 
         return null;
@@ -210,8 +208,6 @@ public class ServerManager {
             connectionBuilder.createConnection().postForText(fullUrl, extraParams);
             return true;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             return false;
         }
     }

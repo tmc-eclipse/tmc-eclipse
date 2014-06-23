@@ -24,6 +24,10 @@ import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
  * class how to build and ant project using the argument "compile-test".
  */
 public abstract class AntTestrunnerTask extends TestrunnerTask {
+
+    public class ConcurrentAntBuildsException extends Exception {
+    }
+
     private static final int THREAD_CHECK_INCREMENT_TIME_IN_MILLIS = 100;
     private static final int THREAD_NOT_FINISHED = -1;
 
@@ -92,6 +96,11 @@ public abstract class AntTestrunnerTask extends TestrunnerTask {
 
         try {
             build(rootPath);
+        } catch (ConcurrentAntBuildsException e) {
+            invoker.raiseVisibleException("Unable to run tests: "
+                    + "\nUnable to build the same project multiple times concurrently."
+                    + "\nPlease wait for the first test run to finish or cancel it.");
+            return BackgroundTask.RETURN_FAILURE;
         } catch (Exception e) {
             invoker.raiseVisibleException("Unable to run tests: Error when building project.");
             return BackgroundTask.RETURN_FAILURE;
