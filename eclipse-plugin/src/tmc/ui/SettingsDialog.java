@@ -40,9 +40,11 @@ public class SettingsDialog extends Dialog {
     private Button btnOk;
     private Combo localeList;
     private Combo combo;
+    private Shell parent;
 
     public SettingsDialog(Shell parent, int style) {
         super(parent, style);
+        this.parent = parent;
         this.settings = Core.getSettings();
         setText("Settings");
     }
@@ -246,8 +248,10 @@ public class SettingsDialog extends Dialog {
     }
 
     private void showExDownloaderDialog() {
-        ExerciseSelectorDialog esd = new ExerciseSelectorDialog(new Shell(), SWT.SHEET);
-        esd.open();
+        if (!Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises().isEmpty()) {
+            ExerciseSelectorDialog esd = new ExerciseSelectorDialog(parent, SWT.SHEET);
+            esd.open();
+        }
     }
 
     private void addFieldData() {

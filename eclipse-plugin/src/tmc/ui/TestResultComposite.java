@@ -165,11 +165,6 @@ public class TestResultComposite extends Composite {
         String className = st.getClassName().replace('.', '/');
 
         path.append(getProjectTestRootPath(className) + "/");
-        // if (!st.getClassName().contains("test.")) {
-        // path.append("test/");
-        // }
-        //
-        // path.append(className);
 
         moreDetailslink.addSelectionListener(new SelectionAdapter() {
             @Override
