@@ -167,10 +167,16 @@ public class SettingsDialog extends Dialog {
                 if (filePathText.getText().isEmpty()) {
                     lblErrorText.setText("No valid file path for exercises!");
                 } else {
-                    settings.setCurrentCourseName(combo.getText());
-                    saveSettings();
-                    shell.close();
-                    showExDownloaderDialog();
+                    try {
+                        Core.getUpdater().updateCourses();
+                        lblErrorText.setText("");
+                        settings.setCurrentCourseName(combo.getText());
+                        saveSettings();
+                        shell.close();
+                        showExDownloaderDialog();
+                    } catch (UserVisibleException uve) {
+                        lblErrorText.setText(uve.getMessage());
+                    }
                 }
             }
         });

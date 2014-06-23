@@ -58,14 +58,14 @@ public class PastebinTaskTest {
         verify(progress, times(2)).incrementProgress(1);
         verify(uploader, times(1)).setAsPaste("pastemessage");
         verify(uploader, times(1)).zipProjects();
-        verify(uploader, times(1)).handleSumissionResponse();
+        verify(uploader, times(1)).handleSubmissionResponse();
     }
 
     @Test
-    public void taskReturnsFailureIfCancelIsRequestedAtFirstCheckpoint() throws IOException {
+    public void taskReturnsInterruptedIfCancelIsRequestedAtFirstCheckpoint() throws IOException {
         when(progress.isCancelRequested()).thenReturn(true);
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
 
         verify(progress, times(0)).incrementProgress(1);
     }
@@ -79,7 +79,7 @@ public class PastebinTaskTest {
     }
 
     @Test
-    public void taskReturnsFailureIfCancelIsRequestedAtSecondCheckpoint() throws IOException {
+    public void taskReturnsInterruptedIfCancelIsRequestedAtSecondCheckpoint() throws IOException {
 
         Mockito.doAnswer(new Answer() {
             @Override
@@ -87,9 +87,9 @@ public class PastebinTaskTest {
                 when(progress.isCancelRequested()).thenReturn(true);
                 return null;
             }
-        }).when(uploader).handleSumissionResponse();
+        }).when(uploader).handleSubmissionResponse();
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
 
         verify(progress, times(1)).incrementProgress(1);
     }

@@ -17,7 +17,7 @@ import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
  * 
  * 
  */
-public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerTask {
+public abstract class MavenTestrunnerTask extends TestrunnerTask {
 
     private Project project;
     private TestRunResult results;
@@ -32,6 +32,7 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
      *            messages
      */
     public MavenTestrunnerTask(Project project, IdeUIInvoker invoker) {
+        super("Running tests");
         this.project = project;
         this.invoker = invoker;
     }
@@ -40,8 +41,12 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
         return this.results;
     }
 
+    public abstract int runMaven(List<String> goals, Project project);
+
     @Override
     public int start(TaskFeedback progress) {
+        progress.startProgress(this.getDescription(), 3);
+
         List<String> goals = new ArrayList<String>();
         goals.add("test-compile");
 
@@ -50,8 +55,9 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
             return BackgroundTask.RETURN_FAILURE;
         }
 
-        if (progress.isCancelRequested()) {
-            return RETURN_FAILURE;
+        progress.incrementProgress(1);
+        if (shouldStop(progress)) {
+            return BackgroundTask.RETURN_INTERRUPTED;
         }
 
         File resultFile = new File(project.getRootPath() + "/target/test_output.txt");
@@ -64,9 +70,15 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
             return BackgroundTask.RETURN_FAILURE;
         }
 
+        progress.incrementProgress(1);
+        if (shouldStop(progress)) {
+            return BackgroundTask.RETURN_INTERRUPTED;
+        }
+
         try {
             this.results = new TestResultParser().parseTestResults(resultFile);
             resultFile.delete();
+            progress.incrementProgress(1);
         } catch (IOException e) {
             invoker.raiseVisibleException("Unable to parse testresults.");
             return BackgroundTask.RETURN_FAILURE;
@@ -74,16 +86,4 @@ public abstract class MavenTestrunnerTask implements BackgroundTask, TestrunnerT
 
         return BackgroundTask.RETURN_SUCCESS;
     }
-
-    public abstract int runMaven(List<String> goals, Project project);
-
-    @Override
-    public void stop() {
-    }
-
-    @Override
-    public String getDescription() {
-        return "Running Maven tests";
-    }
-
 }

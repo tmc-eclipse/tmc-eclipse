@@ -56,7 +56,7 @@ public class UploaderTaskTest {
 
         verify(progress, times(3)).incrementProgress(1);
         verify(uploader, times(1)).zipProjects();
-        verify(uploader, times(1)).handleSumissionResponse();
+        verify(uploader, times(1)).handleSubmissionResponse();
         verify(uploader, times(1)).handleSubmissionResult(Mockito.any(StopStatus.class));
     }
 
@@ -72,11 +72,11 @@ public class UploaderTaskTest {
             }
         }).when(uploader).zipProjects();
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
 
         verify(progress, times(0)).incrementProgress(1);
         verify(uploader, times(1)).zipProjects();
-        verify(uploader, times(0)).handleSumissionResponse();
+        verify(uploader, times(0)).handleSubmissionResponse();
         verify(uploader, times(0)).handleSubmissionResult(Mockito.any(StopStatus.class));
     }
 
@@ -102,13 +102,13 @@ public class UploaderTaskTest {
                 when(progress.isCancelRequested()).thenReturn(true);
                 return null;
             }
-        }).when(uploader).handleSumissionResponse();
+        }).when(uploader).handleSubmissionResponse();
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
 
         verify(progress, times(1)).incrementProgress(1);
         verify(uploader, times(1)).zipProjects();
-        verify(uploader, times(1)).handleSumissionResponse();
+        verify(uploader, times(1)).handleSubmissionResponse();
         verify(uploader, times(0)).handleSubmissionResult(Mockito.any(StopStatus.class));
     }
 
@@ -128,7 +128,7 @@ public class UploaderTaskTest {
 
         verify(progress, times(2)).incrementProgress(1);
         verify(uploader, times(1)).zipProjects();
-        verify(uploader, times(1)).handleSumissionResponse();
+        verify(uploader, times(1)).handleSubmissionResponse();
         verify(uploader, times(1)).handleSubmissionResult(Mockito.any(StopStatus.class));
     }
 

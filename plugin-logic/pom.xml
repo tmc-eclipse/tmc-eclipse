@@ -159,6 +159,7 @@
 					<instrumentation>
 						<excludes>
 							<!-- EXCLUDE INTERFACES FROM CODE COVERAGE REPORTS -->
+							<exclude>fi/helsinki/cs/plugin/tmc/ServiceFactory.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/TMCErrorHandler.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/async/BackgroundTask.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/async/BackgroundTaskListener.class</exclude>
@@ -171,8 +172,8 @@
 							<exclude>fi/helsinki/cs/plugin/tmc/io/zipper/unzippingdecider/UnzippingDecider.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/io/zipper/zippingdecider/ZippingDecider.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/storage/DataSource.class</exclude>
-							<exclude>fi/helsinki/cs/plugin/tmc/spyware/EventReceiver.class</exclude>
-							<exclude>fi/helsinki/cs/plugin/tmc/spyware/TmcEvent.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/spyware/services/EventReceiver.class</exclude>
+							<exclude>fi/helsinki/cs/plugin/tmc/spyware/services/TmcEvent.class</exclude>
 							<exclude>fi/helsinki/cs/plugin/tmc/ui/IdeUIInvoker.class</exclude>
 							<!-- EXCLUDE THIRD PARTY CODE FROM COVERAGE REPORTS -->
 							<exclude>fi/helsinki/cs/plugin/tmc/spyware/utility/diff_match_patch*.class</exclude>

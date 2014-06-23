@@ -16,12 +16,10 @@ public class CodeReviewRequestListener implements BackgroundTaskListener {
 
     @Override
     public void onBegin() {
-
     }
 
     @Override
     public void onSuccess() {
-
         uiInvoker.invokeCodeReviewRequestSuccefullySentWindow();
     }
 
@@ -29,5 +27,9 @@ public class CodeReviewRequestListener implements BackgroundTaskListener {
     public void onFailure() {
         uiInvoker.raiseVisibleException("Failed to create the code review request.");
 
+    }
+
+    @Override
+    public void onInterruption() {
     }
 }

@@ -49,4 +49,8 @@ public class TestrunnerListener implements BackgroundTaskListener {
 
     }
 
+    @Override
+    public void onInterruption() {
+    }
+
 }

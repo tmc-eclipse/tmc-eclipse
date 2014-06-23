@@ -17,7 +17,6 @@ public class UploadTaskListener implements BackgroundTaskListener {
 
     @Override
     public void onBegin() {
-
     }
 
     @Override
@@ -44,5 +43,9 @@ public class UploadTaskListener implements BackgroundTaskListener {
     @Override
     public void onFailure() {
         // error messages handled by the task; no need to do anything here
+    }
+
+    @Override
+    public void onInterruption() {
     }
 }

@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import fi.helsinki.cs.plugin.tmc.async.BackgroundTask;
+import fi.helsinki.cs.plugin.tmc.async.TaskFeedback;
 import fi.helsinki.cs.plugin.tmc.domain.FeedbackAnswer;
 import fi.helsinki.cs.plugin.tmc.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
@@ -36,13 +37,13 @@ public class FeedbackSubmissionTaskTest {
 
     @Test
     public void FeedbackAnswerSubmitterIsCalledWhenTaskIsRun() {
-        task.start(null);
+        task.start(mock(TaskFeedback.class));
         verify(submitter, times(1)).submitFeedback(answers, url);
     }
 
     @Test
     public void FeedbackAnswerSubmitterReturnsSuccess() {
-        assertEquals(BackgroundTask.RETURN_SUCCESS, task.start(null));
+        assertEquals(BackgroundTask.RETURN_SUCCESS, task.start(mock(TaskFeedback.class)));
 
     }
 
@@ -50,7 +51,7 @@ public class FeedbackSubmissionTaskTest {
     public void feedbackAnswerSubmitterCallsErrorHandlerAndReturnsFalseOnException() {
         Mockito.doThrow(new RuntimeException("Error message here")).when(submitter).submitFeedback(answers, url);
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(null));
+        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(mock(TaskFeedback.class)));
         verify(invoker, times(1)).raiseVisibleException(
                 "An error occured while submitting feedback:\nError message here");
     }

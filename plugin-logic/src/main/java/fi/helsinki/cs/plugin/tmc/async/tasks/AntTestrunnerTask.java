@@ -23,7 +23,9 @@ import fi.helsinki.cs.plugin.tmc.utils.TestResultParser;
  * Concrete classes must implement the abstract build method that tells the
  * class how to build and ant project using the argument "compile-test".
  */
-public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTask {
+public abstract class AntTestrunnerTask extends TestrunnerTask {
+    private static final int THREAD_CHECK_INCREMENT_TIME_IN_MILLIS = 100;
+    private static final int THREAD_NOT_FINISHED = -1;
 
     private List<String> args;
     private ClassPath classpath;
@@ -59,6 +61,8 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
     public AntTestrunnerTask(String rootPath, String testDir, String javaExecutable, Integer memoryLimit,
             Settings settings, IdeUIInvoker invoker) {
 
+        super("Running tests");
+
         this.rootPath = rootPath;
         this.resultFilePath = rootPath + "/results.txt";
         this.testDirPath = testDir;
@@ -77,13 +81,14 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
 
     public abstract void build(String root) throws Exception;
 
+    @Override
     public TestRunResult get() {
         return this.result;
     }
 
     @Override
     public int start(TaskFeedback progress) {
-        progress.startProgress("Running tests", 4);
+        progress.startProgress(this.getDescription(), 4);
 
         try {
             build(rootPath);
@@ -93,16 +98,44 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
         }
 
         progress.incrementProgress(1);
-        buildTestRunnerArgs();
+        if (shouldStop(progress)) {
+            return BackgroundTask.RETURN_INTERRUPTED;
+        }
+
+        try {
+            buildTestRunnerArgs(progress);
+        } catch (InterruptedException e) {
+            return BackgroundTask.RETURN_INTERRUPTED;
+        }
 
         progress.incrementProgress(1);
+        if (shouldStop(progress)) {
+            return BackgroundTask.RETURN_INTERRUPTED;
+        }
+
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.redirectError(Redirect.INHERIT);
 
         try {
             process = pb.start();
-            process.waitFor();
+
+            int status = THREAD_NOT_FINISHED;
+            while (status == THREAD_NOT_FINISHED) {
+                try {
+                    status = process.exitValue();
+                } catch (IllegalThreadStateException e) {
+                    Thread.sleep(THREAD_CHECK_INCREMENT_TIME_IN_MILLIS);
+                }
+                if (shouldStop(progress)) {
+                    process.destroy();
+                    return BackgroundTask.RETURN_INTERRUPTED;
+                }
+            }
+
             progress.incrementProgress(1);
+            if (shouldStop(progress)) {
+                return BackgroundTask.RETURN_INTERRUPTED;
+            }
 
             File resultFile = new File(resultFilePath);
             result = new TestResultParser().parseTestResults(resultFile);
@@ -122,15 +155,6 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
         return BackgroundTask.RETURN_FAILURE;
     }
 
-    @Override
-    public void stop() {
-    }
-
-    @Override
-    public String getDescription() {
-        return "Running Ant tests";
-    }
-
     private List<String> buildTestScannerArgs(String testPath) {
         List<String> testScannerArgs = new ArrayList<String>();
         testScannerArgs.add(args.get(0)); // JAVA
@@ -142,12 +166,12 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
         return testScannerArgs;
     }
 
-    private void buildTestRunnerArgs() {
+    private boolean buildTestRunnerArgs(TaskFeedback progress) throws InterruptedException {
         args = new ArrayList<String>();
 
         args.add(javaExecutable);
 
-        List<String> testMethods = findProjectTests(testDirPath);
+        List<String> testMethods = findProjectTests(testDirPath, progress);
 
         args.add("-Dtmc.test_class_dir=" + testDirPath);
         args.add("-Dtmc.results_file=" + resultFilePath);
@@ -169,6 +193,8 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
         for (String method : testMethods) {
             args.add(method);
         }
+
+        return true;
     }
 
     private boolean endorserLibsExists(String rootPath) {
@@ -180,14 +206,26 @@ public abstract class AntTestrunnerTask implements BackgroundTask, TestrunnerTas
         return new File(rootPath + "/lib/endorsed");
     }
 
-    private List<String> findProjectTests(String testPath) {
+    private List<String> findProjectTests(String testPath, TaskFeedback progress) throws InterruptedException {
         List<String> testScannerArgs = buildTestScannerArgs(testPath);
 
         ProcessBuilder pb = new ProcessBuilder(testScannerArgs);
         pb.redirectError(Redirect.INHERIT);
         try {
             process = pb.start();
-            process.waitFor();
+            
+            int status = THREAD_NOT_FINISHED;
+            while (status == THREAD_NOT_FINISHED) {
+                try {
+                    status = process.exitValue();
+                } catch (IllegalThreadStateException e) {
+                    Thread.sleep(THREAD_CHECK_INCREMENT_TIME_IN_MILLIS);
+                }
+                if (shouldStop(progress)) {
+                    process.destroy();
+                    throw new InterruptedException();
+                }
+            }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             List<String> results = new ArrayList<String>();

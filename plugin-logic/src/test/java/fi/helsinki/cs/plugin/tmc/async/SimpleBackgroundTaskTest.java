@@ -77,7 +77,7 @@ public class SimpleBackgroundTaskTest {
     @Test
     public void startReturnsFailureOnCancellation() {
         when(progress.isCancelRequested()).thenReturn(true);
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(progress));
+        assertEquals(BackgroundTask.RETURN_INTERRUPTED, task.start(progress));
     }
 
     @Test

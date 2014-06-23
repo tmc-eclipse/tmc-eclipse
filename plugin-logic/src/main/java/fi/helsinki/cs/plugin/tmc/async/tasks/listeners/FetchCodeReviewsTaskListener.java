@@ -24,8 +24,6 @@ public class FetchCodeReviewsTaskListener implements BackgroundTaskListener {
 
     @Override
     public void onBegin() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -40,12 +38,14 @@ public class FetchCodeReviewsTaskListener implements BackgroundTaskListener {
                 invoker.invokeCodeReviewDialog(r);
             }
         }
-
     }
 
     @Override
     public void onFailure() {
-        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void onInterruption() {
     }
 
 }

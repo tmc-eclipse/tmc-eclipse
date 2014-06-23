@@ -21,4 +21,9 @@ public interface BackgroundTaskListener {
      */
     public void onFailure();
 
+    /**
+     * Called when the background task returns RETURN_INTERRUPTED
+     */
+    public void onInterruption();
+
 }

@@ -13,11 +13,7 @@ import java.util.List;
  *            Object type to be used
  * 
  */
-public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
-
-    private boolean isRunning;
-    private String description;
-
+public abstract class SimpleBackgroundTask<T> extends BackgroundTask {
     private List<T> list;
 
     /**
@@ -30,8 +26,7 @@ public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
      *            one
      */
     public SimpleBackgroundTask(String description, List<T> list) {
-        this.isRunning = true;
-        this.description = description;
+        super(description);
         this.list = list;
     }
 
@@ -42,14 +37,11 @@ public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
      */
     @Override
     public int start(TaskFeedback progress) {
-        progress.startProgress(description, list.size());
+        progress.startProgress(this.getDescription(), list.size());
 
         for (T t : list) {
-            if (progress.isCancelRequested()) {
-                this.stop();
-            }
-            if (!isRunning) {
-                return BackgroundTask.RETURN_FAILURE;
+            if (shouldStop(progress)) {
+                return BackgroundTask.RETURN_INTERRUPTED;
             }
 
             run(t);
@@ -58,16 +50,6 @@ public abstract class SimpleBackgroundTask<T> implements BackgroundTask {
         }
 
         return BackgroundTask.RETURN_SUCCESS;
-    }
-
-    @Override
-    public void stop() {
-        this.isRunning = false;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
     }
 
     public abstract void run(T t);

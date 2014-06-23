@@ -13,8 +13,7 @@ import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
  * This is the background task for feedback submission.
  * 
  */
-public class FeedbackSubmissionTask implements BackgroundTask {
-
+public class FeedbackSubmissionTask extends BackgroundTask {
     private TaskFeedback progress;
     private FeedbackAnswerSubmitter submitter;
     private String feedbackUrl;
@@ -36,6 +35,8 @@ public class FeedbackSubmissionTask implements BackgroundTask {
      */
     public FeedbackSubmissionTask(FeedbackAnswerSubmitter submitter, List<FeedbackAnswer> answers, String feedbackUrl,
             IdeUIInvoker invoker) {
+        super("Submitting feedback");
+
         this.submitter = submitter;
         this.answers = answers;
         this.feedbackUrl = feedbackUrl;
@@ -44,29 +45,19 @@ public class FeedbackSubmissionTask implements BackgroundTask {
 
     @Override
     public int start(TaskFeedback progress) {
-        this.progress = progress;
-
-        return run();
-    }
-
-    @Override
-    public void stop() {
-        // we can't stop here, it's bat country
-    }
-
-    @Override
-    public String getDescription() {
-
-        return "Feedback Submission";
-    }
-
-    private int run() {
+        progress.startProgress(this.getDescription(), 1);
         try {
             submitter.submitFeedback(answers, feedbackUrl);
+            progress.incrementProgress(1);
         } catch (Exception ex) {
             invoker.raiseVisibleException("An error occured while submitting feedback:\n" + ex.getMessage());
             return BackgroundTask.RETURN_FAILURE;
         }
         return BackgroundTask.RETURN_SUCCESS;
+    }
+
+    @Override
+    public void stop() {
+        // we can't stop here, it's bat country
     }
 }

@@ -24,10 +24,8 @@ public class ProjectUploader {
     
     private SubmissionResponse response;
     private SubmissionResult result;
-    private Settings settings;
 
-    public ProjectUploader(ServerManager server, Settings settings) {
-        this.settings = settings;
+    public ProjectUploader(ServerManager server) {
         this.server = server;
         data = null;
         project = null;
@@ -49,16 +47,16 @@ public class ProjectUploader {
         data = zipper.zipProjectSources();
     }
 
-    public void handleSumissionResponse() throws IOException {
+    public void handleSubmissionResponse() throws IOException {
 
         if (project == null || data == null) {
             throw new RuntimeException("Internal error: Invalid project or zip data");
         }
 
         if (!extraParams.isEmpty()) {
-            response = server.uploadFile(project.getExercise(), data, extraParams, settings);
+            response = server.uploadFile(project.getExercise(), data, extraParams);
         } else {
-            response = server.uploadFile(project.getExercise(), data, settings);
+            response = server.uploadFile(project.getExercise(), data);
         }
     }
 
