@@ -28,6 +28,9 @@ public class Settings {
     public static final String[] AVAILABLE_LOCALES = new String[] {"English", "Finnish"};
     public static final int DEFAULT_LOCALE_NUM = 1;
     public static final String PREF_KEY_SAVE_PASSWORD = "savePassword";
+    public static final String PREF_KEY_IS_LOGGED_IN = "isLoggedIn";
+
+    private boolean loggedIn = false;
 
     private Preferences prefs;
 
@@ -84,6 +87,14 @@ public class Settings {
 
     public void setUsername(String username) {
         prefs.put(PREF_KEY_USERNAME, username);
+    }
+
+    public void setLoggedIn(boolean isloggedIn) {
+        prefs.putBoolean(PREF_KEY_IS_LOGGED_IN, isloggedIn);
+    }
+
+    public boolean isLoggedIn() {
+        return prefs.getBoolean(PREF_KEY_IS_LOGGED_IN, false);
     }
 
     public String getPassword() {

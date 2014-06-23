@@ -129,10 +129,8 @@ public class SettingsDialog extends Dialog {
                 try {
                     Core.getUpdater().updateCourses();
                     lblErrorText.setText("");
-                    btnOk.setEnabled(true);
                 } catch (UserVisibleException uve) {
                     lblErrorText.setText(uve.getMessage());
-                    btnOk.setEnabled(false);
                 }
 
                 combo.setItems(DomainUtil.getCourseNames(Core.getCourseDAO().getCourses()));

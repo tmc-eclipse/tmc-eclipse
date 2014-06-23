@@ -96,13 +96,6 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     }
                 }
 
-                boolean settingsWasOpened = false; // checks if the settings
-                                                   // dialog has been opened. it
-                                                   // is needed for a check,
-                                                   // that checks if we have to
-                                                   // open the exercise download
-                                                   // dialog maunally here or
-                                                   // with the settings dialog
                 try {
                     Core.getUpdater().updateCourses();
                 } catch (UserVisibleException uve) {
@@ -112,12 +105,14 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     } else {
                         SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
                         sd.open();
-                        settingsWasOpened = true;
                     }
                 }
-                if (!settingsWasOpened
+
+                if (Core.getSettings().isLoggedIn()
                         && !Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises()
                                 .isEmpty()) {
+                    System.out.println(Core.getCourseDAO().getCurrentCourse(Core.getSettings())
+                            .getDownloadableExercises());
                     ExerciseSelectorDialog esd = new ExerciseSelectorDialog(shell, SWT.SHEET);
                     esd.open();
                 }

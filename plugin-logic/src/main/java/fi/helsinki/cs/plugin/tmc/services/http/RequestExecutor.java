@@ -23,6 +23,8 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 
+import fi.helsinki.cs.plugin.tmc.Core;
+
 /**
  * Downloads a single file over HTTP into memory while being cancellable.
  * 
@@ -84,6 +86,7 @@ class RequestExecutor {
                         null));
             }
             response = httpClient.execute(request);
+
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Executing http request failed: {0}", ex.toString());
             if (request.isAborted()) {
@@ -102,6 +105,7 @@ class RequestExecutor {
     private BufferedHttpEntity handleResponse(HttpResponse response) throws IOException, InterruptedException,
             FailedHttpResponseException {
         int responseCode = response.getStatusLine().getStatusCode();
+        Core.getSettings().setLoggedIn(false);
         if (response.getEntity() == null) {
             throw new IOException("HTTP " + responseCode + " with no response");
         }
@@ -109,8 +113,10 @@ class RequestExecutor {
         BufferedHttpEntity entity = new BufferedHttpEntity(response.getEntity());
         EntityUtils.consume(entity); // Ensure it's loaded into memory
         if (success(responseCode)) {
+            Core.getSettings().setLoggedIn(true);
             return entity;
         } else {
+
             throw new FailedHttpResponseException(responseCode, entity);
         }
     }

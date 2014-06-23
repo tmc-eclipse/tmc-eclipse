@@ -30,7 +30,7 @@ public class LoginDialog extends Dialog {
      */
     public LoginDialog(Shell parent, int style) {
         super(parent, style);
-        setText("SWT Dialog");
+        setText("Login");
     }
 
     /**
@@ -118,6 +118,7 @@ public class LoginDialog extends Dialog {
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                Core.getSettings().setLoggedIn(false);
                 close();
             }
         });
