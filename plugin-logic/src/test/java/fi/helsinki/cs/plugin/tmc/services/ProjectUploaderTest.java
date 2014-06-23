@@ -27,14 +27,12 @@ public class ProjectUploaderTest {
     private ProjectUploader uploader;
     private ServerManager server;
     private Project project;
-    private Settings settings;
 
     @Before
     public void setUp() {
         server = mock(ServerManager.class);
         project = mock(Project.class);
-        settings = mock(Settings.class);
-        uploader = new ProjectUploader(server, settings);
+        uploader = new ProjectUploader(server);
     }
 
     @Test(expected = RuntimeException.class)
@@ -69,13 +67,13 @@ public class ProjectUploaderTest {
 
         SubmissionResponse response = mock(SubmissionResponse.class);
         when(project.getExercise()).thenReturn(exercise);
-        when(server.uploadFile(exercise, data, settings)).thenReturn(response);
+        when(server.uploadFile(exercise, data)).thenReturn(response);
 
         uploader.setProject(project);
         uploader.handleSubmissionResponse();
 
         verify(project, times(1)).getExercise();
-        verify(server, times(1)).uploadFile(exercise, data, settings);
+        verify(server, times(1)).uploadFile(exercise, data);
 
         f = uploader.getClass().getDeclaredField("response");
         f.setAccessible(true);

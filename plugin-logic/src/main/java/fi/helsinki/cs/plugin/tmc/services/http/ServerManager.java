@@ -45,14 +45,16 @@ import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;
     private Gson mapper;
+    private Settings settings;
 
-    public ServerManager(Gson mapper, ConnectionBuilder connectionBuilder) {
+    public ServerManager(Gson mapper, ConnectionBuilder connectionBuilder, Settings settings) {
         this.connectionBuilder = connectionBuilder;
         this.mapper = mapper;
+        this.settings = settings;
     }
 
     public ServerManager(Settings settings) {
-        this(new Gson(), new ConnectionBuilder(settings));
+        this(new Gson(), new ConnectionBuilder(settings), settings);
     }
 
     public List<Course> getCourses() {
@@ -91,12 +93,11 @@ public class ServerManager {
         return zip;
     }
 
-    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Settings settings) {
-        return uploadFile(exercise, data, null, settings);
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data) {
+        return uploadFile(exercise, data, null);
     }
 
-    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams,
-            Settings settings) {
+    public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams) {
         String submitUrl = connectionBuilder.addApiCallQueryParameters(exercise.getReturnUrl());
 
         Map<String, String> params = new LinkedHashMap<String, String>();
@@ -160,7 +161,7 @@ public class ServerManager {
         }
     }
 
-    public void sendEventLogs(String url, List<LoggableEvent> events, Settings settings) {
+    public void sendEventLogs(String url, List<LoggableEvent> events) {
 
         String fullUrl = connectionBuilder.addApiCallQueryParameters(url);
 

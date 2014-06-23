@@ -1,12 +1,13 @@
 package fi.helsinki.cs.plugin.tmc.spyware.services;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import java.util.concurrent.Executors;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import fi.helsinki.cs.plugin.tmc.async.tasks.SingletonTask;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
@@ -100,8 +100,7 @@ public class SendingTaskTest {
             }
         }
 
-        verify(serverManager, times(1)).sendEventLogs(any(String.class), anyListOf(LoggableEvent.class),
-                any(Settings.class));
+        verify(serverManager, times(1)).sendEventLogs(any(String.class), anyListOf(LoggableEvent.class));
         assertEquals(0, sendQueue.size());
         assertEquals(0, eventsToRemoveAfterSend.i);
     }

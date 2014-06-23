@@ -48,7 +48,7 @@ public final class TaskStarter {
     }
 
     public static void startExerciseUploadTask(EclipseIdeUIInvoker invoker) {
-        ProjectUploader uploader = new ProjectUploader(Core.getServerManager(), Core.getSettings());
+        ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
         WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
         helper.initialize();
 
@@ -59,7 +59,7 @@ public final class TaskStarter {
     }
 
     public static void startPastebinTask(EclipseIdeUIInvoker invoker, String pasteMessage) {
-        ProjectUploader uploader = new ProjectUploader(Core.getServerManager(), Core.getSettings());
+        ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
         WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
         helper.initialize();
 
@@ -71,7 +71,7 @@ public final class TaskStarter {
     }
 
     public static void startCodeReviewRequestTask(EclipseIdeUIInvoker invoker, String requestMessage) {
-        ProjectUploader uploader = new ProjectUploader(Core.getServerManager(), Core.getSettings());
+        ProjectUploader uploader = new ProjectUploader(Core.getServerManager());
         WorkbenchHelper helper = CoreInitializer.getDefault().getWorkbenchHelper();
         helper.initialize();
 
