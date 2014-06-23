@@ -1,4 +1,4 @@
-package fi.helsinki.cs.plugin.tmc.spyware.services;
+package fi.helsinki.cs.plugin.tmc.spyware.async;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import fi.helsinki.cs.plugin.tmc.domain.Course;
 import fi.helsinki.cs.plugin.tmc.services.CourseDAO;
 import fi.helsinki.cs.plugin.tmc.services.Settings;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
+import fi.helsinki.cs.plugin.tmc.spyware.services.LoggableEvent;
+import fi.helsinki.cs.plugin.tmc.spyware.services.SharedInteger;
 
 public class SendingTask implements Runnable {
     private static final Logger log = Logger.getLogger(SendingTask.class.getName());
