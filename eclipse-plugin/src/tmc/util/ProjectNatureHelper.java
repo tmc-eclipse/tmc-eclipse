@@ -53,7 +53,10 @@ public class ProjectNatureHelper {
         try {
             IProjectDescription description = project.getDescription();
             if (isTMCProject(project)) {
-                description.getNatureIds()[0] = NATURE_ID;
+                String[] newNatures = description.getNatureIds();
+                newNatures[0] = NATURE_ID;
+                description.setNatureIds(newNatures);
+                project.setDescription(description, new NullProgressMonitor());
             } else {
                 String[] prevNatures = description.getNatureIds();
                 String[] newNatures = new String[prevNatures.length + 1];
