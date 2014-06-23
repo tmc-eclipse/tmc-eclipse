@@ -46,7 +46,7 @@ public class SettingsDialog extends Dialog {
         super(parent, style);
         this.parent = parent;
         this.settings = Core.getSettings();
-        setText("Settings");
+        setText("TMC Settings");
     }
 
     public Object open() {
@@ -89,7 +89,7 @@ public class SettingsDialog extends Dialog {
         passWordText.setBounds(154, 77, 259, 27);
 
         Label lblServerAddress = new Label(shell, SWT.NONE);
-        lblServerAddress.setText("Server Address");
+        lblServerAddress.setText("Server address");
         lblServerAddress.setBounds(10, 117, 123, 17);
 
         serverAddress = new Text(shell, SWT.BORDER);

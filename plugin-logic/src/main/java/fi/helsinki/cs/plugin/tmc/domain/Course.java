@@ -123,11 +123,21 @@ public class Course {
     public List<Exercise> getDownloadableExercises() {
         List<Exercise> downloadableExercises = new ArrayList<Exercise>();
         for (Exercise e : getExercises()) {
-            if (e.isDownloadable() || e.isUpdated()) {
+            if ((e.isDownloadable() || e.isUpdated()) && !e.isCompleted()) {
                 downloadableExercises.add(e);
             }
         }
         return downloadableExercises;
+    }
+
+    public List<Exercise> getCompletedDownloadableExercises() {
+        List<Exercise> completedExercises = new ArrayList<Exercise>();
+        for (Exercise e : getExercises()) {
+            if ((e.isDownloadable() || e.isUpdated()) && e.isCompleted()) {
+                completedExercises.add(e);
+            }
+        }
+        return completedExercises;
     }
 
     public List<Exercise> getExercises() {

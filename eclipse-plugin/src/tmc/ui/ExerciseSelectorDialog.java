@@ -1,6 +1,7 @@
 package tmc.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,6 +29,7 @@ public class ExerciseSelectorDialog extends Dialog {
     private Button btnSelectAll;
 
     private Button btnDownload;
+    private boolean showCompleted;
 
     /**
      * Create the dialog.
@@ -37,7 +39,9 @@ public class ExerciseSelectorDialog extends Dialog {
      */
     public ExerciseSelectorDialog(Shell parent, int style) {
         super(parent, style);
-        setText("Exercises to download/update");
+        setText("Download exercises");
+
+        this.showCompleted = false;
     }
 
     /**
@@ -121,7 +125,7 @@ public class ExerciseSelectorDialog extends Dialog {
             Core.getUpdater().updateExercises(currentCourse);
 
             if (currentCourse != null) {
-                for (Exercise e : currentCourse.getDownloadableExercises()) {
+                for (Exercise e : getExercisesForCourse(currentCourse)) {
                     addTableItem(e.getName());
                 }
             }
@@ -189,6 +193,18 @@ public class ExerciseSelectorDialog extends Dialog {
             btnSelectAll.setText("Select all");
             btnDownload.setEnabled(false);
         }
+    }
+
+    private List<Exercise> getExercisesForCourse(Course course) {
+        if (showCompleted) {
+            return course.getCompletedDownloadableExercises();
+        } else {
+            return course.getDownloadableExercises();
+        }
+    }
+
+    public void setShowCompleted(boolean showCompleted) {
+        this.showCompleted = showCompleted;
     }
 
 }
