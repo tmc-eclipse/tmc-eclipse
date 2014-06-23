@@ -340,6 +340,10 @@ public class Exercise implements Serializable {
         this.updated = updated;
     }
 
+    public boolean getUpdated() {
+        return updated;
+    }
+
     public boolean isUpdated() {
         if (!updated) {
             if (oldChecksum == null || oldChecksum.equals(checksum)) {
