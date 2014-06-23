@@ -9,6 +9,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import tmc.tasks.TaskStarter;
 import tmc.ui.EclipseIdeUIInvoker;
 
+/**
+ * UI handler for code review check
+ * 
+ */
 public class CheckForCodeReviewsHandler extends AbstractHandler {
 
     @Override

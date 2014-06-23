@@ -7,6 +7,12 @@ import fi.helsinki.cs.plugin.tmc.domain.Project;
 import fi.helsinki.cs.plugin.tmc.domain.ProjectStatus;
 import fi.helsinki.cs.plugin.tmc.services.ProjectDAO;
 
+/**
+ * Class that is used on startup to ensure that the project database remains in
+ * consistent state even if files are deleted or added on disk while IDE is
+ * closed
+ * 
+ */
 public class ProjectScanner {
 
     private ProjectDAO projectDAO;

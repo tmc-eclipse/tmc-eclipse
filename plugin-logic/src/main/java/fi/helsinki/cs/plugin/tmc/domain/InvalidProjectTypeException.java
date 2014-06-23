@@ -1,5 +1,9 @@
 package fi.helsinki.cs.plugin.tmc.domain;
 
+/**
+ * Thrown when project type could not be determined.
+ * 
+ */
 public class InvalidProjectTypeException extends RuntimeException {
 
     public InvalidProjectTypeException() {

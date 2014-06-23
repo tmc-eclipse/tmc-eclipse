@@ -5,6 +5,10 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Class that stores the code review result that will be shown to user.
+ * 
+ */
 public class Review {
     @SerializedName("id")
     private int id;

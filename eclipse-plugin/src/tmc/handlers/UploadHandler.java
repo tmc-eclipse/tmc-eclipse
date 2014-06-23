@@ -13,6 +13,11 @@ import tmc.ui.EclipseIdeUIInvoker;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 
+/**
+ * UI handler for exercise submission
+ * 
+ */
+
 public class UploadHandler extends AbstractHandler {
     WorkbenchHelper helper;
     SelectionListener listener;

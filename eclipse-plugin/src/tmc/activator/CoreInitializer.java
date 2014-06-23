@@ -25,9 +25,12 @@ import tmc.ui.LoginDialog;
 import tmc.ui.SettingsDialog;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
+/**
+ * Class that is run on startup and initializes various components
+ * 
+ */
 public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     public static final String PLUGIN_ID = "TestMyCode Eclipse plugin"; //$NON-NLS-1$
@@ -40,8 +43,6 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     public void start(BundleContext context) throws Exception {
         super.start(context);
-
-        ServerManager server = Core.getServerManager();
 
         ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(),
                 IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_DELETE);

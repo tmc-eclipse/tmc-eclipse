@@ -10,6 +10,11 @@ import org.eclipse.ui.PlatformUI;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.spyware.DocumentInfo;
 
+/**
+ * This class listens to editor events such as text inserts. Basically this is
+ * the keylogging component of the spyware. Any actual processing happens in the
+ * core
+ */
 public class DocumentListener implements IDocumentListener {
 
     @Override

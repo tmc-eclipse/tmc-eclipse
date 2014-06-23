@@ -10,6 +10,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import tmc.ui.ExerciseSelectorDialog;
 import fi.helsinki.cs.plugin.tmc.Core;
 
+/**
+ * UI handler for exercise download selector
+ * 
+ */
+
 public class ExerciseSelectorHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {

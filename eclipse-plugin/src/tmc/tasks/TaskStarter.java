@@ -32,6 +32,11 @@ import fi.helsinki.cs.plugin.tmc.services.ReviewDAO;
 import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.IdeUIInvoker;
 
+/**
+ * 
+ * Class that handles task creation and starting
+ * 
+ */
 public final class TaskStarter {
 
     public static void startExerciseDownloadTask(List<Exercise> exercises, EclipseIdeUIInvoker invoker) {
