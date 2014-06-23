@@ -1,19 +1,18 @@
 package tmc.ui;
 
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import tmc.activator.CoreInitializer;
 
@@ -76,7 +75,7 @@ public class PastebinResultDialog extends Dialog {
                 CoreInitializer.getDefault().getWorkbenchHelper().openURL(pasteUrl);
             }
         });
-        btnViewPaste.setBounds(10, 35, 99, 33);
+        btnViewPaste.setBounds(10, 35, 109, 33);
         btnViewPaste.setText("View paste");
 
         text = new Text(shell, SWT.BORDER);
@@ -85,7 +84,7 @@ public class PastebinResultDialog extends Dialog {
 
         Button btnOK = new Button(shell, SWT.NONE);
         btnOK.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnOK.setBounds(384, 105, 50, 33);
+        btnOK.setBounds(384, 105, 60, 33);
         btnOK.setText("Ok");
         btnOK.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -96,7 +95,7 @@ public class PastebinResultDialog extends Dialog {
 
         Button btnCopyToClipboard = new Button(shell, SWT.NONE);
         btnCopyToClipboard.setFont(SWTResourceManager.getFont("Microsoft Sans Serif", 12, SWT.NORMAL));
-        btnCopyToClipboard.setBounds(282, 144, 152, 31);
+        btnCopyToClipboard.setBounds(282, 144, 162, 31);
         btnCopyToClipboard.setText("Copy to clipboard");
         btnCopyToClipboard.addSelectionListener(new SelectionAdapter() {
             @Override
