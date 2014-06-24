@@ -103,10 +103,10 @@ Due to differences between these three parts, different testing strategies were 
 \section{TestMyCode Core}
 
 All new code in the Core has been extensively unit tested with JUnit\footnote{http://junit.org/} and Mockito\footnote{https://code.google.com/p/mockito/}.
-Cobertura\footnote{http://cobertura.github.io/cobertura/} PIT\footnote{http://pitest.org/} were used in evaluating these tests to make sure the tests covered all the relevant lines, code paths and mutations. For this `new' code, the coverage is at or near 100\%.
+Cobertura\footnote{http://cobertura.github.io/cobertura/} and  PIT\footnote{http://pitest.org/} were used in evaluating these tests to make sure the tests covered all the relevant lines, code paths and mutations. For this `new' code, the coverage is at or near 100\%.
 
 The Core also contains legacy code from the TestMyCode Netbeans project, especially in the form of the HTTP stack that was copied over and changed only by renaming a few classes and methods.
-This legacy code base has fever tests due to the hard-to-test style of the code.
+This legacy code base has fewer tests due to the hard-to-test style of the code.
 It was - however - felt that extensive testing of this part of the code base was less critical, mainly due to this code having been in production for years.
 
 The team acknowledges the problem this represents from the point of view of future refactoring and development efforts, but had to prioritize other aspects of the product for not having infinite time.
