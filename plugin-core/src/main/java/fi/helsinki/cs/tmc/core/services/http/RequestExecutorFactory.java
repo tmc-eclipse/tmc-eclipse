@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.services.http;
 
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
 
 /**
  * 
@@ -10,4 +11,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
  */
 public interface RequestExecutorFactory {
     RequestExecutor createExecutor(String url, UsernamePasswordCredentials credentials);
+
+    RequestExecutor createExecutor(HttpPost request, UsernamePasswordCredentials credentials);
+
 }

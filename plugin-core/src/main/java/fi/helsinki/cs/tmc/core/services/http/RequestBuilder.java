@@ -21,7 +21,7 @@ import org.apache.http.util.EntityUtils;
 import com.google.common.base.Charsets;
 
 /**
- * Class that builds various http requests and uses RequestExecutor to execute
+ * Class that builds various HTTP requests and uses RequestExecutor to execute
  * the request
  * 
  */
@@ -43,7 +43,7 @@ class RequestBuilder {
     }
 
     private RequestExecutor createExecutor(HttpPost request) {
-        return new RequestExecutor(request).setCredentials(credentials);
+        return factory.createExecutor(request, credentials);
     }
 
     public byte[] getForBinary(String url) throws Exception {
