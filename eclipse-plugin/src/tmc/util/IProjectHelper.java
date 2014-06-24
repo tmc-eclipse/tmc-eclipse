@@ -3,7 +3,7 @@ package tmc.util;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 
-import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+import fi.helsinki.cs.tmc.core.io.FileUtil;
 
 public class IProjectHelper {
 
