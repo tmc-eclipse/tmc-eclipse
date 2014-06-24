@@ -10,6 +10,9 @@ import fi.helsinki.cs.tmc.core.services.ReviewDAO;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 
 public class FetchCodeReviewsTask extends BackgroundTask {
+    // 1200000ms = 1000ms * 60s * 20min = every 20 min
+    public static int BACKGROUND_FETCH_INTERVAL = 1200000;
+    
     private Course course;
     private ServerManager server;
     private ReviewDAO reviewDAO;

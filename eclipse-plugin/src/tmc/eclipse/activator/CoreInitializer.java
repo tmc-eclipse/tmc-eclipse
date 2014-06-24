@@ -25,6 +25,7 @@ import tmc.eclipse.ui.LoginDialog;
 import tmc.eclipse.ui.SettingsDialog;
 import tmc.eclipse.util.WorkbenchHelper;
 import fi.helsinki.cs.tmc.core.Core;
+import fi.helsinki.cs.tmc.core.async.tasks.FetchCodeReviewsTask;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.ui.UserVisibleException;
@@ -146,6 +147,7 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     private void startRecurringTasks() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new CheckForCodeReviewsOnBackgroundTask(), 5, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new CheckForCodeReviewsOnBackgroundTask(), 5,
+                FetchCodeReviewsTask.BACKGROUND_FETCH_INTERVAL, TimeUnit.SECONDS);
     }
 }
