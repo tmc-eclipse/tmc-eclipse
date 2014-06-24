@@ -20,8 +20,18 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.common.base.Charsets;
 
+/**
+ * Class that builds various http requests and uses RequestExecutor to execute
+ * the request
+ * 
+ */
 class RequestBuilder {
     private UsernamePasswordCredentials credentials = null;
+    private RequestExecutorFactory factory;
+
+    public RequestBuilder(RequestExecutorFactory factory) {
+        this.factory = factory;
+    }
 
     RequestBuilder setCredentials(String username, String password) {
         this.credentials = new UsernamePasswordCredentials(username, password);
@@ -29,7 +39,7 @@ class RequestBuilder {
     }
 
     private RequestExecutor createExecutor(String url) {
-        return new RequestExecutor(url).setCredentials(credentials);
+        return factory.createExecutor(url, credentials);
     }
 
     private RequestExecutor createExecutor(HttpPost request) {

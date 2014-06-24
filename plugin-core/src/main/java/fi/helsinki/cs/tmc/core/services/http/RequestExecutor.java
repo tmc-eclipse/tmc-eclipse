@@ -26,7 +26,7 @@ import org.apache.http.util.EntityUtils;
 import fi.helsinki.cs.tmc.core.Core;
 
 /**
- * Downloads a single file over HTTP into memory while being cancellable.
+ * Downloads a single file over HTTP into memory.
  * 
  * If the response was not a successful one (status code 2xx) then a
  * {@link FailedHttpResponseException} with a preloaded buffered entity is
