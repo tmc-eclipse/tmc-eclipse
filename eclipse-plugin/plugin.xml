@@ -24,6 +24,16 @@
             id="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand">
       </command>
       <command
+            name="Completed exercises"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.completedExercisesCommand">
+      </command>
+      <command
+            name="Check for code reviews"
+            categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
+            id="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand">
+      </command>
+      <command
             name="Run Tests"
             categoryId="fi.helsinki.cs.plugins.eclipse.tmc.commands.category"
             id="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand">
@@ -47,15 +57,19 @@
          point="org.eclipse.ui.handlers">
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.settingsCommand"
-            class="tmc.handlers.SettingsMenuHandler">
+            class="tmc.eclipse.handlers.SettingsMenuHandler">
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.exercisesCommand"
-            class="tmc.handlers.ExerciseSelectorHandler">
+            class="tmc.eclipse.handlers.ExerciseSelectorHandler">
+      </handler>
+      <handler
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.completedExercisesCommand"
+            class="tmc.eclipse.handlers.CompletedExerciseSelectorHandler">
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.uploadCommand"
-            class="tmc.handlers.UploadHandler">
+            class="tmc.eclipse.handlers.UploadHandler">
          <enabledWhen>
             <with
                   variable="fi.helsinki.cs.plugins.eclipse.commands.sourceprovider.active">
@@ -67,24 +81,28 @@
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.testRunnerCommand"
-            class="tmc.handlers.TestRunnerHandler">
+            class="tmc.eclipse.handlers.TestRunnerHandler">
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.pastebinCommand"
-            class="tmc.handlers.PastebinHandler">
+            class="tmc.eclipse.handlers.PastebinHandler">
       </handler>
       <handler
             commandId="fi.helsinki.cs.plugins.eclipse.commands.codeReviewRequestCommand"
-            class="tmc.handlers.CodeReviewRequestHandler">
+            class="tmc.eclipse.handlers.CodeReviewRequestHandler">
       </handler>
       <handler
-            class="tmc.handlers.SubmitCommandStateHandler"
+            class="tmc.eclipse.handlers.CheckForCodeReviewsHandler"
+            commandId="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand">
+      </handler>
+      <handler
+            class="tmc.eclipse.handlers.SubmitCommandStateHandler"
             commandId="fi.helsinki.cs.plugins.eclipse.commands.submitButtonStateCommand">
       </handler>
    </extension>
    <extension 
 		point="org.eclipse.ui.startup">
-   		<startup class="tmc.activator.CoreInitializer"/>
+   		<startup class="tmc.eclipse.activator.CoreInitializer"/>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -116,12 +134,12 @@
                   mnemonic="D">
             </command>
              <command
-                   commandId="eclipse-plugin.command2"
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.completedExercisesCommand"
                    label="Download old completed exercises"
                    style="push">
              </command>
              <command
-                   commandId="eclipse-plugin.command3"
+                   commandId="fi.helsinki.cs.plugins.eclipse.commands.checkReviewsCommand"
                    label="Check for new code reviews"
                    mnemonic="r"
                    style="push">
@@ -201,12 +219,12 @@
         <view id="fi.helsinki.cs.plugins.eclipse.views.tmcTestUi"
         	 icon="icons/smile.gif"
              name="TMC Test Results"
-          	 class="tmc.ui.TestRunnerView"/>
+          	 class="tmc.eclipse.ui.TestRunnerView"/>
 	</extension>
    <extension
          point="org.eclipse.ui.services">
       <sourceProvider
-            provider="tmc.handlers.SubmitCommandState">
+            provider="tmc.eclipse.handlers.SubmitCommandState">
          <variable
                name="tmc.handlers.CommandState.active"
                priorityLevel="workbench">
@@ -214,11 +232,29 @@
       </sourceProvider>
    </extension>
    <extension
-         id="tmcNature"
+         id="tmcNewNature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="tmc.util.TMCProjectNature">
+               class="tmc.eclipse.util.TMCNewProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         id="tmcCompletedNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tmc.eclipse.util.TMCCompletedProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         id="tmcAttemptedNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="tmc.eclipse.util.TMCAttemptedProjectNature">
          </run>
       </runtime>
    </extension>
@@ -227,12 +263,17 @@
       <image
             icon="icons/green-project-dot.png"
             id="eclipse-plugin.tmcNature.greenDot"
-            natureId="eclipse-plugin.tmcNature">
+            natureId="eclipse-plugin.tmcCompletedNature">
       </image>
       <image
             icon="icons/black-project-dot.png"
             id="eclipse-plugin.tmcNature.blackDot"
-            natureId="eclipse-plugin.tmcNature">
+            natureId="eclipse-plugin.tmcNewNature">
+      </image>
+      <image
+            icon="icons/red-project-dot.png"
+            id="eclipse-plugin.tmcNature.redDot"
+            natureId="eclipse-plugin.tmcAttemptedNature">
       </image>
    </extension>
 
