@@ -173,7 +173,6 @@ public class SettingsDialog extends Dialog {
                         Core.getUpdater().updateCourses();
                         lblErrorText.setText("");
                         settings.setCurrentCourseName(combo.getText());
-                        saveSettings();
                         CoreInitializer.getDefault().getRecurringTaskRunner().updateBackgroundExerciseUpdateChecks();
                         shell.close();
                         showExDownloaderDialog();

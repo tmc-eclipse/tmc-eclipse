@@ -33,7 +33,7 @@ public class SuccesfulSubmitDialog extends Dialog {
     private static final int TEXT_FIELD_MIN_SIZE = 10;
 
     public static final int QUESTIONS_HEIGHT_OFFSET = 150;
-    public static final int RATING_QUESTION_HEIGHT = 60;
+    public static final int RATING_QUESTION_HEIGHT = 65;
     public static final int TEXT_QUESTION_HEIGHT = 110;
 
     protected Object result;
@@ -235,7 +235,7 @@ public class SuccesfulSubmitDialog extends Dialog {
 
         scale.setIncrement(1);
         scale.setPageIncrement(1);
-        scale.setBounds(26, heightOffset + 20, 250, 24);
+        scale.setBounds(26, heightOffset + 20, 250, 28);
 
         final Text text = new Text(shell, SWT.BORDER);
         text.setText("");

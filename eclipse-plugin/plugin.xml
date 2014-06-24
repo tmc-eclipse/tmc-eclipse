@@ -236,7 +236,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="tmc.util.TMCNewProjectNature">
+               class="tmc.eclipse.util.TMCNewProjectNature">
          </run>
       </runtime>
    </extension>
@@ -245,7 +245,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="tmc.util.TMCCompletedProjectNature">
+               class="tmc.eclipse.util.TMCCompletedProjectNature">
          </run>
       </runtime>
    </extension>
@@ -254,7 +254,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="tmc.util.TMCAttemptedProjectNature">
+               class="tmc.eclipse.util.TMCAttemptedProjectNature">
          </run>
       </runtime>
    </extension>
