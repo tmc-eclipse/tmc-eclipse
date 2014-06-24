@@ -29,21 +29,21 @@ public class ProjectStorage implements DataSource<Project> {
         if (!io.fileExists()) {
             return new ArrayList<Project>();
         }
-
+        ProjectsFileFormat projectList = null;
         Reader reader = io.getReader();
         if (reader == null) {
             throw new UserVisibleException("Could not load project data from local storage.");
         }
-
-        ProjectsFileFormat projectList = gson.fromJson(io.getReader(), ProjectsFileFormat.class);
-
         try {
-            reader.close();
-        } catch (IOException e) {
-            // TODO: Log here?
-            return projectList.getProjects();
+            projectList = gson.fromJson(reader, ProjectsFileFormat.class);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                // TODO: Log here?
+                return projectList.getProjects();
+            }
         }
-
         return projectList.getProjects();
     }
 
