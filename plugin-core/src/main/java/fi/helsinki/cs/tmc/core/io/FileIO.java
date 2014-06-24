@@ -114,8 +114,8 @@ public class FileIO implements IO {
     }
 
     @Override
-    public List<FileIO> getChildren() {
-        List<FileIO> children = new ArrayList<FileIO>();
+    public List<IO> getChildren() {
+        List<IO> children = new ArrayList<IO>();
         if (directoryExists()) {
             for (File f : file.listFiles()) {
                 children.add(new FileIO(f.getAbsolutePath()));

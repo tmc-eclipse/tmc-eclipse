@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.io.FileIO;
+import fi.helsinki.cs.tmc.core.io.IOFactoryImpl;
 import fi.helsinki.cs.tmc.core.io.ProjectScanner;
 import fi.helsinki.cs.tmc.core.storage.CourseStorage;
 import fi.helsinki.cs.tmc.core.storage.DataSource;
@@ -77,7 +78,7 @@ public class DAOManager {
     }
 
     private void scanProjectFiles() {
-        ProjectScanner projectScanner = new ProjectScanner(projectDAO);
+        ProjectScanner projectScanner = new ProjectScanner(projectDAO, new IOFactoryImpl());
         projectScanner.updateProjects();
         projectDAO.save();
     }
