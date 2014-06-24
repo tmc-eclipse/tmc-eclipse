@@ -8,9 +8,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-
+/**
+ * Class that provides methods for handling project natures.
+ */
 public class ProjectNatureHelper {
-
+    
+    /**
+     * Updates the IProject natures to match the status of the given exercise.
+     * @param e
+     */
     public static void updateTMCProjectNature(Exercise e) {
         IProject project = IProjectHelper.getIProjectWithFilePath(FileUtil.getUnixPath(e.getProject().getRootPath()));
 
@@ -23,7 +29,10 @@ public class ProjectNatureHelper {
         }
 
     }
-
+    
+    /**
+     * Checks whether the given IProject has a TMC Project nature.
+     */
     public static boolean isTMCProject(IProject project) {
         try {
             IProjectDescription description = project.getDescription();
@@ -35,7 +44,8 @@ public class ProjectNatureHelper {
         }
         return false;
     }
-
+    
+    
     public static void setProjectNature(IProject project, String NATURE_ID) {
         try {
             IProjectDescription description = project.getDescription();
@@ -48,7 +58,10 @@ public class ProjectNatureHelper {
             Core.getErrorHandler().handleException(e);
         }
     }
-
+    
+    /**
+     * Adds the TMC project nature to an IProject that does not have a TMC nature.
+     */
     private static void addTMCNature(IProject project, String NATURE_ID, IProjectDescription description)
             throws CoreException {
         String[] prevNatures = description.getNatureIds();
@@ -61,7 +74,10 @@ public class ProjectNatureHelper {
         description.setNatureIds(newNatures);
         project.setDescription(description, new NullProgressMonitor());
     }
-
+    
+    /**
+     * Updates the TMC project nature in an IProject that already has a TMC nature.
+     */
     private static void updateNature(IProject project, String NATURE_ID, IProjectDescription description)
             throws CoreException {
         String[] newNatures = description.getNatureIds();

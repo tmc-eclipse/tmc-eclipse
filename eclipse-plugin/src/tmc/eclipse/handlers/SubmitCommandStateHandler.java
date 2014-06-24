@@ -8,7 +8,10 @@ import org.eclipse.ui.services.ISourceProviderService;
 
 import tmc.eclipse.activator.CoreInitializer;
 import tmc.eclipse.util.WorkbenchHelper;
-
+/**
+ * Handler that updates the status of the submit button when called.
+ *
+ */
 public class SubmitCommandStateHandler extends AbstractHandler {
 
     @Override

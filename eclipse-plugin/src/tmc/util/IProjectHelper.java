@@ -4,7 +4,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-
+/**
+ * Class that provides methods for checking whether an IProject -object corresponding to the given path exists.
+ *
+ */
 public class IProjectHelper {
 
     public static IProject getIProjectWithFilePath(String path) {

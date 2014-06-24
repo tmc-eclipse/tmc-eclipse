@@ -5,7 +5,10 @@ import java.util.Map;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-
+/**
+ * Class that keeps track of whether the submit button should be enabled or not.
+ *
+ */
 public class SubmitCommandState extends AbstractSourceProvider {
     public final static String MY_STATE = "fi.helsinki.cs.plugins.eclipse.commands.sourceprovider.active";
     public final static String ENABLED = "ENABLED";
