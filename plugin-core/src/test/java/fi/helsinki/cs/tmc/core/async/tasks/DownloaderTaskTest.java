@@ -102,7 +102,7 @@ public class DownloaderTaskTest {
     @Test
     public void exerciseIsSetAsUpdated() {
         task.start(progress);
-        verify(exercises.get(0), times(1)).resetUpdateStatus();
+        verify(exercises.get(0), times(1)).setUpdateAvailable(false);
     }
 
     @Test

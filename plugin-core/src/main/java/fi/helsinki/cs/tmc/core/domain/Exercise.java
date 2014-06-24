@@ -63,7 +63,7 @@ public class Exercise implements Serializable {
     private boolean allReviewPointsGiven;
 
     private String oldChecksum;
-    private boolean updated;
+    private boolean updateAvailable;
 
     private String checksum;
 
@@ -337,29 +337,25 @@ public class Exercise implements Serializable {
         this.project = project;
     }
 
-    // sets that the exercise has been updated locally and resets the flag for
-    // new updates
-    public void resetUpdateStatus() {
-        updated = false;
+    public void setUpdateAvailable(boolean updateAvailable) {
+        this.updateAvailable = updateAvailable;
     }
 
-    public void setUpdated(boolean updated) {
-        this.updated = updated;
+    public boolean isUpdateAvailable() {
+        return updateAvailable;
     }
 
-    public boolean getUpdated() {
-        return updated;
-    }
-
-    public boolean isUpdated() {
-        if (!updated) {
+    public boolean shouldBeUpdated() {
+        if (!updateAvailable) {
             if (oldChecksum == null || oldChecksum.equals(checksum)) {
-                return updated;
+                return false;
             } else {
-                updated = true;
+                setUpdateAvailable(true);
+                return true;
             }
         }
-        return updated;
+
+        return true;
     }
 
     public boolean isDownloadable() {

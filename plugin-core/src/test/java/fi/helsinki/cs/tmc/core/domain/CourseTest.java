@@ -155,7 +155,7 @@ public class CourseTest {
 
         ex1.setDeadline(d);
         ex2.setDeadline(d);
-        ex2.setUpdated(true);
+        ex2.setUpdateAvailable(true);
 
         List<Exercise> exList = new ArrayList<>();
 
