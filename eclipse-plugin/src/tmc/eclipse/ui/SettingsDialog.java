@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tmc.eclipse.activator.CoreInitializer;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.services.DomainUtil;
@@ -173,6 +174,7 @@ public class SettingsDialog extends Dialog {
                         lblErrorText.setText("");
                         settings.setCurrentCourseName(combo.getText());
                         saveSettings();
+                        CoreInitializer.getDefault().getRecurringTaskRunner().updateBackgroundExerciseUpdateChecks();
                         shell.close();
                         showExDownloaderDialog();
                     } catch (UserVisibleException uve) {

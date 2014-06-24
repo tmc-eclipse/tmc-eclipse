@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.net.URI;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionService;
@@ -139,6 +140,53 @@ public class WorkbenchHelper {
         } else {
             Core.getErrorHandler().raise("Unable to find a default system browser.");
         }
+    }
 
+    /**
+     * Returns an usable shell via some magic. Shell is *most likely* the main
+     * Eclipse shell, but this is not guaranteed.
+     */
+    public Shell getUsableShell() {
+        /*
+         * Default display seems to always have AT LEAST three shells:
+         * 
+         * Shell #0 = "PartRenderingEngine's limbo". Intended for elements that
+         * should not be part of current view.
+         * 
+         * Shell #1 = "Resource - Eclipse Platform". Changes (or atleast the
+         * name does) based on selected MAIN UI element. Opening a dialog
+         * doesn't change this shell.
+         * 
+         * Shell #2 = "Quick Access". Also always present but probably not the
+         * one we want to semantically use.
+         * 
+         * Out of these three, Shell #1 seems like the best bet, therefore we
+         * should use it.
+         * 
+         * As a fall back, if the shell doesn't for some reason exist, we'll use
+         * Shell #0.
+         * 
+         * If THAT doesn't exist, we try to get the active shell. This is very
+         * unlikely to exist in such a case (f.ex. it doesn't exist if the focus
+         * is on some other window than the Eclipse IDE).
+         * 
+         * If EVERYTHING fails, we just create a new shell.
+         */
+        Shell shell = null;
+        if (Display.getDefault().getShells().length > 1) {
+            shell = Display.getDefault().getShells()[1];
+            if (shell == null && Display.getDefault().getShells().length > 0) {
+                shell = Display.getDefault().getShells()[0];
+            }
+            if (shell == null) {
+                shell = Display.getDefault().getActiveShell();
+            }
+        }
+
+        if (shell == null) {
+            shell = new Shell();
+        }
+
+        return shell;
     }
 }
