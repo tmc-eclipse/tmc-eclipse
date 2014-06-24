@@ -62,6 +62,10 @@ public class ExerciseSelectorDialog extends Dialog {
         return result;
     }
 
+    public void close() {
+        shell.close();
+    }
+
     /**
      * Create contents of the dialog.
      */
