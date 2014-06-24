@@ -172,7 +172,6 @@ public class SettingsDialog extends Dialog {
                         Core.getUpdater().updateCourses();
                         lblErrorText.setText("");
                         settings.setCurrentCourseName(combo.getText());
-                        saveSettings();
                         shell.close();
                         showExDownloaderDialog();
                     } catch (UserVisibleException uve) {

@@ -36,12 +36,12 @@ public class Unzipper {
         while (zipEntry != null) {
             String entryPath = FileUtil.append(destinationFolder.getPath(), zipEntry.getName());
 
+            projectFiles.add(entryPath);
+
             if (!decider.shouldUnzip(entryPath)) {
                 zipEntry = zipStream.getNextEntry();
                 continue;
             }
-
-            projectFiles.add(entryPath);
 
             FileIO file = new FileIO(entryPath);
             file.createFolderTree(!zipEntry.isDirectory());
