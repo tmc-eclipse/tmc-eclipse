@@ -14,7 +14,7 @@ import fi.helsinki.cs.tmc.core.spyware.ChangeType;
  * change (save\rename\addition\removal)
  * 
  * Event data is organised as a tree. EventDataVisitor is called by eclipse
- * whenever it visits a tree node Rename event is delete + add event in tree.
+ * whenever it visits a tree node. Rename event is delete + add event in tree.
  * Add and delete can be an arbitrary order. Parsing this is annoying
  * */
 class EventDataVisitor implements IResourceDeltaVisitor {

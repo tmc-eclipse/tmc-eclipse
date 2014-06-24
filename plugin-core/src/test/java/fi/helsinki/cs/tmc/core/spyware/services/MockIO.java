@@ -9,7 +9,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
-import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.IO;
 
 public class MockIO implements IO {
@@ -80,7 +79,7 @@ public class MockIO implements IO {
     }
 
     @Override
-    public List<FileIO> getChildren() {
+    public List<IO> getChildren() {
         // TODO Auto-generated method stub
         return null;
     }

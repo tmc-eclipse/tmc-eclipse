@@ -16,9 +16,11 @@ import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 public class ProjectScanner {
 
     private ProjectDAO projectDAO;
+    private IOFactory factory;
 
-    public ProjectScanner(ProjectDAO projectDAO) {
+    public ProjectScanner(ProjectDAO projectDAO, IOFactory factory) {
         this.projectDAO = projectDAO;
+        this.factory = factory;
     }
 
     public void updateProject(Project project) {
@@ -27,7 +29,7 @@ public class ProjectScanner {
         }
 
         List<String> files = new ArrayList<String>();
-        traverse(files, new FileIO(project.getRootPath()));
+        traverse(files, factory.createIO(project.getRootPath()));
 
         project.setProjectFiles(files);
 
@@ -44,12 +46,12 @@ public class ProjectScanner {
         }
     }
 
-    private void traverse(List<String> list, FileIO file) {
+    private void traverse(List<String> list, IO file) {
         if (file != null && (file.fileExists() || file.directoryExists())) {
             list.add(file.getPath());
 
             if (file.directoryExists()) {
-                for (FileIO child : file.getChildren()) {
+                for (IO child : file.getChildren()) {
                     traverse(list, child);
                 }
             }

@@ -29,6 +29,6 @@ public interface IO {
 
     void createFolderTree(boolean onlyParents);
 
-    List<FileIO> getChildren();
+    List<IO> getChildren();
 
 }

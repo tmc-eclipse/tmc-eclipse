@@ -48,7 +48,6 @@ public class GenericProjectOpener implements ProjectOpener {
 
             }
             ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-            System.out.println("Updating nature..");
             ProjectNatureHelper.updateTMCProjectNature(e);
 
         } catch (Exception e1) {
