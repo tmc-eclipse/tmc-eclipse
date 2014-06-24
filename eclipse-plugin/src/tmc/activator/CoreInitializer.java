@@ -26,12 +26,9 @@ import tmc.ui.SettingsDialog;
 import tmc.util.WorkbenchHelper;
 import fi.helsinki.cs.plugin.tmc.Core;
 import fi.helsinki.cs.plugin.tmc.domain.Course;
+import fi.helsinki.cs.plugin.tmc.services.http.ServerManager;
 import fi.helsinki.cs.plugin.tmc.ui.UserVisibleException;
 
-/**
- * Class that is run on startup and initializes various components
- * 
- */
 public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     public static final String PLUGIN_ID = "TestMyCode Eclipse plugin"; //$NON-NLS-1$
@@ -44,6 +41,8 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
 
     public void start(BundleContext context) throws Exception {
         super.start(context);
+
+        ServerManager server = Core.getServerManager();
 
         ResourcesPlugin.getWorkspace().addResourceChangeListener(new ResourceEventListener(),
                 IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_DELETE);
@@ -84,34 +83,12 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                             .addPartListener(new EditorListener());
                 }
-                Shell shell = null;
-                if (Display.getDefault().getShells().length > 1) {
-                    shell = Display.getDefault().getShells()[1];
-                    if (shell == null && Display.getDefault().getShells().length > 0) {
-                        shell = Display.getDefault().getShells()[0];
-                    }
-                    if (shell == null) {
-                        shell = Display.getDefault().getActiveShell();
-                    }
-                    if (shell == null) {
-                        shell = new Shell();
-                    }
-                }
 
-                try {
-                    Core.getUpdater().updateCourses();
-                } catch (UserVisibleException uve) {
-                    if (!Core.getSettings().getServerBaseUrl().isEmpty()) {
-                        LoginDialog ld = new LoginDialog(shell, SWT.SHEET);
-                        ld.open();
-                    } else {
-                        SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
-                        sd.open();
-                    }
-                }
+                Shell shell = getDefaultShell();
 
-                Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
-                Core.getUpdater().updateExercises(currentCourse);
+                upadateCoursesForUser(shell);
+
+                updateExercisesForCurrentCourse();
 
                 if (Core.getSettings().isLoggedIn()
                         && !Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises()
@@ -121,6 +98,46 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
                 }
             }
         });
+    }
+
+    private Shell getDefaultShell() {
+        Shell shell = null;
+        if (Display.getDefault().getShells().length > 1) {
+            shell = Display.getDefault().getShells()[1];
+            if (shell == null && Display.getDefault().getShells().length > 0) {
+                shell = Display.getDefault().getShells()[0];
+            }
+            if (shell == null) {
+                shell = Display.getDefault().getActiveShell();
+            }
+            if (shell == null) {
+                shell = new Shell();
+            }
+        }
+        return shell;
+    }
+
+    private void upadateCoursesForUser(Shell shell) {
+        try {
+            Core.getUpdater().updateCourses();
+        } catch (UserVisibleException uve) {
+            if (!Core.getSettings().getServerBaseUrl().isEmpty()) {
+                LoginDialog ld = new LoginDialog(shell, SWT.SHEET);
+                ld.open();
+            } else {
+                SettingsDialog sd = new SettingsDialog(shell, SWT.SHEET);
+                sd.open();
+            }
+        }
+    }
+
+    private void updateExercisesForCurrentCourse() {
+        try {
+            Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
+            Core.getUpdater().updateExercises(currentCourse);
+        } catch (UserVisibleException uve) {
+
+        }
     }
 
     public WorkbenchHelper getWorkbenchHelper() {
