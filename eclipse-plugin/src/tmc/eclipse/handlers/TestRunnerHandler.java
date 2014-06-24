@@ -12,6 +12,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import tmc.eclipse.activator.CoreInitializer;
 import tmc.eclipse.tasks.TaskStarter;
 import tmc.eclipse.ui.EclipseIdeUIInvoker;
+import tmc.eclipse.ui.Notifier;
 import tmc.eclipse.util.WorkbenchHelper;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.domain.Project;
@@ -29,6 +30,8 @@ public class TestRunnerHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {
         helper.updateActiveView();
+        
+        new Notifier().CreateNotification();
 
         shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
         try {
