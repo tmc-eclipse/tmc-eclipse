@@ -5,9 +5,9 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-import fi.helsinki.cs.plugin.tmc.Core;
-import fi.helsinki.cs.plugin.tmc.domain.Exercise;
-import fi.helsinki.cs.plugin.tmc.io.FileUtil;
+import fi.helsinki.cs.tmc.core.Core;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.io.FileUtil;
 
 public class ProjectNatureHelper {
 
