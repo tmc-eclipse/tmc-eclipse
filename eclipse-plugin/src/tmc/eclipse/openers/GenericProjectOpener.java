@@ -12,9 +12,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
-import tmc.util.IProjectHelper;
-import tmc.util.ProjectNatureHelper;
-import tmc.util.TMCNewProjectNature;
+import tmc.eclipse.util.IProjectHelper;
+import tmc.eclipse.util.ProjectNatureHelper;
+import tmc.eclipse.util.TMCNewProjectNature;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.TMCErrorHandler;
 import fi.helsinki.cs.tmc.core.async.tasks.ProjectOpener;

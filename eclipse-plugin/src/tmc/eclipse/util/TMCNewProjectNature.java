@@ -1,12 +1,12 @@
-package tmc.util;
+package tmc.eclipse.util;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
-public class TMCCompletedProjectNature implements IProjectNature {
+public class TMCNewProjectNature implements IProjectNature {
 
-    public static final String NATURE_ID = "eclipse-plugin.tmcCompletedNature";
+    public static final String NATURE_ID = "eclipse-plugin.tmcNewNature";
 
     private IProject project;
 

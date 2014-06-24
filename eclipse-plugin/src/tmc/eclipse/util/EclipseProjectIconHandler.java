@@ -1,4 +1,4 @@
-package tmc.util;
+package tmc.eclipse.util;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.utils.ProjectIconHandler;

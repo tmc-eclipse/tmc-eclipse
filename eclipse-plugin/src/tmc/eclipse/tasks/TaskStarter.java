@@ -6,7 +6,7 @@ import tmc.eclipse.activator.CoreInitializer;
 import tmc.eclipse.openers.GenericProjectOpener;
 import tmc.eclipse.ui.EclipseIdeUIInvoker;
 import tmc.eclipse.util.WorkbenchHelper;
-import tmc.util.EclipseProjectIconHandler;
+import tmc.eclipse.util.EclipseProjectIconHandler;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.async.listeners.CodeReviewRequestListener;
 import fi.helsinki.cs.tmc.core.async.listeners.FetchCodeReviewsTaskListener;

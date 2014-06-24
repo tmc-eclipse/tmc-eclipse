@@ -1,4 +1,4 @@
-package tmc.util;
+package tmc.eclipse.util;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
