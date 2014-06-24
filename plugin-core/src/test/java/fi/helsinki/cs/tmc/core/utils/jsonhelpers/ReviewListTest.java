@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Review;
-import fi.helsinki.cs.tmc.core.utils.jsonhelpers.ReviewList;
 
 public class ReviewListTest {
     private ReviewList rl;

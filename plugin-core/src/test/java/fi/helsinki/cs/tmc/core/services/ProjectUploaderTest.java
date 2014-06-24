@@ -19,7 +19,6 @@ import fi.helsinki.cs.tmc.core.async.StopStatus;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
-import fi.helsinki.cs.tmc.core.services.ProjectUploader;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.services.http.SubmissionResponse;
 

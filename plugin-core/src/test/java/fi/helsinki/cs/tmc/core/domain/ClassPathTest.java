@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.google.common.io.Files;
 
-import fi.helsinki.cs.tmc.core.domain.ClassPath;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
 
 public class ClassPathTest {

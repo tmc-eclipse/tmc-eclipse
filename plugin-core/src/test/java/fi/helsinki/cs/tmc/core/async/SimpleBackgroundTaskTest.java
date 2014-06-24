@@ -14,10 +14,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.SimpleBackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
-
 public class SimpleBackgroundTaskTest {
 
     private class Foo {

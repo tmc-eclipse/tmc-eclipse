@@ -5,8 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.spyware.ChangeType;
-
 public class ChangeTypeTest {
 
     @Before

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.services.Settings;
-import fi.helsinki.cs.tmc.core.services.http.ConnectionBuilder;
 
 public class ConnectionBuilderTest {
     private ConnectionBuilder cb;

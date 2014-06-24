@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
-import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 
 public class ProjectFetcherTest {

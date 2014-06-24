@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.services.DomainUtil;
 
 public class DomainUtilTest {
 

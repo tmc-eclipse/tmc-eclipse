@@ -15,7 +15,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.async.listeners.FetchCodeReviewsTaskListener;
 import fi.helsinki.cs.tmc.core.async.tasks.FetchCodeReviewsTask;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.services.ReviewDAO;

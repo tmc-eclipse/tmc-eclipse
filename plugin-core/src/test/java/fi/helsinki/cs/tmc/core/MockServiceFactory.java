@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core;
 
 import static org.mockito.Mockito.mock;
-import fi.helsinki.cs.tmc.core.ServiceFactory;
 import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectEventHandler;

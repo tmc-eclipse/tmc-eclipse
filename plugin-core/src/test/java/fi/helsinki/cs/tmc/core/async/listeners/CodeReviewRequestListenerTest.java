@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.async.listeners.CodeReviewRequestListener;
 import fi.helsinki.cs.tmc.core.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 

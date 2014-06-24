@@ -1,5 +1,8 @@
 package fi.helsinki.cs.tmc.core.io;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.io.zipper.unzippingdecider.TmcProjectFile;
-import static org.junit.Assert.*;
 
 public class TmcProjectFileTest {
     private TempTestDir tempDir;

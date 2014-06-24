@@ -7,8 +7,6 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.services.http.UriUtils;
-
 public class UriUtilsTest {
 
     @Test

@@ -5,9 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.ServiceFactory;
-import fi.helsinki.cs.tmc.core.ServiceFactoryImpl;
-
 public class ServiceFactoryTest {
 
     // this test has nasty dependencies to actual files due to various DAOS

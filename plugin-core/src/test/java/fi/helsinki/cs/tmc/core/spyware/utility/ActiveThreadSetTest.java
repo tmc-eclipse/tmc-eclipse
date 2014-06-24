@@ -11,8 +11,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.spyware.utility.ActiveThreadSet;
-
 public class ActiveThreadSetTest {
     private ActiveThreadSet set;
 

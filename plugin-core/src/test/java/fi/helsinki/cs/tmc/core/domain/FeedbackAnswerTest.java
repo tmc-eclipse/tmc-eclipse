@@ -1,12 +1,9 @@
 package fi.helsinki.cs.tmc.core.domain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import fi.helsinki.cs.tmc.core.domain.FeedbackAnswer;
-import fi.helsinki.cs.tmc.core.domain.FeedbackQuestion;
 
 public class FeedbackAnswerTest {
     private FeedbackAnswer answer;

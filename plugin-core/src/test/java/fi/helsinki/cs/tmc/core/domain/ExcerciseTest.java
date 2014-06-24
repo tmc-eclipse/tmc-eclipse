@@ -13,9 +13,6 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
-
 public class ExcerciseTest {
 
     Exercise exercise;

@@ -1,12 +1,8 @@
 package fi.helsinki.cs.tmc.core.spyware.services;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayDeque;
@@ -24,9 +20,6 @@ import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.spyware.async.SavingTask;
 import fi.helsinki.cs.tmc.core.spyware.async.SendingTask;
-import fi.helsinki.cs.tmc.core.spyware.services.EventStore;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
-import fi.helsinki.cs.tmc.core.spyware.services.SharedInteger;
 
 public class SendingTaskTest {
     private SendingTask task;

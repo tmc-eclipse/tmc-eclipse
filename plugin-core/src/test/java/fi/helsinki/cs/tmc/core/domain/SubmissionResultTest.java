@@ -1,6 +1,8 @@
 package fi.helsinki.cs.tmc.core.domain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +10,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.domain.FeedbackQuestion;
-import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
-import fi.helsinki.cs.tmc.core.domain.TestCaseResult;
 import fi.helsinki.cs.tmc.core.domain.SubmissionResult.Status;
 
 public class SubmissionResultTest {

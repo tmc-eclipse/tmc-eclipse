@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.services.Settings;
 
 public class SettingsTest {
 

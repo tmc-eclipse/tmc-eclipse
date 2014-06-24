@@ -22,8 +22,6 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.spyware.DocumentInfo;
 import fi.helsinki.cs.tmc.core.spyware.async.DocumentSendThread;
-import fi.helsinki.cs.tmc.core.spyware.services.EventReceiver;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
 import fi.helsinki.cs.tmc.core.spyware.utility.diff_match_patch;
 
 public class DocumentSendThreadTest {

@@ -9,8 +9,6 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.domain.Review;
-
 public class ReviewTest {
     private Review r;
 

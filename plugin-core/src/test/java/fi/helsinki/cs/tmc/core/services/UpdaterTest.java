@@ -14,9 +14,6 @@ import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.services.CourseDAO;
-import fi.helsinki.cs.tmc.core.services.ProjectDAO;
-import fi.helsinki.cs.tmc.core.services.Updater;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 
 public class UpdaterTest {

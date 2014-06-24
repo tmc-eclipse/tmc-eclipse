@@ -13,8 +13,6 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.services.http.FailedHttpResponseException;
-
 public class FailedHttpResponseExceptionTest {
     private HttpEntity entity;
     private FailedHttpResponseException exception;

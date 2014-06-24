@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.TestCaseResult;
-import fi.helsinki.cs.tmc.core.utils.TestResultParser;
 import fi.helsinki.cs.tmc.testrunner.TestCase;
 import fi.helsinki.cs.tmc.testrunner.TestCaseList;
 

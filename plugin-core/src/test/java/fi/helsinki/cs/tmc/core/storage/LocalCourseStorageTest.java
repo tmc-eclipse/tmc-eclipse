@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.io.FileIO;
-import fi.helsinki.cs.tmc.core.storage.CourseStorage;
 import fi.helsinki.cs.tmc.core.ui.UserVisibleException;
 import fi.helsinki.cs.tmc.core.utils.jsonhelpers.CourseList;
 

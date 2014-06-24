@@ -21,8 +21,6 @@ import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
-import fi.helsinki.cs.tmc.core.services.ProjectDAO;
-import fi.helsinki.cs.tmc.core.services.ProjectEventHandler;
 import fi.helsinki.cs.tmc.core.spyware.ChangeType;
 import fi.helsinki.cs.tmc.core.spyware.SnapshotInfo;
 

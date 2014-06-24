@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import fi.helsinki.cs.tmc.core.async.listeners.UploadTaskListener;
 import fi.helsinki.cs.tmc.core.async.tasks.UploaderTask;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;

@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
-import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.storage.DataSource;
 
 public class ProjectDAOTest {

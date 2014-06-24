@@ -9,9 +9,6 @@ import java.io.Reader;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.io.FileIO;
-import fi.helsinki.cs.tmc.core.io.IO;
-
 public class FileIOTest {
 
     private IO io;

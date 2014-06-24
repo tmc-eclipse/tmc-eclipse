@@ -5,8 +5,6 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.ui.UserVisibleException;
-
 public class UserVisibleExceptionTest {
 
     @Test

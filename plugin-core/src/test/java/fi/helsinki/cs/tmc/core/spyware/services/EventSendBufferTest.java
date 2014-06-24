@@ -1,12 +1,14 @@
 package fi.helsinki.cs.tmc.core.spyware.services;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -14,17 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.async.tasks.SingletonTask;
-import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.spyware.async.SavingTask;
 import fi.helsinki.cs.tmc.core.spyware.async.SendingTask;
-import fi.helsinki.cs.tmc.core.spyware.services.EventSendBuffer;
-import fi.helsinki.cs.tmc.core.spyware.services.EventStore;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
-import fi.helsinki.cs.tmc.core.spyware.services.SharedInteger;
-import fi.helsinki.cs.tmc.core.storage.DataSource;
 
 public class EventSendBufferTest {
     private EventSendBuffer buffer;

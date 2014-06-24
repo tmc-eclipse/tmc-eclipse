@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
-import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
 import fi.helsinki.cs.tmc.core.domain.ExerciseKey.GsonAdapter;
 
 public class ExerciseKeyTest {

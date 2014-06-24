@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.services.http.UrlExtension;
-
 public class UrlExtensionTest {
 
     @Test

@@ -10,9 +10,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.domain.Project;
-import fi.helsinki.cs.tmc.core.domain.ProjectType;
 import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.DefaultZippingDecider;
 import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.MavenZippingDecider;
 

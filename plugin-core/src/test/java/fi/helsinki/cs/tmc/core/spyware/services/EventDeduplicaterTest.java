@@ -6,9 +6,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import fi.helsinki.cs.tmc.core.spyware.services.EventReceiver;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
-
 public class EventDeduplicaterTest {
 
     @Mock

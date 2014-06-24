@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
 
 public class LoggableEventTest {
 

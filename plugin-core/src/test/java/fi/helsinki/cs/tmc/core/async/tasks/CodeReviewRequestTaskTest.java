@@ -18,7 +18,6 @@ import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.TaskFeedback;
-import fi.helsinki.cs.tmc.core.async.tasks.CodeReviewRequestTask;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectUploader;

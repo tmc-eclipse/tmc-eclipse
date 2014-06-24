@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Review;
-import fi.helsinki.cs.tmc.core.services.ReviewDAO;
 
 public class ReviewDAOTest {
     private ReviewDAO dao;

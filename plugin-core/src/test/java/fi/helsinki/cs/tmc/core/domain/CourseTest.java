@@ -10,9 +10,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
-
 public class CourseTest {
 
     private Course course;

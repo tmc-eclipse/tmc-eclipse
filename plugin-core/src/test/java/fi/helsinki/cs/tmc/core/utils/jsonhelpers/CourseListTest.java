@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
-import fi.helsinki.cs.tmc.core.utils.jsonhelpers.CourseList;
-
 public class CourseListTest {
 
     @Test

@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.TaskFeedback;
-import fi.helsinki.cs.tmc.core.async.tasks.FetchCodeReviewsTask;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.services.ReviewDAO;

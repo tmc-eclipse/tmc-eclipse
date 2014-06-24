@@ -13,8 +13,6 @@ import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.BackgroundTaskListener;
-import fi.helsinki.cs.tmc.core.async.tasks.MavenTestrunnerTask;
-import fi.helsinki.cs.tmc.core.async.tasks.TestrunnerTask;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 

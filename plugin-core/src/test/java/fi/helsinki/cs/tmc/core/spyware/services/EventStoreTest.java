@@ -8,9 +8,6 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.spyware.services.EventStore;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
-
 public class EventStoreTest {
     private LoggableEvent[] events;
     private MockIO io;

@@ -8,9 +8,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.spyware.DocumentInfo;
-import fi.helsinki.cs.tmc.core.spyware.SnapshotInfo;
-import fi.helsinki.cs.tmc.core.spyware.SpywarePluginLayer;
 import fi.helsinki.cs.tmc.core.spyware.services.DocumentChangeHandler;
 import fi.helsinki.cs.tmc.core.spyware.services.EventReceiver;
 import fi.helsinki.cs.tmc.core.spyware.services.SnapshotTaker;

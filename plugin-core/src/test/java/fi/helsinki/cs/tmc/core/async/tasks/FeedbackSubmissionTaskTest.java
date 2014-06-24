@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.TaskFeedback;
-import fi.helsinki.cs.tmc.core.async.tasks.FeedbackSubmissionTask;
 import fi.helsinki.cs.tmc.core.domain.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;

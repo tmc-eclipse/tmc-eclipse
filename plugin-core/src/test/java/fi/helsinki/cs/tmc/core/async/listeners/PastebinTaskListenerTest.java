@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.async.listeners.PastebinTaskListener;
 import fi.helsinki.cs.tmc.core.async.tasks.PastebinTask;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 

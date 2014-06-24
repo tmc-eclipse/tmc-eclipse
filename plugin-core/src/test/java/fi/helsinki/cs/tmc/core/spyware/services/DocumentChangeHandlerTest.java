@@ -14,8 +14,6 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.spyware.DocumentInfo;
-import fi.helsinki.cs.tmc.core.spyware.services.DocumentChangeHandler;
-import fi.helsinki.cs.tmc.core.spyware.services.EventReceiver;
 import fi.helsinki.cs.tmc.core.spyware.utility.ActiveThreadSet;
 
 public class DocumentChangeHandlerTest {

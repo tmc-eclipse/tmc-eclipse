@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import fi.helsinki.cs.tmc.core.async.TaskFeedback;
-import fi.helsinki.cs.tmc.core.async.tasks.DownloaderTask;
-import fi.helsinki.cs.tmc.core.async.tasks.ProjectOpener;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;

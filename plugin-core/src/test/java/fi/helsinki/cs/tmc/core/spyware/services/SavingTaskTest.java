@@ -1,25 +1,18 @@
 package fi.helsinki.cs.tmc.core.spyware.services;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Spy.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.regex.Matcher;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.exceptions.base.MockitoException;
 
 import com.google.common.collect.Iterables;
 
-import fi.helsinki.cs.tmc.core.io.IO;
 import fi.helsinki.cs.tmc.core.spyware.async.SavingTask;
-import fi.helsinki.cs.tmc.core.spyware.services.EventStore;
-import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
 
 public class SavingTaskTest {
     private SavingTask task;

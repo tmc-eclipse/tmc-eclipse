@@ -7,9 +7,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.spyware.ChangeType;
-import fi.helsinki.cs.tmc.core.spyware.SnapshotInfo;
-
 public class SnapshotInfoTest {
     private SnapshotInfo info;
 
