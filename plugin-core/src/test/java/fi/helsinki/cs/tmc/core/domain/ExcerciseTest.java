@@ -287,17 +287,18 @@ public class ExcerciseTest {
     @Test
     public void isUpdatedReturnsTrueWithDifferentChecksums() {
         exercise.setChecksum("a");
+        exercise.setUpdateAvailable(true);
         exercise.setOldChecksum("b");
-        assertTrue(exercise.isUpdated());
+        assertTrue(exercise.shouldBeUpdated());
         exercise.setOldChecksum("a");
-        assertTrue(exercise.isUpdated());
+        assertTrue(exercise.shouldBeUpdated());
     }
 
     @Test
     public void isUpdatedReturnsFalseWithSameChecksums() {
         exercise.setChecksum("a");
         exercise.setOldChecksum("a");
-        assertFalse(exercise.isUpdated());
+        assertFalse(exercise.shouldBeUpdated());
     }
 
 }

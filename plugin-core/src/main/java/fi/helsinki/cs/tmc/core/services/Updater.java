@@ -80,7 +80,7 @@ public class Updater {
     private void updateExercise(Exercise oldExercise, Exercise newExercise) {
         // Update Exercise.course
         newExercise.setOldChecksum(oldExercise.getChecksum());
-        newExercise.setUpdated(oldExercise.getUpdated());
+        newExercise.setUpdateAvailable(oldExercise.isUpdateAvailable());
         newExercise.setCourse(oldExercise.getCourse());
         newExercise.setProject(oldExercise.getProject());
 

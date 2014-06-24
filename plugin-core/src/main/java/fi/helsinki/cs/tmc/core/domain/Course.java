@@ -124,7 +124,7 @@ public class Course {
     public List<Exercise> getDownloadableExercises() {
         List<Exercise> downloadableExercises = new ArrayList<Exercise>();
         for (Exercise e : getExercises()) {
-            if ((e.isDownloadable() || e.isUpdated()) && !e.isCompleted()) {
+            if ((e.isDownloadable() || e.shouldBeUpdated()) && !e.isCompleted()) {
                 downloadableExercises.add(e);
             }
         }
@@ -134,7 +134,7 @@ public class Course {
     public List<Exercise> getCompletedDownloadableExercises() {
         List<Exercise> completedExercises = new ArrayList<Exercise>();
         for (Exercise e : getExercises()) {
-            if ((e.isDownloadable() || e.isUpdated()) && e.isCompleted()) {
+            if ((e.isDownloadable() || e.shouldBeUpdated()) && e.isCompleted()) {
                 completedExercises.add(e);
             }
         }
