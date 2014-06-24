@@ -6,7 +6,6 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 
 /**
  * Abstract base class for all zipping deciders.
- * 
  */
 public abstract class AbstractZippingDecider implements ZippingDecider {
     protected Project project;

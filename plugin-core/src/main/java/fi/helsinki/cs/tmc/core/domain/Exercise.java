@@ -8,9 +8,8 @@ import java.util.Date;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * This class stores necessary data for single TMC exercise, such as its
- * deadline, name and various URLs *
- * 
+ * A domain class for storing necessary data for a single TMC exercise, such as
+ * its deadline, name and various URLs.
  */
 public class Exercise implements Serializable {
     private static final long serialVersionUID = 1L;

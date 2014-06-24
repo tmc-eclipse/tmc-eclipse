@@ -5,8 +5,7 @@ import java.util.regex.Pattern;
 import fi.helsinki.cs.tmc.core.domain.Project;
 
 /**
- * Zipping decider for maven projects
- * 
+ * Zipping decider for Maven projects.
  */
 public class MavenZippingDecider extends AbstractZippingDecider {
 

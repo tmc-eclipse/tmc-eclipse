@@ -10,8 +10,7 @@ import fi.helsinki.cs.tmc.core.ui.UserVisibleException;
 
 /**
  * Class that handles updating necessary data when we update exercise from
- * server
- * 
+ * server.
  */
 public class Updater {
 

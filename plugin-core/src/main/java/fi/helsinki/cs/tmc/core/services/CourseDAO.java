@@ -6,8 +6,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.storage.DataSource;
 
 /**
- * Class that handles Course object loading, saving and accessing
- * 
+ * Class that handles Course object loading, saving and accessing.
  */
 public class CourseDAO {
 

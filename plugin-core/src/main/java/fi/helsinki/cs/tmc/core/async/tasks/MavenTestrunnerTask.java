@@ -13,9 +13,7 @@ import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 import fi.helsinki.cs.tmc.core.utils.TestResultParser;
 
 /**
- * Background task for maven test runner. For all your maven testing needs.
- * 
- * 
+ * Background task for Maven test runner. For all your Maven testing needs.
  */
 public abstract class MavenTestrunnerTask extends TestrunnerTask {
 

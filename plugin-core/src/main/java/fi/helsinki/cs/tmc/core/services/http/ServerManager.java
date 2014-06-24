@@ -37,10 +37,8 @@ import fi.helsinki.cs.tmc.core.utils.jsonhelpers.ExerciseList;
 import fi.helsinki.cs.tmc.core.utils.jsonhelpers.ReviewList;
 
 /**
- * 
- * This class serves as the main layer for any http connections. Any class
- * wishing to send or receive data should use this
- * 
+ * This class serves as the main layer for any HTTP connections. Any class
+ * wishing to send or receive data should use this.
  */
 public class ServerManager {
     private ConnectionBuilder connectionBuilder;

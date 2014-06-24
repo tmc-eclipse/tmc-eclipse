@@ -16,8 +16,7 @@ import fi.helsinki.cs.tmc.core.storage.DataSource;
 import fi.helsinki.cs.tmc.core.storage.ProjectStorage;
 
 /**
- * Class that initializes various daos
- * 
+ * Class that initializes the various DAOs.
  */
 public class DAOManager {
 

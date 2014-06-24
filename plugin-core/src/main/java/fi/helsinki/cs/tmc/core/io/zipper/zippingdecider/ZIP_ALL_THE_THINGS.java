@@ -1,8 +1,7 @@
 package fi.helsinki.cs.tmc.core.io.zipper.zippingdecider;
 
 /**
- * Zips all the things
- * 
+ * Zips everything.
  */
 public class ZIP_ALL_THE_THINGS implements ZippingDecider {
 

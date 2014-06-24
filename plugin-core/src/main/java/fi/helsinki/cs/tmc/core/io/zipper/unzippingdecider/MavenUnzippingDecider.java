@@ -4,8 +4,7 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 
 /**
- * Unzipping decider for maven projects
- * 
+ * Unzipping decider for Maven projects.
  */
 public class MavenUnzippingDecider extends AbstractUnzippingDecider {
 
@@ -15,7 +14,7 @@ public class MavenUnzippingDecider extends AbstractUnzippingDecider {
 
     /**
      * Prevents unzipping in src/main-folder so that user source files are not
-     * overwritten
+     * overwritten.
      */
     @Override
     public boolean shouldUnzip(String filePath) {

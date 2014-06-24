@@ -7,7 +7,6 @@ import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 
 /**
  * Class used by the feedback submission background task.
- * 
  */
 public class FeedbackAnswerSubmitter {
     private ServerManager server;

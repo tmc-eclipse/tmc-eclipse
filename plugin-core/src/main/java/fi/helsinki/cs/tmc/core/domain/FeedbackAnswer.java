@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * 
- * Stores single answer to feedback question
- * 
+ * A domain class for storing a single answer to a feedback question.
  */
 public class FeedbackAnswer {
     private FeedbackQuestion question;
