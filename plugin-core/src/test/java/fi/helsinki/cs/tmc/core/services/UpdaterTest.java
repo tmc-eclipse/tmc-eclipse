@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,7 +184,8 @@ public class UpdaterTest {
     }
 
     @Test
-    public void exerciseIsUpdatedWhenThereIsOldExerciseForCourse() {
+    public void exerciseIsUpdatedWhenThereIsOldExerciseForCourse() throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
         Project project = mock(Project.class);
 
         Course course = new Course("foo");
@@ -193,7 +195,7 @@ public class UpdaterTest {
         exercises.add(new Exercise("foo", "bar"));
         exercises.add(new Exercise("baz", "qux"));
         exercises.get(1).setChecksum("1234");
-        exercises.get(1).setUpdated(false);
+        exercises.get(1).setUpdateAvailable(false);
         exercises.get(1).setCourse(course);
         exercises.get(1).setProject(project);
 
@@ -204,8 +206,11 @@ public class UpdaterTest {
         when(server.getExercises("1")).thenReturn(serverExercises);
 
         updater.updateExercises(course);
+
+        Field field = Exercise.class.getDeclaredField("updateAvailable");
+        field.setAccessible(true);
         assertEquals(exercises.get(1).getChecksum(), serverExercises.get(0).getOldChecksum());
-        assertEquals(exercises.get(1).getUpdated(), serverExercises.get(0).getUpdated());
+        assertEquals(field.get(exercises.get(1)), field.get(serverExercises.get(0)));
         assertEquals(exercises.get(1).getCourse(), serverExercises.get(0).getCourse());
         assertEquals(exercises.get(1).getProject(), serverExercises.get(0).getProject());
     }
@@ -221,7 +226,7 @@ public class UpdaterTest {
         exercises.add(new Exercise("foo", "bar"));
         exercises.add(new Exercise("baz", "qux"));
         exercises.get(1).setChecksum("1234");
-        exercises.get(1).setUpdated(false);
+        exercises.get(1).setUpdateAvailable(false);
         exercises.get(1).setCourse(course);
         exercises.get(1).setProject(project);
 
@@ -238,7 +243,8 @@ public class UpdaterTest {
     }
 
     @Test
-    public void serverExerciseIsNotModifiedIfNoLocalMatchIsPresent() {
+    public void serverExerciseIsNotModifiedIfNoLocalMatchIsPresent() throws IllegalArgumentException,
+            IllegalAccessException, NoSuchFieldException, SecurityException {
         Project project = mock(Project.class);
 
         Course course = new Course("foo");
@@ -253,7 +259,7 @@ public class UpdaterTest {
         serverExercises.add(new Exercise("baz", "qux"));
 
         serverExercises.get(0).setOldChecksum("1234");
-        serverExercises.get(0).setUpdated(false);
+        serverExercises.get(0).setUpdateAvailable(false);
         serverExercises.get(0).setCourse(course);
         serverExercises.get(0).setProject(project);
 
@@ -261,8 +267,11 @@ public class UpdaterTest {
 
         updater.updateExercises(course);
 
+        Field field = Exercise.class.getDeclaredField("updateAvailable");
+        field.setAccessible(true);
+
         assertEquals("1234", serverExercises.get(0).getOldChecksum());
-        assertEquals(false, serverExercises.get(0).getUpdated());
+        assertEquals(false, field.get(serverExercises.get(0)));
         assertEquals(course, serverExercises.get(0).getCourse());
         assertEquals(project, serverExercises.get(0).getProject());
     }
