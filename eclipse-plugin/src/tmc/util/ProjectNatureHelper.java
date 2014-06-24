@@ -15,13 +15,10 @@ public class ProjectNatureHelper {
         IProject project = IProjectHelper.getIProjectWithFilePath(FileUtil.getUnixPath(e.getProject().getRootPath()));
 
         if (e.isCompleted()) {
-            System.out.println("1");
             setProjectNature(project, TMCCompletedProjectNature.NATURE_ID);
         } else if (e.isAttempted()) {
-            System.out.println("2");
             setProjectNature(project, TMCAttemptedProjectNature.NATURE_ID);
         } else {
-            System.out.println("3");
             setProjectNature(project, TMCNewProjectNature.NATURE_ID);
         }
 
