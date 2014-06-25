@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -27,11 +29,13 @@ public class ProjectStorageTest {
 
     private ProjectStorage storage;
     private FileIO io;
+    private List<Project> projects;
 
     @Before
     public void setUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
             IllegalAccessException {
         io = mock(FileIO.class);
+        projects = new ArrayList<Project>();
         storage = new ProjectStorage(io);
 
     }
@@ -129,6 +133,28 @@ public class ProjectStorageTest {
         when(io.getReader()).thenReturn(reader);
         when(reader.read(any(char[].class), anyInt(), anyInt())).thenThrow(new IOException("Foo"));
         storage.load();
+    }
+
+    @Test(expected = UserVisibleException.class)
+    public void saveThrowsIfIOIsNull() {
+        storage = new ProjectStorage(null);
+
+        storage.save(projects);
+    }
+
+    @Test(expected = UserVisibleException.class)
+    public void saveThrowsIfWriterIsNull() {
+        when(io.getWriter()).thenReturn(null);
+        storage.save(projects);
+    }
+
+    @Test
+    public void saveDoesNotThrowIfCloseThrows() throws IOException {
+        Writer writer = mock(Writer.class);
+        when(io.getWriter()).thenReturn(writer);
+        doThrow(new IOException("foo")).when(writer).close();
+        storage.save(projects);
+        verify(writer, times(1)).close();
     }
 
     private void verifyData() {
