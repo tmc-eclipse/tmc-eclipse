@@ -8,10 +8,31 @@ package fi.helsinki.cs.tmc.core.async;
  */
 public interface BackgroundTaskRunner {
 
+    /**
+     * Runs a specified background task
+     * 
+     * @param task
+     *            The background task to run
+     */
     void runTask(BackgroundTask task);
 
+    /**
+     * Runs a specified background task with a given listener that is notified
+     * when the status of the task changes
+     * 
+     * @param task
+     *            The background task to run
+     * @param listener
+     *            A listener to be notified when the status of the task changes
+     */
     void runTask(BackgroundTask task, BackgroundTaskListener listener);
 
+    /**
+     * Cancels the execution of a given background task
+     * 
+     * @param task
+     *            The background task to cancel
+     */
     void cancelTask(BackgroundTask task);
 
 }
