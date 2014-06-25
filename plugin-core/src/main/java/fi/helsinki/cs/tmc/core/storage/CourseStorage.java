@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
@@ -37,19 +38,25 @@ public class CourseStorage implements DataSource<Course> {
         }
         try {
             courseList = gson.fromJson(reader, CoursesFileFormat.class);
+        } catch (JsonSyntaxException ex) {
+            throw new UserVisibleException("Local course storage corrupted");
         } finally {
             try {
                 reader.close();
             } catch (IOException e) {
-                if (courseList != null) {
-                    return courseList.getCourses();
-                } else {
-                    return new ArrayList<Course>();
-                }
+                return getCourses(courseList);
             }
         }
 
-        return courseList.getCourses();
+        return getCourses(courseList);
+    }
+
+    private List<Course> getCourses(CoursesFileFormat courseList) {
+        if (courseList != null) {
+            return courseList.getCourses();
+        } else {
+            return new ArrayList<Course>();
+        }
     }
 
     @Override
