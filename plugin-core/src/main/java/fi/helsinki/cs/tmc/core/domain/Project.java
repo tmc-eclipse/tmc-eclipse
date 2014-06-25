@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.domain;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -91,10 +92,30 @@ public class Project {
             return "";
         }
         synchronized (projectFiles) {
-            for (String file : projectFiles) {
-                if (file.contains(type.getBuildFile())) {
-                    return FileUtil.getUnixPath(file.replace(type.getBuildFile(), ""));
+            if (projectFiles.size() == 1) {
+                File projectFile = new File(projectFiles.get(0));
+                if (projectFile.isDirectory()) {
+                    return FileUtil.getUnixPath(projectFile.getAbsolutePath());
+                } else {
+                    return FileUtil.getUnixPath(projectFile.getParent());
                 }
+            }
+            String shortest = null;
+            for (String file : projectFiles) {
+                if (shortest == null || file.length() < shortest.length()) {
+                    shortest = file;
+                } else {
+                    for (int i = 0; i < shortest.length(); i++) {
+                        if (!(shortest.charAt(i) == file.charAt(i))) {
+                            shortest = shortest.substring(0, i);
+                            System.out.println(shortest);
+                        }
+                    }
+                }
+            }
+            if (shortest != null) {
+                File rootPathFile = new File(shortest);
+                return FileUtil.getUnixPath(rootPathFile.getAbsolutePath());
             }
         }
         return "";
