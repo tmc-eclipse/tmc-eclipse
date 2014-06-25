@@ -127,7 +127,7 @@ public class TestResultComposite extends Composite {
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
 
         Composite moreDetails = new Composite(this, SWT.SMOOTH);
-        heightOffset = 0;
+        heightOffset = 20;
 
         for (StackTraceElement st : tcr.getException().stackTrace) {
             if (st.getFileName().toLowerCase().contains("test.")) {

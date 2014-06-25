@@ -14,6 +14,7 @@ import fi.helsinki.cs.tmc.core.io.zipper.Unzipper;
 import fi.helsinki.cs.tmc.core.io.zipper.unzippingdecider.UnzippingDeciderFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
+import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
