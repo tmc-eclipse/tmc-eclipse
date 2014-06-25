@@ -4,9 +4,7 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 
 /**
- * 
- * Unzipping decider for java ant and C projects
- * 
+ * Unzipping decider for java ant and C projects.
  */
 public class DefaultUnzippingDecider extends AbstractUnzippingDecider {
 
@@ -16,7 +14,7 @@ public class DefaultUnzippingDecider extends AbstractUnzippingDecider {
 
     /**
      * Prevents unzipping in /src folder so that user source files are not
-     * overwritten
+     * overwritten.
      */
     @Override
     public boolean shouldUnzip(String filePath) {

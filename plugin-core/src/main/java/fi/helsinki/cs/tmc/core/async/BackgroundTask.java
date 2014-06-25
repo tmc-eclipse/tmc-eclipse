@@ -1,8 +1,7 @@
 package fi.helsinki.cs.tmc.core.async;
 
 /**
- * Interface for the IDE specific background tasks
- * 
+ * An abstract class extended by all background tasks.
  */
 public abstract class BackgroundTask {
 

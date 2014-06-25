@@ -1,0 +1,132 @@
+%%--------------------------------------
+%% DEFINITIONS
+%%--------------------------------------
+
+\nonstopmode
+
+%% Font 12pt
+%% Paper A4
+%% Language englanti
+%% Left-justify equation numbering
+\documentclass[12pt,a4paper,english,leqno]{article}
+
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{float}
+
+
+%% Use palantino as font
+\usepackage[osf,sc]{mathpazo} 
+
+%% Marginals
+\usepackage[a4paper,right=3cm,left=4cm,vmargin=3cm]{geometry}
+
+%% Linespacing
+\linespread{1.6}
+
+%% Remove widow and orphan lines
+\clubpenalty=10000
+\widowpenalty=10000
+
+%% Remove hyphenation
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=100
+\hbadness=100
+
+\begin{document}
+
+\parskip 2mm
+\parindent 0mm
+
+%%--------------------------------------
+%% FRONTPAGE
+%%--------------------------------------
+
+\begin{titlepage}
+  \setlength{\parindent}{0mm}
+  \sloppy
+  \large \textsc{University of Helsinki \\
+  				 Faculty of Science\\
+                 Department of Computer Science}
+  \vspace{5mm}
+
+  \hrule height3pt
+  \vspace{20mm}
+
+  \begin{center}
+	\vfill  
+  
+    \begin{Huge} 
+    \textbf{TestMyCode Eclipse}\\
+    \end{Huge}
+    \begin{LARGE}
+    Testing documentation
+    \end{LARGE}
+    \vspace{20mm}
+
+    \vfill
+
+  \end{center}
+  \hrule height2pt
+  \vspace{5mm}
+
+  \begin{small}
+  Juhani Heliö\\
+  Ville-Pekka Hämäläinen\\
+  Nikke Kostiainen\\
+  Erkka Kääriä\\
+  Leo Leppänen\\
+  Joel Nummelin\end{small} \hfill \today
+  
+\end{titlepage}
+
+%%--------------------------------------
+%% BODY
+%%--------------------------------------
+
+\section{Overview}
+
+The TestMyCode Eclipse code base can be seen as consisting of three different parts.
+Firstly, we have the completely new Eclipse plugin code that was specifically written for this project.
+Secondly, there's the TestMyCode Core's new code that was also written during the lifetime of this project.
+Thirdly, the project is also affected by - and contains parts of - a rather large legacy code base from the TestMyCode Netbeans project\footnote{https://github.com/testmycode/tmc-netbeans}.
+Due to differences between these three parts, different testing strategies were chosen for each of them.
+
+\section{TestMyCode Core}
+
+All new code in the Core has been extensively unit tested with JUnit\footnote{http://junit.org/} and Mockito\footnote{https://code.google.com/p/mockito/}.
+Cobertura\footnote{http://cobertura.github.io/cobertura/} and  PIT\footnote{http://pitest.org/} were used in evaluating these tests to make sure the tests covered all the relevant lines, code paths and mutations. For this `new' code, the coverage is at or near 100\%.
+
+The Core also contains legacy code from the TestMyCode Netbeans project, especially in the form of the HTTP stack that was copied over and changed only by renaming a few classes and methods.
+This legacy code base has fewer tests due to the hard-to-test style of the code.
+It was - however - felt that extensive testing of this part of the code base was less critical, mainly due to this code having been in production for years.
+
+The team acknowledges the problem this represents from the point of view of future refactoring and development efforts, but had to prioritize other aspects of the product for not having infinite time.
+In a sense, the legacy code was not tested because it was not refactored to be testable and the code could not be safely refactored in the allocated time frame before tests existed.
+
+Other parts of the project are also heavily influenced by the legacy code base. The prime example of this kind of code is the Spyware component that was first brought over directly, but later underwent some refactoring and testing efforts.
+
+Also influenced by the legacy code base were most of the background tasks. Most of these are well tested, with the exceptions of the Ant and Maven test runners.
+These tasks are dependent on a IDE specific implementation that tells them how to build projects and run Maven tasks respectively.
+This made testing these classes in the frame of the Core impossible without tying the Core to a specific IDE for development.
+Tying any future development efforts to a single IDE - and a less used that Dept. of CS at that - was deemed unwise.
+ 
+\section{TestMyCode Eclipse plugin}
+
+The Eclipse plugin component has no automated tests at this time.
+This is mainly due to Eclipse using the SWT graphics library that has very little support in the form of automated UI testing frameworks.
+After no good and robust automated testing solution was found, the team decided to handle all UI testing manually.
+The team felt that it was better to test manually that to have extremely brittle UI tests that would only work a fraction of the time.
+This dependency on manual testing is was made possible by the relative Simplicity of the Eclipse plugin's code and the rather small amount of features present in the plugin.
+
+Any future efforts will probably want to research whether better automatic testing frameworks for SWT UI testing exist and possibly migrate over to using them.
+
+\end{document}

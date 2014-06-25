@@ -2,8 +2,7 @@ package fi.helsinki.cs.tmc.core;
 
 /**
  * Dummy error handler that does nothing. Default for the Core until
- * ide-specific implementation is provided.
- * 
+ * IDE-specific implementation is provided.
  */
 public class DummyErrorHandler implements TMCErrorHandler {
 

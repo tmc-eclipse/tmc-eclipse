@@ -47,3 +47,14 @@ eclipse-plugin/lib/*.jar
 # Test files
 testDirectoryOutput.zip
 zippingDeciderTest.zip
+
+# LaTeX
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.synctex.gz

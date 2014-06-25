@@ -3,8 +3,7 @@ package fi.helsinki.cs.tmc.core.domain;
 import java.util.List;
 
 /**
- * Results of a single test run
- * 
+ * Results of a single test run.
  */
 public class TestRunResult {
     private final List<TestCaseResult> testCaseResults;

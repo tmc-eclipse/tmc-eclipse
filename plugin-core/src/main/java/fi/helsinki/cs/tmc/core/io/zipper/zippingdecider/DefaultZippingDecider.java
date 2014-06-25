@@ -3,8 +3,7 @@ package fi.helsinki.cs.tmc.core.io.zipper.zippingdecider;
 import fi.helsinki.cs.tmc.core.domain.Project;
 
 /**
- * Default zipping decider that is used by java ant and C projects
- * 
+ * Default zipping decider that is used by Java Ant and C projects.
  */
 public class DefaultZippingDecider extends AbstractZippingDecider {
 

@@ -17,7 +17,7 @@ import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 import fi.helsinki.cs.tmc.core.utils.TestResultParser;
 
 /**
- * An abstract background task for buildin and running tmc-junit-runner for an
+ * An abstract background task for building and running tmc-junit-runner for an
  * Ant project.
  * 
  * Concrete classes must implement the abstract build method that tells the
@@ -222,7 +222,7 @@ public abstract class AntTestrunnerTask extends TestrunnerTask {
         pb.redirectError(Redirect.INHERIT);
         try {
             process = pb.start();
-            
+
             int status = THREAD_NOT_FINISHED;
             while (status == THREAD_NOT_FINISHED) {
                 try {

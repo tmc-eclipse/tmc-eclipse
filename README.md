@@ -28,7 +28,7 @@ The plugin component supports both Eclipse 4.3 (Kepler) and Eclipse 4.4 (Luna).
 To build the project, follow the following process:
 
 1. Clone this repository
-2. Run the "clean" and "verify" Maven goals for the plugin component ("plugin-logic")
+2. Run the "clean" and "verify" Maven goals for the core component ("plugin-core")
 3. Open the Eclipse IDE
 4. Make sure you have the following components installed from the marketplace:
  * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
@@ -42,7 +42,7 @@ To use the built plugin, place it in the /plugins folder within your eclipse ins
 
 You can also run the project as "Eclipse Application" to run an instance of Eclipse with the plugin within the Eclipse instance you are developing on.
 
-The plugin component utilizes the core component via a shaded .jar file that must be present in the plugin's /lib folder. When running the "verify" Maven goal for the core a shaded .jar will be built and moved to the plugin components /lib folder. For this reason, you **must** run the "clean verify" goals for any changes in the core to be visible within the plugin. Changes that only affect the plugin components code do not require running the "clean verify" goal.
+The plugin component utilizes the core component via a shaded .jar file that must be present in the plugin's /lib folder. When running the "verify" Maven goal for the core a shaded .jar will be built and moved to the plugin components /lib folder. For this reason, you **must** run the "clean verify" goals for any changes in the core to be visible within the plugin. Changes that only affect the plugin component's code do not require running the "clean verify" goal.
 
 ##Using the plugin
 ###Installation

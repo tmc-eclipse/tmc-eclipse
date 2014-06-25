@@ -7,11 +7,10 @@ import fi.helsinki.cs.tmc.core.services.ProjectUploader;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 /**
- * Background task for sending project to pastebin. It is closely related to
- * uploading task as the only real difference is single parameter in the http
- * request (potentially merge to single task? Constructor parameter list would
- * be nasty though)
- * 
+ * Background task for sending projects to the TestMyCode pastebin. It is
+ * closely related to the uploading task as the only real difference is single
+ * parameter in the HTTP request (potentially merge to single task? Constructor
+ * parameter list would be nasty though).
  */
 public class PastebinTask extends BackgroundTask {
 

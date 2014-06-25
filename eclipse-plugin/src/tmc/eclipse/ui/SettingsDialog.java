@@ -248,6 +248,12 @@ public class SettingsDialog extends Dialog {
     }
 
     private void showExDownloaderDialog() {
+        try {
+            Course currentCourse = Core.getCourseDAO().getCurrentCourse(Core.getSettings());
+            Core.getUpdater().updateExercises(currentCourse);
+        } catch (UserVisibleException uve) {
+            Core.getErrorHandler().raise(uve.getLocalizedMessage());
+        }
         if (!Core.getCourseDAO().getCurrentCourse(Core.getSettings()).getDownloadableExercises().isEmpty()) {
             ExerciseSelectorDialog esd = new ExerciseSelectorDialog(parent, SWT.SHEET);
             esd.open();

@@ -9,7 +9,7 @@ import fi.helsinki.cs.tmc.core.domain.Review;
  * Class that handles storing the code reviews locally. Prevents the situation
  * where same review is shown multiple times (after each review background
  * check) if user has not marked them as read. The reviews will only be shown
- * again during new session
+ * again during new session.
  */
 public class ReviewDAO {
     private List<Review> reviews;

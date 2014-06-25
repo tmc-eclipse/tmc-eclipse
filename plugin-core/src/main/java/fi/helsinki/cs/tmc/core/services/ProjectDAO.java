@@ -7,11 +7,8 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.storage.DataSource;
 
 /**
- * 
- * Class that handles Project object storage, loading and saving
- * 
+ * Class that handles Project object storage, loading and saving.
  */
-
 public class ProjectDAO {
 
     private DataSource<Project> dataSource;

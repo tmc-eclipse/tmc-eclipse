@@ -1,10 +1,9 @@
 package fi.helsinki.cs.tmc.core;
 
 /**
- * Interface for the error handlers. IDE should implement this so that program
- * may raise errors (the UI elements at least) from core
- * 
- * 
+ * An interface that all the error handlers implement. IDE-specific plugins
+ * should implement this interface so that exceptions thrown by Core can be
+ * handled properly and the user can be shown appropriate error messages.
  */
 public interface TMCErrorHandler {
 

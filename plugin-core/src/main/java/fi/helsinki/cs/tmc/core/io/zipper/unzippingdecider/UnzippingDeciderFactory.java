@@ -3,8 +3,7 @@ package fi.helsinki.cs.tmc.core.io.zipper.unzippingdecider;
 import fi.helsinki.cs.tmc.core.domain.Project;
 
 /**
- * Factory class that returns correct unzipping decider based on project type
- * 
+ * Factory class that returns correct unzipping decider based on project type.
  */
 public final class UnzippingDeciderFactory {
 

@@ -6,9 +6,8 @@ import java.util.List;
 import fi.helsinki.cs.tmc.core.domain.Project;
 
 /**
- * Abstract base class that provides common functionality for all
- * unzippingdeciders
- * 
+ * Abstract base class that provides common functionality for all unzipping
+ * deciders.
  */
 public abstract class AbstractUnzippingDecider implements UnzippingDecider {
     protected Project project;
@@ -20,8 +19,8 @@ public abstract class AbstractUnzippingDecider implements UnzippingDecider {
     }
 
     /**
-     * Prevents unzipping if file would overwrite file on the extra student file
-     * list
+     * Prevents unzipping if file would overwrite file on the extra student
+     * files list.
      */
     @Override
     public boolean shouldUnzip(String filePath) {

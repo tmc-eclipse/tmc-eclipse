@@ -17,6 +17,7 @@ import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
 import fi.helsinki.cs.tmc.core.spyware.services.SharedInteger;
 
 public class SendingTask implements Runnable {
+
     private static final Logger log = Logger.getLogger(SendingTask.class.getName());
     private static final int MAX_EVENTS_PER_SEND = 500;
 
@@ -26,7 +27,7 @@ public class SendingTask implements Runnable {
     private Settings settings;
     private Random random;
     private SharedInteger eventsToRemoveAfterSend;
-    
+
     private SingletonTask savingTask;
 
     public SendingTask(ArrayDeque<LoggableEvent> sendQueue, ServerManager serverManager, CourseDAO courseDAO,
@@ -45,7 +46,7 @@ public class SendingTask implements Runnable {
         if (!settings.isSpywareEnabled()) {
             return;
         }
-        
+
         boolean shouldSendMore;
 
         do {
@@ -85,7 +86,6 @@ public class SendingTask implements Runnable {
     }
 
     private String pickDestinationUrl() {
-
         Course course = courseDAO.getCurrentCourse(settings);
         if (course == null) {
             log.log(Level.FINE, "Not sending events because no course selected");
