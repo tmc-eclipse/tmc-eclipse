@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * Wrapper class for file IO. Allows us to mock file interactions in unit tests
- * 
+ * Wrapper class for file IO. Allows us to mock file interactions in unit tests.
  */
 public class FileIO implements IO {
     private File file;

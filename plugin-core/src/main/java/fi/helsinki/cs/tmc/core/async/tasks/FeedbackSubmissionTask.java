@@ -9,9 +9,7 @@ import fi.helsinki.cs.tmc.core.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 /**
- * 
  * This is the background task for feedback submission.
- * 
  */
 public class FeedbackSubmissionTask extends BackgroundTask {
     private TaskFeedback progress;

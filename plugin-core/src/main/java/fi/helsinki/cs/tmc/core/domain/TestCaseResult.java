@@ -6,7 +6,6 @@ import fi.helsinki.cs.tmc.testrunner.TestCase;
 
 /**
  * Class that stores the result of a single test case.
- * 
  */
 public class TestCaseResult {
 

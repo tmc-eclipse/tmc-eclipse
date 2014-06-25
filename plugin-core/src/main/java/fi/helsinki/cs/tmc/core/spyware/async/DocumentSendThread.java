@@ -20,6 +20,7 @@ import fi.helsinki.cs.tmc.core.spyware.utility.diff_match_patch;
 import fi.helsinki.cs.tmc.core.spyware.utility.diff_match_patch.Patch;
 
 public class DocumentSendThread extends Thread {
+
     private static final Logger log = Logger.getLogger(DocumentSendThread.class.getName());
     private final EventReceiver receiver;
     private final DocumentInfo info;

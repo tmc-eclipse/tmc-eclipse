@@ -7,9 +7,8 @@ import fi.helsinki.cs.tmc.core.services.ProjectUploader;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 /**
- * Background task for code review request
+ * Background task responsible for handling code review requests.
  */
-
 public class CodeReviewRequestTask extends BackgroundTask {
 
     private ProjectUploader uploader;

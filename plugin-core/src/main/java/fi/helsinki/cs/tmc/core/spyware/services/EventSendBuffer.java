@@ -15,7 +15,6 @@ import fi.helsinki.cs.tmc.core.spyware.utility.Cooldown;
 /**
  * Buffers {@link LoggableEvent}s and sends them to the server and/or syncs them
  * to the disk periodically.
- * 
  */
 public class EventSendBuffer implements EventReceiver {
     private static final Logger log = Logger.getLogger(EventSendBuffer.class.getName());

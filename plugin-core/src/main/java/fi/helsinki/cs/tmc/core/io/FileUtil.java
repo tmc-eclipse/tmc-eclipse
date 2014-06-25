@@ -3,8 +3,7 @@ package fi.helsinki.cs.tmc.core.io;
 import java.io.File;
 
 /**
- * Helper class for file operations
- * 
+ * Helper class for file operations.
  */
 public class FileUtil {
 
@@ -13,8 +12,8 @@ public class FileUtil {
     }
 
     /**
-     * Replaces the file separators in given path with unix styled separators.
-     * We use these internally
+     * Replaces the file separators in given path with Unix styled separators.
+     * We use these internally.
      */
     public static String getUnixPath(String path) {
         String unixPath = path.replace(File.separator, "/");

@@ -20,7 +20,6 @@ public class PastebinTaskListener implements BackgroundTaskListener {
 
     @Override
     public void onSuccess() {
-
         final String pasteUrl = task.getPasteUrl();
 
         if (pasteUrl == null) {

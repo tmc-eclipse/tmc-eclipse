@@ -25,16 +25,15 @@ public class UploadTaskListener implements BackgroundTaskListener {
 
     @Override
     public void onSuccess() {
-
         final SubmissionResult result = task.getResult();
-        
+
         if (result == null) {
             return;
         }
         String exerciseName = task.getProject().getExercise().getName();
         Exercise exercise = task.getProject().getExercise();
         uiInvoker.invokeTestResultWindow(result.getTestCases());
-        
+
         if (result.allTestCasesSucceeded()) {
             uiInvoker.invokeAllTestsPassedWindow(result, exerciseName);
             exercise.setCompleted(true);
@@ -46,7 +45,6 @@ public class UploadTaskListener implements BackgroundTaskListener {
             exercise.setAttempted(true);
         }
         projectIconHandler.updateIcon(exercise);
-
     }
 
     @Override

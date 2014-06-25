@@ -26,7 +26,6 @@ public class CodeReviewRequestListener implements BackgroundTaskListener {
     @Override
     public void onFailure() {
         uiInvoker.raiseVisibleException("Failed to create the code review request.");
-
     }
 
     @Override

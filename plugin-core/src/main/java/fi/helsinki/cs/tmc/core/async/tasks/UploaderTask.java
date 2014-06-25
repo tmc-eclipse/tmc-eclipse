@@ -10,10 +10,8 @@ import fi.helsinki.cs.tmc.core.services.ProjectUploader;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 /**
- * Background task that handles file upload to server. Used when submitting
- * files to server for grading
- * 
- * 
+ * Background task for handling the file uploads to server. Used when submitting
+ * files to server for grading.
  */
 public class UploaderTask extends BackgroundTask {
 

@@ -13,7 +13,7 @@ import fi.helsinki.cs.tmc.core.services.http.SubmissionResponse;
 
 /**
  * Class that handles uploading the exercise to server. Used by the UploaderTask
- * background task
+ * background task.
  */
 public class ProjectUploader {
 

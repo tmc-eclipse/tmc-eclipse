@@ -9,8 +9,7 @@ import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 
 /**
  * Class that handles project downloading. Used by the DownloaderTask background
- * task
- * 
+ * task.
  */
 public class ProjectDownloader {
 

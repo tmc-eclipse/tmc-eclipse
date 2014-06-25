@@ -10,8 +10,7 @@ import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 /**
  * Class that is used on startup to ensure that the project database remains in
  * consistent state even if files are deleted or added on disk while IDE is
- * closed
- * 
+ * closed.
  */
 public class ProjectScanner {
 

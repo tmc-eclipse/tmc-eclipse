@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.domain.TestRunResult;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 public class TestrunnerListener implements BackgroundTaskListener {
+
     private TestrunnerTask task;
     private IdeUIInvoker uiInvoker;
 
@@ -46,7 +47,6 @@ public class TestrunnerListener implements BackgroundTaskListener {
     public void onFailure() {
         // TODO: Kill "Running tests"
         // TODO: Popout error
-
     }
 
     @Override

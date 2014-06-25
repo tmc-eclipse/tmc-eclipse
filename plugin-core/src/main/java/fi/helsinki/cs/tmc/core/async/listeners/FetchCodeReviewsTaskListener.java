@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.services.ReviewDAO;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 public class FetchCodeReviewsTaskListener implements BackgroundTaskListener {
+
     private FetchCodeReviewsTask task;
     private IdeUIInvoker invoker;
     private ReviewDAO reviewDAO;
