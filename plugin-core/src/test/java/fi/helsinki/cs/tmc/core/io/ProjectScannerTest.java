@@ -34,7 +34,7 @@ public class ProjectScannerTest {
         dao = mock(ProjectDAO.class);
         IOFactory factory = mock(IOFactory.class);
         io = mock(IO.class);
-        when(factory.createIO(anyString())).thenReturn(io);
+        when(factory.newFile(anyString())).thenReturn(io);
         scanner = new ProjectScanner(dao, factory);
     }
 
