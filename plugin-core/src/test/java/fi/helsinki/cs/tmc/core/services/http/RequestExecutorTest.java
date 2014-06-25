@@ -19,6 +19,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.helsinki.cs.tmc.core.services.Settings;
+
 public class RequestExecutorTest {
     private RequestExecutor executor;
     private MockHttpFactory factory;
@@ -40,7 +42,7 @@ public class RequestExecutorTest {
     public void constructorTest() throws URISyntaxException {
         HttpUriRequest request = new HttpPost(new URI("http", "userInfo", "kjhgfdskdfghksadlfg.com", 1337,
                 "/dfgdfd/dfgdff.html", "xdxd", "dsfsd"));
-        executor = new RequestExecutor(request, factory);
+        executor = new RequestExecutor(request, factory, mock(Settings.class));
         assertTrue(executor.toString().startsWith("fi.helsinki.cs.tmc.core.services.http.RequestExecutor"));
         assertTrue(executor.toString().contains("POST"));
         assertTrue(executor.toString().contains("userInfo"));
@@ -48,7 +50,7 @@ public class RequestExecutorTest {
 
     @Test
     public void setCredentialsTest() {
-        this.executor = new RequestExecutor(new HttpPost("link.html?asdasd=123"), factory);
+        this.executor = new RequestExecutor(new HttpPost("link.html?asdasd=123"), factory, mock(Settings.class));
         executor.setCredentials(new UsernamePasswordCredentials("trololo", "jeejee"));
         assertTrue(executor.toString().contains("trololo"));
         assertTrue(executor.toString().contains("jeejee"));
@@ -58,7 +60,7 @@ public class RequestExecutorTest {
 
     @Test(expected = IllegalStateException.class)
     public void nonExistentUrlCausesException() throws IOException, InterruptedException, FailedHttpResponseException {
-        this.executor = new RequestExecutor("sadasdasd", factory);
+        this.executor = new RequestExecutor("sadasdasd", factory, mock(Settings.class));
         executor.execute();
     }
 

@@ -28,7 +28,7 @@ class ConnectionBuilder {
     }
 
     public RequestBuilder createConnection() {
-        return new RequestBuilder(new RequestExecutorFactoryImpl()).setCredentials(settings.getUsername(),
+        return new RequestBuilder(new RequestExecutorFactoryImpl(settings)).setCredentials(settings.getUsername(),
                 settings.getPassword());
     }
 }

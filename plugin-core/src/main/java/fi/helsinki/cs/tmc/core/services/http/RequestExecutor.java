@@ -17,7 +17,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import fi.helsinki.cs.tmc.core.Core;
+import fi.helsinki.cs.tmc.core.services.Settings;
 
 /**
  * Downloads a single file over HTTP into memory.
@@ -32,14 +32,16 @@ class RequestExecutor {
 
     private UsernamePasswordCredentials credentials; // May be null
     private HttpClientFactory factory;
+    private Settings settings;
 
-    /* package */RequestExecutor(String url, HttpClientFactory factory) {
-        this(new HttpGet(url), factory);
+    /* package */RequestExecutor(String url, HttpClientFactory factory, Settings settings) {
+        this(new HttpGet(url), factory, settings);
     }
 
-    /* package */RequestExecutor(HttpUriRequest request, HttpClientFactory factory) {
+    /* package */RequestExecutor(HttpUriRequest request, HttpClientFactory factory, Settings settings) {
         this.request = request;
         this.factory = factory;
+        this.settings = settings;
         if (request.getURI().getUserInfo() != null) {
             credentials = new UsernamePasswordCredentials(request.getURI().getUserInfo());
         }
@@ -91,7 +93,7 @@ class RequestExecutor {
     private BufferedHttpEntity handleResponse(HttpResponse response) throws IOException, InterruptedException,
             FailedHttpResponseException {
         int responseCode = response.getStatusLine().getStatusCode();
-        Core.getSettings().setLoggedIn(false);
+        settings.setLoggedIn(false);
         if (response.getEntity() == null) {
             throw new IOException("HTTP " + responseCode + " with no response");
         }
@@ -99,7 +101,7 @@ class RequestExecutor {
         BufferedHttpEntity entity = new BufferedHttpEntity(response.getEntity());
         EntityUtils.consume(entity); // Ensure it's loaded into memory
         if (success(responseCode)) {
-            Core.getSettings().setLoggedIn(true);
+            settings.setLoggedIn(true);
             return entity;
         } else {
 
