@@ -210,7 +210,7 @@ public class SettingsDialog extends Dialog {
 
         btnCheckThat = new Button(shell, SWT.CHECK);
         btnCheckThat.setSelection(true);
-        btnCheckThat.setText("Check that all active active exercises are open on startup");
+        btnCheckThat.setText("Check that all active exercises are open on startup");
         btnCheckThat.setBounds(10, 293, 430, 24);
         btnCheckThat.setSelection(settings.isCheckingForUnopenedAtStartup());
 
