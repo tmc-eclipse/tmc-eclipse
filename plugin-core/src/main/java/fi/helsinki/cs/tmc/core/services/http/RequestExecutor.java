@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.services.http;
 
 import java.io.IOException;
-import java.net.ProxySelector;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,13 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 
 import fi.helsinki.cs.tmc.core.Core;
@@ -37,13 +31,15 @@ class RequestExecutor {
     private static final Logger LOG = Logger.getLogger(RequestExecutor.class.getName());
 
     private UsernamePasswordCredentials credentials; // May be null
+    private HttpClientFactory factory;
 
-    /* package */RequestExecutor(String url) {
-        this(new HttpGet(url));
+    /* package */RequestExecutor(String url, HttpClientFactory factory) {
+        this(new HttpGet(url), factory);
     }
 
-    /* package */RequestExecutor(HttpUriRequest request) {
+    /* package */RequestExecutor(HttpUriRequest request, HttpClientFactory factory) {
         this.request = request;
+        this.factory = factory;
         if (request.getURI().getUserInfo() != null) {
             credentials = new UsernamePasswordCredentials(request.getURI().getUserInfo());
         }
@@ -60,19 +56,9 @@ class RequestExecutor {
     }
 
     public BufferedHttpEntity execute() throws IOException, InterruptedException, FailedHttpResponseException {
-        CloseableHttpClient httpClient = makeHttpClient();
+        CloseableHttpClient httpClient = factory.makeHttpClient();
 
         return executeRequest(httpClient);
-    }
-
-    private CloseableHttpClient makeHttpClient() throws IOException {
-
-        HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties()
-                .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
-                .setRedirectStrategy(new LaxRedirectStrategy());
-        maybeSetProxy(httpClientBuilder);
-
-        return httpClientBuilder.build();
     }
 
     private BufferedHttpEntity executeRequest(HttpClient httpClient) throws IOException, InterruptedException,
@@ -127,13 +113,6 @@ class RequestExecutor {
      */
     private boolean success(int responseCode) {
         return HttpStatus.SC_OK <= responseCode && responseCode < HttpStatus.SC_MULTIPLE_CHOICES;
-    }
-
-    private void maybeSetProxy(HttpClientBuilder httpClientBuilder) {
-        SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(ProxySelector.getDefault());
-        if (routePlanner != null) {
-            httpClientBuilder.setRoutePlanner(routePlanner);
-        }
     }
 
     /**

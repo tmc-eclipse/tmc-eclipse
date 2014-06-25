@@ -12,12 +12,12 @@ public class RequestExecutorFactoryImpl implements RequestExecutorFactory {
 
     @Override
     public RequestExecutor createExecutor(String url, UsernamePasswordCredentials credentials) {
-        return new RequestExecutor(url).setCredentials(credentials);
+        return new RequestExecutor(url, new HttpClientFactoryImpl()).setCredentials(credentials);
     }
 
     @Override
     public RequestExecutor createExecutor(HttpPost request, UsernamePasswordCredentials credentials) {
-        return new RequestExecutor(request).setCredentials(credentials);
+        return new RequestExecutor(request, new HttpClientFactoryImpl()).setCredentials(credentials);
     }
 
 }
