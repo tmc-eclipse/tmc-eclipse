@@ -3,14 +3,22 @@ package tmc.eclipse.ui;
 import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
-import tmc.eclipse.handlers.CustomNotification;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 
 public class Notifier {
-
-    public void CreateNotification() {
-        AbstractNotificationPopup notification = new CustomNotification(Display.getDefault(), "otsikko", "tässä on tekstiä");
+    
+//    Usage: 
+//    Notifier.CreateNotification("Title", "Content", new Listener() {
+//        public void handleEvent(Event e) {
+//            System.out.println("click!");
+//        }
+//    });
+//    
+    
+    public static void CreateNotification(String title, String text, Listener listener) {
+        AbstractNotificationPopup notification = new CustomNotification(Display.getDefault(), title, text, listener);
         notification.open();
     }
 }
