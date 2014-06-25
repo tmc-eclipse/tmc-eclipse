@@ -35,7 +35,7 @@ public abstract class SimpleBackgroundTask<T> extends BackgroundTask {
      * that handles the IDE progress bar.
      */
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), list.size());
 
         for (T t : list) {

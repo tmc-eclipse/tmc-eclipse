@@ -16,7 +16,7 @@ public abstract class BackgroundTask {
         this.description = description;
     }
 
-    public abstract int start(TaskFeedback progress);
+    public abstract int start(TaskStatusMonitor progress);
 
     public void stop() {
         this.isRunning = false;
@@ -38,7 +38,7 @@ public abstract class BackgroundTask {
      *            requests
      * @return true, if the task execution should be stopped. False otherwise.
      */
-    protected boolean shouldStop(TaskFeedback progress) {
+    protected boolean shouldStop(TaskStatusMonitor progress) {
         if (!isRunning) {
             return true;
         }

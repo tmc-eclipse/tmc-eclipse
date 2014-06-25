@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.TestRunResult;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
@@ -42,7 +42,7 @@ public abstract class MavenTestrunnerTask extends TestrunnerTask {
     public abstract int runMaven(List<String> goals, Project project);
 
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), 3);
 
         List<String> goals = new ArrayList<String>();

@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
@@ -37,13 +37,13 @@ public class FeedbackSubmissionTaskTest {
 
     @Test
     public void FeedbackAnswerSubmitterIsCalledWhenTaskIsRun() {
-        task.start(mock(TaskFeedback.class));
+        task.start(mock(TaskStatusMonitor.class));
         verify(submitter, times(1)).submitFeedback(answers, url);
     }
 
     @Test
     public void FeedbackAnswerSubmitterReturnsSuccess() {
-        assertEquals(BackgroundTask.RETURN_SUCCESS, task.start(mock(TaskFeedback.class)));
+        assertEquals(BackgroundTask.RETURN_SUCCESS, task.start(mock(TaskStatusMonitor.class)));
 
     }
 
@@ -51,7 +51,7 @@ public class FeedbackSubmissionTaskTest {
     public void feedbackAnswerSubmitterCallsErrorHandlerAndReturnsFalseOnException() {
         Mockito.doThrow(new RuntimeException("Error message here")).when(submitter).submitFeedback(answers, url);
 
-        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(mock(TaskFeedback.class)));
+        assertEquals(BackgroundTask.RETURN_FAILURE, task.start(mock(TaskStatusMonitor.class)));
         verify(invoker, times(1)).raiseVisibleException(
                 "An error occured while submitting feedback:\nError message here");
     }

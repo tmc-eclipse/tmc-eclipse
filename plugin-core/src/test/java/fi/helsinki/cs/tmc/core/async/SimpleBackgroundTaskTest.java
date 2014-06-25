@@ -23,13 +23,13 @@ public class SimpleBackgroundTaskTest {
 
     private SimpleBackgroundTask<Foo> task;
     private List<Foo> list;
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
 
     @Before
     public void setUp() {
         list = new ArrayList<Foo>();
         list.add(mock(Foo.class));
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
         when(progress.isCancelRequested()).thenReturn(false);
 
         task = new SimpleBackgroundTask<Foo>("Description", list) {

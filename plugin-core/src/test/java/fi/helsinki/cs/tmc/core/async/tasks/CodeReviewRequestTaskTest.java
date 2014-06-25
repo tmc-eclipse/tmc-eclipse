@@ -17,7 +17,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectUploader;
@@ -25,7 +25,7 @@ import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 public class CodeReviewRequestTaskTest {
     private ProjectUploader uploader;
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
 
     private CodeReviewRequestTask task;
 
@@ -36,7 +36,7 @@ public class CodeReviewRequestTaskTest {
         IdeUIInvoker invoker = mock(IdeUIInvoker.class);
         task = new CodeReviewRequestTask(uploader, "path", "requestMessage", dao, invoker);
 
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
 
     }
 
