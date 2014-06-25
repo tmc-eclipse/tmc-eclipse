@@ -132,7 +132,7 @@ public class TestRunnerComposite extends Composite {
 
     private void makeScrolledComposite() {
         scrolledComposite = new ScrolledComposite(master, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-        scrolledComposite.setSize(this.getSize().x, this.getSize().y);
+        scrolledComposite.setSize(master.getSize().x - 20, master.getSize().y - 80);
         scrolledComposite.setLocation(10, 70);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
