@@ -2,6 +2,7 @@ package tmc.eclipse.ui;
 
 import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -19,6 +20,8 @@ public class CustomNotification extends AbstractNotificationPopup {
         this.listener = listener;
     }
 
+  
+    
     @Override
     protected String getPopupShellTitle() {
         return title;
@@ -27,12 +30,14 @@ public class CustomNotification extends AbstractNotificationPopup {
     @Override
     protected void createContentArea(Composite composite) {
         Label label = new Label(composite, SWT.WRAP);
+        label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         label.setText(text);
+        composite.addListener(SWT.Activate, listener);
     }
 
     @Override
     protected void createTitleArea(Composite composite) {
         super.createTitleArea(composite);
-        composite.addListener(SWT.Activate, listener);
+        
     }
 }

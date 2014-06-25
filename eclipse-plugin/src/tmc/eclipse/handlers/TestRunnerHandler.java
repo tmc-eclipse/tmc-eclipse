@@ -4,6 +4,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -30,8 +32,7 @@ public class TestRunnerHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {
         helper.updateActiveView();
-        
-        new Notifier().CreateNotification();
+
 
         shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
         try {
