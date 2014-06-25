@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core;
 import java.util.ArrayDeque;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import fi.helsinki.cs.tmc.core.async.tasks.SingletonTask;
 import fi.helsinki.cs.tmc.core.io.FileIO;
@@ -21,7 +22,6 @@ import fi.helsinki.cs.tmc.core.spyware.services.DocumentChangeHandler;
 import fi.helsinki.cs.tmc.core.spyware.services.EventSendBuffer;
 import fi.helsinki.cs.tmc.core.spyware.services.EventStore;
 import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
-import fi.helsinki.cs.tmc.core.spyware.services.SharedInteger;
 import fi.helsinki.cs.tmc.core.spyware.services.SnapshotTaker;
 import fi.helsinki.cs.tmc.core.spyware.utility.ActiveThreadSet;
 
@@ -53,7 +53,7 @@ public final class ServiceFactoryImpl implements ServiceFactory {
         this.updater = new Updater(server, courseDAO, projectDAO);
         this.projectEventHandler = new ProjectEventHandler(projectDAO);
 
-        SharedInteger eventsToRemoveAfterSend = new SharedInteger();
+        AtomicInteger eventsToRemoveAfterSend = new AtomicInteger();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
         ArrayDeque<LoggableEvent> sendQueue = new ArrayDeque<LoggableEvent>();
         EventStore eventStore = new EventStore(new FileIO("events.tmp"));

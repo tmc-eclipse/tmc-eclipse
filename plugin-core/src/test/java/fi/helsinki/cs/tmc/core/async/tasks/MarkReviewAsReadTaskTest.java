@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 
@@ -19,14 +19,14 @@ public class MarkReviewAsReadTaskTest {
     private ServerManager server;
     private Review review;
     
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
     private MarkReviewAsReadTask task;
 
     @Before
     public void setUp() throws Exception {
         server = mock(ServerManager.class);
         review = mock(Review.class);
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
         task = new MarkReviewAsReadTask(server, review);
     }
 

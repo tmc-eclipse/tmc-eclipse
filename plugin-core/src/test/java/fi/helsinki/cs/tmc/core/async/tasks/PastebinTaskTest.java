@@ -18,7 +18,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectUploader;
@@ -27,7 +27,7 @@ import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 public class PastebinTaskTest {
     private ProjectUploader uploader;
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
     private PastebinTask task;
     private IdeUIInvoker invoker;
     private ProjectDAO dao;
@@ -36,7 +36,7 @@ public class PastebinTaskTest {
     @Before
     public void setup() {
         uploader = mock(ProjectUploader.class);
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
         when(progress.isCancelRequested()).thenReturn(false);
 
         dao = mock(ProjectDAO.class);

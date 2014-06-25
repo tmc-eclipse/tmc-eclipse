@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.async.tasks;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectUploader;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
@@ -46,12 +46,12 @@ public class CodeReviewRequestTask extends BackgroundTask {
     }
 
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), 2);
         return run(progress);
     }
 
-    private int run(TaskFeedback progress) {
+    private int run(TaskStatusMonitor progress) {
 
         try {
             uploader.setProject(projectDAO.getProjectByFile(path));

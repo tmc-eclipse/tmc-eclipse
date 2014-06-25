@@ -62,7 +62,7 @@ public class Project {
         if (file == null || rootPath.isEmpty()) {
             return false;
         }
-        return file.contains(rootPath);
+        return (file + "/").contains(rootPath + "/");
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import fi.helsinki.cs.tmc.core.spyware.async.SavingTask;
 import fi.helsinki.cs.tmc.core.spyware.async.SendingTask;
 
 public class SendingTaskTest {
+
     private SendingTask task;
     private ArrayDeque<LoggableEvent> sendQueue;
     private ServerManager serverManager;
@@ -29,7 +31,7 @@ public class SendingTaskTest {
     private Settings settings;
     private SingletonTask savingTask;
     private EventStore eventStore;
-    private SharedInteger eventsToRemoveAfterSend;
+    private AtomicInteger eventsToRemoveAfterSend;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +41,7 @@ public class SendingTaskTest {
         initializeCourseDAO();
         initializeEventStore();
 
-        this.eventsToRemoveAfterSend = new SharedInteger();
+        this.eventsToRemoveAfterSend = new AtomicInteger();
         this.savingTask = new SingletonTask(new SavingTask(sendQueue, eventStore), Executors.newScheduledThreadPool(2));
         this.task = new SendingTask(sendQueue, serverManager, courseDAO, settings, savingTask, eventsToRemoveAfterSend);
     }
@@ -49,11 +51,11 @@ public class SendingTaskTest {
         task.run();
         assertEquals(sendQueue.size(), 5);
     }
-    
+
     @Test
     public void runWhenSpywareIsDisabledTest() throws InterruptedException {
         when(settings.isSpywareEnabled()).thenReturn(false);
-        
+
         for (Course c : courseDAO.getCourses()) {
             List<String> l = new ArrayList<String>();
             l.add("a");
@@ -61,14 +63,14 @@ public class SendingTaskTest {
             l.add("c");
             c.setSpywareUrls(l);
         }
-        
+
         task.run();
 
         assertEquals(sendQueue.size(), 5);
     }
 
     @Test
-    public void runTest() { 
+    public void runTest() {
         for (Course c : courseDAO.getCourses()) {
             List<String> l = new ArrayList<String>();
             l.add("a");
@@ -79,7 +81,7 @@ public class SendingTaskTest {
 
         task.run();
 
-        assertEquals(0, eventsToRemoveAfterSend.i);
+        assertEquals(0, eventsToRemoveAfterSend.intValue());
     }
 
     private void initializeEventStore() {

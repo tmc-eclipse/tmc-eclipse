@@ -16,7 +16,7 @@ public abstract class BackgroundTask {
         this.description = description;
     }
 
-    public abstract int start(TaskFeedback progress);
+    public abstract int start(TaskStatusMonitor progress);
 
     public void stop() {
         this.isRunning = false;
@@ -26,7 +26,19 @@ public abstract class BackgroundTask {
         return this.description;
     }
 
-    protected boolean shouldStop(TaskFeedback progress) {
+    /**
+     * Returns whether the background task should stop it's execution. This
+     * method should be polled periodically from the background task
+     * implementation. A task may be stopped either by calling it's
+     * {@link #stop()} method (usually invoked through the task runner) or by
+     * user interaction.
+     * 
+     * @param progress
+     *            a task status monitor for listening to task cancellation
+     *            requests
+     * @return true, if the task execution should be stopped. False otherwise.
+     */
+    protected boolean shouldStop(TaskStatusMonitor progress) {
         if (!isRunning) {
             return true;
         }
