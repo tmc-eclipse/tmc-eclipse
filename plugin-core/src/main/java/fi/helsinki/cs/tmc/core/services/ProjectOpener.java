@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.core.async.tasks;
+package fi.helsinki.cs.tmc.core.services;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 

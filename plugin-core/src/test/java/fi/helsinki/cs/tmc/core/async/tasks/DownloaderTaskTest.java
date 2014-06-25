@@ -21,6 +21,7 @@ import fi.helsinki.cs.tmc.core.domain.ProjectType;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
+import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 

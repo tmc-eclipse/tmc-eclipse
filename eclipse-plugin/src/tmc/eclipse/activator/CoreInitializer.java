@@ -14,6 +14,7 @@ import tmc.eclipse.spyware.EditorListener;
 import tmc.eclipse.spyware.ResourceEventListener;
 import tmc.eclipse.tasks.EclipseTaskRunner;
 import tmc.eclipse.tasks.RecurringTaskRunner;
+import tmc.eclipse.tasks.TaskStarter;
 import tmc.eclipse.util.WorkbenchHelper;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
@@ -44,6 +45,10 @@ public class CoreInitializer extends AbstractUIPlugin implements IStartup {
         Core.setTaskRunner(new EclipseTaskRunner());
         recurringTaskRunner = new RecurringTaskRunner(Core.getSettings());
         recurringTaskRunner.startRecurringTasks();
+
+        if (Core.getSettings().isCheckingForUnopenedAtStartup()) {
+            TaskStarter.startOpenAllDownloadedExercisesTask();
+        }
     }
 
     public void stop(BundleContext context) throws Exception {

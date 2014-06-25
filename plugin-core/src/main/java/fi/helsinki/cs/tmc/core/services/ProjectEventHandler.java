@@ -26,7 +26,6 @@ public class ProjectEventHandler {
             return;
         }
 
-        project.setProjectFiles(new ArrayList<String>());
         project.setStatus(ProjectStatus.DELETED);
     }
 
