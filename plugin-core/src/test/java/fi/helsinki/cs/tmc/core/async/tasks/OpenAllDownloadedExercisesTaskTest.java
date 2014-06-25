@@ -5,10 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -16,9 +14,12 @@ import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
+import fi.helsinki.cs.tmc.core.io.FakeFileIO;
+import fi.helsinki.cs.tmc.core.io.FakeIOFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 
 public class OpenAllDownloadedExercisesTaskTest {
+
     private OpenAllDownloadedExercisesTask task;
     private List<Exercise> exercises;
     private Exercise e1;
@@ -28,6 +29,8 @@ public class OpenAllDownloadedExercisesTaskTest {
     private Project p2;
     private Project p3;
     private ProjectOpener opener;
+
+    private FakeIOFactory io;
 
     @Before
     public void setUp() throws Exception {
@@ -49,25 +52,21 @@ public class OpenAllDownloadedExercisesTaskTest {
 
         opener = mock(ProjectOpener.class);
 
-        task = new OpenAllDownloadedExercisesTask("desc", exercises, opener);
+        io = new FakeIOFactory();
+        task = new OpenAllDownloadedExercisesTask("desc", exercises, opener, io);
     }
 
     @Test
     public void opensProjectsWithKnownBuildfile() throws IOException {
-        String tmpDir = File.createTempFile("foo", ".bar").getParent();
-        File pom = new File(tmpDir + File.separator + new Date().getTime() + File.separator + "pom.xml");
-        pom.mkdirs();
-        pom.createNewFile();
+        FakeFileIO pom = io.getFake("/project/pom.xml");
 
         List<String> p1Files = new ArrayList<String>();
         p1Files.add(pom.getPath());
-        p1Files.add(pom.getParent());
         p1.setProjectFiles(p1Files);
 
         task.run(e1);
 
         verify(opener, times(1)).open(any(Exercise.class));
-        pom.deleteOnExit();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core;
 
 import static org.mockito.Mockito.mock;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectEventHandler;
@@ -20,6 +21,7 @@ public class MockServiceFactory implements ServiceFactory {
     private Updater updater;
     private SpywarePluginLayer spywarePluginLayer;
     private ProjectEventHandler eventHandler;
+    private IOFactory io;
 
     public MockServiceFactory() {
         settings = mock(Settings.class);
@@ -30,7 +32,7 @@ public class MockServiceFactory implements ServiceFactory {
         updater = mock(Updater.class);
         spywarePluginLayer = mock(SpywarePluginLayer.class);
         eventHandler = mock(ProjectEventHandler.class);
-
+        io = mock(IOFactory.class);
     }
 
     @Override
@@ -65,13 +67,17 @@ public class MockServiceFactory implements ServiceFactory {
 
     @Override
     public ProjectEventHandler getProjectEventHandler() {
-
         return eventHandler;
     }
 
     @Override
     public ReviewDAO getReviewDAO() {
         return reviewDAO;
+    }
+
+    @Override
+    public IOFactory getIOFactory() {
+        return io;
     }
 
 }

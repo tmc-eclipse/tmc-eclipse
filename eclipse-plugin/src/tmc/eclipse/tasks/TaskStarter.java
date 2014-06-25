@@ -139,7 +139,8 @@ public final class TaskStarter {
         }
 
         ProjectOpener opener = new GenericProjectOpener();
-        OpenAllDownloadedExercisesTask task = new OpenAllDownloadedExercisesTask(description, exercises, opener);
+        OpenAllDownloadedExercisesTask task = new OpenAllDownloadedExercisesTask(description, exercises, opener,
+                Core.getIOFactory());
         Core.getTaskRunner().runTask(task);
     }
 }

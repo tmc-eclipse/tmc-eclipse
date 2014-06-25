@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTaskRunner;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectEventHandler;
@@ -34,6 +35,7 @@ public final class Core {
     private Updater updater;
 
     private ProjectEventHandler projectEventHandler;
+    private IOFactory io;
 
     private Core(ServiceFactory factory) {
         this.settings = factory.getSettings();
@@ -45,6 +47,7 @@ public final class Core {
         this.errorHandler = new DummyErrorHandler();
         this.spyware = factory.getSpyware();
         this.projectEventHandler = factory.getProjectEventHandler();
+        this.io = factory.getIOFactory();
     }
 
     public static void setErrorHandler(TMCErrorHandler errorHandler) {
@@ -93,6 +96,10 @@ public final class Core {
 
     public static ProjectEventHandler getProjectEventHandler() {
         return Core.getInstance().projectEventHandler;
+    }
+
+    public static IOFactory getIOFactory() {
+        return Core.getInstance().io;
     }
 
     public static Core getInstance() {

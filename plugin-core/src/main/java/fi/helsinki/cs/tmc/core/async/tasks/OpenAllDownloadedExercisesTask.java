@@ -1,20 +1,24 @@
 package fi.helsinki.cs.tmc.core.async.tasks;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.async.SimpleBackgroundTask;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
+import fi.helsinki.cs.tmc.core.io.IO;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 
 public class OpenAllDownloadedExercisesTask extends SimpleBackgroundTask<Exercise> {
-    private ProjectOpener opener;
 
-    public OpenAllDownloadedExercisesTask(String description, List<Exercise> list, ProjectOpener opener) {
+    private ProjectOpener opener;
+    private IOFactory io;
+
+    public OpenAllDownloadedExercisesTask(String description, List<Exercise> list, ProjectOpener opener, IOFactory io) {
         super(description, list);
         this.opener = opener;
+        this.io = io;
     }
 
     @Override
@@ -31,11 +35,10 @@ public class OpenAllDownloadedExercisesTask extends SimpleBackgroundTask<Exercis
             return false;
         }
 
-        File root = new File(exercise.getProject().getRootPath());
-        File buildFile = new File(root.getPath() + File.separator
-                + exercise.getProject().getProjectType().getBuildFile());
+        IO root = io.newFile(exercise.getProject().getRootPath());
+        IO buildFile = io.newFile(root.getPath() + "/" + exercise.getProject().getProjectType().getBuildFile());
 
-        if (buildFile.exists()) {
+        if (buildFile.fileExists()) {
             return true;
         } else {
             cleanup(exercise);

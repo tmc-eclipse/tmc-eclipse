@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core;
 
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectEventHandler;
@@ -32,5 +33,7 @@ public interface ServiceFactory {
     public SpywarePluginLayer getSpyware();
 
     public ProjectEventHandler getProjectEventHandler();
+
+    public IOFactory getIOFactory();
 
 }

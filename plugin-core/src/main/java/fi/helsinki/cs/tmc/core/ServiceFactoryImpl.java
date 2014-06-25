@@ -7,6 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import fi.helsinki.cs.tmc.core.async.tasks.SingletonTask;
 import fi.helsinki.cs.tmc.core.io.FileIO;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
+import fi.helsinki.cs.tmc.core.io.IOFactoryImpl;
 import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.DAOManager;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
@@ -41,9 +43,13 @@ public final class ServiceFactoryImpl implements ServiceFactory {
     private SpywarePluginLayer spyware;
     private ProjectEventHandler projectEventHandler;
 
+    private IOFactory io;
+
     public ServiceFactoryImpl() {
         this.settings = Settings.getDefaultSettings();
         this.server = new ServerManager(settings);
+
+        this.io = new IOFactoryImpl();
 
         DAOManager manager = new DAOManager();
         this.courseDAO = manager.getCourseDAO();
@@ -102,6 +108,11 @@ public final class ServiceFactoryImpl implements ServiceFactory {
 
     public ProjectEventHandler getProjectEventHandler() {
         return projectEventHandler;
+    }
+
+    @Override
+    public IOFactory getIOFactory() {
+        return io;
     }
 
 }
