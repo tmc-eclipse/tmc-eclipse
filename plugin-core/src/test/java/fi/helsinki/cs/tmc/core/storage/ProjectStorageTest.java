@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,25 +187,18 @@ public class ProjectStorageTest {
                         + "\"projectFiles\": [\"/path/to/file\"], \"extraStudentFiles\": [],"
                         + "\"rootPath\": \"/path/to\", \"status\": \"DOWNLOADED\"}]}";
                 private int position = 0;
+                private StringReader stringReader = null;
 
                 @Override
                 public Integer answer(InvocationOnMock invocation) throws Throwable {
+                    if (stringReader == null) {
+                        stringReader = new StringReader(json);
+                    }
+
                     char[] buffer = (char[]) invocation.getArguments()[0];
                     int offset = (int) (invocation.getArguments()[1]);
                     int length = (int) (invocation.getArguments()[2]);
-
-                    if (position >= json.length()) {
-                        return -1;
-                    }
-
-                    int readCharacters = 0;
-                    for (; readCharacters < length && position < json.length()
-                            && readCharacters + offset < buffer.length; ++position, ++readCharacters) {
-                        buffer[readCharacters + offset] = json.charAt(position);
-                    }
-                    position += readCharacters;
-
-                    return readCharacters;
+                    return stringReader.read(buffer, offset, length);
                 }
             });
         } catch (IOException e) {
