@@ -11,36 +11,35 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.async.tasks.SingletonTask;
 import fi.helsinki.cs.tmc.core.services.Settings;
-import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.spyware.async.SavingTask;
 import fi.helsinki.cs.tmc.core.spyware.async.SendingTask;
 
 public class EventSendBufferTest {
+
     private EventSendBuffer buffer;
     private EventStore store;
     private Settings settings;
-    private ServerManager serverManager;
     private ArrayDeque<LoggableEvent> sendQueue;
-    private SharedInteger eventsToRemoveAfterSend;
+    private AtomicInteger eventsToRemoveAfterSend;
 
     private SendingTask sendingTask;
     private SavingTask savingTask;
 
     @Before
     public void setUp() throws Exception {
-        this.serverManager = mock(ServerManager.class);
         this.settings = mock(Settings.class);
         when(settings.isSpywareEnabled()).thenReturn(true);
         initializeEventStore();
         initializeSendQueue();
-        this.eventsToRemoveAfterSend = new SharedInteger();
-        
+        this.eventsToRemoveAfterSend = new AtomicInteger();
+
         this.sendingTask = mock(SendingTask.class);
         this.savingTask = mock(SavingTask.class);
 
@@ -55,31 +54,31 @@ public class EventSendBufferTest {
         when(settings.isSpywareEnabled()).thenReturn(false);
 
         buffer.receiveEvent(new LoggableEvent("a", "a", "a", new byte[1], "a"));
-        
+
         assertEquals(6, sendQueue.size());
     }
-    
+
     @Test
     public void receiveEventTest() {
-    	buffer.setSendingInterval(1);
-    	buffer.receiveEvent(new LoggableEvent("a", "a", "a", new byte[1], "a"));
-    	
-    	try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-    	
-    	assertEquals(7, sendQueue.size());
-    	verify(sendingTask, atLeastOnce()).run();
+        buffer.setSendingInterval(1);
+        buffer.receiveEvent(new LoggableEvent("a", "a", "a", new byte[1], "a"));
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(7, sendQueue.size());
+        verify(sendingTask, atLeastOnce()).run();
     }
-    
+
     @Test
     public void closeTest() {
-    	buffer.setSavingInterval(1);
-    	buffer.close();
-    	
-    	verify(savingTask, times(1)).run();
+        buffer.setSavingInterval(1);
+        buffer.close();
+
+        verify(savingTask, times(1)).run();
     }
 
     private void initializeEventStore() throws IOException {
