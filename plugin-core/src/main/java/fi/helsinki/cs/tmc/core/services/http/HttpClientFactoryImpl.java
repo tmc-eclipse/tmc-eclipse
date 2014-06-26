@@ -9,8 +9,16 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 
+/**
+ * Implementation of HttpClientFactory interface. Creates actual HttpClients
+ * that can be used to connect to the internet
+ * 
+ */
 public class HttpClientFactoryImpl implements HttpClientFactory {
 
+    /**
+     * Creates HTTP client
+     */
     @Override
     public CloseableHttpClient makeHttpClient() {
         HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties()
