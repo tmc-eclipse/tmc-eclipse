@@ -33,7 +33,9 @@ public class FetchCodeReviewsTaskListener implements BackgroundTaskListener {
         if (unseen.isEmpty() && showMessages) {
             invoker.invokeMessageBox("No new code reviews.");
             return;
-        } else {
+        } else if (!unseen.isEmpty() && !showMessages) {
+            invoker.invokeCodeReviewPopupNotification(unseen);
+        } else{
             for (Review r : unseen) {
                 r.setMarkedAsRead(true);
                 invoker.invokeCodeReviewDialog(r);
