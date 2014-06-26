@@ -31,19 +31,25 @@ public class FakeFileIO extends FileIO {
         super("");
 
         this.path = path;
-        this.byteContents = null;
         this.fileExists = true;
         this.directoryExists = true;
 
         this.byteContents = new byte[0];
     }
 
-    public void setFileExists(boolean fileExists) {
-        this.fileExists = fileExists;
+    public void setFileExists() {
+        this.fileExists = true;
+        this.directoryExists = false;
     }
 
-    public void setDirectoryExists(boolean directoryExists) {
-        this.directoryExists = directoryExists;
+    public void setDirectoryExists() {
+        this.directoryExists = true;
+        this.fileExists = false;
+    }
+
+    public void setDoesNotExist() {
+        this.directoryExists = false;
+        this.fileExists = false;
     }
 
     public void setContents(byte[] bytes) {

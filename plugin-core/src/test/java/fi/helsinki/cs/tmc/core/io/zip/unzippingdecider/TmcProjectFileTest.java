@@ -3,32 +3,20 @@ package fi.helsinki.cs.tmc.core.io.zip.unzippingdecider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+
+import fi.helsinki.cs.tmc.core.io.FakeFileIO;
 
 public class TmcProjectFileTest {
 
-    private TempTestDir tempDir;
-
-    @Before
-    public void setUp() throws IOException {
-        tempDir = new TempTestDir();
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        tempDir.destroy();
-    }
-
     @Test
     public void testLoading() throws IOException {
-        writeFile("extra_student_files:\n - \"one\"\n - \"two\"");
-        TmcProjectFile result = TmcProjectFile.load(getFile());
+        FakeFileIO file = getFile();
+        file.setContents("extra_student_files:\n - \"one\"\n - \"two\"");
+
+        TmcProjectFile result = new TmcProjectFile(file);
         assertTrue(result.getExtraStudentFiles().contains("one"));
         assertTrue(result.getExtraStudentFiles().contains("two"));
         assertEquals(2, result.getExtraStudentFiles().size());
@@ -36,19 +24,13 @@ public class TmcProjectFileTest {
 
     @Test
     public void testLoadingEmptyFile() throws IOException {
-        writeFile("---");
-        TmcProjectFile result = TmcProjectFile.load(getFile());
+        FakeFileIO file = getFile();
+        TmcProjectFile result = new TmcProjectFile(file);
         assertTrue(result.getExtraStudentFiles().isEmpty());
     }
 
-    private File getFile() {
-        return new File(tempDir.get().getPath() + File.separator + ".tmcproject.yml");
+    private FakeFileIO getFile() {
+        return new FakeFileIO("/project/.tmcproject.yml");
     }
 
-    private void writeFile(String content) throws IOException {
-        File file = getFile();
-        PrintWriter writer = new PrintWriter(file, "UTF-8");
-        writer.println(content);
-        writer.close();
-    }
 }

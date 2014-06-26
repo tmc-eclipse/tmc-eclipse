@@ -19,6 +19,8 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
 import fi.helsinki.cs.tmc.core.domain.ProjectType;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
+import fi.helsinki.cs.tmc.core.io.FakeIOFactory;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
 import fi.helsinki.cs.tmc.core.services.ProjectOpener;
@@ -34,12 +36,14 @@ public class DownloaderTaskTest {
     private ProjectDAO projectDao;
     private Settings settings;
     private IdeUIInvoker invoker;
+    private IOFactory io;
 
     private ZippedProject zipProject;
     TaskStatusMonitor progress;
 
     @Before
     public void setUp() {
+        io = new FakeIOFactory();
         progress = mock(TaskStatusMonitor.class);
 
         downloader = mock(ProjectDownloader.class);
@@ -60,7 +64,7 @@ public class DownloaderTaskTest {
 
         when(downloader.downloadExercise(exercises.get(0))).thenReturn(zipProject);
 
-        task = new DownloaderTask(downloader, opener, exercises, projectDao, settings, invoker);
+        task = new DownloaderTask(downloader, opener, exercises, projectDao, settings, invoker, io);
     }
 
     @Test

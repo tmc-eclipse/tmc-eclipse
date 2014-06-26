@@ -1,21 +1,25 @@
 package fi.helsinki.cs.tmc.core.io.zip.unzippingdecider;
 
-import java.io.File;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.domain.Project;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 
 /**
  * Abstract base class that provides common functionality for all unzipping
  * deciders.
  */
 public abstract class AbstractUnzippingDecider implements UnzippingDecider {
+
     protected Project project;
     private List<String> doNotUnzip;
+    protected IOFactory io;
 
-    public AbstractUnzippingDecider(Project project) {
+    public AbstractUnzippingDecider(IOFactory io, Project project) {
         this.project = project;
-        this.doNotUnzip = TmcProjectFile.forProject(new File(project.getRootPath())).getExtraStudentFiles();
+        this.io = io;
+        this.doNotUnzip = new TmcProjectFile(io.newFile(project.getRootPath() + "/.tmcproject.yml"))
+                .getExtraStudentFiles();
     }
 
     /**

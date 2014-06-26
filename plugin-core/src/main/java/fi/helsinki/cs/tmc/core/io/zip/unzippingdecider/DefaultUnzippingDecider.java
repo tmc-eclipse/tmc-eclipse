@@ -1,26 +1,26 @@
 package fi.helsinki.cs.tmc.core.io.zip.unzippingdecider;
 
 import fi.helsinki.cs.tmc.core.domain.Project;
-import fi.helsinki.cs.tmc.core.io.FileIO;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 
 /**
  * Unzipping decider for java ant and C projects.
  */
 public class DefaultUnzippingDecider extends AbstractUnzippingDecider {
 
-    public DefaultUnzippingDecider(Project project) {
-        super(project);
+    public DefaultUnzippingDecider(IOFactory io, Project project) {
+        super(io, project);
     }
 
     /**
-     * Prevents unzipping in /src folder so that user source files are not
-     * overwritten.
+     * Prevents overwriting files in /src folder when unzipping so that changes
+     * made by the user will not be lost.
      */
     @Override
     public boolean shouldUnzip(String filePath) {
         String s = project.getRootPath() + "/src";
         if (filePath.startsWith(s) && (filePath.equals(s) || filePath.charAt(s.length()) == '/')) {
-            return !(new FileIO(filePath).fileExists());
+            return !(io.newFile(filePath).fileExists());
         }
         return super.shouldUnzip(filePath);
     }
