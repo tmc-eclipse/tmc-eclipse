@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse tmc plugin
-Bundle-SymbolicName: eclipse-plugin;singleton:=true
+Bundle-Name: TestMyCode Eclipse plugin
+Bundle-SymbolicName: TestMyCode_Eclipse_plugin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: tmc.eclipse.activator.CoreInitializer
 Require-Bundle: org.eclipse.ui,
@@ -29,3 +29,4 @@ Bundle-ClassPath: .,
  swing2swt.jar,
  swt-grouplayout.jar
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: fi.helsinki.cs.tmc
