@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.DefaultZippingDecider;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.MavenZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.DefaultZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.MavenZippingDecider;
 
 public class ProjectTest {
     private Project project;

@@ -6,7 +6,7 @@ import java.util.List;
 import fi.helsinki.cs.tmc.core.async.SimpleBackgroundTask;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
-import fi.helsinki.cs.tmc.core.io.IO;
+import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 
@@ -26,7 +26,6 @@ public class OpenAllDownloadedExercisesTask extends SimpleBackgroundTask<Exercis
         if (canOpen(exercise)) {
             opener.open(exercise);
             exercise.getProject().setStatus(ProjectStatus.DOWNLOADED);
-
         }
     }
 
@@ -35,8 +34,8 @@ public class OpenAllDownloadedExercisesTask extends SimpleBackgroundTask<Exercis
             return false;
         }
 
-        IO root = io.newFile(exercise.getProject().getRootPath());
-        IO buildFile = io.newFile(root.getPath() + "/" + exercise.getProject().getProjectType().getBuildFile());
+        FileIO root = io.newFile(exercise.getProject().getRootPath());
+        FileIO buildFile = io.newFile(root.getPath() + "/" + exercise.getProject().getProjectType().getBuildFile());
 
         if (buildFile.fileExists()) {
             return true;

@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class TMCAttemptedProjectNature implements IProjectNature {
 
-    public static final String NATURE_ID = "eclipse-plugin.tmcAttemptedNature";
+    public static final String NATURE_ID = "TestMyCode_Eclipse_plugin.tmcAttemptedNature";
 
     private IProject project;
 

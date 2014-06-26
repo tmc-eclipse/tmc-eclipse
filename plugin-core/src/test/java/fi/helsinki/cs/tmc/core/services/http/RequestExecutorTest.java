@@ -38,7 +38,7 @@ import fi.helsinki.cs.tmc.core.services.Settings;
 
 public class RequestExecutorTest {
     private RequestExecutor executor;
-    private MockHttpFactory factory;
+    private MockHttpClientFactory factory;
     private CloseableHttpResponse response;
     private CloseableHttpClient client;
     private StatusLine line;
@@ -63,7 +63,7 @@ public class RequestExecutorTest {
 
         when(response.getEntity()).thenReturn(entity);
         when(client.execute(any(HttpUriRequest.class))).thenReturn(response);
-        factory = new MockHttpFactory(client);
+        factory = new MockHttpClientFactory(client);
     }
 
     @Test
