@@ -5,5 +5,7 @@ package fi.helsinki.cs.tmc.core.io;
  * can inject mock factory that creates mock objects.
  */
 public interface IOFactory {
-    IO createIO(String path);
+
+    public IO newFile(String path);
+
 }

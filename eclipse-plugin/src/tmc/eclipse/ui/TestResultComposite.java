@@ -127,7 +127,7 @@ public class TestResultComposite extends Composite {
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
 
         Composite moreDetails = new Composite(this, SWT.SMOOTH);
-        heightOffset = 0;
+        heightOffset = 20;
 
         for (StackTraceElement st : tcr.getException().stackTrace) {
             if (st.getFileName().toLowerCase().contains("test.")) {
@@ -165,14 +165,11 @@ public class TestResultComposite extends Composite {
         String className = st.getClassName().replace('.', '/');
 
         path.append(getProjectTestRootPath(className) + "/");
+        System.out.println(moreDetailslink.isFocusControl());
 
         moreDetailslink.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-
-                System.out.println(st.getFileName());
-                System.out.println(st.getClassName());
-                System.out.println(path);
 
                 final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot()
                         .getFileForLocation(Path.fromOSString(path.toString().trim()));

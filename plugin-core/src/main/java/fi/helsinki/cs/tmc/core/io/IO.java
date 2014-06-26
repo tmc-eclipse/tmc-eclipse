@@ -27,6 +27,8 @@ public interface IO {
 
     void write(byte[] bytes) throws IOException;
 
+    byte[] read() throws IOException;
+
     void createFolderTree(boolean onlyParents);
 
     List<IO> getChildren();

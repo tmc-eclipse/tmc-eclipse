@@ -2,7 +2,7 @@ package fi.helsinki.cs.tmc.core.async.tasks;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.StopStatus;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
@@ -30,14 +30,14 @@ public class UploaderTask extends BackgroundTask {
     }
 
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), 3);
 
         return run(progress);
 
     }
 
-    private int run(final TaskFeedback progress) {
+    private int run(final TaskStatusMonitor progress) {
 
         try {
             uploader.setProject(projectDAO.getProjectByFile(path));

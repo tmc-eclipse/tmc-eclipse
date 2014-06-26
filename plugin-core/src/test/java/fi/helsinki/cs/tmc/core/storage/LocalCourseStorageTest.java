@@ -2,11 +2,16 @@ package fi.helsinki.cs.tmc.core.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +77,22 @@ public class LocalCourseStorageTest {
 
         List<Course> returned = lcs.load();
         assertEquals("c1", returned.get(0).getName());
+    }
+
+    @Test(expected = UserVisibleException.class)
+    public void saveThrowsIfWritesIsNull() {
+        when(io.getWriter()).thenReturn(null);
+        lcs.save(new ArrayList<Course>());
+    }
+
+    @Test
+    public void exceptionIsCaughtIfClosingWriterThrows() throws IOException {
+        Writer writer = mock(Writer.class);
+        when(io.getWriter()).thenReturn(writer);
+        doThrow(new IOException("Foo")).when(writer).close();
+
+        lcs.save(new ArrayList<Course>());
+        verify(writer, times(1)).close();
     }
 
     private CourseList buildMockCourseList() {

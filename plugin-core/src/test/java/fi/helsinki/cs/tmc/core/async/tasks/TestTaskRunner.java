@@ -3,11 +3,11 @@ package fi.helsinki.cs.tmc.core.async.tasks;
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.BackgroundTaskListener;
 import fi.helsinki.cs.tmc.core.async.BackgroundTaskRunner;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 
 public class TestTaskRunner implements BackgroundTaskRunner {
 
-    class TaskFeedbackDummy implements TaskFeedback {
+    class TaskFeedbackDummy implements TaskStatusMonitor {
 
         @Override
         public void startProgress(String message, int amountOfWork) {
@@ -24,7 +24,7 @@ public class TestTaskRunner implements BackgroundTaskRunner {
 
     }
 
-    private TaskFeedback taskFeedback;
+    private TaskStatusMonitor taskFeedback;
 
     public TestTaskRunner() {
         this.taskFeedback = new TaskFeedbackDummy();

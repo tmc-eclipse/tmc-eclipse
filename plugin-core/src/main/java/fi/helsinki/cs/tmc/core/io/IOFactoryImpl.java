@@ -6,7 +6,7 @@ package fi.helsinki.cs.tmc.core.io;
 public class IOFactoryImpl implements IOFactory {
 
     @Override
-    public IO createIO(String path) {
+    public IO newFile(String path) {
         return new FileIO(path);
     }
 

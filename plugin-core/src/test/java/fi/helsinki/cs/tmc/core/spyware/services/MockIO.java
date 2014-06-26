@@ -83,4 +83,10 @@ public class MockIO implements IO {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public byte[] read() throws IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

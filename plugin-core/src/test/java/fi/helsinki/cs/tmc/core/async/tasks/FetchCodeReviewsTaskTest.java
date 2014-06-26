@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.services.ReviewDAO;
@@ -26,7 +26,7 @@ public class FetchCodeReviewsTaskTest {
     private ReviewDAO reviewDAO;
     private Course course;
 
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
     private FetchCodeReviewsTask task;
 
     @Before
@@ -35,7 +35,7 @@ public class FetchCodeReviewsTaskTest {
         reviewDAO = mock(ReviewDAO.class);
         course = mock(Course.class);
 
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
         task = new FetchCodeReviewsTask(course, server, reviewDAO);
     }
 

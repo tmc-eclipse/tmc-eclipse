@@ -2,13 +2,13 @@ package tmc.eclipse.tasks;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 
-public class EclipseTaskFeedbackAdapter implements TaskFeedback {
+public class EclipseTaskStatusMonitor implements TaskStatusMonitor {
 
     private IProgressMonitor monitor;
 
-    public EclipseTaskFeedbackAdapter(IProgressMonitor monitor) {
+    public EclipseTaskStatusMonitor(IProgressMonitor monitor) {
         this.monitor = monitor;
     }
 

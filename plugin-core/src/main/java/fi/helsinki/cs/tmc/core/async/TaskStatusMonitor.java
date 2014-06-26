@@ -6,7 +6,7 @@ package fi.helsinki.cs.tmc.core.async;
  * status changes and the monitor in turn is responsible for notifying the user
  * in a IDE-specific way.
  */
-public interface TaskFeedback {
+public interface TaskStatusMonitor {
 
     void startProgress(String message, int amountOfWork);
 

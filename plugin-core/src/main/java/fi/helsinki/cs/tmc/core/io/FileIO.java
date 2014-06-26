@@ -19,10 +19,11 @@ import java.util.List;
  * Wrapper class for file IO. Allows us to mock file interactions in unit tests.
  */
 public class FileIO implements IO {
+
     private File file;
 
-    public FileIO(String file) {
-        this.file = new File(file);
+    public FileIO(String path) {
+        this.file = new File(path);
     }
 
     @Override
@@ -141,4 +142,11 @@ public class FileIO implements IO {
             }
         }
     }
+
+    @Override
+    public byte[] read() throws IOException {
+        // TODO: implement
+        return null;
+    }
+
 }

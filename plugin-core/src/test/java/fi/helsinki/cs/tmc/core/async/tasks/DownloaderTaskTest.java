@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
@@ -21,6 +21,7 @@ import fi.helsinki.cs.tmc.core.domain.ProjectType;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
+import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
@@ -35,11 +36,11 @@ public class DownloaderTaskTest {
     private IdeUIInvoker invoker;
 
     private ZippedProject zipProject;
-    TaskFeedback progress;
+    TaskStatusMonitor progress;
 
     @Before
     public void setUp() {
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
 
         downloader = mock(ProjectDownloader.class);
 

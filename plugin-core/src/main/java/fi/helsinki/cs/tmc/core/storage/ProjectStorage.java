@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.io.FileIO;
@@ -29,22 +30,32 @@ public class ProjectStorage implements DataSource<Project> {
         if (!io.fileExists()) {
             return new ArrayList<Project>();
         }
-
+        ProjectsFileFormat projectList = null;
         Reader reader = io.getReader();
         if (reader == null) {
             throw new UserVisibleException("Could not load project data from local storage.");
         }
-
-        ProjectsFileFormat projectList = gson.fromJson(io.getReader(), ProjectsFileFormat.class);
-
         try {
-            reader.close();
-        } catch (IOException e) {
-            // TODO: Log here?
-            return projectList.getProjects();
+            projectList = gson.fromJson(reader, ProjectsFileFormat.class);
+        } catch (JsonSyntaxException ex) {
+            throw new UserVisibleException("Local project storage corrupted");
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                return getProjectList(projectList);
+            }
         }
 
-        return projectList.getProjects();
+        return getProjectList(projectList);
+    }
+
+    private List<Project> getProjectList(ProjectsFileFormat projectList) {
+        if (projectList != null) {
+            return projectList.getProjects();
+        } else {
+            return new ArrayList<Project>();
+        }
     }
 
     @Override

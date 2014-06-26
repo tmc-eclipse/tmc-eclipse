@@ -1,12 +1,13 @@
 package tmc.eclipse.tasks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tmc.eclipse.activator.CoreInitializer;
 import tmc.eclipse.openers.GenericProjectOpener;
 import tmc.eclipse.ui.EclipseIdeUIInvoker;
-import tmc.eclipse.util.WorkbenchHelper;
 import tmc.eclipse.util.EclipseProjectIconHandler;
+import tmc.eclipse.util.WorkbenchHelper;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.async.listeners.CodeReviewRequestListener;
 import fi.helsinki.cs.tmc.core.async.listeners.FetchCodeReviewsTaskListener;
@@ -18,6 +19,7 @@ import fi.helsinki.cs.tmc.core.async.tasks.DownloaderTask;
 import fi.helsinki.cs.tmc.core.async.tasks.FeedbackSubmissionTask;
 import fi.helsinki.cs.tmc.core.async.tasks.FetchCodeReviewsTask;
 import fi.helsinki.cs.tmc.core.async.tasks.MarkReviewAsReadTask;
+import fi.helsinki.cs.tmc.core.async.tasks.OpenAllDownloadedExercisesTask;
 import fi.helsinki.cs.tmc.core.async.tasks.PastebinTask;
 import fi.helsinki.cs.tmc.core.async.tasks.TestrunnerTask;
 import fi.helsinki.cs.tmc.core.async.tasks.UploaderTask;
@@ -28,6 +30,7 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
+import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 import fi.helsinki.cs.tmc.core.services.ProjectUploader;
 import fi.helsinki.cs.tmc.core.services.ReviewDAO;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
@@ -125,6 +128,19 @@ public final class TaskStarter {
     public static void startMarkCodereviewAsReadTask(Review review) {
         ServerManager server = Core.getServerManager();
         MarkReviewAsReadTask task = new MarkReviewAsReadTask(server, review);
+        Core.getTaskRunner().runTask(task);
+    }
+
+    public static void startOpenAllDownloadedExercisesTask() {
+        String description = "Opening previously downloaded exercises";
+        List<Exercise> exercises = new ArrayList<Exercise>();
+        for (Project p : Core.getProjectDAO().getProjects()) {
+            exercises.add(p.getExercise());
+        }
+
+        ProjectOpener opener = new GenericProjectOpener();
+        OpenAllDownloadedExercisesTask task = new OpenAllDownloadedExercisesTask(description, exercises, opener,
+                Core.getIOFactory());
         Core.getTaskRunner().runTask(task);
     }
 }
