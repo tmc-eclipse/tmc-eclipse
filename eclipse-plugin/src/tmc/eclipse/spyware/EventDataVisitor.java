@@ -13,9 +13,9 @@ import fi.helsinki.cs.tmc.core.spyware.ChangeType;
  * This class handles parsing the resource change event that triggers on file
  * change (save\rename\addition\removal)
  * 
- * Event data is organised as a tree. EventDataVisitor is called by eclipse
- * whenever it visits a tree node. Rename event is delete + add event in tree.
- * Add and delete can be an arbitrary order. Parsing this is annoying
+ * Event data is organised as a tree where inner nodes contain folders and leaf
+ * nodes are files
+ * 
  * */
 class EventDataVisitor implements IResourceDeltaVisitor {
     class EventData {
@@ -35,6 +35,9 @@ class EventDataVisitor implements IResourceDeltaVisitor {
     private List<EventData> events;
 
     private boolean done;
+
+    // if we have folder delete\rename, we ignore any file changes that it
+    // spawns and only notify about the folder change.
     private boolean folderOperation;
 
     private String projectName;
@@ -53,6 +56,15 @@ class EventDataVisitor implements IResourceDeltaVisitor {
         return events;
     }
 
+    /**
+     * visit is called by eclipse whenever it visits a tree node. Rename event
+     * is two different events, delete and add, in tree. Add and delete can be
+     * in an arbitrary order. Parsing this is annoying and explains the vast
+     * majority of the complexity in this class.
+     * 
+     * @param delta
+     *            Tree node with change information
+     * */
     public boolean visit(IResourceDelta delta) {
 
         projectName = delta.getResource().getFullPath().segment(0);
@@ -108,7 +120,6 @@ class EventDataVisitor implements IResourceDeltaVisitor {
 
     private void folderRemoved(IResourceDelta delta) {
         folderOperation = true;
-
         if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
 
             handleDeleteRenamePortion(delta, ChangeType.FOLDER_RENAME);

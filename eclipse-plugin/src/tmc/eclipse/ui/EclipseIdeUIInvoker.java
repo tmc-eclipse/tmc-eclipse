@@ -10,8 +10,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import tmc.eclipse.handlers.EclipseErrorHandler;
-import tmc.eclipse.spyware.EditorListener;
 import tmc.eclipse.tasks.TaskStarter;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.domain.Review;
@@ -19,6 +17,11 @@ import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.TestCaseResult;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
+/**
+ * Eclipse implementation of the IdeUIInvoker interface. Handles invoking any
+ * eclipse specific UI components for the core
+ * 
+ */
 public class EclipseIdeUIInvoker implements IdeUIInvoker {
 
     private Shell shell;
@@ -167,20 +170,21 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
         invokeMessageBox(message, "", MessageDialog.OK);
 
     }
-    
+
     public void invokeCodeReviewPopupNotification(final List<Review> unseen) {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-                Notifier.getInstance().createNotification("Code review available", "Click this box to read new code reviews", new Listener() {
-                    @Override
-                    public void handleEvent(Event arg0) {
-                        for (Review r : unseen) {
-                            r.setMarkedAsRead(true);
-                            invokeCodeReviewDialog(r);
-                        }
-                    }
-                });
+                Notifier.getInstance().createNotification("Code review available",
+                        "Click this box to read new code reviews", new Listener() {
+                            @Override
+                            public void handleEvent(Event arg0) {
+                                for (Review r : unseen) {
+                                    r.setMarkedAsRead(true);
+                                    invokeCodeReviewDialog(r);
+                                }
+                            }
+                        });
             }
         });
     }
