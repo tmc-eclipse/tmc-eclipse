@@ -7,7 +7,7 @@ import fi.helsinki.cs.tmc.core.services.Settings;
 
 /**
  * Implementation of the RequestExecutorFactory interface. Produces actual
- * RE-objects
+ * RequestExecutor-objects
  * 
  */
 public class RequestExecutorFactoryImpl implements RequestExecutorFactory {
