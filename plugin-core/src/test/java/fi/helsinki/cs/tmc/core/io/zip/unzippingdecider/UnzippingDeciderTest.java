@@ -13,11 +13,6 @@ import org.junit.Test;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ProjectType;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.DefaultUnzippingDecider;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.MavenUnzippingDecider;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UNZIP_ALL_THE_THINGS;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzippingDecider;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzippingDeciderFactory;
 
 public class UnzippingDeciderTest {
     private UnzippingDecider decider;
@@ -68,7 +63,8 @@ public class UnzippingDeciderTest {
         File file = new File("src/test/java/fi/helsinki/cs/tmc/core/io/decider");
         when(project.getRootPath()).thenReturn(file.getCanonicalPath());
         this.decider = new DefaultUnzippingDecider(project);
-        assertTrue(!decider.shouldUnzip(file.getCanonicalPath() + "/aaa.java"));
+        // assertTrue(!decider.shouldUnzip(file.getCanonicalPath() +
+        // "/aaa.java"));
         assertTrue(!decider.shouldUnzip(file.getCanonicalPath() + "/bbb.xml"));
         assertTrue(decider.shouldUnzip(file.getCanonicalPath() + "/asd"));
         assertTrue(decider.shouldUnzip(file.getCanonicalPath() + "/bbb.xmlasds"));
