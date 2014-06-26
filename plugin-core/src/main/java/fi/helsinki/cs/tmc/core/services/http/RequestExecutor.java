@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.services.http;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
@@ -76,14 +75,12 @@ class RequestExecutor {
             response = httpClient.execute(request);
 
         } catch (IOException ex) {
-            LOG.log(Level.INFO, "Executing http request failed: {0}", ex.toString());
             if (request.isAborted()) {
                 throw new InterruptedException();
             } else {
                 throw new IOException("Download failed: " + ex.getMessage(), ex);
             }
         } catch (AuthenticationException ex) {
-            LOG.log(Level.INFO, "Auth failed {0}", ex);
             throw new InterruptedException();
         }
 
