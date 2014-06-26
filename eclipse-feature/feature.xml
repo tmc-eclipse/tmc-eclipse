@@ -2,7 +2,8 @@
 <feature
       id="TestMyCode_Eclipse"
       label="TestMyCode_Eclipse"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="fi.helsinki.cs.tmc">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,6 +18,8 @@
    </license>
 
    <requires>
+      <import feature="org.eclipse.m2e.feature" version="1.4.0.20130601-0317"/>
+      <import feature="org.eclipse.cdt" version="8.3.0.201402142303"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide" version="3.9.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.9.100" match="greaterOrEqual"/>
@@ -36,10 +39,16 @@
       <import plugin="org.eclipse.core.filesystem" version="1.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.8.101" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.editors" version="3.8.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.notifications.ui" version="1.1.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.builds.ui" version="1.1.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.notifications.core" version="1.1.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.notifications.feed" version="1.1.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.9.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.builds.core" version="1.1.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin
-         id="eclipse-plugin"
+         id="TestMyCode_Eclipse_plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
