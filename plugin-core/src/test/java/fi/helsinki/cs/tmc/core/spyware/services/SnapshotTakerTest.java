@@ -37,7 +37,7 @@ public class SnapshotTakerTest {
     @Before
     public void setUp() throws Exception {
         relPath = "src/test/java/fi/helsinki/cs/tmc/core/spyware/services/testProject/aaa.txt";
-        fullPath = new File(relPath).getCanonicalPath();
+        fullPath = FileUtil.getUnixPath(new File(relPath).getCanonicalPath());
         createReceiver();
         createSource();
 
