@@ -8,15 +8,18 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.helsinki.cs.tmc.core.io.FakeFileIO;
+
 public class EventStoreTest {
+
     private LoggableEvent[] events;
-    private MockIO io;
+    private FakeFileIO fakeFile;
     private EventStore store;
 
     @Before
     public void setUp() {
-        io = new MockIO();
-        store = new EventStore(io);
+        fakeFile = new FakeFileIO();
+        store = new EventStore(fakeFile);
 
         events = new LoggableEvent[2];
         events[0] = new LoggableEvent("foo", "bar", "event1", null);
@@ -26,14 +29,14 @@ public class EventStoreTest {
     @Test
     public void eventStoreSavesData() throws IOException {
         store.save(events);
-        assertTrue(io.writer.toString().length() > 0);
+        assertTrue(fakeFile.getWriter().toString().length() > 0);
     }
 
     @Test
     public void eventStoreClearsDataCorrectly() throws IOException {
         store.save(events);
         store.clear();
-        assertTrue(io.writer.toString().length() == 0);
+        assertEquals(fakeFile.read().length, 0);
     }
 
     @Test

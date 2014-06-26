@@ -46,7 +46,7 @@ public class MavenTestrunnerTaskTest {
 
     }
 
-    private TestTaskRunner taskRunner;
+    private FakeTaskRunner taskRunner;
     private Project project;
 
     private MavenTestrunnerTask succesfulRunner;
@@ -55,7 +55,7 @@ public class MavenTestrunnerTaskTest {
 
     @Before
     public void setUp() {
-        this.taskRunner = new TestTaskRunner();
+        this.taskRunner = new FakeTaskRunner();
         this.project = mock(Project.class);
 
         invoker = mock(IdeUIInvoker.class);

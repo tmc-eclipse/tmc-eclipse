@@ -45,12 +45,12 @@ public class ProjectScanner {
         }
     }
 
-    private void traverse(List<String> list, IO file) {
+    private void traverse(List<String> list, FileIO file) {
         if (file != null && (file.fileExists() || file.directoryExists())) {
             list.add(file.getPath());
 
             if (file.directoryExists()) {
-                for (IO child : file.getChildren()) {
+                for (FileIO child : file.getChildren()) {
                     traverse(list, child);
                 }
             }

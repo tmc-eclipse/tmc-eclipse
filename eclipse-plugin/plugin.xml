@@ -262,18 +262,18 @@
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
             icon="icons/green-project-dot.png"
-            id="eclipse-plugin.tmcNature.greenDot"
-            natureId="eclipse-plugin.tmcCompletedNature">
+            id="TestMyCode_Eclipse_plugin.tmcNature.greenDot"
+            natureId="TestMyCode_Eclipse_plugin.tmcCompletedNature">
       </image>
       <image
             icon="icons/black-project-dot.png"
-            id="eclipse-plugin.tmcNature.blackDot"
-            natureId="eclipse-plugin.tmcNewNature">
+            id="TestMyCode_Eclipse_plugin.tmcNature.blackDot"
+            natureId="TestMyCode_Eclipse_plugin.tmcNewNature">
       </image>
       <image
             icon="icons/red-project-dot.png"
-            id="eclipse-plugin.tmcNature.redDot"
-            natureId="eclipse-plugin.tmcAttemptedNature">
+            id="TestMyCode_Eclipse_plugin.tmcNature.redDot"
+            natureId="TestMyCode_Eclipse_plugin.tmcAttemptedNature">
       </image>
    </extension>
 

@@ -27,13 +27,13 @@ public class ProjectScannerTest {
 
     private ProjectScanner scanner;
     private ProjectDAO dao;
-    private IO io;
+    private FileIO io;
 
     @Before
     public void setUp() {
         dao = mock(ProjectDAO.class);
         IOFactory factory = mock(IOFactory.class);
-        io = mock(IO.class);
+        io = mock(FileIO.class);
         when(factory.newFile(anyString())).thenReturn(io);
         scanner = new ProjectScanner(dao, factory);
     }
@@ -53,13 +53,13 @@ public class ProjectScannerTest {
         when(io.directoryExists()).thenReturn(true);
         when(io.getPath()).thenReturn("path_1");
 
-        List<IO> list = new ArrayList<IO>();
-        IO childIO = mock(IO.class);
+        List<FileIO> list = new ArrayList<FileIO>();
+        FileIO childIO = mock(FileIO.class);
         list.add(childIO);
         when(io.getChildren()).thenReturn(list);
 
         when(childIO.getPath()).thenReturn("path_2");
-        when(childIO.getChildren()).thenReturn(new ArrayList<IO>());
+        when(childIO.getChildren()).thenReturn(new ArrayList<FileIO>());
         when(childIO.fileExists()).thenReturn(true);
 
         when(io.getChildren()).thenReturn(list);
