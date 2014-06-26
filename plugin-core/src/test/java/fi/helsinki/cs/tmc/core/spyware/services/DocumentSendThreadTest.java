@@ -24,6 +24,9 @@ import fi.helsinki.cs.tmc.core.spyware.DocumentInfo;
 import fi.helsinki.cs.tmc.core.spyware.async.DocumentSendThread;
 import fi.helsinki.cs.tmc.core.spyware.utility.diff_match_patch;
 
+/*
+ * If you are here for find out why the test randomly freezes, it's the clipboard function in paste event test
+ * */
 public class DocumentSendThreadTest {
     private DocumentSendThread thread;
     private EventReceiver receiver;
@@ -48,7 +51,6 @@ public class DocumentSendThreadTest {
     @Test
     public void generatePatchesTest() {
         thread.run();
-
         assertEquals(cache.size(), 1);
     }
 
@@ -64,6 +66,7 @@ public class DocumentSendThreadTest {
         }).when(receiver).receiveEvent(any(LoggableEvent.class));
 
         thread.run();
+
         verify(receiver, times(1)).receiveEvent(any(LoggableEvent.class));
     }
 
@@ -87,11 +90,13 @@ public class DocumentSendThreadTest {
 
     @Test
     public void pasteEventTest() {
+
         // travis does not have necessary components to run this test
         if ("true".equals(System.getenv("TRAVIS"))) {
             return;
         }
 
+        /* THIS PART OCCASIONALLY FREEZES, NO IDEA WHY */
         StringSelection s = new StringSelection("a a");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s, s);
 
@@ -108,7 +113,6 @@ public class DocumentSendThreadTest {
         }).when(receiver).receiveEvent(any(LoggableEvent.class));
 
         thread.run();
-
         verify(receiver, times(1)).receiveEvent(any(LoggableEvent.class));
     }
 
