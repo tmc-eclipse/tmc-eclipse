@@ -108,7 +108,6 @@ public class Project {
                     for (int i = 0; i < shortest.length(); i++) {
                         if (!(shortest.charAt(i) == file.charAt(i))) {
                             shortest = shortest.substring(0, i);
-                            System.out.println(shortest);
                         }
                     }
                 }
