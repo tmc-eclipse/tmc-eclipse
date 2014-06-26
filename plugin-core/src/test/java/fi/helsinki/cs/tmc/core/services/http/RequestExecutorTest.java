@@ -1,7 +1,9 @@
 package fi.helsinki.cs.tmc.core.services.http;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -38,17 +40,20 @@ public class RequestExecutorTest {
     private RequestExecutor executor;
     private MockHttpFactory factory;
     private CloseableHttpResponse response;
+    private CloseableHttpClient client;
+    private StatusLine line;
+    private BufferedHttpEntity entity;
 
     @Before
     public void setUp() throws ClientProtocolException, IOException {
-        CloseableHttpClient client = mock(CloseableHttpClient.class);
+        client = mock(CloseableHttpClient.class);
 
         response = mock(CloseableHttpResponse.class);
-        StatusLine line = mock(StatusLine.class);
+        line = mock(StatusLine.class);
         when(line.getStatusCode()).thenReturn(200);
         when(response.getStatusLine()).thenReturn(line);
 
-        BufferedHttpEntity entity = mock(BufferedHttpEntity.class);
+        entity = mock(BufferedHttpEntity.class);
         InputStream stream = mock(InputStream.class);
         when(stream.read()).thenReturn(-1);
         when(stream.read(any(byte[].class))).thenReturn(-1);
@@ -84,16 +89,7 @@ public class RequestExecutorTest {
     @Test
     public void executorSetsCredentialsToRequest() throws FailedHttpResponseException, IOException,
             InterruptedException, URISyntaxException {
-        HttpUriRequest request = mock(HttpUriRequest.class);
-        URI uri = new URI("http://foo.com");
-        when(request.getURI()).thenReturn(uri);
-
-        HttpParams param = mock(HttpParams.class);
-        // encoding name, for example "UTF-8"; null seems to work as it picks
-        // some default encoding in this case
-
-        when(param.getParameter(anyString())).thenReturn(null);
-        when(request.getParams()).thenReturn(param);
+        HttpUriRequest request = mockRequest();
 
         executor = new RequestExecutor(request, factory, mock(Settings.class));
 
@@ -115,4 +111,112 @@ public class RequestExecutorTest {
 
         verify(request, times(1)).addHeader(any(Header.class));
     }
+
+    @Test
+    public void executorDoesNotSetCredentialsToRequestIfExecutorHasNoCredentials() throws FailedHttpResponseException,
+            IOException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+
+        executor = new RequestExecutor(request, factory, mock(Settings.class));
+
+        executor.execute();
+
+        verify(request, times(0)).addHeader(any(Header.class));
+    }
+
+    @Test(expected = IOException.class)
+    public void executeRequestThrowsIoExceptionIfRequestNotAbortedAndHttpClientThrowsIOException()
+            throws ClientProtocolException, IOException, FailedHttpResponseException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+        when(request.isAborted()).thenReturn(false);
+        when(client.execute(any(HttpUriRequest.class))).thenThrow(new IOException("Foo"));
+        executor = new RequestExecutor(request, factory, mock(Settings.class));
+        executor.execute();
+    }
+
+    @Test(expected = InterruptedException.class)
+    public void executeThrowsInterruptedExceptionsIfRequestIsAbortedAndHttpClientThrowsIOException()
+            throws ClientProtocolException, IOException, FailedHttpResponseException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+        when(request.isAborted()).thenReturn(true);
+        when(client.execute(any(HttpUriRequest.class))).thenThrow(new IOException("Foo"));
+        executor = new RequestExecutor(request, factory, mock(Settings.class));
+        executor.execute();
+    }
+
+    @Test(expected = IOException.class)
+    public void executeThrowsIOExceptionIfResponseEntityIsNull() throws ClientProtocolException, IOException,
+            FailedHttpResponseException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+
+        when(response.getEntity()).thenReturn(null);
+        executor = new RequestExecutor(request, factory, mock(Settings.class));
+        executor.execute();
+    }
+
+    @Test
+    public void userIsLoggedInIfStatusIsOK() throws ClientProtocolException, IOException, FailedHttpResponseException,
+            InterruptedException {
+        HttpUriRequest request = mockRequest();
+
+        Settings settings = mock(Settings.class);
+        executor = new RequestExecutor(request, factory, settings);
+        executor.execute();
+        verify(settings, times(1)).setLoggedIn(true);
+    }
+
+    @Test
+    public void entityIsReturnedIfStatusIsOK() throws ClientProtocolException, IOException,
+            FailedHttpResponseException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+
+        Settings settings = mock(Settings.class);
+        executor = new RequestExecutor(request, factory, settings);
+        assertNotNull(executor.execute());
+    }
+
+    @Test
+    public void userIsNotLoggedInIfStatusIs403() throws ClientProtocolException, IOException,
+            FailedHttpResponseException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+        when(line.getStatusCode()).thenReturn(403);
+        Settings settings = mock(Settings.class);
+        executor = new RequestExecutor(request, factory, settings);
+        try {
+            executor.execute();
+        } catch (FailedHttpResponseException ex) {
+
+        }
+        verify(settings, times(1)).setLoggedIn(false);
+    }
+
+    @Test(expected = FailedHttpResponseException.class)
+    public void executeThrowsFailedHttpResponseExceptionOn() throws ClientProtocolException, IOException,
+            FailedHttpResponseException, InterruptedException {
+        HttpUriRequest request = mockRequest();
+        when(line.getStatusCode()).thenReturn(403);
+        Settings settings = mock(Settings.class);
+        executor = new RequestExecutor(request, factory, settings);
+        executor.execute();
+    }
+
+    private HttpUriRequest mockRequest() {
+        HttpUriRequest request = mock(HttpUriRequest.class);
+        URI uri = null;
+        try {
+            uri = new URI("http://foo.com");
+        } catch (URISyntaxException e) {
+            fail("Uri syntax broken");
+        }
+        when(request.getURI()).thenReturn(uri);
+
+        HttpParams param = mock(HttpParams.class);
+        // encoding name, for example "UTF-8"; null seems to work as it picks
+        // some default encoding in this case
+
+        when(param.getParameter(anyString())).thenReturn(null);
+        when(request.getParams()).thenReturn(param);
+        return request;
+    }
+
 }
