@@ -9,16 +9,16 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 
+import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.IO;
 import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.ZippingDecider;
 
 public class RecursiveZipper {
 
-    private IO rootDirectory;
+    private FileIO rootDirectory;
     private ZippingDecider zippingDecider;
 
-    public RecursiveZipper(IO rootDirectory, ZippingDecider zippingDecider) {
+    public RecursiveZipper(FileIO rootDirectory, ZippingDecider zippingDecider) {
         this.rootDirectory = rootDirectory;
         this.zippingDecider = zippingDecider;
     }
@@ -43,7 +43,7 @@ public class RecursiveZipper {
         return zipBuffer.toByteArray();
     }
 
-    private void writeEntry(IO file, ZipOutputStream zipStream, String zipPath) throws IOException {
+    private void writeEntry(FileIO file, ZipOutputStream zipStream, String zipPath) throws IOException {
         zipStream.putNextEntry(new ZipEntry(FileUtil.append(zipPath, file.getName())));
 
         InputStream in = file.getInputStream();
@@ -60,7 +60,7 @@ public class RecursiveZipper {
     /**
      * Zips a directory recursively.
      */
-    private void zipRecursively(IO directory, ZipOutputStream zipStream, String parentZipPath) throws IOException {
+    private void zipRecursively(FileIO directory, ZipOutputStream zipStream, String parentZipPath) throws IOException {
         String thisDirZipPath;
         if (parentZipPath.isEmpty()) {
             thisDirZipPath = directory.getName();
@@ -72,7 +72,7 @@ public class RecursiveZipper {
         zipStream.putNextEntry(new ZipEntry(FileUtil.append(thisDirZipPath, "")));
         zipStream.closeEntry();
 
-        for (IO file : directory.getChildren()) {
+        for (FileIO file : directory.getChildren()) {
             try {
                 boolean isDirectory = file.directoryExists();
 

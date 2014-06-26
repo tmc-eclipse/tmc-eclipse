@@ -15,7 +15,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeFileIO implements IO {
+public class FakeFileIO extends FileIO {
 
     private String path;
     private boolean fileExists;
@@ -23,11 +23,19 @@ public class FakeFileIO implements IO {
 
     private byte[] byteContents;
 
+    public FakeFileIO() {
+        this("");
+    }
+
     public FakeFileIO(String path) {
+        super("");
+
         this.path = path;
         this.byteContents = null;
         this.fileExists = true;
         this.directoryExists = true;
+
+        this.byteContents = new byte[0];
     }
 
     public void setFileExists(boolean fileExists) {
@@ -117,7 +125,12 @@ public class FakeFileIO implements IO {
     }
 
     @Override
-    public void write(byte[] bytes) throws IOException {
+    public byte[] read() {
+        return byteContents;
+    }
+
+    @Override
+    public void write(byte[] bytes) {
         this.byteContents = bytes;
     }
 
@@ -126,13 +139,8 @@ public class FakeFileIO implements IO {
     }
 
     @Override
-    public List<IO> getChildren() {
-        return new ArrayList<IO>();
-    }
-
-    @Override
-    public byte[] read() throws IOException {
-        return byteContents;
+    public List<FileIO> getChildren() {
+        return new ArrayList<FileIO>();
     }
 
 }

@@ -5,19 +5,19 @@ import java.util.Map;
 
 public class FakeIOFactory implements IOFactory {
 
-    public Map<String, IO> files;
+    public Map<String, FileIO> files;
 
     public FakeIOFactory() {
-        this.files = new HashMap<String, IO>();
+        this.files = new HashMap<String, FileIO>();
     }
 
     @Override
-    public IO newFile(String path) {
+    public FileIO newFile(String path) {
         if (files.containsKey(path)) {
             return files.get(path);
         }
 
-        IO file = new FakeFileIO(path);
+        FileIO file = new FakeFileIO(path);
         files.put(path, file);
         return file;
     }

@@ -11,7 +11,6 @@ import java.util.zip.ZipInputStream;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.IO;
 import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzippingDecider;
 
 public class Unzipper {
@@ -26,7 +25,7 @@ public class Unzipper {
         this.decider = decider;
     }
 
-    public List<String> unzipTo(IO destinationFolder) throws IOException {
+    public List<String> unzipTo(FileIO destinationFolder) throws IOException {
         List<String> projectFiles = new ArrayList<String>();
 
         destinationFolder.createFolderTree(false);

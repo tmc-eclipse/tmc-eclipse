@@ -25,9 +25,6 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.IO;
-import fi.helsinki.cs.tmc.core.io.zip.RecursiveZipper;
-import fi.helsinki.cs.tmc.core.io.zip.Unzipper;
 import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UNZIP_ALL_THE_THINGS;
 import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.DefaultZippingDecider;
 import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.MavenZippingDecider;
@@ -189,11 +186,11 @@ public class RecursiveZipperTest {
         unzipper.unzipTo(new FileIO(path));
     }
 
-    private void zipDirectory(IO directory, String zipName) throws Exception {
+    private void zipDirectory(FileIO directory, String zipName) throws Exception {
         zipDirectory(directory, zipName, new ZIP_ALL_THE_THINGS());
     }
 
-    private void zipDirectory(IO directory, String zipName, ZippingDecider decider) throws Exception {
+    private void zipDirectory(FileIO directory, String zipName, ZippingDecider decider) throws Exception {
         RecursiveZipper zipper = new RecursiveZipper(directory, decider);
 
         byte[] zip = zipper.zipProjectSources();

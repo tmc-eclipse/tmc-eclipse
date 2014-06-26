@@ -21,6 +21,7 @@ import org.yaml.snakeyaml.Yaml;
  * Represents the contents of a {@code .tmcproject.yml} file.
  */
 public class TmcProjectFile {
+    
     private static final Logger log = Logger.getLogger(TmcProjectFile.class.getName());
 
     private List<String> extraStudentFiles;
