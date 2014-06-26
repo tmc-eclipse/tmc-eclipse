@@ -40,6 +40,7 @@ To build the project, follow the following process:
  * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
  * [CDT](https://www.eclipse.org/cdt/) - C and C++ development tools for Eclipse IDE
  * [PDE](https://www.eclipse.org/pde/) - Plug-in Development Environment for Eclipse IDE
+ * [Mylyn](http://www.eclipse.org/mylyn/) - Provides the notification elements
 5. Restart the IDE if you had to install any of the above components
 6. Import the Eclipse plugin component ("eclipse-plugin") using the "General > Existing Projects into Workspace" settings
 7. Import the plugin core component using the "Maven > Existing Maven Projects" settings
@@ -63,14 +64,6 @@ To use the built plugin, place it in the /plugins folder within your eclipse ins
 ##Using the plugin
 ###Installation
 
-####Manual installation
-1. Move the plugin's .jar file to the /plugins folder within your Eclipse folder.
-2. Start Eclipse
-3. Make sure you have the following components installed from the marketplace:
- * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
- * [CDT](https://www.eclipse.org/cdt/) - C and C++ development tools for Eclipse IDE
-4. Restart the IDE if you had to install any of the above components
-
 ####Installation using the update site
 1. Start Eclipse.
 2. Open the "Help | Install new software..." window.
@@ -80,6 +73,15 @@ To use the built plugin, place it in the /plugins folder within your eclipse ins
 6. Click Next a few times to complete the installation.
 7. If warned about unsigned content, allow the installation.
 8. Restart Eclipse when installation if complete.
+
+####Manual installation
+1. Move the plugin's .jar file to the /plugins folder within your Eclipse folder.
+2. Start Eclipse
+3. Make sure you have the following plugin components installed:
+ * [m2e](https://www.eclipse.org/m2e/) - Provides the required Maven support to the Eclipse IDE
+ * [CDT](https://www.eclipse.org/cdt/) - C and C++ development tools for Eclipse IDE
+ * [Mylyn](http://www.eclipse.org/mylyn/) - Provides the notification elements
+4. Restart the IDE if you had to install any of the above components
 
 ####Updating the plugin using the update site
 1. Follow the steps in "Installation using the update site". Eclipse will detect the plugin as installed and perform an update instead.
