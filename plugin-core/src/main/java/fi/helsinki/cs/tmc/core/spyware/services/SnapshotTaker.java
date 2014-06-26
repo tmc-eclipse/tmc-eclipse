@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import fi.helsinki.cs.tmc.core.domain.InvalidProjectTypeException;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.io.FileIO;
-import fi.helsinki.cs.tmc.core.io.zipper.RecursiveZipper;
+import fi.helsinki.cs.tmc.core.io.zip.RecursiveZipper;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.spyware.ChangeType;

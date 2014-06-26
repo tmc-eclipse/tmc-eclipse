@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.DefaultZippingDecider;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.MavenZippingDecider;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.ZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.DefaultZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.MavenZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.ZippingDecider;
 
 /**
  * A domain class for IDE independent data storage of project data, such as it's
