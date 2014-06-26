@@ -5,6 +5,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
@@ -18,6 +19,7 @@ public class CustomNotification extends AbstractNotificationPopup {
         this.title = title;
         this.text = text;
         this.listener = listener;
+        setDelayClose(20000);
     }
 
   
@@ -33,6 +35,12 @@ public class CustomNotification extends AbstractNotificationPopup {
         label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         label.setText(text);
         composite.addListener(SWT.Activate, listener);
+        composite.addListener(SWT.Activate, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+               close();
+            }
+        });
     }
 
     @Override

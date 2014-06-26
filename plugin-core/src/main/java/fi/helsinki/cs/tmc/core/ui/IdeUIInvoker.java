@@ -30,4 +30,6 @@ public interface IdeUIInvoker {
     void invokeCodeReviewDialog(Review review);
 
     void invokeMessageBox(String string);
+
+    void invokeCodeReviewPopupNotification(List<Review> unseen);
 }

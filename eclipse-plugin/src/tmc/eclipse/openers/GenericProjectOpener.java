@@ -74,30 +74,6 @@ public class GenericProjectOpener implements ProjectOpener {
         return projectObject;
     }
 
-    private void addTMCProjectNature(IProject projectObject) throws CoreException {
-        ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-        IProjectDescription description = projectObject.getDescription();
-        if (!description.hasNature(TMCNewProjectNature.NATURE_ID)) {
-            setNatures(description);
-            try {
-                projectObject.setDescription(description, new NullProgressMonitor());
-            } catch (ResourceException re) {
-                Core.getErrorHandler().handleException(re);
-            }
-        }
-    }
-
-    private void setNatures(IProjectDescription description) {
-        String[] prevNatures = description.getNatureIds();
-        String[] newNatures = new String[prevNatures.length + 1];
-        System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-        newNatures[prevNatures.length] = TMCNewProjectNature.NATURE_ID;
-        String temp = newNatures[newNatures.length - 1];
-        newNatures[newNatures.length - 1] = newNatures[0];
-        newNatures[0] = temp;
-        description.setNatureIds(newNatures);
-    }
-
     private IProject openCProject(Project project, ProjectType projectType) throws OperationCanceledException,
             URISyntaxException, CoreException {
 
