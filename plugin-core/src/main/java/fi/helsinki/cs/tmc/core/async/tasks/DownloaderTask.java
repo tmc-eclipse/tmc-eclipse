@@ -10,6 +10,7 @@ import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.io.zip.Unzipper;
 import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzippingDeciderFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
@@ -30,6 +31,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
     private final ProjectDownloader downloader;
     private final ProjectOpener opener;
     private final IdeUIInvoker invoker;
+    private final IOFactory io;
 
     /**
      * 
@@ -50,7 +52,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
      *            Requires IDE-specific implementation
      */
     public DownloaderTask(ProjectDownloader downloader, ProjectOpener opener, List<Exercise> exercises,
-            ProjectDAO projectDao, Settings settings, IdeUIInvoker invoker) {
+            ProjectDAO projectDao, Settings settings, IdeUIInvoker invoker, IOFactory io) {
         super("Downloading exercises", exercises);
 
         this.settings = settings;
@@ -58,6 +60,7 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
         this.opener = opener;
         this.projectDao = projectDao;
         this.invoker = invoker;
+        this.io = io;
     }
 
     /**
@@ -72,7 +75,8 @@ public class DownloaderTask extends SimpleBackgroundTask<Exercise> {
             Project project = projectDao.getProjectByExercise(exercise);
 
             ZippedProject zip = downloader.downloadExercise(exercise);
-            Unzipper unzipper = new Unzipper(zip, UnzippingDeciderFactory.createUnzippingDecider(project));
+            UnzippingDeciderFactory factory = new UnzippingDeciderFactory(io);
+            Unzipper unzipper = new Unzipper(zip, factory.createUnzippingDecider(project));
             FileIO folder = new FileIO(FileUtil.append(settings.getExerciseFilePath(), settings.getCurrentCourseName()));
             List<String> fileList = unzipper.unzipTo(folder);
 

@@ -47,7 +47,7 @@ public final class TaskStarter {
         ProjectDownloader downloader = new ProjectDownloader(Core.getServerManager());
         Core.getTaskRunner().runTask(
                 new DownloaderTask(downloader, new GenericProjectOpener(), exercises, Core.getProjectDAO(), Core
-                        .getSettings(), invoker));
+                        .getSettings(), invoker, Core.getIOFactory()));
     }
 
     public static void startFeedbackSubmissionTask(List<FeedbackAnswer> answers, String feedbackUrl,

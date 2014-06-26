@@ -25,10 +25,10 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UNZIP_ALL_THE_THINGS;
+import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzipAllTheThings;
 import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.DefaultZippingDecider;
 import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.MavenZippingDecider;
-import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.ZIP_ALL_THE_THINGS;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.ZipAllTheThings;
 import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.ZippingDecider;
 
 public class RecursiveZipperTest {
@@ -182,12 +182,12 @@ public class RecursiveZipperTest {
         byte[] b = IOUtils.toByteArray(new FileInputStream(f));
         ZippedProject project = new ZippedProject();
         project.setBytes(b);
-        Unzipper unzipper = new Unzipper(project, new UNZIP_ALL_THE_THINGS());
+        Unzipper unzipper = new Unzipper(project, new UnzipAllTheThings());
         unzipper.unzipTo(new FileIO(path));
     }
 
     private void zipDirectory(FileIO directory, String zipName) throws Exception {
-        zipDirectory(directory, zipName, new ZIP_ALL_THE_THINGS());
+        zipDirectory(directory, zipName, new ZipAllTheThings());
     }
 
     private void zipDirectory(FileIO directory, String zipName, ZippingDecider decider) throws Exception {

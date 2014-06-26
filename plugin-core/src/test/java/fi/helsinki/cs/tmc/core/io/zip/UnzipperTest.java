@@ -16,7 +16,7 @@ import org.junit.Test;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
 import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.io.zip.Unzipper;
-import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UNZIP_ALL_THE_THINGS;
+import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzipAllTheThings;
 import fi.helsinki.cs.tmc.core.io.zip.unzippingdecider.UnzippingDecider;
 
 public class UnzipperTest {
@@ -36,7 +36,7 @@ public class UnzipperTest {
         s.close();
 
         ZippedProject project = new ZippedProject();
-        Unzipper unzipper = new Unzipper(project, new UNZIP_ALL_THE_THINGS());
+        Unzipper unzipper = new Unzipper(project, new UnzipAllTheThings());
         project.setBytes(b);
 
         unzipper.unzipTo(new FileIO(path));
@@ -122,7 +122,7 @@ public class UnzipperTest {
     }
 
     private void unZipDirectory(String zip) throws IOException, FileNotFoundException {
-        unZipDirectory(zip, new UNZIP_ALL_THE_THINGS());
+        unZipDirectory(zip, new UnzipAllTheThings());
     }
 
     private void unZipDirectory(String zip, UnzippingDecider decider) throws IOException, FileNotFoundException {
