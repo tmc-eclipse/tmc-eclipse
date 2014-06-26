@@ -123,7 +123,7 @@ public class SuccesfulSubmitDialog extends Dialog {
         testStatusLabel.setBounds(53, 10, 301, 37);
 
         Label imageLabel = new Label(shell, SWT.NONE);
-        imageLabel.setImage(ResourceManager.getPluginImage("eclipse-plugin", "icons/smile.gif"));
+        imageLabel.setImage(ResourceManager.getPluginImage("TestMyCode_Eclipse_plugin", "icons/smile.gif"));
         imageLabel.setBounds(10, 0, 37, 47);
 
         Label pointsAwardedLabel = new Label(shell, SWT.NONE);
@@ -235,7 +235,7 @@ public class SuccesfulSubmitDialog extends Dialog {
 
         scale.setIncrement(1);
         scale.setPageIncrement(1);
-        scale.setBounds(26, heightOffset + 20, 250, 28);
+        scale.setBounds(26, heightOffset + 20, 250, 30);
 
         final Text text = new Text(shell, SWT.BORDER);
         text.setText("");
