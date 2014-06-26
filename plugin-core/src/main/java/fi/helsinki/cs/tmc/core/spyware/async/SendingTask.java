@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,9 +15,9 @@ import fi.helsinki.cs.tmc.core.services.CourseDAO;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.spyware.services.LoggableEvent;
-import fi.helsinki.cs.tmc.core.spyware.services.SharedInteger;
 
 public class SendingTask implements Runnable {
+
     private static final Logger log = Logger.getLogger(SendingTask.class.getName());
     private static final int MAX_EVENTS_PER_SEND = 500;
 
@@ -25,12 +26,12 @@ public class SendingTask implements Runnable {
     private CourseDAO courseDAO;
     private Settings settings;
     private Random random;
-    private SharedInteger eventsToRemoveAfterSend;
-    
+    private AtomicInteger eventsToRemoveAfterSend;
+
     private SingletonTask savingTask;
 
     public SendingTask(ArrayDeque<LoggableEvent> sendQueue, ServerManager serverManager, CourseDAO courseDAO,
-            Settings settings, SingletonTask savingTask, SharedInteger eventsToRemoveAfterSend) {
+            Settings settings, SingletonTask savingTask, AtomicInteger eventsToRemoveAfterSend) {
         this.sendQueue = sendQueue;
         this.serverManager = serverManager;
         this.courseDAO = courseDAO;
@@ -45,7 +46,7 @@ public class SendingTask implements Runnable {
         if (!settings.isSpywareEnabled()) {
             return;
         }
-        
+
         boolean shouldSendMore;
 
         do {
@@ -78,14 +79,13 @@ public class SendingTask implements Runnable {
                 eventsToSend.add(i.next());
             }
 
-            eventsToRemoveAfterSend.i = eventsToSend.size();
+            eventsToRemoveAfterSend.set(eventsToSend.size());
 
             return eventsToSend;
         }
     }
 
     private String pickDestinationUrl() {
-
         Course course = courseDAO.getCurrentCourse(settings);
         if (course == null) {
             log.log(Level.FINE, "Not sending events because no course selected");
@@ -128,10 +128,11 @@ public class SendingTask implements Runnable {
 
     private void removeSentEventsFromQueue() {
         synchronized (sendQueue) {
-            assert (eventsToRemoveAfterSend.i <= sendQueue.size());
-            while (eventsToRemoveAfterSend.i > 0) {
+            assert (eventsToRemoveAfterSend.intValue() <= sendQueue.size());
+
+            while (eventsToRemoveAfterSend.intValue() > 0) {
                 sendQueue.pop();
-                eventsToRemoveAfterSend.i--;
+                eventsToRemoveAfterSend.decrementAndGet();
             }
         }
     }

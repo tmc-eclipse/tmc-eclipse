@@ -9,10 +9,8 @@ import fi.helsinki.cs.tmc.core.spyware.ChangeType;
 import fi.helsinki.cs.tmc.core.spyware.SnapshotInfo;
 
 /**
- * 
  * Class that responds to events such as renames, deletes and additions. Ensures
  * that project database remains consistent.
- * 
  */
 public class ProjectEventHandler {
 
@@ -28,7 +26,6 @@ public class ProjectEventHandler {
             return;
         }
 
-        project.setProjectFiles(new ArrayList<String>());
         project.setStatus(ProjectStatus.DELETED);
     }
 

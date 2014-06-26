@@ -28,9 +28,13 @@ public class EditorListener implements IPartListener {
     private DocumentListener listener;
     private Set<IDocument> documentsWithListeners;
 
+    /**
+     * Constructor; inserts listener to active document as it does not receive
+     * activation event when starting the IDE
+     */
     public EditorListener() {
         // if eclipse disposes the associated IDocument, we want to get rid of
-        // it as well -> weakhashset
+        // it as well so that we won't leak memory -> weakhashset
         documentsWithListeners = Collections.newSetFromMap(new WeakHashMap<IDocument, Boolean>());
         listener = new DocumentListener();
         IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -43,6 +47,13 @@ public class EditorListener implements IPartListener {
         }
     }
 
+    /**
+     * Method that is called when a part is activated; when this part is an
+     * editor, we will add a listener to it
+     * 
+     * @param part
+     *            Eclipse IDE part that contains activated part
+     */
     @Override
     public void partActivated(IWorkbenchPart part) {
         if (part instanceof ITextEditor) {
@@ -53,6 +64,12 @@ public class EditorListener implements IPartListener {
         }
     }
 
+    /**
+     * Method that adds listener to document, if it does not already have one
+     * 
+     * @param doc
+     *            The document where we want to inject the listener
+     */
     private void addListener(IDocument doc) {
         if (documentsWithListeners.contains(doc)) {
             return;

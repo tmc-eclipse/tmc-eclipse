@@ -19,10 +19,14 @@ public class DocumentListener implements IDocumentListener {
 
     @Override
     public void documentAboutToBeChanged(DocumentEvent event) {
-        // System.out.println("Document about to be changed: " +
-        // event.getText());
     }
 
+    /**
+     * Method that is called when the listened document is changed
+     * 
+     * @param event
+     *            The event received from Eclipse
+     */
     @Override
     public void documentChanged(DocumentEvent event) {
 

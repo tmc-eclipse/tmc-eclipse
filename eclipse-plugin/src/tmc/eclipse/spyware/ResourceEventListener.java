@@ -19,6 +19,7 @@ public class ResourceEventListener implements IResourceChangeListener {
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
 
+        // pre_delete-event is used to update project file database
         if (event.getType() == IResourceChangeEvent.PRE_DELETE) {
             if (event.getResource() != null && event.getResource().getLocation() != null) {
                 String path = event.getResource().getLocation().toString();

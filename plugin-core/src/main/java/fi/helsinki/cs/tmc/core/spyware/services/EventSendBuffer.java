@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +16,6 @@ import fi.helsinki.cs.tmc.core.spyware.utility.Cooldown;
 /**
  * Buffers {@link LoggableEvent}s and sends them to the server and/or syncs them
  * to the disk periodically.
- * 
  */
 public class EventSendBuffer implements EventReceiver {
     private static final Logger log = Logger.getLogger(EventSendBuffer.class.getName());
@@ -37,10 +37,10 @@ public class EventSendBuffer implements EventReceiver {
     private int maxEvents = DEFAULT_MAX_EVENTS;
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private Cooldown autosendCooldown;
-    private SharedInteger eventsToRemoveAfterSend;
+    private AtomicInteger eventsToRemoveAfterSend;
 
     public EventSendBuffer(EventStore store, Settings settings, ArrayDeque<LoggableEvent> sendQueue,
-            SingletonTask sendingTask, SingletonTask savingTask, SharedInteger eventsToRemoveAfterSend) {
+            SingletonTask sendingTask, SingletonTask savingTask, AtomicInteger eventsToRemoveAfterSend) {
         this.eventStore = store;
         this.settings = settings;
         this.sendQueue = sendQueue;
@@ -90,7 +90,7 @@ public class EventSendBuffer implements EventReceiver {
         synchronized (sendQueue) {
             if (sendQueue.size() >= maxEvents) {
                 sendQueue.pop();
-                eventsToRemoveAfterSend.i--;
+                eventsToRemoveAfterSend.decrementAndGet();
             }
             sendQueue.add(event);
 

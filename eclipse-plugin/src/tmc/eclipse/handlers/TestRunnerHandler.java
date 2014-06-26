@@ -4,6 +4,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -12,6 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import tmc.eclipse.activator.CoreInitializer;
 import tmc.eclipse.tasks.TaskStarter;
 import tmc.eclipse.ui.EclipseIdeUIInvoker;
+import tmc.eclipse.ui.Notifier;
 import tmc.eclipse.util.WorkbenchHelper;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.domain.Project;
@@ -29,6 +32,7 @@ public class TestRunnerHandler extends AbstractHandler {
 
     public Object execute(ExecutionEvent event) throws ExecutionException {
         helper.updateActiveView();
+
 
         shell = HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell();
         try {

@@ -11,15 +11,15 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fi.helsinki.cs.tmc.core.io.IO;
+import fi.helsinki.cs.tmc.core.io.FileIO;
 import fi.helsinki.cs.tmc.core.spyware.utility.ByteArrayGsonSerializer;
 
 public class EventStore {
     private static final Logger log = Logger.getLogger(EventStore.class.getName());
 
-    private IO configFile;
+    private FileIO configFile;
 
-    public EventStore(IO configFile) {
+    public EventStore(FileIO configFile) {
         this.configFile = configFile;
     }
 

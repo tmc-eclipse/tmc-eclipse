@@ -44,7 +44,8 @@ public class SnapshotTakerTest {
         List<Project> sourceList = new ArrayList<Project>();
         List<String> projectFiles = new ArrayList<String>();
 
-        projectFiles.add("src/test/java/fi/helsinki/cs/tmc/core/spyware/services/testProject/build.xml");
+        projectFiles.add(FileUtil.getUnixPath(new File(
+                "src/test/java/fi/helsinki/cs/tmc/core/spyware/services/testProject/build.xml").getPath()));
         sourceList.add(new Project(new Exercise("testProject", "course1"), projectFiles));
         source.save(sourceList);
 
@@ -118,7 +119,7 @@ public class SnapshotTakerTest {
 
         assertEquals(event.getCourseName(), "course1");
     }
-    
+
     @Test
     public void folderRenameTest() {
         SnapshotInfo info = new SnapshotInfo("testProject", relPath + "a", relPath, fullPath + "a", fullPath,

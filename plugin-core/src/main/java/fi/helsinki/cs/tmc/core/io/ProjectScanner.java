@@ -10,17 +10,16 @@ import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 /**
  * Class that is used on startup to ensure that the project database remains in
  * consistent state even if files are deleted or added on disk while IDE is
- * closed
- * 
+ * closed.
  */
 public class ProjectScanner {
 
     private ProjectDAO projectDAO;
-    private IOFactory factory;
+    private IOFactory io;
 
-    public ProjectScanner(ProjectDAO projectDAO, IOFactory factory) {
+    public ProjectScanner(ProjectDAO projectDAO, IOFactory io) {
         this.projectDAO = projectDAO;
-        this.factory = factory;
+        this.io = io;
     }
 
     public void updateProject(Project project) {
@@ -29,7 +28,7 @@ public class ProjectScanner {
         }
 
         List<String> files = new ArrayList<String>();
-        traverse(files, factory.createIO(project.getRootPath()));
+        traverse(files, io.newFile(project.getRootPath()));
 
         project.setProjectFiles(files);
 
@@ -46,12 +45,12 @@ public class ProjectScanner {
         }
     }
 
-    private void traverse(List<String> list, IO file) {
+    private void traverse(List<String> list, FileIO file) {
         if (file != null && (file.fileExists() || file.directoryExists())) {
             list.add(file.getPath());
 
             if (file.directoryExists()) {
-                for (IO child : file.getChildren()) {
+                for (FileIO child : file.getChildren()) {
                     traverse(list, child);
                 }
             }

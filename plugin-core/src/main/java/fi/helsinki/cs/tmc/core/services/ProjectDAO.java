@@ -4,14 +4,12 @@ import java.util.List;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
+import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
 import fi.helsinki.cs.tmc.core.storage.DataSource;
 
 /**
- * 
- * Class that handles Project object storage, loading and saving
- * 
+ * Class that handles Project object storage, loading and saving.
  */
-
 public class ProjectDAO {
 
     private DataSource<Project> dataSource;
@@ -44,7 +42,7 @@ public class ProjectDAO {
 
     public Project getProjectByFile(String filePath) {
         for (Project project : projects) {
-            if (project.containsFile(filePath)) {
+            if (project.containsFile(filePath) && project.getStatus() != ProjectStatus.DELETED) {
                 return project;
             }
         }

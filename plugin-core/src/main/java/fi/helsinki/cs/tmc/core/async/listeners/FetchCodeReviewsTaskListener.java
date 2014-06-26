@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.services.ReviewDAO;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 public class FetchCodeReviewsTaskListener implements BackgroundTaskListener {
+
     private FetchCodeReviewsTask task;
     private IdeUIInvoker invoker;
     private ReviewDAO reviewDAO;
@@ -32,7 +33,9 @@ public class FetchCodeReviewsTaskListener implements BackgroundTaskListener {
         if (unseen.isEmpty() && showMessages) {
             invoker.invokeMessageBox("No new code reviews.");
             return;
-        } else {
+        } else if (!unseen.isEmpty() && !showMessages) {
+            invoker.invokeCodeReviewPopupNotification(unseen);
+        } else{
             for (Review r : unseen) {
                 r.setMarkedAsRead(true);
                 invoker.invokeCodeReviewDialog(r);

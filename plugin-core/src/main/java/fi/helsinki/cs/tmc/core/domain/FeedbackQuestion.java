@@ -4,12 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Class that handles feedback question such as
+ * A domain class representing feedback questions such as
  * "How difficult this exercise was". It may be either text or intrange
  * question; former has textbox for answer, latter has a bar representing range
- * of ints.
- * 
- * 
+ * of integers.
  */
 public class FeedbackQuestion {
 

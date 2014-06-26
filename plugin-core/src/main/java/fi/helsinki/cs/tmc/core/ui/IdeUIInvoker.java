@@ -6,6 +6,11 @@ import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.TestCaseResult;
 
+/**
+ * Interface for invoking IDE UI functionality from the IDE-independent core.
+ * IDE specific portion must implement this interface
+ * 
+ */
 public interface IdeUIInvoker {
     void invokeTestResultWindow(List<TestCaseResult> results);
 
@@ -30,4 +35,6 @@ public interface IdeUIInvoker {
     void invokeCodeReviewDialog(Review review);
 
     void invokeMessageBox(String string);
+
+    void invokeCodeReviewPopupNotification(List<Review> unseen);
 }

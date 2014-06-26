@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse tmc plugin
-Bundle-SymbolicName: eclipse-plugin;singleton:=true
+Bundle-Name: TestMyCode Eclipse plugin
+Bundle-SymbolicName: TestMyCode_Eclipse_plugin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: tmc.eclipse.activator.CoreInitializer
 Require-Bundle: org.eclipse.ui,
@@ -23,9 +23,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ant.core;bundle-version="3.2.500",
  org.eclipse.core.filesystem;bundle-version="1.4.0",
  org.eclipse.jface.text;bundle-version="3.8.101",
- org.eclipse.ui.editors;bundle-version="3.8.100"
+ org.eclipse.ui.editors;bundle-version="3.8.100",
+ org.eclipse.mylyn.commons.notifications.ui;bundle-version="1.1.2",
+ org.eclipse.mylyn.builds.ui;bundle-version="1.1.2",
+ org.eclipse.mylyn.commons.notifications.core;bundle-version="1.1.2",
+ org.eclipse.mylyn.commons.notifications.feed;bundle-version="1.1.2",
+ org.eclipse.mylyn.commons.ui;bundle-version="3.9.2",
+ org.eclipse.mylyn.builds.core;bundle-version="1.1.2"
 Bundle-ClassPath: .,
  lib/tmc.core-0.0.1-SNAPSHOT.jar,
  swing2swt.jar,
  swt-grouplayout.jar
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: fi.helsinki.cs.tmc

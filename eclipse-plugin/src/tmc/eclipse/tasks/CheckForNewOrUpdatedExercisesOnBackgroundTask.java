@@ -3,11 +3,14 @@ package tmc.eclipse.tasks;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import tmc.eclipse.activator.CoreInitializer;
 import tmc.eclipse.ui.ExerciseSelectorDialog;
 import tmc.eclipse.ui.LoginDialog;
+import tmc.eclipse.ui.Notifier;
 import tmc.eclipse.ui.SettingsDialog;
 import fi.helsinki.cs.tmc.core.Core;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -20,7 +23,7 @@ public class CheckForNewOrUpdatedExercisesOnBackgroundTask implements Runnable {
         try {
             Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
-                    Shell shell = CoreInitializer.getDefault().getWorkbenchHelper().getUsableShell();
+                    final Shell shell = CoreInitializer.getDefault().getWorkbenchHelper().getUsableShell();
 
                     updateCoursesForUser(shell);
                     updateExercisesForCurrentCourse();
@@ -36,8 +39,15 @@ public class CheckForNewOrUpdatedExercisesOnBackgroundTask implements Runnable {
                                 // Closed by user, just continue as usual.
                             }
                         }
-                        dialog = new ExerciseSelectorDialog(shell, SWT.SHEET);
-                        dialog.open();
+
+                        Notifier.getInstance().createNotification("New exercises or updates available",
+                                "Click this box to download new exercises", new Listener() {
+                                    @Override
+                                    public void handleEvent(Event arg0) {
+                                        dialog = new ExerciseSelectorDialog(shell, SWT.SHEET);
+                                        dialog.open();
+                                    }
+                                });
                     }
                 }
             });

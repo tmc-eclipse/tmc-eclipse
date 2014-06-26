@@ -13,14 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.ProjectStatus;
 import fi.helsinki.cs.tmc.core.domain.ProjectType;
 import fi.helsinki.cs.tmc.core.domain.ZippedProject;
+import fi.helsinki.cs.tmc.core.io.FakeIOFactory;
+import fi.helsinki.cs.tmc.core.io.IOFactory;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
 import fi.helsinki.cs.tmc.core.services.ProjectDownloader;
+import fi.helsinki.cs.tmc.core.services.ProjectOpener;
 import fi.helsinki.cs.tmc.core.services.Settings;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
@@ -33,13 +36,15 @@ public class DownloaderTaskTest {
     private ProjectDAO projectDao;
     private Settings settings;
     private IdeUIInvoker invoker;
+    private IOFactory io;
 
     private ZippedProject zipProject;
-    TaskFeedback progress;
+    TaskStatusMonitor progress;
 
     @Before
     public void setUp() {
-        progress = mock(TaskFeedback.class);
+        io = new FakeIOFactory();
+        progress = mock(TaskStatusMonitor.class);
 
         downloader = mock(ProjectDownloader.class);
 
@@ -59,7 +64,7 @@ public class DownloaderTaskTest {
 
         when(downloader.downloadExercise(exercises.get(0))).thenReturn(zipProject);
 
-        task = new DownloaderTask(downloader, opener, exercises, projectDao, settings, invoker);
+        task = new DownloaderTask(downloader, opener, exercises, projectDao, settings, invoker, io);
     }
 
     @Test

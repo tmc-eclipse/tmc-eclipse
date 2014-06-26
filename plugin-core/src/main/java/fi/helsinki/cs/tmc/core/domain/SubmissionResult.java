@@ -6,11 +6,9 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * 
  * Class that stores the submission result that the server provides us after
  * submitting exercises; for example which tests failed on server and the
- * solution url.
- * 
+ * solution URL.
  */
 public class SubmissionResult {
 

@@ -3,7 +3,7 @@ package fi.helsinki.cs.tmc.core.async.tasks;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.services.ReviewDAO;
@@ -24,7 +24,7 @@ public class FetchCodeReviewsTask extends BackgroundTask {
     }
 
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), 2);
         this.reviews = server.downloadReviews(course);
         progress.incrementProgress(1);

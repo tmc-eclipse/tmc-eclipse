@@ -16,33 +16,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * Wrapper class for file IO. Allows us to mock file interactions in unit tests
- * 
+ * Wrapper class for file IO. Allows us to mock file interactions in unit tests.
  */
-public class FileIO implements IO {
+public class FileIO {
+
     private File file;
 
-    public FileIO(String file) {
-        this.file = new File(file);
+    public FileIO(String path) {
+        this.file = new File(path);
     }
 
-    @Override
     public String getName() {
         return file.getName();
     }
 
-    @Override
     public String getPath() {
         return FileUtil.getUnixPath(file.getAbsolutePath());
     }
 
-    @Override
     public boolean fileExists() {
         return file.exists() && !file.isDirectory();
     }
 
-    @Override
     public boolean directoryExists() {
         return file.exists() && file.isDirectory();
     }
@@ -50,7 +45,6 @@ public class FileIO implements IO {
     /**
      * Important: It is the responsibility of the caller to close this stream!
      */
-    @Override
     public OutputStream getOutputStream() {
         try {
             return new FileOutputStream(file);
@@ -62,7 +56,6 @@ public class FileIO implements IO {
     /**
      * Important: It is the responsibility of the caller to close this stream!
      */
-    @Override
     public InputStream getInputStream() {
         try {
             return new FileInputStream(file);
@@ -74,7 +67,6 @@ public class FileIO implements IO {
     /**
      * Important: It is the responsibility of the caller to close this writer!
      */
-    @Override
     public Writer getWriter() {
         try {
             OutputStream os = getOutputStream();
@@ -91,7 +83,6 @@ public class FileIO implements IO {
     /**
      * Important: It is the responsibility of the caller to close this reader!
      */
-    @Override
     public Reader getReader() {
         try {
             InputStream is = getInputStream();
@@ -104,7 +95,6 @@ public class FileIO implements IO {
         }
     }
 
-    @Override
     public void createFolderTree(boolean onlyParents) {
         if (onlyParents) {
             file.getParentFile().mkdirs();
@@ -113,9 +103,8 @@ public class FileIO implements IO {
         }
     }
 
-    @Override
-    public List<IO> getChildren() {
-        List<IO> children = new ArrayList<IO>();
+    public List<FileIO> getChildren() {
+        List<FileIO> children = new ArrayList<FileIO>();
         if (directoryExists()) {
             for (File f : file.listFiles()) {
                 children.add(new FileIO(f.getAbsolutePath()));
@@ -124,7 +113,6 @@ public class FileIO implements IO {
         return children;
     }
 
-    @Override
     public void write(byte[] bytes) {
         FileOutputStream fos = null;
         try {
@@ -143,4 +131,10 @@ public class FileIO implements IO {
             }
         }
     }
+
+    public byte[] read() {
+        // TODO: implement
+        return null;
+    }
+
 }

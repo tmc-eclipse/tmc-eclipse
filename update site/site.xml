@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/TestMyCode_Eclipse_1.0.0.201406261409.jar" id="TestMyCode_Eclipse" version="1.0.0.201406261409">
+      <category name="TestMyCode Eclipse"/>
+   </feature>
+   <category-def name="TestMyCode Eclipse" label="TestMyCode Eclipse"/>
+</site>

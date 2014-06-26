@@ -102,7 +102,6 @@ public class ProjectEventHandlerTest {
         when(projectDAO.getProjectByFile(filePath)).thenReturn(project);
         handler.handleDeletion(filePath);
         verify(project, times(1)).setStatus(ProjectStatus.DELETED);
-        verify(project, times(1)).setProjectFiles(Mockito.anyListOf(String.class));
     }
 
     @Test

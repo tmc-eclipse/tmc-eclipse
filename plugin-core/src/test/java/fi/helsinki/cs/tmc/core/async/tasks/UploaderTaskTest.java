@@ -18,7 +18,7 @@ import org.mockito.stubbing.Answer;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
 import fi.helsinki.cs.tmc.core.async.StopStatus;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
 import fi.helsinki.cs.tmc.core.services.ProjectDAO;
@@ -29,7 +29,7 @@ public class UploaderTaskTest {
     private UploaderTask task;
     private ProjectUploader uploader;
     private String path;
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
     private Project project;
     private ProjectDAO dao;
     private IdeUIInvoker invoker;
@@ -38,7 +38,7 @@ public class UploaderTaskTest {
     public void setUp() {
         path = "mock_path";
         uploader = mock(ProjectUploader.class);
-        progress = mock(TaskFeedback.class);
+        progress = mock(TaskStatusMonitor.class);
 
         dao = mock(ProjectDAO.class);
         invoker = mock(IdeUIInvoker.class);

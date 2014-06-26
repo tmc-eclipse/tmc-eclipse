@@ -1,8 +1,7 @@
 package fi.helsinki.cs.tmc.core.async;
 
 /**
- * Interface for background task listener
- * 
+ * An interface that all background task listeners implement.
  */
 public interface BackgroundTaskListener {
 

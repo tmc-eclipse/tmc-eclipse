@@ -6,8 +6,7 @@ import java.util.List;
 import fi.helsinki.cs.tmc.core.domain.Course;
 
 /**
- * Helper class that gets course names from given courses
- * 
+ * Helper class that gets course names from given courses.
  */
 public class DomainUtil {
 

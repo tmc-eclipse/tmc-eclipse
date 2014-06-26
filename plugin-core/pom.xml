@@ -165,16 +165,20 @@
 							<exclude>fi/helsinki/cs/tmc/core/async/BackgroundTaskListener.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/async/BackgroundTaskRunner.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/async/StopStatus.class</exclude>
-							<exclude>fi/helsinki/cs/tmc/core/async/TaskFeedback.class</exclude>
-							<exclude>fi/helsinki/cs/tmc/core/async/tasks/ProjectOpener.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/async/TaskStatusMonitor.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/async/tasks/TestrunnerTask.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/io/IO.class</exclude>
-							<exclude>fi/helsinki/cs/tmc/core/io/zipper/unzippingdecider/UnzippingDecider.class</exclude>
-							<exclude>fi/helsinki/cs/tmc/core/io/zipper/zippingdecider/ZippingDecider.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/io/IOFactory.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/io/zip/unzippingdecider/UnzippingDecider.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/io/zip/zippingdecider/ZippingDecider.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/services/ProjectOpener.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/services/http/HttpClientFactory.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/services/http/RequestExecutorFactory.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/storage/DataSource.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/spyware/services/EventReceiver.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/spyware/services/TmcEvent.class</exclude>
 							<exclude>fi/helsinki/cs/tmc/core/ui/IdeUIInvoker.class</exclude>
+							<exclude>fi/helsinki/cs/tmc/core/utils/ProjectIconHandler.class</exclude>
 							<!-- EXCLUDE THIRD PARTY CODE FROM COVERAGE REPORTS -->
 							<exclude>fi/helsinki/cs/tmc/core/spyware/utility/diff_match_patch*.class</exclude>
 						</excludes>

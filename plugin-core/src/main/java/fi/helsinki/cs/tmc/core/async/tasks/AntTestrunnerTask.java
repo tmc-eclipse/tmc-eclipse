@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.ClassPath;
 import fi.helsinki.cs.tmc.core.domain.TestRunResult;
 import fi.helsinki.cs.tmc.core.services.Settings;
@@ -17,7 +17,7 @@ import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 import fi.helsinki.cs.tmc.core.utils.TestResultParser;
 
 /**
- * An abstract background task for buildin and running tmc-junit-runner for an
+ * An abstract background task for building and running tmc-junit-runner for an
  * Ant project.
  * 
  * Concrete classes must implement the abstract build method that tells the
@@ -91,7 +91,7 @@ public abstract class AntTestrunnerTask extends TestrunnerTask {
     }
 
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), 4);
 
         try {
@@ -175,7 +175,7 @@ public abstract class AntTestrunnerTask extends TestrunnerTask {
         return testScannerArgs;
     }
 
-    private boolean buildTestRunnerArgs(TaskFeedback progress) throws InterruptedException {
+    private boolean buildTestRunnerArgs(TaskStatusMonitor progress) throws InterruptedException {
         args = new ArrayList<String>();
 
         args.add(javaExecutable);
@@ -215,14 +215,14 @@ public abstract class AntTestrunnerTask extends TestrunnerTask {
         return new File(rootPath + "/lib/endorsed");
     }
 
-    private List<String> findProjectTests(String testPath, TaskFeedback progress) throws InterruptedException {
+    private List<String> findProjectTests(String testPath, TaskStatusMonitor progress) throws InterruptedException {
         List<String> testScannerArgs = buildTestScannerArgs(testPath);
 
         ProcessBuilder pb = new ProcessBuilder(testScannerArgs);
         pb.redirectError(Redirect.INHERIT);
         try {
             process = pb.start();
-            
+
             int status = THREAD_NOT_FINISHED;
             while (status == THREAD_NOT_FINISHED) {
                 try {

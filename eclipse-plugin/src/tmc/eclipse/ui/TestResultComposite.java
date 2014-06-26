@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -31,7 +30,7 @@ import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.TestCaseResult;
 
 public class TestResultComposite extends Composite {
-    private Text colorBar;
+    private Label colorBar;
     private Label testResultName;
     private Button showMoreBtn;
     private Label testResultMessage;
@@ -71,7 +70,7 @@ public class TestResultComposite extends Composite {
 
         testResultName.setBounds(10, 0, parent.getSize().x, i.y + 5);
 
-        colorBar = new Text(this, SWT.READ_ONLY);
+        colorBar = new Label(this, SWT.READ_ONLY);
         colorBar.setBounds(0, 0, 5, testResultName.getSize().y);
         colorBar.setBackground(PASS);
 
@@ -116,7 +115,7 @@ public class TestResultComposite extends Composite {
         testResultMessage.setText(message);
     }
 
-    public Text getColorBar() {
+    public Label getColorBar() {
         return colorBar;
     }
 
@@ -127,7 +126,7 @@ public class TestResultComposite extends Composite {
     private void showMoreDetails(TestCaseResult tcr, GC gc) {
 
         Composite moreDetails = new Composite(this, SWT.SMOOTH);
-        heightOffset = 0;
+        heightOffset = 20;
 
         for (StackTraceElement st : tcr.getException().stackTrace) {
             if (st.getFileName().toLowerCase().contains("test.")) {
@@ -165,14 +164,11 @@ public class TestResultComposite extends Composite {
         String className = st.getClassName().replace('.', '/');
 
         path.append(getProjectTestRootPath(className) + "/");
+        System.out.println(moreDetailslink.isFocusControl());
 
         moreDetailslink.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-
-                System.out.println(st.getFileName());
-                System.out.println(st.getClassName());
-                System.out.println(path);
 
                 final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot()
                         .getFileForLocation(Path.fromOSString(path.toString().trim()));

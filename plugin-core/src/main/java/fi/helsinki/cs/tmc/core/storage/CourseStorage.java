@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
@@ -30,22 +31,32 @@ public class CourseStorage implements DataSource<Course> {
         if (!io.fileExists()) {
             return new ArrayList<Course>();
         }
-
+        CoursesFileFormat courseList = null;
         Reader reader = io.getReader();
         if (reader == null) {
             throw new UserVisibleException("Could not load course data from local storage.");
         }
-
-        CoursesFileFormat courseList = gson.fromJson(io.getReader(), CoursesFileFormat.class);
-
         try {
-            reader.close();
-        } catch (IOException e) {
-            // TODO: Log here?
-            return courseList.getCourses();
+            courseList = gson.fromJson(reader, CoursesFileFormat.class);
+        } catch (JsonSyntaxException ex) {
+            throw new UserVisibleException("Local course storage corrupted");
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                return getCourses(courseList);
+            }
         }
 
-        return courseList.getCourses();
+        return getCourses(courseList);
+    }
+
+    private List<Course> getCourses(CoursesFileFormat courseList) {
+        if (courseList != null) {
+            return courseList.getCourses();
+        } else {
+            return new ArrayList<Course>();
+        }
     }
 
     @Override

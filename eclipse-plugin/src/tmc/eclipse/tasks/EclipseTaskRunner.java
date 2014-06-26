@@ -27,7 +27,7 @@ public class EclipseTaskRunner implements BackgroundTaskRunner {
                     listener.onBegin();
                 }
 
-                int returnValue = task.start(new EclipseTaskFeedbackAdapter(monitor));
+                int returnValue = task.start(new EclipseTaskStatusMonitor(monitor));
 
                 switch (returnValue) {
                 case BackgroundTask.RETURN_FAILURE:

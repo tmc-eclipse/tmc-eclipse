@@ -1,21 +1,20 @@
 package fi.helsinki.cs.tmc.core.domain;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.io.FileUtil;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.DefaultZippingDecider;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.MavenZippingDecider;
-import fi.helsinki.cs.tmc.core.io.zipper.zippingdecider.ZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.DefaultZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.MavenZippingDecider;
+import fi.helsinki.cs.tmc.core.io.zip.zippingdecider.ZippingDecider;
 
 /**
- * 
- * This class is IDE independent data storage for project data, such as it's
- * path, status and files. It is similar to Course class, but Course class is
- * meant to reflect server side information while Project class is supposed to
- * track local information
- * 
+ * A domain class for IDE independent data storage of project data, such as it's
+ * path, status and files. It is similar to the Exercise class, but Exercise
+ * class is meant to reflect server side information while Project class is
+ * supposed to track local information.
  */
 public class Project {
 
@@ -64,7 +63,7 @@ public class Project {
         if (file == null || rootPath.isEmpty()) {
             return false;
         }
-        return file.contains(rootPath);
+        return (file + "/").contains(rootPath + "/");
     }
 
     @Override
@@ -93,10 +92,29 @@ public class Project {
             return "";
         }
         synchronized (projectFiles) {
-            for (String file : projectFiles) {
-                if (file.contains(type.getBuildFile())) {
-                    return FileUtil.getUnixPath(file.replace(type.getBuildFile(), ""));
+            if (projectFiles.size() == 1) {
+                File projectFile = new File(projectFiles.get(0));
+                if (projectFile.isDirectory()) {
+                    return FileUtil.getUnixPath(projectFile.getAbsolutePath());
+                } else {
+                    return FileUtil.getUnixPath(projectFile.getParent());
                 }
+            }
+            String shortest = null;
+            for (String file : projectFiles) {
+                if (shortest == null || file.length() < shortest.length()) {
+                    shortest = file;
+                } else {
+                    for (int i = 0; i < shortest.length(); i++) {
+                        if (!(shortest.charAt(i) == file.charAt(i))) {
+                            shortest = shortest.substring(0, i);
+                        }
+                    }
+                }
+            }
+            if (shortest != null) {
+                File rootPathFile = new File(shortest);
+                return FileUtil.getUnixPath(rootPathFile.getAbsolutePath());
             }
         }
         return "";

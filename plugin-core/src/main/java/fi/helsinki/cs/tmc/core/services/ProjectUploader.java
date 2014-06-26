@@ -7,13 +7,13 @@ import fi.helsinki.cs.tmc.core.async.StopStatus;
 import fi.helsinki.cs.tmc.core.domain.Project;
 import fi.helsinki.cs.tmc.core.domain.SubmissionResult;
 import fi.helsinki.cs.tmc.core.io.FileIO;
-import fi.helsinki.cs.tmc.core.io.zipper.RecursiveZipper;
+import fi.helsinki.cs.tmc.core.io.zip.RecursiveZipper;
 import fi.helsinki.cs.tmc.core.services.http.ServerManager;
 import fi.helsinki.cs.tmc.core.services.http.SubmissionResponse;
 
 /**
  * Class that handles uploading the exercise to server. Used by the UploaderTask
- * background task
+ * background task.
  */
 public class ProjectUploader {
 

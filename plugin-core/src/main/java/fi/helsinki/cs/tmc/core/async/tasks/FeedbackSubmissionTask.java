@@ -3,18 +3,16 @@ package fi.helsinki.cs.tmc.core.async.tasks;
 import java.util.List;
 
 import fi.helsinki.cs.tmc.core.async.BackgroundTask;
-import fi.helsinki.cs.tmc.core.async.TaskFeedback;
+import fi.helsinki.cs.tmc.core.async.TaskStatusMonitor;
 import fi.helsinki.cs.tmc.core.domain.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.services.FeedbackAnswerSubmitter;
 import fi.helsinki.cs.tmc.core.ui.IdeUIInvoker;
 
 /**
- * 
  * This is the background task for feedback submission.
- * 
  */
 public class FeedbackSubmissionTask extends BackgroundTask {
-    private TaskFeedback progress;
+    private TaskStatusMonitor progress;
     private FeedbackAnswerSubmitter submitter;
     private String feedbackUrl;
     private List<FeedbackAnswer> answers;
@@ -44,7 +42,7 @@ public class FeedbackSubmissionTask extends BackgroundTask {
     }
 
     @Override
-    public int start(TaskFeedback progress) {
+    public int start(TaskStatusMonitor progress) {
         progress.startProgress(this.getDescription(), 1);
         try {
             submitter.submitFeedback(answers, feedbackUrl);
