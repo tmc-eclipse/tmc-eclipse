@@ -1,5 +1,9 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
+/**
+ * Helper class that contains necessary data for core to take a snapshot. IDE
+ * must fill in this information.
+ */
 public class SnapshotInfo {
     private final String projectName;
     private final String oldFilePath; // empty string unless rename operation,
