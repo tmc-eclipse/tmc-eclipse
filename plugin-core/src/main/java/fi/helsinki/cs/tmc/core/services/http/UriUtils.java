@@ -10,15 +10,42 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
+/**
+ * 
+ * Helper utility class for URI operations
+ * 
+ */
 final class UriUtils {
 
     private UriUtils() {
     }
 
+    /**
+     * Returns the given string with query parameters
+     * 
+     * @param uri
+     *            Original string
+     * @param name
+     *            name
+     * @param value
+     *            value
+     * @return String with uri + name + value
+     */
     public static String withQueryParam(String uri, String name, String value) {
         return withQueryParam(URI.create(uri), name, value).toString();
     }
 
+    /**
+     * Returns the given string with query parameters
+     * 
+     * @param uri
+     *            Original string
+     * @param name
+     *            name
+     * @param value
+     *            value
+     * @return URI with uri + name + value
+     */
     public static URI withQueryParam(URI uri, String name, String value) {
         List<NameValuePair> pairs = URLEncodedUtils.parse(uri, "UTF-8");
         Iterator<NameValuePair> i = pairs.iterator();

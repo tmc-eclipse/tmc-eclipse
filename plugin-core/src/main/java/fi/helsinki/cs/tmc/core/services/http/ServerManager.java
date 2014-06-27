@@ -55,6 +55,11 @@ public class ServerManager {
         this(new Gson(), new ConnectionBuilder(settings), settings);
     }
 
+    /**
+     * Gets list of courses from server
+     * 
+     * @return List of courses
+     */
     public List<Course> getCourses() {
         String url = connectionBuilder.getUrl(UrlExtension.COURSES.getExtension());
         String bodyText = getString(url);
@@ -65,6 +70,13 @@ public class ServerManager {
         return Arrays.asList(cl.getCourses());
     }
 
+    /**
+     * Gets exercises for given courseID
+     * 
+     * @param courseId
+     *            Id of the course
+     * @return List of Exercises
+     */
     public List<Exercise> getExercises(String courseId) {
         String url = connectionBuilder.getUrl(UrlExtension.EXERCISES.getExtension(courseId));
         String bodyText = getString(url);
@@ -79,6 +91,13 @@ public class ServerManager {
         return exercises;
     }
 
+    /**
+     * Gets the zipped project from the server
+     * 
+     * @param zipUrl
+     *            Url to the zip
+     * @return ZippedProject object that contains the project zip
+     */
     public ZippedProject getExerciseZip(String zipUrl) {
         ZippedProject zip = new ZippedProject();
         try {
@@ -91,10 +110,32 @@ public class ServerManager {
         return zip;
     }
 
+    /**
+     * Uploads the exercise to the server
+     * 
+     * @param exercise
+     *            Exercise to be uploaded
+     * @param data
+     *            Zipped project files
+     * @return Response to upload (for example, used to later to retrieve test
+     *         results from the server if upload was exercise submission)
+     */
     public SubmissionResponse uploadFile(Exercise exercise, byte[] data) {
         return uploadFile(exercise, data, null);
     }
 
+    /**
+     * Uploads the exercise to the server with extra parameters
+     * 
+     * @param exercise
+     *            Exercise to be uploaded
+     * @param data
+     *            Zipped project files
+     * @param extraParams
+     *            Any extra parameters that will be sent to the server
+     * @return Response to upload (for example, used to later to retrieve test
+     *         results from the server if upload was exercise submission)
+     */
     public SubmissionResponse uploadFile(Exercise exercise, byte[] data, Map<String, String> extraParams) {
         String submitUrl = connectionBuilder.addApiCallQueryParameters(exercise.getReturnUrl());
 
@@ -132,11 +173,28 @@ public class ServerManager {
         }
     }
 
+    /**
+     * Gets submission results from the server (test results)
+     * 
+     * @param resultURI
+     *            URI where the result will be retrieved
+     * @return SubmissionResult
+     */
     public SubmissionResult getSubmissionResult(URI resultURI) {
         String json = getString(resultURI.toString());
         return (new SubmissionResultParser()).parseFromJson(json);
     }
 
+    /**
+     * Sends feedback to the server (offered after successful exercise
+     * submission)
+     * 
+     * @param answerUrl
+     *            URL where the feedback will be sent
+     * @param answers
+     *            Answers to the feedback questions
+     * @return Response string from the server
+     */
     public String submitFeedback(String answerUrl, List<FeedbackAnswer> answers) {
 
         final String submitUrl = connectionBuilder.addApiCallQueryParameters(answerUrl);
@@ -159,6 +217,14 @@ public class ServerManager {
         }
     }
 
+    /**
+     * Sends spyware event logs to the server
+     * 
+     * @param url
+     *            URL where the events will be sent
+     * @param events
+     *            List of events that will be sent
+     */
     public void sendEventLogs(String url, List<LoggableEvent> events) {
 
         String fullUrl = connectionBuilder.addApiCallQueryParameters(url);
@@ -182,6 +248,13 @@ public class ServerManager {
         }
     }
 
+    /**
+     * Downloads any reviews associated with given course
+     * 
+     * @param course
+     *            The course where the reviews will be downloaded
+     * @return List of reviews
+     */
     public List<Review> downloadReviews(Course course) {
         String fullUrl = connectionBuilder.addApiCallQueryParameters(course.getReviewsUrl());
         try {
@@ -196,6 +269,13 @@ public class ServerManager {
         return null;
     }
 
+    /**
+     * Marks given review as read on the server
+     * 
+     * @param review
+     *            The review that will be marked as read
+     * @return Whether or not the operation was successful
+     */
     public boolean markReviewAsRead(Review review) {
         String fullUrl = connectionBuilder.addApiCallQueryParameters(review.getUpdateUrl() + ".json");
         Map<String, String> extraParams = new HashMap<String, String>();
