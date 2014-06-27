@@ -172,20 +172,22 @@ public class EclipseIdeUIInvoker implements IdeUIInvoker {
     }
 
     public void invokeCodeReviewPopupNotification(final List<Review> unseen) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                Notifier.getInstance().createNotification("Code review available",
-                        "Click this box to read new code reviews", new Listener() {
-                            @Override
-                            public void handleEvent(Event arg0) {
-                                for (Review r : unseen) {
-                                    r.setMarkedAsRead(true);
+        for (final Review r : unseen) {
+            r.setMarkedAsRead(true);
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    Notifier.getInstance().createNotification("Code review ",
+                            "Code review for " + r.getExerciseName() + " ready. ", new Listener() {
+                                @Override
+                                public void handleEvent(Event arg0) {
+
                                     invokeCodeReviewDialog(r);
                                 }
-                            }
-                        });
-            }
-        });
+
+                            });
+                }
+            });
+        }
     }
 }

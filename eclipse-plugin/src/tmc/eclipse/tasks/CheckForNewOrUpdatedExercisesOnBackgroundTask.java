@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import tmc.eclipse.activator.CoreInitializer;
+import tmc.eclipse.ui.CustomNotification;
 import tmc.eclipse.ui.ExerciseSelectorDialog;
 import tmc.eclipse.ui.LoginDialog;
 import tmc.eclipse.ui.Notifier;
@@ -17,12 +18,17 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.ui.UserVisibleException;
 
 public class CheckForNewOrUpdatedExercisesOnBackgroundTask implements Runnable {
-    ExerciseSelectorDialog dialog;
+    private ExerciseSelectorDialog dialog;
+    private CustomNotification notification;
 
     public void run() {
+        if ((notification != null && notification.isAlive())) {
+            return; 
+        }
+        
         try {
             Display.getDefault().asyncExec(new Runnable() {
-                public void run() {
+                public void run() { 
                     final Shell shell = CoreInitializer.getDefault().getWorkbenchHelper().getUsableShell();
 
                     updateCoursesForUser(shell);
@@ -40,12 +46,17 @@ public class CheckForNewOrUpdatedExercisesOnBackgroundTask implements Runnable {
                             }
                         }
 
-                        Notifier.getInstance().createNotification("New exercises or updates available",
-                                "Click this box to download new exercises", new Listener() {
+                        notification = Notifier.getInstance().createNotification("New exercises are available. ",
+                                "Click here to download. ", new Listener() {
                                     @Override
                                     public void handleEvent(Event arg0) {
-                                        dialog = new ExerciseSelectorDialog(shell, SWT.SHEET);
-                                        dialog.open();
+                                        Display.getDefault().asyncExec(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                dialog = new ExerciseSelectorDialog(shell, SWT.SHEET);
+                                                dialog.open();
+                                            }
+                                        });
                                     }
                                 });
                     }
