@@ -12,7 +12,7 @@ public class RecurringTaskRunner {
     private static int INITIAL_WAIT = 0;
 
     // 1200s = 60s * 20min = every 20 min
-    private static int CODE_REVIEW_FETCH_INTERVAL = 5;
+    private static int CODE_REVIEW_FETCH_INTERVAL = 1200;
 
     // 3600s = 60s * 60min = every 1h
     private static int EXERCISE_UPDATE_INTERVAL = 3600;
