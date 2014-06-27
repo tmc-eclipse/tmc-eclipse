@@ -143,7 +143,7 @@
 						<configuration>
 							<executable>cp</executable>
 							<arguments>
-								<argument>target/tmc.core-0.0.1-SNAPSHOT.jar</argument>
+								<argument>target/${project.artifactId}-${project.version}.jar</argument>
 								<argument>../eclipse-plugin/lib/</argument>
 							</arguments>
 						</configuration>

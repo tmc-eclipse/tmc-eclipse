@@ -1,6 +1,5 @@
 package tmc.eclipse.ui;
 
-import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
@@ -16,9 +15,10 @@ public class Notifier {
 //    });
 //    
     
-    public void createNotification(String title, String text, Listener listener) {
-        AbstractNotificationPopup notification = new CustomNotification(Display.getDefault(), title, text, listener);
+    public CustomNotification createNotification(String title, String text, Listener listener) {
+        CustomNotification notification = new CustomNotification(Display.getDefault(), title, text, listener);
         notification.open();
+        return notification;
     }
     
     public static Notifier getInstance() {
