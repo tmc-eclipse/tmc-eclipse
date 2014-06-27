@@ -33,10 +33,34 @@ class RequestExecutor {
     private HttpClientFactory factory;
     private Settings settings;
 
+    /**
+     * Constructor that will default to HTTP get request with the given URL
+     * 
+     * @param url
+     *            URL where the post request will be sent
+     * @param factory
+     *            HTTP client factory that will construct the http client that
+     *            will be used for network communication
+     * @param settings
+     *            Program settings. Class will update the login status of the
+     *            user
+     */
     /* package */RequestExecutor(String url, HttpClientFactory factory, Settings settings) {
         this(new HttpGet(url), factory, settings);
     }
 
+    /**
+     * Constructor that accepts HTTP requests from user
+     * 
+     * @param request
+     *            The request that will be sent to the server
+     * @param factory
+     *            HTTP client factory that will construct the http client that
+     *            will be used for network communication
+     * @param settings
+     *            Program settings. Class will update the login status of the
+     *            user
+     */
     /* package */RequestExecutor(HttpUriRequest request, HttpClientFactory factory, Settings settings) {
         this.request = request;
         this.factory = factory;
@@ -47,15 +71,45 @@ class RequestExecutor {
 
     }
 
+    /**
+     * Sets the credentials for future use
+     * 
+     * @param username
+     *            username
+     * @param password
+     *            passowrd
+     * @return Returns itself to enable builder pattern
+     */
     public RequestExecutor setCredentials(String username, String password) {
         return setCredentials(new UsernamePasswordCredentials(username, password));
     }
 
+    /**
+     * Sets the credentials for future use
+     * 
+     * @param credentials
+     *            UsernamePasswordCredentials object containing the username and
+     *            password
+     * @return Returns itself to enable builder pattern
+     */
     public RequestExecutor setCredentials(UsernamePasswordCredentials credentials) {
         this.credentials = credentials;
         return this;
     }
 
+    /**
+     * Executes the HTTP request
+     * 
+     * @return BufferedHttpEntity containing the result of the request
+     * @throws IOException
+     *             Throws IOException if download fails, if server response
+     *             contains no entity or if various java buffers fail internally
+     * @throws InterruptedException
+     *             Throws InterruptedException if request is aborted or if
+     *             authentication fails
+     * @throws FailedHttpResponseException
+     *             Throws FailedHttpResponseException if status code is not 2xx
+     */
     public BufferedHttpEntity execute() throws IOException, InterruptedException, FailedHttpResponseException {
         CloseableHttpClient httpClient = factory.makeHttpClient();
 
@@ -72,6 +126,7 @@ class RequestExecutor {
                 request.addHeader(new BasicScheme(Charset.forName("UTF-8")).authenticate(this.credentials, request,
                         null));
             }
+
             response = httpClient.execute(request);
 
         } catch (IOException ex) {
@@ -87,8 +142,7 @@ class RequestExecutor {
         return handleResponse(response);
     }
 
-    private BufferedHttpEntity handleResponse(HttpResponse response) throws IOException, InterruptedException,
-            FailedHttpResponseException {
+    private BufferedHttpEntity handleResponse(HttpResponse response) throws IOException, FailedHttpResponseException {
         int responseCode = response.getStatusLine().getStatusCode();
         settings.setLoggedIn(false);
         if (response.getEntity() == null) {
