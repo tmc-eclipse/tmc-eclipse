@@ -111,7 +111,7 @@ See the instructions for using the Netbeans version.
 
 #### Instructor
 
-* Jarmo Isotalo ([jamox](https://github.com/jamox))
+* Jarmo Isotalo ([jamo](https://github.com/jamo))
 
 #### Client
 
